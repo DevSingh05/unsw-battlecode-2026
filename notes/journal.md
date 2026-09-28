@@ -43,3 +43,4 @@
 - 04:13 UTC: unknown-map learning: LEARN_PORTALS alone 0.45, LEARN_GAPS alone 0.50, both 0.45 vs v13-unknown (120 games each) -> kept in code, default OFF. User: work additively (keep old algorithms, add new files/functions).
 - 04:20 UTC: Loong blog studied (notes/13). Generated 40 test (maps/gen) + 40 held-out (maps/genhold) unseen maps via tools/mapgen.py. Added flags UNK_PORTAL_ESCAPE, UNK_BLIND_PEN (default off); waiting for Schooltime agent's tests before running unseen-map tests.
 - 05:03 UTC: created codex-battlecode/ sandbox (copy of v13 + AGENTS.md rules/brief) for an independent Codex researcher; read-only outside its folder.
+- 05:10 UTC: git repo initialised (local + private GitHub DevSingh05/unsw-battlecode-2026), first commit 49b3f35 = v13 + notes + tools + codex sandbox. Ignored: replays, notes/replays, archive, reference, build dirs, .claude.
