@@ -462,3 +462,31 @@
 #ifndef SMALL_THREAT_PEN
 #define SMALL_THREAT_PEN 12.0
 #endif
+// ---- pocket pumping (notes/14): dive into pearl dead ends, split out at the tip
+#ifndef POCKET_PUMP
+#define POCKET_PUMP 1
+#endif
+#ifndef POCKET_PUMP_HOT
+#define POCKET_PUMP_HOT 0
+#endif
+#ifndef POCKET_PUMP_BONUS
+#define POCKET_PUMP_BONUS 3.0
+#endif
+#ifndef POCKET_MAX_ALLIES
+#define POCKET_MAX_ALLIES 1
+#endif
+// Tiles with max gap at most this count as fast-respawning pocket food.
+#ifndef POCKET_FAST_GAP
+#define POCKET_FAST_GAP 10
+#endif
+#ifndef POCKET_OBSERVED
+#define POCKET_OBSERVED 1
+#endif
+// Expected length at the tip needed to dive (4 = can split out).
+#ifndef POCKET_NEED
+#define POCKET_NEED 4.0
+#endif
+// Unseen maps: require evidence of fast pearls in a pocket before diving.
+#ifndef POCKET_UNK_NEEDS_HOT
+#define POCKET_UNK_NEEDS_HOT 1
+#endif

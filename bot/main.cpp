@@ -1630,6 +1630,60 @@ struct Bot
         }
     }
 
+    // Pocket pumping: a short dragon dives into a dead end with pearls, eats up to
+    // length 4+ at the tip, then (reverse-)splits so the rear half walks back out.
+    // Worth it only if the pocket's pearls get us to 4, no enemy guards the mouth,
+    // and at most one teammate is already inside.
+    bool pocketWorthPumping(int t)
+    {
+        auto why = [&](const char* r) { if (dbg) std::fprintf(dbg, "POCKET %s len=%d\n", r, myLen); return false; };
+        if (myLen < 2 || myLen > 3 || units >= w.unitLimit || iAmKing())
+            return why("len/units/king");
+        for (auto& o : segs)
+            if (o.head && o.team != w.myTeam && wrapDist(o.tile, t) <= 3)
+                return why("enemy");
+        // flood the pocket from its mouth, not crossing our own body or anything occupied
+        std::vector<int> q{t}, seen{t};
+        double pearls = 0;
+        int allies = 0, hot = 0;
+        for (size_t qi = 0; qi < q.size() && q.size() <= 24; qi++)
+        {
+            int u = q[qi];
+            if (visible[u] && w.pearlMem[u])
+                pearls += 1.0;
+            else if (w.gmax[u] > 0 && w.gmax[u] <= POCKET_FAST_GAP)
+                pearls += 0.5, hot++;
+            else if (POCKET_OBSERVED && !w.gapSeen.empty() && w.gapSeen[u] > 0 && w.gapSeen[u] <= POCKET_FAST_GAP)
+                pearls += 0.5, hot++; // we've watched this tile respawn quickly
+            else if (POCKET_OBSERVED && w.spawnAt[u] >= 0 && w.spawnAt[u] - round <= 6)
+                pearls += 0.7; // a pearl is about to appear here
+            if (occHead[u] && occTeam[u] == w.myTeam && occId[u] != w.myId)
+                allies++;
+            for (int d = 0; d < 4; d++)
+            {
+                int v = step(u, d);
+                if (v < 0 || v == myHead || std::find(seen.begin(), seen.end(), v) != seen.end())
+                    continue;
+                if (occId[v] >= 0 && !(occHead[v] && occTeam[v] == w.myTeam))
+                    continue;
+                seen.push_back(v);
+                q.push_back(v);
+            }
+        }
+        if (q.size() > 24)
+            return why("big"); // not a pocket, just a region the area check didn't like
+        if (allies > POCKET_MAX_ALLIES)
+            return why("allies");
+        // on an unseen map, only dive when we've seen evidence of fast pearls in there
+        if ((POCKET_PUMP_HOT || (POCKET_UNK_NEEDS_HOT && !w.known)) && hot == 0)
+            return why("nohot");
+        if (myLen + pearls < POCKET_NEED)
+            return why("fewpearls");
+        if (dbg)
+            std::fprintf(dbg, "POCKET YES len=%d pearls=%.1f\n", myLen, pearls);
+        return true;
+    }
+
     // Sprint 2-3 steps along pearls when an enemy head could take them first.
     // Each extra step costs a segment, but a step onto a pearl pays it back, so a
     // run over pearls is free (or better) and denies them to the enemy.
@@ -1957,12 +2011,15 @@ struct Bot
             bfsFrom(t, pearls, area, areaCap);
             score += 10.0 * pearls;
             int need = myLen + 3;
-            if (area < need)
+            bool pump = POCKET_PUMP && area < need && pocketWorthPumping(t);
+            if (area < need && !pump)
                 score -= AREA_WEIGHT * (need - area) / need + 20;
             int wantDepth = myLen >= 10 ? std::max(SURVIVE_DEPTH, std::min(myLen, KING_SURVIVE_DEPTH)) : SURVIVE_DEPTH;
             int depth = surviveDepth(t, wantDepth);
-            if (depth < wantDepth)
+            if (depth < wantDepth && !pump)
                 score -= 150.0 + 40.0 * (wantDepth - depth);
+            if (pump)
+                score += POCKET_PUMP_BONUS;
             int threat = threatAt[t];
             if (threat > 0)
                 score -= (myLen >= 6 ? 25.0 + 4.0 * myLen : SMALL_THREAT_PEN) * (units <= LAST_FEW_UNITS ? LAST_FEW_MULT : 1.0);
