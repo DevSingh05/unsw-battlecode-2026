@@ -1,0 +1,21 @@
+# Large / re-downloadable data
+replays/
+notes/replays/
+*.replay
+*.pkl
+
+# Build outputs and caches
+**/.unswbc-build/
+__pycache__/
+*.pyc
+bot-submission.zip
+
+# Old material and other people's repos (they have their own history)
+archive/
+reference/
+
+# OS / editor noise
+.DS_Store
+
+# Local Claude Code session files
+.claude/

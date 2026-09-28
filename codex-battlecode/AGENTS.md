@@ -1,0 +1,62 @@
+# Codex sandbox: UNSW Battlecode 2026
+
+You are a second, independent researcher/engineer on team "Cache me outside" (UNSW Battlecode 2026,
+https://game.battlecode.au). Your job: find ideas that make our bot win more, prototype them, and prove
+or disprove them with tests. Work ONLY inside this folder: `codex-battlecode/`.
+
+## Hard rules (do not break)
+1. **Write only inside `codex-battlecode/`.** Everything outside it (`../bot`, `../variants`, `../notes`,
+   `../tools`, `../maps`, `../reference`, `../replays`) is **read-only** for you. Never edit, move or delete
+   anything there.
+2. **Never delete files**, even in this folder. Move unwanted things to `codex-battlecode/archive/`.
+3. **No submissions, no challenges, no POST requests** to game.battlecode.au, and never touch the API key
+   (`~/.unswbc/keys.json`). Reading public pages/replays with GET requests is fine (max ~1 request/second).
+4. **Discord: read-only.** Never type, click, react or post. The useful content is already summarised in
+   `../notes/12-discord-strategy.md`.
+5. **CPU:** run at most ONE local test batch at a time, `--jobs 6` max (the laptop has 18 cores but heats up).
+   Check nothing else heavy is running first (`ps aux | grep -E "pool.py|arena.py"`); if our main tests are
+   running, wait.
+6. Keep a timestamped log of what you tried and the results in `codex-battlecode/notes/journal.md`.
+
+## Your starting point
+- `codex-battlecode/bot/` is a copy of our live bot (v13). Change it freely.
+- C++20, one process per dragon, 7x7 view, sonar is the only communication. 100M CPU points/turn/dragon.
+- Structure: `main.cpp` (`decide()` = per-turn choice; `bfsFrom` pearl planning; `surviveDepth` look-ahead;
+  `tryRam`; `computeThreats`; king/feeding `updateKingship`/`shouldFeed`; sonar `emitSonar`/`readMessages`;
+  `applyMapParams` per-map settings), `params.hpp` (all switches), `maps/<map>.hpp` (per-map modules),
+  `maps_data.hpp` (generated map data).
+
+## Read first (read-only)
+- `../notes/01-game-rules.md` (rules), `../notes/02-engine-and-protocol.md` (protocol, compute, tools)
+- `../notes/06-our-bot.md` (how our bot works), `../notes/journal.md` (every experiment + result)
+- `../notes/05`, `08`, `09`, `10`, `11` (top-team tactics, per-map strategy, loss diagnoses, top-10 kings)
+- `../notes/maps/*.md` (per-map analyses), `../notes/12-discord-strategy.md` (community), `../notes/13-loong-blog.md`
+- Engine source: `../reference/unswbc/engine/src/` (ground truth for rules). Blog code: `../reference/loong/`.
+- Web: https://over-yonder.tech/games/loong/ (The Loong Game series), the game docs at https://game.battlecode.au/docs,
+  and anything else useful you can find (past Battlecode / Battlesnake / Halite / Lux AI / Kaggle Hungry Geese writeups).
+
+## Testing (use our tools read-only; they accept any bot dir)
+From the project root (`..`):
+- `python3 tools/pool.py "codex-battlecode/bot" --pool variants/v13,variants/v12 --seeds 6 --jobs 6`
+  (all 10 ranked maps, both sides, 95% interval). Variants via flags: `"codex-battlecode/bot:-DMYFLAG=1"`.
+- Unseen maps (Sprint/Qualifier tournaments will probably use NEW maps): add `--maps gen/g2026_00,gen/g2026_01,...`
+  (40 maps in `../maps/gen/`); keep `../maps/genhold/` untouched as a final held-out check.
+- `python3 tools/cpuwatch.py -- <command>` logs CPU while a batch runs.
+- Replays: `../notes/tools/replay_decode.py`, `../notes/tools/replay_sim.py`; public replays via `../tools/api.py`
+  (`api.download_replay(game_id, path)`; GET only).
+- Only claim an improvement if its 95% interval is clearly above 0.50 against v13, and it holds on a second,
+  fresh seed set (`--seed-base 50000` then `--seed-base 51000`). Self-play can mislead (e.g. our Schooltime yard
+  rush scored 82% locally but 2/15 on the ladder), so say what real-ladder evidence would confirm it.
+
+## Current priorities (ideas welcome beyond these)
+1. **Unseen maps** (Sprint 1 Oct, Qualifiers 10 Oct): our bot is much weaker without its built-in map knowledge
+   (portals unknown, newly split dragons know nothing, no symmetry inference). Anything that makes the
+   generic bot stronger on `../maps/gen/` is the most valuable.
+2. **Schooltime** (we lose the contested "yard" to strong teams).
+3. King growth/feeding and ram defence against strong teams.
+
+## Deliverable
+For each idea: a short write-up in `codex-battlecode/notes/` (what, why, evidence, test numbers on both seed
+sets, CPU cost) and the code behind a clearly named `#define` switch (default 0) so it can be ported into our
+main bot additively. Put your best candidate in `codex-battlecode/bot/` with a `CANDIDATE.md` explaining exactly
+which switches to turn on. We will review and, if it looks good, test it with real unranked challenges.

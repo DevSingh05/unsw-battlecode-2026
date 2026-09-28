@@ -1,0 +1,65 @@
+--- bot/main.cpp	2026-09-27 14:59:55
++++ /private/tmp/claude-501/-Users-devsingh-Developer-UNSW-Battlecode/4107a3b1-a08f-4826-9eaa-522a1a1ebd84/scratchpad/proto_sli/main.cpp	2026-09-27 21:42:28
+@@ -865,6 +865,14 @@
+         int L = static_cast<int>(trail.size());
+         if (L == 0)
+             return maxDepth;
++        const int LT = L; // known trail tiles
++#ifndef TRAIL_FIX
++#define TRAIL_FIX 0
++#endif
++        // an incomplete trail (e.g. a fresh reverse-split child): the unseen rest of the
++        // body is still behind us, so known tiles free only after myLen - i moves
++        if (TRAIL_FIX && myLen > L)
++            L = myLen;
+         const int L0 = L;
+         int hotEaten = 0;
+         const int cap = L + maxDepth + 4;
+@@ -873,8 +881,9 @@
+         int h = 0;
+         for (int i = 0; i < L; i++)
+         {
+-            simBody[i] = trail[i];
+-            bodyCnt[trail[i]]++;
++            simBody[i] = i < LT ? trail[i] : -2;
++            if (i < LT)
++                bodyCnt[trail[i]]++;
+         }
+         int best = 0;
+         nodes = 0;
+@@ -908,12 +917,19 @@
+             }
+             int tailIdx = (h + L) % cap;
+             int tail = simBody[tailIdx];
++            if (tail == -2)
++                return -2;
+             bodyCnt[tail]--;
+             return tail;
+         };
+         auto pop = [&](int tail) {
+-            if (tail < 0)
++            if (tail == -2)
+             {
++                int tailIdx = (h + L) % cap;
++                simBody[tailIdx] = -2;
++            }
++            else if (tail < 0)
++            {
+                 eatenMark[simBody[h]] = 0;
+                 if (w.gmax[simBody[h]] == 1)
+                     hotEaten--;
+@@ -938,12 +954,12 @@
+                 pop(stack.back().tailTile);
+                 stack.pop_back();
+             }
+-            for (int i = 0; i < L0; i++)
++            for (int i = 0; i < LT; i++)
+                 bodyCnt[trail[i]]--;
+         };
+         if (!canEnter(firstTile, 1))
+         {
+-            for (int i = 0; i < L0; i++)
++            for (int i = 0; i < LT; i++)
+                 bodyCnt[trail[i]]--;
+             return 0;
+         }

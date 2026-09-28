@@ -1,0 +1,45 @@
+# Journal
+- 2026-09-27 05:49 UTC: v5 live (portal-exit sonar warnings, map look-alike fix). v5 challenges vs ranks 16-20 running (tools/launch_later.py -> replays/ch2). Research agents: notes/08 per-map, notes/09 loss diagnosis.
+- 2026-09-27 05:55 UTC: loop start. Elo 1570 (rank ~167). v5 vs PPP 3-7 (v4 was 5-5; single games noisy). Other 4 v5 challenge sets waiting on hourly cap. Waiting on notes/08 + notes/09 agents before picking next change.
+- 05:57 UTC: notes/08 (per-map) + notes/09 (loss diagnosis) done. Top causes: rams while outnumbered; king too late; king self-trap (DFS ignores eating); wasted feeding; split children die. Implementing A=ram guard, B=eat-aware DFS + split-escape, C=split exit check, as flags; testing in parallel.
+- 06:05 UTC: pool tests (240 games each vs v3-v5): DFS_EATS+ESCAPE_SPLIT 0.567 [0.503,0.628] ACCEPTED. DFS_EATS alone 0.537 (Trauma 1/24). RAM_GUARD 0.531 (Default/QoS/Autarky .75-.79, Devil/Trophy .25 -> per-map). SPLIT_NEEDS_EXIT 0.446 rejected.
+- 06:13 UTC: g2 (RAM_GUARD except Devil/Trophy + per-map KING_DECLARE seeds) = 0.650 [0.588,0.708] vs pool. Submitted v6.
+- 06:19 UTC: rejected FEED_MAX_LEN=5 (0.525, Portals .21) and combat-map SS=500/no-feed on Trophy/Devil/QoS (0.549 on those maps vs ~0.53 baseline, not significant).
+- 06:21 UTC: user reported CPU at 98%/heat. Stopped http.server. New rule: one test batch at a time, --jobs 8 max.
+- 06:27 UTC: KING_SURVIVE_DEPTH=24 -> 0.50 vs v6 (no gain), rejected.
+- 06:30 UTC: KING_PORTAL_PENALTY=40 -> 0.49 vs v6, rejected.
+- 06:35 UTC: CROWD_PENALTY=3 -> 0.49 vs v6 overall but QoS/Portals/Trauma/Schooltime up, Devil/Dilemma down -> testing per-map.
+- 06:40 UTC: per-map crowd=3 on QoS/Portals/Trauma/Schooltime: 0.674 vs baseline 0.597 same seeds (144 games). Submitted v7.
+- 06:47 UTC: Slithery KS=150 (0.42) and CR=3 (0.53) vs baseline 0.56 -> both rejected. PAUSED at user request (fan noise). ch4 challenge launcher still running (network only).
+- 15:52 UTC: RESUMED. v7 took us 1570->1703 (rank 167->85). v7 ranked 52/70, unranked 53/72. Weak: Schooltime 6/13, QoS 7/13, Trauma ranked 2/5, Dilemma 10/15. Launched ch5 vs ranks 60-72; agent writing notes/10. Searching Schooltime params.
+- 16:00 UTC: CPU check at 8 jobs (big maps): user avg 45% / sys 34%, 1600 procs max, no throttling. Default stays 6 jobs.
+- 16:23 UTC: notes/10 fixes tested on their maps vs baseline (same seeds 13000, 36/map):
+  T1 PD keep long dragon (KEEP 8): 0/36 -> REJECT (breaks PD badly).
+  T2 Trauma consolidate: 0.64 vs 0.61 -> not significant.
+  T3 KING_RAM_AVOID=10: 0.55 vs ~0.52 on 5 big maps (QoS +9, Trauma +8, Portals -8) -> not significant.
+  T4 ESCAPE_HOT_ONLY: 0.565 vs ~0.54 -> not significant. All flags left OFF; v7 stays live.
+- notes/11 (top-10 kings) done. NEXT PLAN: king rework per its recipe: 2 king candidates skip split-at-4 from a per-map seed round (Sch 200, Sli 170, Por 250, QoS 330); king only U-turn-splits; king keeps >=4 from enemy heads and near fast-spawn tiles; feeders len 2-3 go 1-2 tiles AHEAD of king and reverse into neck, max 1 death / 2 rounds, none with enemy head within 4; merges from r420. Validate with challenges vs ranks 60-75 on Schooltime/Portals/Slithery/QoS (self-play can't measure king races).
+- 16:25 UTC: PAUSED, user closing laptop. No local processes running; v7 live on ladder.
+- 17:30 UTC: RESUMED. Building king rework (KING_V2) per notes/11.
+- 17:42 UTC: KING_V2 (loose feeding, reserve 4 big maps): big 4 maps 0.569 vs base 0.500; other 6 0.560 vs 0.528. Submitted v8.
+- 17:43 UTC: v8 active. Launched 60 big-map challenges (Sch/Por/Sli/QoS) vs 15 teams ranks 45-72 (replays/ch6). v7 baseline vs ch5 teams on these maps: 7/20.
+- 17:49 UTC: v8 big-map challenges 34/60: Slithery 12/15 (king 42 v 28), Portals 11/15 (27 v 19), QoS 8/15, Schooltime 3/15 (25 v 39.5; our big dragons die 3-6x/game, rams + bodies near portals). Next: Schooltime-only king portal penalty + keep 5.
+- 17:52 UTC: submitted v9 (Schooltime king portal 100 + keep 5; local sch 0.53 vs 0.44). Queued Schooltime-only challenges vs 30 teams ranks 40-110 (ch7).
+- 18:21 UTC: Matcha Latte G3 (Schooltime) post-mortem: our last dragon (king len 15, ahead 15 v 7) stepped next to an enemy len-4 TAIL; enemy split, child head = old tail, rammed us same round -> eliminated at r482. Fixing: tails of splittable enemies = threats; extra caution when units<=3.
+- 18:41 UTC: TAIL_THREAT=2 (kings/last-3 only) 0.537 vs base 0.508; all-dragons version 0.433 (too timid). LAST_FEW_MULT=4 neutral locally. Submitted v10.
+- 18:50 UTC: Schooltime-only challenges with v10: 8/30 (v8 3/15). King eats same as theirs r300+ (~16-17); but our 12+ dragons die 6.8/game vs 1.8: 73 rams (64 from adjacent enemy), ~42 trapped self-hits (0 exits), ~21 deliberate merges; 80% in maze rows 8-31. Trying KING_CORRIDOR_PENALTY.
+- 19:00 UTC: corridor penalty neutral/neg (0.50/0.46) -> off. Added per-map module hooks (bot/maps/<map>.hpp: <map>Override(), <map>Score(t,d)); variants/v10h = v10 + empty hooks (baseline). Starting per-map workflow.
+- 2026-09-27T19:58Z: [per-map] Schooltime: integrated SCH_RUSH=1 SCH_RUSH_INNER=1 (33.0/40 = 0.825 [0.680, 0.913] vs v8,v10h, seeds 10/base 21500; baseline 21.0/40 = 0.525 [0.375, 0.671]; guard devil+trophy vs v10h 6/12 = 0.50).
+- 2026-09-27 21:37 UTC: [per-map] Portals: integrated -DPOR_PULL=1 -DPOR_EXIT=1 -DPOR_W=16 as defaults in bot/maps/portals.hpp (vs pool v8+v10h, portals, 10 seeds, seed-base 22500: 24.0/40 = 0.600 95% [0.446, 0.737] vs no-flag baseline 20.0/40 = 0.500 [0.352, 0.648]; guard devil+trophy vs v10h 6/12 = 0.50; old module archived as archive/portals.hpp.bot.20260927T213659Z).
+- 21:44 UTC: submitted v11 (v10 + Schooltime + Portals map modules).
+- 2026-09-28T00:28Z: [per-map] Trauma: integrated TRA_PENKING=1 TRA_FACTORY=1 TRA_PENFEED=1 TRA_PF_START=150 TRA_KPULL_ALL=0 PM_TRA_KS=450 (wip_trauma vs v8,v10h, 10 seeds, base 23500: 38/40=0.950 [0.835,0.986] vs baseline 20/40=0.500; guard devil,trophy vs v10h 6/12=0.50).
+- 00:30 UTC: submitted v12 (v11 + Trauma module).
+- 2026-09-28T01:09Z: [per-map] Queen Of Spades: integrated -DQOS_NECK=1 -DQOS_ONEWAY=1 -DQOS_SPACING=4 -DQOS_GATE=1 (40.0/40 = 1.000, 95% CI [0.912, 1.000] vs pool v8,v10h on queen_of_spades, 10 seeds base 24500; baseline no-flags 20/40 = 0.500 [0.352, 0.648]; regression devil+trophy vs v10h 6/12 = 0.50).
+- 01:27 UTC: submitted v13 (v12 + QoS module).
+- 01:34 UTC: v13 challenges (60): QoS 14/15, Trauma 13/15, Portals 13/15, Schooltime 2/15; vs rank25-30 16/24, vs rank38-84 26/36. Schooltime module does NOT transfer to ladder.
+- 01:35 UTC: Schooltime ladder diagnosis (ch9): 2 patterns - (1) we win the yard race (58-64 units r100) but die en masse inside it (HitSelf 66-132, own-body 32-57/game), lose 3/5 on longest 34-51 vs 56-62; (2) enemy holds yard (10 games): our units r300 5-15 vs 34-64, lose all. TODO Schooltime pass 2: contest yard, cap/space our dragons inside, fallback economy. Use replays/ch9 as evidence (local self-play misleads here).
+- 03:53 UTC: per-map workflow DONE: 4/5 integrated (Sch, Por, Tra, QoS). Slithery SLI_SS=420 refuted on fresh seeds (0.50 vs 0.525) -> not integrated. Reading Discord #strategy (read-only).
+- 04:03 UTC: Discord #strategy read (notes/12). Dev: hardcoding won't help sprint/qual -> new maps likely. Priority: generic (unknown-map) strength. Measuring NO_KNOWN_MAPS baseline.
+- 04:13 UTC: unknown-map learning: LEARN_PORTALS alone 0.45, LEARN_GAPS alone 0.50, both 0.45 vs v13-unknown (120 games each) -> kept in code, default OFF. User: work additively (keep old algorithms, add new files/functions).
+- 04:20 UTC: Loong blog studied (notes/13). Generated 40 test (maps/gen) + 40 held-out (maps/genhold) unseen maps via tools/mapgen.py. Added flags UNK_PORTAL_ESCAPE, UNK_BLIND_PEN (default off); waiting for Schooltime agent's tests before running unseen-map tests.
+- 05:03 UTC: created codex-battlecode/ sandbox (copy of v13 + AGENTS.md rules/brief) for an independent Codex researcher; read-only outside its folder.
