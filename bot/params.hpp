@@ -444,3 +444,21 @@
 #ifndef INFER_SYM_MIN
 #define INFER_SYM_MIN 4
 #endif
+// Sprint along pearls that an enemy head could reach first.
+#ifndef EAT_SPRINT
+#define EAT_SPRINT 0
+#endif
+#ifndef EAT_SPRINT_MAX
+#define EAT_SPRINT_MAX 3
+#endif
+// A pearl counts as contested if an enemy head is within this many tiles.
+#ifndef EAT_SPRINT_CONTEST
+#define EAT_SPRINT_CONTEST 3
+#endif
+#ifndef EAT_SPRINT_STRICT
+#define EAT_SPRINT_STRICT 0
+#endif
+// Penalty for a small dragon (<6) moving where an enemy head could reach it.
+#ifndef SMALL_THREAT_PEN
+#define SMALL_THREAT_PEN 12.0
+#endif

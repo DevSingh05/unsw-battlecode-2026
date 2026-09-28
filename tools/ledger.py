@@ -20,6 +20,8 @@ def main():
     ap.add_argument("--since", default="")
     ap.add_argument("--download", default="")
     a = ap.parse_args()
+    if a.download:
+        pathlib.Path(a.download).mkdir(parents=True, exist_ok=True)
     rows = []
     for b in api.get("/api/v1/battles?limit=200"):
         if b["at"] < a.since or b["outcome"] in ("queued", "live"):
@@ -40,6 +42,7 @@ def main():
                         api.download_replay(g["id"], p)
                     except Exception as e:  # noqa: BLE001
                         print("replay fail", g["id"], e)
+    pathlib.Path(a.download or ".").mkdir(parents=True, exist_ok=True)
     out = pathlib.Path(a.download or ".") / "ledger.json"
     out.write_text(json.dumps(rows, indent=1))
     for kind in (True, False):

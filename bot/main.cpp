@@ -13,6 +13,7 @@
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
+#include <functional>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -1629,6 +1630,89 @@ struct Bot
         }
     }
 
+    // Sprint 2-3 steps along pearls when an enemy head could take them first.
+    // Each extra step costs a segment, but a step onto a pearl pays it back, so a
+    // run over pearls is free (or better) and denies them to the enemy.
+    bool tryEatSprint()
+    {
+        if (myLen < 3 || feedPhase() && iAmKing() || threatAt[myHead] > 0)
+            return false;
+        auto pearlAt = [&](int t) { return t >= 0 && visible[t] && w.pearlMem[t]; };
+        auto enemyNear = [&](int t) {
+            for (auto& o : segs)
+                if (o.head && o.team != w.myTeam && wrapDist(o.tile, t) <= EAT_SPRINT_CONTEST)
+                    return true;
+            return false;
+        };
+        auto inBody = [&](int t, int skipTail) {
+            int L = static_cast<int>(trail.size());
+            for (int i = 0; i < L - skipTail; i++)
+                if (trail[i] == t)
+                    return true;
+            return false;
+        };
+        double bestVal = 0.0;
+        std::string bestCmd;
+        std::vector<int> bestPath;
+        int maxSteps = std::min(EAT_SPRINT_MAX, myLen - 1);
+        // depth-first over 2..maxSteps step paths
+        std::vector<int> path;
+        std::vector<int> dirs;
+        std::function<void(int, int, int)> go = [&](int at, int eaten, int contested) {
+            int steps = static_cast<int>(path.size());
+            if (steps >= 2)
+            {
+                // net length change: +eaten - (steps-1); worth it only if it grabs contested pearls
+                int net = eaten - (steps - 1);
+                double val = net + 1.5 * contested;
+                int landing = path.back();
+                int exits = 0;
+                for (int d = 0; d < 4; d++)
+                {
+                    int v = step(landing, d);
+                    if (v >= 0 && freeOther[v] <= 1 && std::find(path.begin(), path.end(), v) == path.end() && !inBody(v, steps))
+                        exits++;
+                }
+                if (exits >= 2 && threatAt[landing] == 0 && net >= 0 && contested > 0 && val > bestVal)
+                {
+                    bestVal = val;
+                    bestPath = path;
+                    bestCmd = "MOVE ";
+                    for (int d : dirs)
+                        bestCmd += DIRC[d];
+                }
+            }
+            if (steps >= maxSteps)
+                return;
+            for (int d = 0; d < 4; d++)
+            {
+                int v = step(at, d);
+                if (v < 0 || freeOther[v] > 1 || occId[v] >= 0 && occId[v] != w.myId)
+                    continue;
+                // our own body before this step: each earlier non-eating step moved the
+                // tail once, and each paid step (2nd onwards) moved it once more; the
+                // engine checks the destination before this step's tail moves
+                int tailFreed = (steps - eaten) + std::max(0, steps - 1);
+                if (inBody(v, std::max(0, tailFreed)) || std::find(path.begin(), path.end(), v) != path.end())
+                    continue;
+                bool p = pearlAt(v);
+                if ((steps >= 1 || EAT_SPRINT_STRICT) && !p)
+                    continue; // only extend a sprint over pearls (strict: every step is a pearl)
+                path.push_back(v);
+                dirs.push_back(d);
+                go(v, eaten + (p ? 1 : 0), contested + (p && enemyNear(v) ? 1 : 0));
+                path.pop_back();
+                dirs.pop_back();
+            }
+        };
+        go(myHead, 0, 0);
+        if (bestCmd.empty())
+            return false;
+        out += bestCmd + "\n";
+        pending = bestPath;
+        return true;
+    }
+
     // Try a head-on ram at distance 1 or 2. Returns true if we emitted it.
     bool tryRam()
     {
@@ -1826,6 +1910,10 @@ struct Bot
             }
         }
 
+        // ---- sprint to grab contested pearls before an enemy can (EAT_SPRINT)
+        if (EAT_SPRINT && tryEatSprint())
+            return;
+
         // ---- splitting
         bool threatened = threatAt[myHead] > 0 || (PORTAL_NO_SPLIT && portalExit[myHead]);
         bool bigLate = RP.kingDeclare && round >= RP.kingSeedRound && myLen >= KING_MIN_LEN;
@@ -1877,7 +1965,7 @@ struct Bot
                 score -= 150.0 + 40.0 * (wantDepth - depth);
             int threat = threatAt[t];
             if (threat > 0)
-                score -= (myLen >= 6 ? 25.0 + 4.0 * myLen : 12.0) * (units <= LAST_FEW_UNITS ? LAST_FEW_MULT : 1.0);
+                score -= (myLen >= 6 ? 25.0 + 4.0 * myLen : SMALL_THREAT_PEN) * (units <= LAST_FEW_UNITS ? LAST_FEW_MULT : 1.0);
             score += mapScore(t, d);
             if (KING_CORRIDOR_PENALTY > 0 && myLen >= 10)
             {
