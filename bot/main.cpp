@@ -1468,8 +1468,8 @@ struct Bot
             int tile, rnd;
             if (!PORTAL_WARN || !decodeWarn(m, tile, rnd))
                 continue;
-            if (PORTAL_WARN_MEMO && lastWarnLen > 0 && rnd + lastWarnLen > round)
-                warnMem.push_back({tile, rnd + lastWarnLen});
+            if (PORTAL_WARN_MEMO && lastWarnLen > 0 && rnd + lastWarnLen + PORTAL_WARN_MEMO_SLACK > round)
+                warnMem.push_back({tile, rnd + lastWarnLen + PORTAL_WARN_MEMO_SLACK});
             if (round - rnd > 1)
                 continue;
             learnFrame(lastFrameCode);
@@ -1497,6 +1497,40 @@ struct Bot
                     freeT[tile] = std::max(freeT[tile], until - round + 1);
                     freeOther[tile] = std::max(freeOther[tile], until - round + 1);
                 }
+        }
+        if (PORTAL_ECHO_GUARD && probeMask && probeRound == round - 1 && probeTile == myHead)
+        {
+            int heads = in.echoes[2] + in.echoes[4];  // ally_head + enemy_head
+            int bodies = in.echoes[1] + in.echoes[3]; // ally (incl. own) + enemy bodies
+            if (probeRays > __builtin_popcount(static_cast<unsigned>(probeMask)))
+                bodies = 0; // king/relay rays in other directions pollute the body count
+            for (int d = 0; d < 4; d++)
+            {
+                if (!((probeMask >> d) & 1))
+                    continue;
+                int x = step(myHead, d);
+                if (x < 0 || x == w.plainStep(myHead, d) || w.lastSeen[x] == round)
+                    continue;
+                bool shortPath = false; // the ray dies on kelp soon after the exit
+                int y = x;
+                for (int k = 0; k <= PORTAL_ECHO_RANGE; k++)
+                {
+                    y = step(y, d);
+                    if (y < 0)
+                    {
+                        shortPath = true;
+                        break;
+                    }
+                }
+                if (heads > 0 || (PORTAL_ECHO_GUARD >= 2 && bodies > 0 && shortPath))
+                {
+                    occId[x] = 1 << 20;
+                    occTeam[x] = w.myTeam;
+                    occHead[x] = heads > 0;
+                    freeT[x] = std::max(freeT[x], 2);
+                    freeOther[x] = std::max(freeOther[x], 2);
+                }
+            }
         }
         haveRelay = false;
         int bestHopRelay = 99;
@@ -1639,9 +1673,24 @@ struct Bot
         for (int d = 0; d < 4; d++)
             if (warnDirs[d])
                 out += std::string("SONAR ") + DIRC[d] + " " + std::to_string(warn) + "\n";
+        if (PORTAL_ECHO_GUARD)
+        {
+            // remember what our warn rays probed: next turn's echo counts tell us
+            // whether someone was standing on (or just past) the exit (notes/17)
+            probeMask = 0;
+            for (int d = 0; d < 4; d++)
+                if (warnDirs[d])
+                    probeMask |= 1 << d;
+            probeRays = 0;
+            for (size_t q = out.find("SONAR "); q != std::string::npos; q = out.find("SONAR ", q + 1))
+                probeRays++;
+            probeTile = pending.empty() ? myHead : pending.back();
+            probeRound = round;
+        }
         warnDirs[0] = warnDirs[1] = warnDirs[2] = warnDirs[3] = false;
     }
     bool warnDirs[4] = {false, false, false, false};
+    int probeTile = -1, probeRound = -1000, probeMask = 0, probeRays = 0;
 
     // Tile a feeder should die on: a couple of steps in front of the king.
     int feedTarget() const
@@ -1667,6 +1716,10 @@ struct Bot
 
     bool shouldFeed() const
     {
+        // FEED_FRESH: only feed a king we heard from recently (a dead king's remembered
+        // length pulled our real longest dragon into suicide, e.g. L21 at r435)
+        if (FEED_FRESH > 0 && (kingId < 0 || round - kingRound > FEED_FRESH || kingLen < myLen + 2))
+            return false;
         if (KING_V2 && RP.kingDeclare)
             return FEED_ENABLE && feedPhase() && kingId >= 0 && kingLen >= myLen + 2 && !iAmKing() &&
                    units > RP.feedReserve &&

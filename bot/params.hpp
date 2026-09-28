@@ -528,3 +528,20 @@
 #ifndef PM_POR_KPORTAL
 #define PM_POR_KPORTAL 0.0
 #endif
+// ---- portal echo guard (notes/17): our warn ray from a mouth tile probes the exit for
+// free; 1 = an echoed head blocks the exit next turn, 2 = also echoed bodies when the
+// ray's path past the exit ends on kelp within PORTAL_ECHO_RANGE tiles.
+#ifndef PORTAL_ECHO_GUARD
+#define PORTAL_ECHO_GUARD 2
+#endif
+#ifndef PORTAL_ECHO_RANGE
+#define PORTAL_ECHO_RANGE 3
+#endif
+// keep a remembered warning this many extra rounds (off-by-one for lower-id crossers)
+#ifndef PORTAL_WARN_MEMO_SLACK
+#define PORTAL_WARN_MEMO_SLACK 1
+#endif
+// ---- feed only a king heard from within this many rounds (0 = off)
+#ifndef FEED_FRESH
+#define FEED_FRESH 0
+#endif
