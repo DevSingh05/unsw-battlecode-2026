@@ -2162,7 +2162,8 @@ struct Bot
             }
         }
         if (!(RP.kingDeclare && kingSelf) && !bigLate && (!SPLIT_NEEDS_EXIT || tailHasExit(2)) && myLen >= SPLIT_LEN && myLen >= 4 && units < w.unitLimit && units < SPLIT_MAX_UNITS &&
-            round < RP.splitStopRound && !threatened)
+            (round < RP.splitStopRound || (LATE_SPLIT_ROUND > 0 && round < LATE_SPLIT_ROUND && myLen <= LATE_SPLIT_MAXLEN)) &&
+            !threatened)
         {
             int k = SPLIT_CHILD > 0 ? std::min(SPLIT_CHILD, myLen - 2) : myLen / 2;
             out += "SPLIT " + std::to_string(k) + "\n";

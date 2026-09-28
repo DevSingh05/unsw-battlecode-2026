@@ -545,3 +545,11 @@
 #ifndef FEED_FRESH
 #define FEED_FRESH 0
 #endif
+// ---- late splitting (notes/15 #2, notes/16 #3): top teams keep doing 4->2+2 splits
+// until ~r450; small dragons (len <= LATE_SPLIT_MAXLEN) keep splitting until this round (0 = off)
+#ifndef LATE_SPLIT_ROUND
+#define LATE_SPLIT_ROUND 450
+#endif
+#ifndef LATE_SPLIT_MAXLEN
+#define LATE_SPLIT_MAXLEN 5
+#endif
