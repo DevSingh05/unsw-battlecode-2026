@@ -553,3 +553,14 @@
 #ifndef LATE_SPLIT_MAXLEN
 #define LATE_SPLIT_MAXLEN 5
 #endif
+// ---- big-dragon escape when every 1-step move is threatened (notes/18)
+#ifndef KING_ESCAPE
+#define KING_ESCAPE 1
+#endif
+#ifndef ESC_SPRINT_COST
+#define ESC_SPRINT_COST 15.0
+#endif
+// ---- enemy with its tail out of view: assume at least this reach vs our big dragons (0 = off)
+#ifndef THREAT_TAIL_UNKNOWN
+#define THREAT_TAIL_UNKNOWN 2
+#endif

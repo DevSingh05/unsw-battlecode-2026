@@ -1742,7 +1742,25 @@ struct Bot
             if (!s.head || s.team == w.myTeam)
                 continue;
             int maxReach = myLen >= KING_MIN_LEN ? KING_THREAT_REACH : MAX_THREAT_REACH;
-            int reach = std::min(std::max(1, enemyVisibleLength(s.id) - 1), maxReach);
+            int reach = std::max(1, enemyVisibleLength(s.id) - 1);
+            if (THREAT_TAIL_UNKNOWN > 0 && myLen >= KING_MIN_LEN && reach < THREAT_TAIL_UNKNOWN)
+            {
+                // its tail is out of view: it may be longer (and sprint further) than it looks
+                bool tailSeen = false;
+                for (int j = 0; j < static_cast<int>(segs.size()) && !tailSeen; j++)
+                {
+                    if (segs[j].id != s.id || segs[j].head || !tailIsVisibleTail(j))
+                        continue;
+                    bool hasPrev = false; // some segment of it steps into j: j isn't the tail
+                    for (auto& o : segs)
+                        if (o.id == s.id && !o.head && step(o.tile, o.facing) == segs[j].tile)
+                            hasPrev = true;
+                    tailSeen = !hasPrev;
+                }
+                if (!tailSeen)
+                    reach = THREAT_TAIL_UNKNOWN;
+            }
+            reach = std::min(reach, maxReach);
             tq.clear();
             tq.push_back(s.tile);
             threatDist[s.tile] = 0;
@@ -2001,6 +2019,107 @@ struct Bot
         out += bestCmd + "\n";
         pending.clear();
         return true;
+    }
+
+    // KING_ESCAPE (notes/18): a big dragon whose every 1-step move is inside an enemy
+    // head's reach sprints 2 (or 3) steps to a threat-free tile, or reverse-splits.
+    bool tryKingEscape(int bestD)
+    {
+        if (myLen < KING_MIN_LEN || bestD < 0 || threatAt[step(myHead, bestD)] == 0)
+            return false;
+        for (int d = 0; d < 4; d++)
+        {
+            int t = step(myHead, d);
+            if (t >= 0 && !(occId[t] >= 0 && freeT[t] > 1) && threatAt[t] == 0)
+                return false; // a plain step is safe after all
+        }
+        auto ownIdx = [&](int t) {
+            for (int i = 0; i < static_cast<int>(trail.size()); i++)
+                if (trail[i] == t)
+                    return i;
+            return -1;
+        };
+        std::string bestSeq;
+        std::vector<int> bestPath;
+        double bs = -1e18;
+        for (int n = 2; n <= 3 && bestSeq.empty(); n++)
+        {
+            if (myLen - (n - 1) < 2)
+                break;
+            for (int code = 0; code < (n == 2 ? 16 : 64); code++)
+            {
+                int dirs[3] = {code & 3, (code >> 2) & 3, (code >> 4) & 3};
+                int cur = myHead;
+                bool ok = true;
+                std::vector<int> path;
+                for (int k = 0; k < n && ok; k++)
+                {
+                    int t = step(cur, dirs[k]);
+                    if (t < 0 || t == myHead)
+                    {
+                        ok = false;
+                        break;
+                    }
+                    for (int q : path)
+                        if (q == t)
+                            ok = false;
+                    int oi = ownIdx(t);
+                    if (oi >= 0)
+                    {
+                        if (oi < myLen - (k + 1)) // still part of our body at this step
+                            ok = false;
+                    }
+                    else if (occId[t] >= 0 || (!visible[t] && t != w.plainStep(cur, dirs[k])))
+                        ok = false; // other dragons don't move during our turn; no blind crossings
+                    path.push_back(t);
+                    cur = t;
+                }
+                if (!ok || threatAt[cur] > 0)
+                    continue;
+                double pv;
+                int area;
+                bfsFrom(cur, pv, area, 3 * myLen + 30);
+                int dep = surviveDepth(cur, SURVIVE_DEPTH);
+                if (area < myLen - (n - 1) || dep < SURVIVE_DEPTH / 2)
+                    continue;
+                double sc = 10.0 * pv + dep - ESC_SPRINT_COST * (n - 1);
+                if (sc > bs)
+                {
+                    bs = sc;
+                    bestSeq.clear();
+                    for (int k = 0; k < n; k++)
+                        bestSeq += DIRC[dirs[k]];
+                    bestPath = path;
+                }
+            }
+        }
+        if (!bestSeq.empty())
+        {
+            out += "MOVE " + bestSeq + "\n";
+            pending = bestPath;
+            if (dbg)
+                std::fprintf(dbg, "  -> king escape sprint %s\n", bestSeq.c_str());
+            return true;
+        }
+        int tail = static_cast<int>(trail.size()) >= myLen ? trail[myLen - 1] : -1;
+        if (tail >= 0 && units < w.unitLimit && tailHasExit(myLen - 2) && threatAt[tail] == 0)
+        {
+            bool enemyNearTail = false;
+            for (auto& o : segs)
+                if (o.head && o.team != w.myTeam && wrapDist(o.tile, tail) <= 2)
+                    enemyNearTail = true;
+            if (!enemyNearTail)
+            {
+                out += "SPLIT " + std::to_string(myLen - 2) + "\n";
+                pending.clear();
+                pendingSplit = true;
+                kingSelf = false;
+                if (dbg)
+                    std::fprintf(dbg, "  -> king escape reverse split\n");
+                return true;
+            }
+        }
+        return false;
     }
 
     // Can a split-off child whose head is our current tail get away?
@@ -2282,6 +2401,9 @@ struct Bot
                 bestDepth = depth;
             }
         }
+
+        if (KING_ESCAPE && tryKingEscape(bestD))
+            return;
 
         // ---- trapped: reverse-split so the bulk of the body escapes backwards
         bool trapped = bestD < 0 || (bestDepth < 4 && best < -100);
