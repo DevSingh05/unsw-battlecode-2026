@@ -114,7 +114,7 @@ double queenofspadesScore(int t, int d)
             s -= QOS_GATE_PEN;
 #endif
 #if QOS_OPENER
-        if (entering && round < QOS_OPENER && w.myId == (w.myTeam == 'A' ? 0 : 1))
+        if (entering && round < QOS_OPENER && w.myId == (frameTeam() == 'A' ? 0 : 1))
             s -= 200.0;
 #endif
         (void)entering;

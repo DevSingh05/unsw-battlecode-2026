@@ -264,6 +264,9 @@ struct World
     int sym = -1; // 0 none, 1 x, 2 y, 3 xy, -1 unknown
     const KnownMap* known = nullptr;
     std::vector<int> candidates; // indices into KNOWN_MAPS still consistent
+    // FRAME_FIX: did the server swap the teams' start positions vs the map file?
+    int swapState = -1;     // -1 unknown, 0 as in the file, 1 swapped
+    bool swapKnown = false; // learned from our own start or an ally's sonar (not a guess)
 
     std::vector<int> nxt;        // N*4, -1 blocked
     std::vector<int> gmin, gmax; // gap range, gmax 0 = never spawns, -1 unknown
@@ -569,8 +572,13 @@ struct World
                 continue;
             const int16_t* d = m.dragons + myId * 4;
             char team = d[0] == 0 ? 'A' : 'B';
-            if (team == myTeam && d[2] == headX && d[3] == headY)
+            if ((team == myTeam || FRAME_FIX) && d[2] == headX && d[3] == headY)
             {
+                if (FRAME_FIX)
+                {
+                    swapState = team != myTeam;
+                    swapKnown = true;
+                }
                 // Prefer this candidate by moving it to the front.
                 std::vector<int> keep{c};
                 for (int o : candidates)
@@ -742,6 +750,8 @@ struct Bot
         if (round == 0 || (w.known == nullptr && !w.candidates.empty() && w.lastSeen[myHead] < 0))
             w.identifyByStart(hx, hy);
         w.observeEdges(in, hx, hy);
+        if (FRAME_FIX && w.swapState < 0 && w.known)
+            guessFrame();
 
         filterByCountdowns();
         if (UNK_SIZE_PARAMS && !w.known && !unkParamsSet)
@@ -1315,21 +1325,67 @@ struct Bot
     }
     static constexpr uint64_t SECRET = 0x5d1c0ffee15b00b5ULL;
 
+    // ---- FRAME_FIX: which side of the map file are we? ("A" = the file's team 0 starts)
+    char frameTeam() const
+    {
+        if (!FRAME_FIX || w.swapState != 1)
+            return w.myTeam;
+        return w.myTeam == 'A' ? 'B' : 'A';
+    }
+    // Split children never see the start: guess from the nearest start position
+    // (children are born near home early on); an ally's sonar overrides the guess.
+    void guessFrame()
+    {
+        const KnownMap* m = w.known;
+        if (myHead < 0 || !m->dragons || m->dragonCount <= 0)
+            return;
+        int best = 1 << 30, bestTeam = -1;
+        for (int i = 0; i < m->dragonCount; i++)
+        {
+            const int16_t* d = m->dragons + i * 4;
+            int dd = wrapDist(myHead, w.idx(d[2], d[3]));
+            if (dd < best)
+                best = dd, bestTeam = d[0];
+        }
+        if (bestTeam >= 0)
+            w.swapState = (bestTeam == 0 ? 'A' : 'B') != w.myTeam;
+    }
+    // Salt mixed into our sonar checksums: 0 with FRAME_FIX off (v16-compatible);
+    // otherwise 1 + (0 as file / 1 swapped / 2 unknown) so receivers learn the frame.
+    uint64_t frameSalt(int fr) const { return FRAME_FIX ? static_cast<uint64_t>(fr + 1) << 58 : 0; }
+    int myFrameCode() const { return w.swapKnown ? w.swapState : 2; }
+    int lastFrameCode = 2; // frame code of the last message decoded
+    void learnFrame(int fr)
+    {
+        if (FRAME_FIX && fr < 2 && !w.swapKnown)
+        {
+            w.swapState = fr;
+            w.swapKnown = true;
+        }
+    }
+
     uint64_t encodeKing(int tile, int len, int id, int hop, int dir, int rnd) const
     {
         uint64_t x = static_cast<uint64_t>(tile % w.W) | (static_cast<uint64_t>(tile / w.W) << 6) |
                      (static_cast<uint64_t>(std::min(len, 255)) << 12) | (static_cast<uint64_t>(id & 1023) << 20) |
                      (static_cast<uint64_t>(hop & 3) << 30) | (static_cast<uint64_t>(dir & 3) << 32) |
                      (static_cast<uint64_t>(rnd & 511) << 34);
-        uint64_t check = mix(x ^ SECRET ^ (static_cast<uint64_t>(w.myTeam) << 50)) & ((1ULL << 21) - 1);
+        uint64_t check =
+            mix(x ^ SECRET ^ (static_cast<uint64_t>(w.myTeam) << 50) ^ frameSalt(myFrameCode())) & ((1ULL << 21) - 1);
         return x | (check << 43);
     }
 
-    bool decodeKing(uint64_t m, int& tile, int& len, int& id, int& hop, int& dir, int& rnd) const
+    bool decodeKing(uint64_t m, int& tile, int& len, int& id, int& hop, int& dir, int& rnd)
     {
         uint64_t x = m & ((1ULL << 43) - 1);
-        uint64_t check = mix(x ^ SECRET ^ (static_cast<uint64_t>(w.myTeam) << 50)) & ((1ULL << 21) - 1);
-        if ((m >> 43) != check)
+        bool ok = false;
+        for (int fr = 0; fr < (FRAME_FIX ? 3 : 1) && !ok; fr++)
+        {
+            uint64_t check = mix(x ^ SECRET ^ (static_cast<uint64_t>(w.myTeam) << 50) ^ frameSalt(fr)) & ((1ULL << 21) - 1);
+            if ((m >> 43) == check)
+                ok = true, lastFrameCode = fr;
+        }
+        if (!ok)
             return false;
         int px = static_cast<int>(x & 63), py = static_cast<int>((x >> 6) & 63);
         if (px >= w.W || py >= w.H)
@@ -1352,14 +1408,21 @@ struct Bot
     {
         uint64_t x = static_cast<uint64_t>(tile % w.W) | (static_cast<uint64_t>(tile / w.W) << 6) |
                      (static_cast<uint64_t>(rnd & 511) << 12);
-        uint64_t check = mix(x ^ WARN_SECRET ^ (static_cast<uint64_t>(w.myTeam) << 50)) & ((1ULL << 43) - 1);
+        uint64_t check =
+            mix(x ^ WARN_SECRET ^ (static_cast<uint64_t>(w.myTeam) << 50) ^ frameSalt(myFrameCode())) & ((1ULL << 43) - 1);
         return x | (check << 21);
     }
-    bool decodeWarn(uint64_t m, int& tile, int& rnd) const
+    bool decodeWarn(uint64_t m, int& tile, int& rnd)
     {
         uint64_t x = m & ((1ULL << 21) - 1);
-        uint64_t check = mix(x ^ WARN_SECRET ^ (static_cast<uint64_t>(w.myTeam) << 50)) & ((1ULL << 43) - 1);
-        if ((m >> 21) != check)
+        bool ok = false;
+        for (int fr = 0; fr < (FRAME_FIX ? 3 : 1) && !ok; fr++)
+        {
+            uint64_t check = mix(x ^ WARN_SECRET ^ (static_cast<uint64_t>(w.myTeam) << 50) ^ frameSalt(fr)) & ((1ULL << 43) - 1);
+            if ((m >> 21) == check)
+                ok = true, lastFrameCode = fr;
+        }
+        if (!ok)
             return false;
         int px = static_cast<int>(x & 63), py = static_cast<int>((x >> 6) & 63);
         if (px >= w.W || py >= w.H)
@@ -1377,6 +1440,7 @@ struct Bot
             int tile, rnd;
             if (!PORTAL_WARN || !decodeWarn(m, tile, rnd) || round - rnd > 1)
                 continue;
+            learnFrame(lastFrameCode);
             if (occId[tile] < 0)
             {
                 // treat the exit as holding an ally head this turn
@@ -1394,6 +1458,7 @@ struct Bot
             int tile, len, id, hop, dir, rnd;
             if (!decodeKing(m, tile, len, id, hop, dir, rnd))
                 continue;
+            learnFrame(lastFrameCode);
             if (round - rnd > 4)
                 continue;
             if (id == (w.myId & 1023))

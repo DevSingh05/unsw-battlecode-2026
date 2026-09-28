@@ -503,3 +503,9 @@
 #ifndef PORTAL_COST_C
 #define PORTAL_COST_C 10.0
 #endif
+// ---- start-layout swap (notes/15): the server swaps which team starts where in ~half
+// of games. 1: identify our side by start POSITION (not team letter), share it with
+// split children through the sonar checksum, and let map modules use it.
+#ifndef FRAME_FIX
+#define FRAME_FIX 1
+#endif
