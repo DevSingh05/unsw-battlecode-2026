@@ -302,7 +302,7 @@
 #endif
 // Extra penalty for a long dragon (10+) stepping blind through a portal.
 #ifndef KING_PORTAL_PENALTY
-#define KING_PORTAL_PENALTY 0.0
+#define KING_PORTAL_PENALTY 100.0
 #endif
 // Penalty per teammate head within 2 tiles of where we'd move (spread the swarm).
 #ifndef CROWD_PENALTY
@@ -518,4 +518,13 @@
 // crossing deaths into an ally body hit an ally that had just left the exit.
 #ifndef PORTAL_WARN_MEMO
 #define PORTAL_WARN_MEMO 1
+#endif
+// ---- trapped split with the tail out of view (game 517220 r398: a L10 child traded
+// itself for an enemy L2 head instead of splitting).
+#ifndef TRAP_SPLIT_BLIND
+#define TRAP_SPLIT_BLIND 1
+#endif
+// Portals: king portal penalty override (negative = keep the global KING_PORTAL_PENALTY)
+#ifndef PM_POR_KPORTAL
+#define PM_POR_KPORTAL 0.0
 #endif

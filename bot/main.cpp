@@ -105,6 +105,8 @@ void applyMapParams(const char* name)
                 RP.kingKeepExtra = PM_SCH_KKEEP;
         }
     }
+    if (n == "Portals" && PM_POR_KPORTAL >= 0)
+        RP.kingPortal = PM_POR_KPORTAL; // the Portals module routes the king through portals on purpose
     if (n == "Prisoners Dilemma" && PM_DIL_KEEP >= 0)
         RP.keepLen = PM_DIL_KEEP;
     if (n == "Trauma" && PM_TRA_LATEFEED >= 0)
@@ -2229,7 +2231,10 @@ struct Bot
 
         // ---- trapped: reverse-split so the bulk of the body escapes backwards
         bool trapped = bestD < 0 || (bestDepth < 4 && best < -100);
-        if (trapped && myLen >= 4 && units < w.unitLimit && tailHasExit(myLen - 2))
+        // TRAP_SPLIT_BLIND: when every move is lethal, split even if the tail is out of view
+        // (a young child's tail often is): losing both halves is no worse than dying whole.
+        if (trapped && myLen >= 4 && units < w.unitLimit &&
+            (tailHasExit(myLen - 2) || (TRAP_SPLIT_BLIND && bestD < 0 && static_cast<int>(trail.size()) < myLen)))
         {
             out += "SPLIT " + std::to_string(myLen - 2) + "\n";
             pending.clear();
