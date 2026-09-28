@@ -67,7 +67,7 @@ def svg_for(path):
 
 
 PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Unseen Test Maps</title><style>
+<title>__TITLE__</title><style>
 :root{--bg:#0e1116;--panel:#161b22;--ink:#e6edf3;--mute:#8b949e;--rule:#30363d;--floor:#131820;--spawn:#1c2633;--fast:#2b4a6f;--hot:#e3b341;--kelp:#3fb950;--a:#f0883e;--b:#58a6ff}
 @media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--bg:#f6f8fa;--panel:#fff;--ink:#1f2328;--mute:#59636e;--rule:#d0d7de;--floor:#eef1f4;--spawn:#dce6f2;--fast:#9ec5ee;--hot:#d4a72c;--kelp:#1a7f37;--a:#bc4c00;--b:#0969da}}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
@@ -77,8 +77,8 @@ main{max-width:1200px;margin:0 auto;padding:20px 16px 40px}h1{font-size:22px;mar
 figure{margin:0;background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:10px;overflow:hidden}
 figcaption{display:flex;flex-direction:column;gap:2px;margin-bottom:8px}figcaption span{color:var(--mute);font-size:12.5px}
 svg{max-width:100%;height:auto;display:block;border-radius:4px}
-</style></head><body><main><h1>Unseen test maps</h1>
-<p class="sub">__N__ of the 80 generated maps we use to rehearse the Sprint, where every map is new. The bot has never seen any of them.</p>
+</style></head><body><main><h1>__TITLE__</h1>
+<p class="sub">__SUB__</p>
 <div class="legend"><div><span style="background:var(--a)"></span>Team A start (head = full square)</div><div><span style="background:var(--b)"></span>Team B start</div>
 <div><span style="background:var(--kelp)"></span>Kelp wall</div><div><span style="background:#d2a8ff"></span>Portal pair (same colour = linked)</div>
 <div><span style="background:var(--hot)"></span>Pearl every round</div><div><span style="background:var(--fast)"></span>Fast pearls (≤20 rounds)</div><div><span style="background:var(--spawn)"></span>Slow pearls</div></div>
@@ -88,7 +88,10 @@ svg{max-width:100%;height:auto;display:block;border-radius:4px}
 def main():
     out = pathlib.Path(sys.argv[1])
     figs = "".join(svg_for(p) for p in sys.argv[2:])
-    out.write_text(PAGE.replace("__N__", str(len(sys.argv) - 2)).replace("__FIGS__", figs))
+    title = "Lesson Maps" if "lesson" in out.name else "Unseen Test Maps"
+    sub = (f"{len(sys.argv) - 2} hand-designed maps, each isolating one strategic lesson." if "lesson" in out.name
+           else f"{len(sys.argv) - 2} generated maps we use to rehearse the Sprint, where every map is new.")
+    out.write_text(PAGE.replace("__TITLE__", title).replace("__SUB__", sub).replace("__FIGS__", figs))
     print(f"wrote {out} ({out.stat().st_size // 1024} KB)")
 
 
