@@ -490,3 +490,16 @@
 #ifndef POCKET_UNK_NEEDS_HOT
 #define POCKET_UNK_NEEDS_HOT 1
 #endif
+// ---- ally-scaled blind portal cost (notes/14)
+#ifndef PORTAL_ALLY_COST
+#define PORTAL_ALLY_COST 0
+#endif
+#ifndef PORTAL_COST_A
+#define PORTAL_COST_A 2.0
+#endif
+#ifndef PORTAL_COST_B
+#define PORTAL_COST_B 6.0
+#endif
+#ifndef PORTAL_COST_C
+#define PORTAL_COST_C 10.0
+#endif

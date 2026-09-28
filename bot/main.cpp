@@ -626,6 +626,8 @@ struct Bot
     std::vector<int> segAt;     // tile -> index into segs, -1
     std::string out;
     bool unkParamsSet = false; // generic settings chosen for an unseen map
+    std::vector<std::pair<int, int>> allyHeadMemory; // (tile, round) of ally heads seen lately
+    int lastPortalRound = -100;                       // last round we stepped through a portal
     std::vector<int> trail;    // our body, head first (tracked across turns)
     std::vector<int> freeOther; // like freeT but ignoring our own body
     std::vector<int> bodyCnt;   // survival search: our simulated body
@@ -802,6 +804,15 @@ struct Bot
             }
         }
 
+        if (PORTAL_ALLY_COST)
+        {
+            for (auto& sg : segs)
+                if (sg.head && sg.team == w.myTeam && sg.id != w.myId)
+                    allyHeadMemory.push_back({sg.tile, round});
+            allyHeadMemory.erase(std::remove_if(allyHeadMemory.begin(), allyHeadMemory.end(),
+                                                [&](const std::pair<int, int>& e) { return round - e.second > 5; }),
+                                 allyHeadMemory.end());
+        }
         computePortalExits();
         computeFreeTimes();
         updateTrail();
@@ -1233,6 +1244,8 @@ struct Bot
         int t = step(myHead, d);
         if (t >= 0)
             pending.push_back(t);
+        if (t >= 0 && t != w.plainStep(myHead, d))
+            lastPortalRound = round;
     }
 
     // Keep an exact copy of our own body, including parts out of view (e.g.
@@ -2058,7 +2071,20 @@ struct Bot
             }
             // stepping through a portal onto a tile we can't see: someone may be standing there
             if (!visible[t] && t != w.plainStep(myHead, d))
+            {
                 score -= PORTAL_BLIND_PENALTY + (myLen >= 10 ? RP.kingPortal : 0.0) + (w.known ? 0.0 : UNK_BLIND_PEN);
+                if (PORTAL_ALLY_COST)
+                {
+                    // allies we've recently seen near the (invisible) exit make a blind crossing risky
+                    int near = 0;
+                    for (auto& [tile, rnd] : allyHeadMemory)
+                        if (round - rnd <= 5 && wrapDist(tile, t) <= 3)
+                            near++;
+                    score -= PORTAL_COST_A + PORTAL_COST_B * near;
+                    if (round - lastPortalRound <= 4)
+                        score -= PORTAL_COST_C; // bouncing straight back through
+                }
+            }
             // standing on a portal exit: others can arrive on us blind
             if (portalExit[t])
                 score -= PORTAL_EXIT_PENALTY;
