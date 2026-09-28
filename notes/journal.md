@@ -44,3 +44,4 @@
 - 04:20 UTC: Loong blog studied (notes/13). Generated 40 test (maps/gen) + 40 held-out (maps/genhold) unseen maps via tools/mapgen.py. Added flags UNK_PORTAL_ESCAPE, UNK_BLIND_PEN (default off); waiting for Schooltime agent's tests before running unseen-map tests.
 - 05:03 UTC: created codex-battlecode/ sandbox (copy of v13 + AGENTS.md rules/brief) for an independent Codex researcher; read-only outside its folder.
 - 05:10 UTC: git repo initialised (local + private GitHub DevSingh05/unsw-battlecode-2026), first commit 49b3f35 = v13 + notes + tools + codex sandbox. Ignored: replays, notes/replays, archive, reference, build dirs, .claude.
+- 05:45 UTC: Schooltime pass 2 (notes/maps/schooltime-pass2.md): server runs TWO Schooltime spawn layouts (B = no pool, ~half of games). SCH_LAYOUT+FALLBACK+CONTEST: layout B ~0.60 vs v13 (0.80/0.65/0.60 over seed sets), layout A ~0.49. Submitted v14.
