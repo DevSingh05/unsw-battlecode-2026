@@ -45,3 +45,7 @@
 - 05:03 UTC: created codex-battlecode/ sandbox (copy of v13 + AGENTS.md rules/brief) for an independent Codex researcher; read-only outside its folder.
 - 05:10 UTC: git repo initialised (local + private GitHub DevSingh05/unsw-battlecode-2026), first commit 49b3f35 = v13 + notes + tools + codex sandbox. Ignored: replays, notes/replays, archive, reference, build dirs, .claude.
 - 05:45 UTC: Schooltime pass 2 (notes/maps/schooltime-pass2.md): server runs TWO Schooltime spawn layouts (B = no pool, ~half of games). SCH_LAYOUT+FALLBACK+CONTEST: layout B ~0.60 vs v13 (0.80/0.65/0.60 over seed sets), layout A ~0.49. Submitted v14.
+- 05:46 UTC: updated toolkit unswbc 1.1.0 -> 1.2.2 (engine wasm changed; protocol/helpers identical; bundled maps + portals, slithery_fight).
+- 06:23 UTC: map-version audit: walls/portals/starts identical to ours on all 10 maps; pearl layouts: Schooltime has a 2nd layout (confirmed), Slithery likely (1/15 games), QoS unclear; others match. Recent replays hide pearl gaps/countdowns (engine 1.2). v14 Schooltime real: 3/20 vs ranks 15-54. PEARL_DISTRUST on 20 pearl-variant maps (maps/var): 0.41 (prior .01), 0.375 (.04), 0.45 (.1) vs 0.50 off -> rejected, kept off.
+- 06:34 UTC: gen maps (80 games each vs v14): UNK_PORTAL_ESCAPE 0.537 (keep, safe), LEARN_PORTALS+UNK_BLIND_PEN 0.438 (off), UNK_PRIOR=.04 0.375 (off), UNK_SIZE_PARAMS 0.475/0.525 (neutral, off).
+- 06:47 UTC: INFER_SYM correct on all tested maps but 0.519 vs 0.544 baseline (160 games) -> off. UNK_PORTAL_ESCAPE confirmed 0.544 (160 games) -> ON. Submitted v15.

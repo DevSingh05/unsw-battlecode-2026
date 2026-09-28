@@ -397,9 +397,50 @@
 #endif
 // Unknown maps: step through an unknown portal rather than die for certain.
 #ifndef UNK_PORTAL_ESCAPE
-#define UNK_PORTAL_ESCAPE 0
+#define UNK_PORTAL_ESCAPE 1
 #endif
 // Unknown maps: extra penalty for crossing a (learned) portal onto a tile we can't see.
 #ifndef UNK_BLIND_PEN
 #define UNK_BLIND_PEN 0.0
+#endif
+// Stop trusting built-in pearl gaps when visible countdowns contradict them
+// (the server runs pearl-layout variants of the same walls).
+#ifndef PEARL_DISTRUST
+#define PEARL_DISTRUST 0
+#endif
+#ifndef PEARL_DISTRUST_MIN
+#define PEARL_DISTRUST_MIN 3
+#endif
+// Assumed spawn rate for unseen tiles once built-in pearl data is distrusted.
+#ifndef DISTRUST_PRIOR
+#define DISTRUST_PRIOR 0.01
+#endif
+// ---- unseen maps
+// Assumed spawn rate for a tile we've never seen on an unknown map.
+#ifndef UNK_PRIOR
+#define UNK_PRIOR 0.01
+#endif
+// On unknown maps, choose king timing by board size.
+#ifndef UNK_SIZE_PARAMS
+#define UNK_SIZE_PARAMS 0
+#endif
+#ifndef UNK_BIG_TILES
+#define UNK_BIG_TILES 1000
+#endif
+#ifndef UNK_KS
+#define UNK_KS 250
+#endif
+#ifndef UNK_SS
+#define UNK_SS 360
+#endif
+#ifndef UNK_FS
+#define UNK_FS 300
+#endif
+// Unknown maps: infer the map's symmetry from seen walls and mirror what we learn.
+#ifndef INFER_SYM
+#define INFER_SYM 0
+#endif
+// Matching non-open edges needed before trusting a symmetry.
+#ifndef INFER_SYM_MIN
+#define INFER_SYM_MIN 4
 #endif

@@ -330,6 +330,8 @@ struct World
     std::vector<std::pair<int, std::vector<int>>> portalSeen; // id -> canonical edges (tile*2 + 0 horiz / 1 vert)
     std::vector<int> gapSeen;                                  // largest countdown+1 seen per tile
     std::vector<char> portalSide;                              // tile*4+dir is a portal edge (unknown maps)
+    bool pearlDistrust = false;                                // built-in pearl gaps contradicted by what we see
+    int pearlContradictions = 0;
     int canonEdge(int t, int d) const
     {
         switch (d)
@@ -373,6 +375,82 @@ struct World
             }
         portalSeen.push_back({pid, {e}});
     }
+    // ---- unknown maps: work out the map's symmetry from walls we've seen, then
+    // mirror every wall we learn (each observation also teaches us the far side).
+    std::vector<signed char> edgeObs; // tile*4+dir -> -1 unknown, 0 open, 1 kelp, 2 portal
+    int symBad[4] = {0, 0, 0, 0}, symGood[4] = {0, 0, 0, 0};
+    int mirrorTileAs(int t, int sy) const
+    {
+        int x = t % W, y = t / W;
+        if (sy == 1) return idx(x, H - 1 - y);
+        if (sy == 2) return idx(W - 1 - x, y);
+        return idx(W - 1 - x, H - 1 - y);
+    }
+    static int mirrorDirAs(int d, int sy)
+    {
+        bool flipNS = sy == 1 || sy == 3, flipEW = sy == 2 || sy == 3;
+        if ((d == 0 || d == 2) && flipNS) return d ^ 2;
+        if ((d == 1 || d == 3) && flipEW) return d ^ 2;
+        return d;
+    }
+    void inferSymmetry(const std::vector<std::pair<int, int>>& obs)
+    {
+        if (edgeObs.size() != nxt.size())
+            edgeObs.assign(nxt.size(), -1);
+        for (auto& [td, k] : obs)
+            edgeObs[td] = static_cast<signed char>(k);
+        if (sym < 0)
+        {
+            // score each candidate on the walls we've seen from both mirrored sides
+            for (auto& [td, k] : obs)
+            {
+                int t = td / 4, d = td % 4;
+                for (int sy = 1; sy <= 3; sy++)
+                {
+                    int mt = mirrorTileAs(t, sy), md = mirrorDirAs(d, sy);
+                    int other = edgeObs[mt * 4 + md];
+                    if (other < 0 || (mt == t && md == d))
+                        continue;
+                    if (other != k)
+                        symBad[sy]++;
+                    else if (k != 0)
+                        symGood[sy]++;
+                }
+            }
+            int alive = 0, pick = -1;
+            for (int sy = 1; sy <= 3; sy++)
+                if (symBad[sy] == 0)
+                {
+                    alive++;
+                    pick = sy;
+                }
+            if (alive == 1 && symGood[pick] >= INFER_SYM_MIN)
+            {
+                sym = pick;
+                if (dbg)
+                    std::fprintf(dbg, "SYMINFER %d good=%d bad=%d,%d,%d\n", sym, symGood[pick], symBad[1], symBad[2], symBad[3]);
+            }
+        }
+        if (sym > 0)
+        {
+            // copy what we know onto the mirrored edges we haven't seen yet
+            for (int td = 0; td < static_cast<int>(edgeObs.size()); td++)
+            {
+                int k = edgeObs[td];
+                if (k < 0)
+                    continue;
+                int mt = mirrorTileAs(td / 4, sym), md = mirrorDirAs(td % 4, sym);
+                int m = mt * 4 + md;
+                if (edgeObs[m] >= 0)
+                    continue;
+                if (k == 0)
+                    nxt[m] = plainStep(mt, md);
+                else
+                    nxt[m] = -1;
+            }
+        }
+    }
+
     bool portalKnown(int t, int d) const
     {
         int e = canonEdge(t, d);
@@ -475,6 +553,8 @@ struct World
                 portalSide.assign(nxt.size(), 0);
             for (auto& [td, pid] : portalObs)
                 portalSide[td] = 1;
+            if (INFER_SYM)
+                inferSymmetry(obs);
         }
     }
 
@@ -509,9 +589,11 @@ struct World
         if (gmax[t] < 0)
         {
             // unknown map: estimate from the largest countdown we've seen here
-            if (LEARN_GAPS && !gapSeen.empty() && gapSeen[t] > 0)
+            if ((LEARN_GAPS || pearlDistrust) && !gapSeen.empty() && gapSeen[t] > 0)
                 return 1.0 / std::max(1.0, 0.75 * gapSeen[t]);
-            return 0.01;
+            if (pearlDistrust)
+                return DISTRUST_PRIOR; // unseen tile on a distrusted map: assume a typical rate so we still explore
+            return UNK_PRIOR;
         }
         return 2.0 / (gmin[t] + gmax[t]);
     }
@@ -542,6 +624,7 @@ struct Bot
     std::vector<Seg> segs;
     std::vector<int> segAt;     // tile -> index into segs, -1
     std::string out;
+    bool unkParamsSet = false; // generic settings chosen for an unseen map
     std::vector<int> trail;    // our body, head first (tracked across turns)
     std::vector<int> freeOther; // like freeT but ignoring our own body
     std::vector<int> bodyCnt;   // survival search: our simulated body
@@ -658,6 +741,41 @@ struct Bot
         w.observeEdges(in, hx, hy);
 
         filterByCountdowns();
+        if (UNK_SIZE_PARAMS && !w.known && !unkParamsSet)
+        {
+            // Unseen map: pick king timing from the board size (big boards reward one
+            // big king, small ones end in swarm fights).
+            unkParamsSet = true;
+            if (w.N >= UNK_BIG_TILES)
+            {
+                RP.kingDeclare = 1;
+                RP.kingSeedRound = UNK_KS;
+                RP.splitStopRound = UNK_SS;
+                RP.feedStart = UNK_FS;
+                RP.feedReserve = 4;
+            }
+        }
+        if (PEARL_DISTRUST && w.known && !w.pearlDistrust)
+        {
+            // Same walls can come with a different pearl layout (the server runs
+            // variants). If what we see contradicts the built-in gaps, stop trusting
+            // them: keep walls/portals, learn pearls from our own observations.
+            int bad = 0;
+            for (int i = 0; i < 49; i++)
+            {
+                int t = w.idx(in.tx[i], in.ty[i]);
+                int tin = in.tin[i];
+                if ((tin >= 0 && w.gmax[t] == 0) || (tin < 0 && w.gmax[t] > 0) || (w.gmax[t] > 0 && tin > w.gmax[t]))
+                    bad++;
+            }
+            w.pearlContradictions += bad;
+            if (w.pearlContradictions >= PEARL_DISTRUST_MIN)
+            {
+                w.pearlDistrust = true;
+                std::fill(w.gmin.begin(), w.gmin.end(), -1);
+                std::fill(w.gmax.begin(), w.gmax.end(), -1);
+            }
+        }
         for (int i = 0; i < 49; i++)
         {
             int t = w.idx(in.tx[i], in.ty[i]);
