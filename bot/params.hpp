@@ -564,3 +564,12 @@
 #ifndef THREAT_TAIL_UNKNOWN
 #define THREAT_TAIL_UNKNOWN 2
 #endif
+// ---- Schooltime-style long exits (notes/20): a body echo past the exit makes a crossing
+// risky (~18% fatal) but the guard only blocks short exits; penalise instead (0 = off)
+#ifndef PORTAL_ECHO_BODY_PEN
+#define PORTAL_ECHO_BODY_PEN 30.0
+#endif
+// skip king/relay broadcasts on turns we probe a portal, so the body echo count is usable
+#ifndef PORTAL_PROBE_SOLO
+#define PORTAL_PROBE_SOLO 1
+#endif

@@ -1498,6 +1498,7 @@ struct Bot
                     freeOther[tile] = std::max(freeOther[tile], until - round + 1);
                 }
         }
+        echoBodyDir[0] = echoBodyDir[1] = echoBodyDir[2] = echoBodyDir[3] = false;
         if (PORTAL_ECHO_GUARD && probeMask && probeRound == round - 1 && probeTile == myHead)
         {
             int heads = in.echoes[2] + in.echoes[4];  // ally_head + enemy_head
@@ -1522,6 +1523,8 @@ struct Bot
                         break;
                     }
                 }
+                if (PORTAL_ECHO_BODY_PEN > 0 && heads == 0 && bodies > 0 && !shortPath)
+                    echoBodyDir[d] = true; // a body somewhere past the exit: risky, not certain
                 if (heads > 0 || (PORTAL_ECHO_GUARD >= 2 && bodies > 0 && shortPath))
                 {
                     occId[x] = 1 << 20;
@@ -1657,14 +1660,15 @@ struct Bot
         bool anyWarn = warnDirs[0] || warnDirs[1] || warnDirs[2] || warnDirs[3];
         if (anyWarn)
             warn = encodeWarn(pending.empty() ? myHead : pending.back(), round);
-        if (iAmKing() && (round >= KING_BROADCAST_START || kingSelf))
+        bool probing = PORTAL_PROBE_SOLO && anyWarn; // keep the echo counts clean (notes/20)
+        if (!probing && iAmKing() && (round >= KING_BROADCAST_START || kingSelf))
         {
             uint64_t m = encodeKing(myHead, myLen, w.myId, 0, myDir, round);
             for (int d = 0; d < 4; d++)
                 if (!warnDirs[d])
                     out += std::string("SONAR ") + DIRC[d] + " " + std::to_string(m) + "\n";
         }
-        else if (haveRelay)
+        else if (!probing && haveRelay)
         {
             for (int d = 0; d < 4; d++)
                 if (!warnDirs[d])
@@ -1691,6 +1695,7 @@ struct Bot
     }
     bool warnDirs[4] = {false, false, false, false};
     int probeTile = -1, probeRound = -1000, probeMask = 0, probeRays = 0;
+    bool echoBodyDir[4] = {false, false, false, false};
 
     // Tile a feeder should die on: a couple of steps in front of the king.
     int feedTarget() const
@@ -2358,6 +2363,8 @@ struct Bot
             if (!visible[t] && t != w.plainStep(myHead, d))
             {
                 score -= PORTAL_BLIND_PENALTY + (myLen >= 10 ? RP.kingPortal : 0.0) + (w.known ? 0.0 : UNK_BLIND_PEN);
+                if (PORTAL_ECHO_BODY_PEN > 0 && echoBodyDir[d])
+                    score -= PORTAL_ECHO_BODY_PEN;
                 if (PORTAL_ALLY_COST)
                 {
                     // allies we've recently seen near the (invisible) exit make a blind crossing risky
