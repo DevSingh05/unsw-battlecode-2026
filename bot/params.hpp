@@ -509,3 +509,13 @@
 #ifndef FRAME_FIX
 #define FRAME_FIX 1
 #endif
+// ---- newborn neck guard (notes/15): a child born with its neck across a portal can't
+// see it and stepped back into it (9/game on Default, 60/game on Portals).
+#ifndef NEWBORN_NECK_GUARD
+#define NEWBORN_NECK_GUARD 1
+#endif
+// ---- portal warnings remembered for the sender's length (notes/16): 80% of our
+// crossing deaths into an ally body hit an ally that had just left the exit.
+#ifndef PORTAL_WARN_MEMO
+#define PORTAL_WARN_MEMO 1
+#endif

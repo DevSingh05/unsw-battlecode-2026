@@ -1294,6 +1294,23 @@ struct Bot
         }
         if (static_cast<int>(trail.size()) > myLen)
             trail.resize(myLen);
+        if (NEWBORN_NECK_GUARD && myLen >= 2 && trail.size() == 1)
+        {
+            // A plain-adjacent neck would be in view, so an unseen neck (typically a
+            // child born straddling a portal) sits on a portal exit next to the head.
+            std::vector<int> cand;
+            for (int d = 0; d < 4; d++)
+            {
+                int v = step(myHead, d);
+                if (v >= 0 && v != w.plainStep(myHead, d) && occId[v] < 0)
+                    cand.push_back(v);
+            }
+            if (cand.size() == 1)
+                trail.push_back(cand[0]);
+            else
+                for (int v : cand)
+                    freeT[v] = std::max(freeT[v], myLen);
+        }
         freeOther = freeT;
         for (int t : trail)
             if (occId[t] == w.myId)
@@ -1404,22 +1421,29 @@ struct Bot
     // "Someone is standing on this portal exit": sent back through the portal
     // so an ally about to cross (and unable to see the exit) doesn't land on us.
     static constexpr uint64_t WARN_SECRET = 0x9a3c55e1d2b47f08ULL;
+    // PORTAL_WARN_MEMO: the sender's length rides along (bits 21-26), so receivers
+    // keep the exit blocked while its body drains off it.
+    static constexpr int WARN_XB = PORTAL_WARN_MEMO ? 27 : 21;
     uint64_t encodeWarn(int tile, int rnd) const
     {
         uint64_t x = static_cast<uint64_t>(tile % w.W) | (static_cast<uint64_t>(tile / w.W) << 6) |
                      (static_cast<uint64_t>(rnd & 511) << 12);
-        uint64_t check =
-            mix(x ^ WARN_SECRET ^ (static_cast<uint64_t>(w.myTeam) << 50) ^ frameSalt(myFrameCode())) & ((1ULL << 43) - 1);
-        return x | (check << 21);
+        if (PORTAL_WARN_MEMO)
+            x |= static_cast<uint64_t>(std::min(myLen, 63)) << 21;
+        uint64_t check = mix(x ^ WARN_SECRET ^ (static_cast<uint64_t>(w.myTeam) << 50) ^ frameSalt(myFrameCode())) &
+                         ((1ULL << (64 - WARN_XB)) - 1);
+        return x | (check << WARN_XB);
     }
+    int lastWarnLen = 0;
     bool decodeWarn(uint64_t m, int& tile, int& rnd)
     {
-        uint64_t x = m & ((1ULL << 21) - 1);
+        uint64_t x = m & ((1ULL << WARN_XB) - 1);
         bool ok = false;
         for (int fr = 0; fr < (FRAME_FIX ? 3 : 1) && !ok; fr++)
         {
-            uint64_t check = mix(x ^ WARN_SECRET ^ (static_cast<uint64_t>(w.myTeam) << 50) ^ frameSalt(fr)) & ((1ULL << 43) - 1);
-            if ((m >> 21) == check)
+            uint64_t check = mix(x ^ WARN_SECRET ^ (static_cast<uint64_t>(w.myTeam) << 50) ^ frameSalt(fr)) &
+                             ((1ULL << (64 - WARN_XB)) - 1);
+            if ((m >> WARN_XB) == check)
                 ok = true, lastFrameCode = fr;
         }
         if (!ok)
@@ -1430,15 +1454,21 @@ struct Bot
         tile = w.idx(px, py);
         int r9 = static_cast<int>((x >> 12) & 511);
         rnd = round - ((round - r9) & 511);
+        lastWarnLen = static_cast<int>((x >> 21) & 63);
         return true;
     }
+    std::vector<std::pair<int, int>> warnMem; // (exit tile, round its last ally segment leaves)
 
     void readMessages()
     {
         for (uint64_t m : in.msgs)
         {
             int tile, rnd;
-            if (!PORTAL_WARN || !decodeWarn(m, tile, rnd) || round - rnd > 1)
+            if (!PORTAL_WARN || !decodeWarn(m, tile, rnd))
+                continue;
+            if (PORTAL_WARN_MEMO && lastWarnLen > 0 && rnd + lastWarnLen > round)
+                warnMem.push_back({tile, rnd + lastWarnLen});
+            if (round - rnd > 1)
                 continue;
             learnFrame(lastFrameCode);
             if (occId[tile] < 0)
@@ -1450,6 +1480,21 @@ struct Bot
                 freeT[tile] = std::max(freeT[tile], WARN_FREE_T);
                 freeOther[tile] = std::max(freeOther[tile], WARN_FREE_T);
             }
+        }
+        if (PORTAL_WARN_MEMO)
+        {
+            warnMem.erase(std::remove_if(warnMem.begin(), warnMem.end(),
+                                         [&](const std::pair<int, int>& e) { return e.second <= round; }),
+                          warnMem.end());
+            for (auto& [tile, until] : warnMem)
+                if (w.lastSeen[tile] != round && (occId[tile] < 0 || occId[tile] == (1 << 20)))
+                {
+                    // an ally's body is still draining off this unseen exit
+                    occId[tile] = 1 << 20;
+                    occTeam[tile] = w.myTeam;
+                    freeT[tile] = std::max(freeT[tile], until - round + 1);
+                    freeOther[tile] = std::max(freeOther[tile], until - round + 1);
+                }
         }
         haveRelay = false;
         int bestHopRelay = 99;
