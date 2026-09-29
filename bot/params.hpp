@@ -658,7 +658,7 @@
 #define UNK_EXPLORE_REGION_FRAC 0.7
 #endif
 #ifndef UNK_EXPLORE_BFS_CAP
-#define UNK_EXPLORE_BFS_CAP 4096
+#define UNK_EXPLORE_BFS_CAP 2000
 #endif
 // UNK_EXPLORE=2: explore (scouted or hungry) only when our portal-free region < this share of the board
 #ifndef UNK_EXPLORE_SEALED_FRAC
