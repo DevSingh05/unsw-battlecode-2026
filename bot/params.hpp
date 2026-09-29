@@ -808,3 +808,11 @@
 #ifndef PROFILE_POINTS
 #define PROFILE_POINTS 0
 #endif
+// ---- notes/23 M1: required flood area (tiles) for each half after a growth split; 0 = off
+#ifndef SPLIT_VIABLE
+#define SPLIT_VIABLE 0
+#endif
+// extra area required when units >= 3/4 of the unit limit
+#ifndef SPLIT_VIABLE_DENSE
+#define SPLIT_VIABLE_DENSE 0
+#endif

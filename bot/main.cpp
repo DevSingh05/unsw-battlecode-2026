@@ -2757,6 +2757,40 @@ struct Bot
         return false;
     }
 
+    // SPLIT_VIABLE (notes/23): time-aware flood area for one half after SPLIT k (child head =
+    // our tail, parent head = our head); own segments free as each half moves, others use freeOther.
+    int splitSideArea(bool childSide, int k, int cap)
+    {
+        int L = myLen, P = L - k;
+        if (static_cast<int>(trail.size()) < L || L < 2)
+            return cap; // tail unseen: don't block
+        std::vector<int> rel(w.N, 0);
+        for (int i = 0; i < P; i++)
+            rel[trail[i]] = P - i;
+        for (int m = 0; m < k; m++)
+            rel[trail[L - 1 - m]] = k - m;
+        int start = childSide ? trail[L - 1] : trail[0];
+        int neck = childSide ? trail[L - 2] : trail[1];
+        std::vector<int> q{start}, dist{0};
+        std::vector<char> seen(w.N, 0);
+        seen[start] = 1;
+        int area = 0;
+        for (size_t qi = 0; qi < q.size() && area < cap; qi++)
+            for (int d = 0; d < 4; d++)
+            {
+                int v = step(q[qi], d), du = dist[qi] + 1;
+                if (v < 0 || seen[v] || (qi == 0 && v == neck))
+                    continue;
+                if (freeOther[v] > du || rel[v] > du)
+                    continue; // occupied when we'd get there
+                seen[v] = 1;
+                q.push_back(v);
+                dist.push_back(du);
+                area++;
+            }
+        return area;
+    }
+
     // Can a split-off child whose head is our current tail get away?
     bool tailHasExit(int k) const
     {
@@ -2976,10 +3010,23 @@ struct Bot
                 if (exits == 0 && tailHasExit(myLen - 2))
                     k = myLen - 2;
             }
-            out += "SPLIT " + std::to_string(k) + "\n";
-            pending.clear();
-            pendingSplit = true;
-            return;
+            bool viable = true;
+            if (SPLIT_VIABLE > 0)
+            {
+                // don't give birth into a sealed spot (37% of our splits at 50+ units; notes/23)
+                int A = SPLIT_VIABLE + (units * 4 >= w.unitLimit * 3 ? SPLIT_VIABLE_DENSE : 0);
+                if (splitSideArea(true, k, A) < A)
+                    viable = false;
+                else if (myLen >= 5 && splitSideArea(false, k, A) < A)
+                    k = myLen - 2; // parent sealed at a tip: the bulk leaves as the child
+            }
+            if (viable)
+            {
+                out += "SPLIT " + std::to_string(k) + "\n";
+                pending.clear();
+                pendingSplit = true;
+                return;
+            }
         }
 
         if (UNK_EXPLORE && !w.known)

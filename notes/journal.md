@@ -113,3 +113,6 @@
 - 19:01 UTC: REPLY_SEARCH local vs v29 (seed 126000): gen .438 lesson .500 ladder .550 -> mixed; server A/B on Default+Schooltime at 19:10 decides, gen needs a confirmation run if server positive.
 - 19:36 UTC: r30 (REPLY_SEARCH) server A/B Default+Schooltime: 13/20 = v29 13/20; Schooltime L>=8 rams 41 vs 32 -> reject. v29 restored 19:34.
 - 19:43 UTC: vs top-15 since v28 (auto games): 127/245; weakest = the 3 biggest boards: Schooltime 3/23, Slithery 6/30, Autarky 8/32; strongest Trauma 16/16, Default 20/24, Dilemma 14/17. Agent studying the common big-board mechanism (notes/23).
+- 20:06 UTC: big-board study (notes/23): not size - mass RETENTION (Slithery .10 v .27, Schooltime .22 v .42, Autarky .01 v .33); we split children into sealed spots (37% at 50-60 units vs top 12-19%; ~102 v 40 stillborn/game). Implemented SPLIT_VIABLE (+_DENSE); testing.
+- 20:19 UTC: SPLIT_VIABLE=4+DENSE4: big boards .396 (Trauma 1/8), gen .475 lesson .375 -> reject; clusters of 5-7 of our heads idle 18-32 rounds near Autarky pockets in 625768 (forensics workflow running). Trying SPLIT_VIABLE=2.
+- 20:21 UTC: SPLIT_VIABLE=2: .469 -> reject both variants (off).
