@@ -1063,7 +1063,7 @@ struct Bot
         if (od < s)
             v *= 0.25;
         else if (od == s)
-            v *= 0.55;
+            v *= TURN_ORDER_TIES ? 0.85 : 0.55; // we move first in every tie (notes/unseen/PLAN.md Q3)
         if (UNK_EXPLORE && exploreDesire && !lureTile.empty() && lureTile[t])
             v = std::max(v, UNK_EXPLORE_LURE); // an unexplored door is worth walking to
         return v;
@@ -1089,7 +1089,7 @@ struct Bot
         {
             int u = bfsQ[qi];
             int du = bfsDist[u];
-            if (!VORONOI_AREA || du < otherDist[u])
+            if (!VORONOI_AREA || du < otherDist[u] || (TURN_ORDER_TIES && du == otherDist[u]))
                 area++;
             while (static_cast<int>(gp.size()) <= du)
                 gp.push_back(gp.back() * g);

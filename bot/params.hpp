@@ -664,3 +664,7 @@
 #ifndef UNK_EXPLORE_SEALED_FRAC
 #define UNK_EXPLORE_SEALED_FRAC 0.85
 #endif
+// ---- Q3: pearl/area ties go to us (sequential turn order)
+#ifndef TURN_ORDER_TIES
+#define TURN_ORDER_TIES 0
+#endif
