@@ -111,3 +111,5 @@
 - 18:49 UTC: blind29s (UNK_SEALED_FOOD) server: 11/20 = blind28 (Default 5/10 eats 318 cross 19 vs 4/10 348 cross 0; Autarky 6/10 vs 7/10) -> mechanism fires but no win gain; off. v29 live 18:48.
 - 18:57 UTC: CORRECTION: ranked games are NOT only at even UTC hours. User saw an autoscrim at 19:00 UTC (3pm EDT); battle log shows ranked games at many times, incl. other teams' ranked challenges (3.14159265 ~10x today). Any live test version can get ranked games -> keep test windows short.
 - 19:01 UTC: REPLY_SEARCH local vs v29 (seed 126000): gen .438 lesson .500 ladder .550 -> mixed; server A/B on Default+Schooltime at 19:10 decides, gen needs a confirmation run if server positive.
+- 19:36 UTC: r30 (REPLY_SEARCH) server A/B Default+Schooltime: 13/20 = v29 13/20; Schooltime L>=8 rams 41 vs 32 -> reject. v29 restored 19:34.
+- 19:43 UTC: vs top-15 since v28 (auto games): 127/245; weakest = the 3 biggest boards: Schooltime 3/23, Slithery 6/30, Autarky 8/32; strongest Trauma 16/16, Default 20/24, Dilemma 14/17. Agent studying the common big-board mechanism (notes/23).
