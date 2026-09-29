@@ -1,0 +1,23 @@
+L boxer=THEM -> died alone (HitHeadToHead)   n=   2 (0.2/g)
+L boxer=THEM -> died alone (HitSelf)         n=   3 (0.2/g)
+L boxer=THEM -> escaped                      n=   3 (0.2/g)
+L boxer=THEM -> rammed-us (trade)            n=  18 (1.5/g)
+L boxer=THEM -> split                        n=   2 (0.2/g)
+L boxer=US   -> escaped                      n=   4 (0.3/g)
+L boxer=US   -> rammed-us (trade)            n=  30 (2.5/g)
+L boxer=US   -> split                        n=   1 (0.1/g)
+W boxer=THEM -> escaped                      n=   1 (0.1/g)
+W boxer=THEM -> rammed-us (trade)            n=  14 (0.7/g)
+W boxer=THEM -> split                        n=   1 (0.1/g)
+W boxer=US   -> died alone (HitHeadToHead)   n=   2 (0.1/g)
+W boxer=US   -> escaped                      n=   2 (0.1/g)
+W boxer=US   -> rammed-us (trade)            n=  33 (1.6/g)
+trades after a box move: corpse pearls eaten in 8 rounds, boxer team / other team
+  L boxer=THEM local ahead  n=  9  boxer 1.33 / other 0.78  net +0.56
+  L boxer=THEM local behind n=  9  boxer 1.00 / other 1.33  net -0.33
+  L boxer=US   local ahead  n=  6  boxer 0.17 / other 1.00  net -0.83
+  L boxer=US   local behind n= 24  boxer 0.12 / other 2.00  net -1.88
+  W boxer=THEM local ahead  n=  4  boxer 1.75 / other 0.75  net +1.00
+  W boxer=THEM local behind n= 10  boxer 0.20 / other 1.90  net -1.70
+  W boxer=US   local ahead  n= 22  boxer 1.50 / other 0.45  net +1.05
+  W boxer=US   local behind n= 11  boxer 0.64 / other 1.73  net -1.09

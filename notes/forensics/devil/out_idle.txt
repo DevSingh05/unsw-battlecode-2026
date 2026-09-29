@@ -1,0 +1,34 @@
+608235 Peanut Butte L idle% us   26% (  98 of  380)  them   16% | hubfood  7.8 | our idle while >=8 hub pearls: 57
+608207 Sponge(Alber L idle% us   35% ( 110 of  318)  them   11% | hubfood  8.2 | our idle while >=8 hub pearls: 56
+612612 3.14159265   L idle% us   27% ( 120 of  447)  them    7% | hubfood  8.9 | our idle while >=8 hub pearls: 90
+612734 Team SKKU    W idle% us   19% ( 120 of  633)  them   21% | hubfood  7.4 | our idle while >=8 hub pearls: 65
+612768 Peanut Butte W idle% us   21% ( 363 of 1750)  them   48% | hubfood  8.3 | our idle while >=8 hub pearls: 217
+612864 3.14159265   L idle% us   41% ( 150 of  370)  them    7% | hubfood  5.2 | our idle while >=8 hub pearls: 23
+612747 dev test 1 : W idle% us   15% ( 240 of 1622)  them   28% | hubfood  8.2 | our idle while >=8 hub pearls: 108
+612998 Team SKKU    W idle% us   21% ( 319 of 1546)  them   18% | hubfood  8.6 | our idle while >=8 hub pearls: 131
+609890 PPP          W idle% us   16% ( 217 of 1341)  them   39% | hubfood  6.9 | our idle while >=8 hub pearls: 82
+613575 3.14159265   L idle% us   19% ( 105 of  552)  them   17% | hubfood  7.0 | our idle while >=8 hub pearls: 49
+613711 Sabotage-d   L idle% us   25% ( 128 of  503)  them   25% | hubfood  7.3 | our idle while >=8 hub pearls: 55
+613835 bread first  W idle% us   21% ( 152 of  714)  them   28% | hubfood  9.6 | our idle while >=8 hub pearls: 113
+615642 bread first  W idle% us   15% ( 220 of 1455)  them   38% | hubfood  9.0 | our idle while >=8 hub pearls: 155
+616113 SSS          L idle% us   25% (  63 of  250)  them   19% | hubfood  9.0 | our idle while >=8 hub pearls: 41
+616123 SSS          L idle% us   22% (  94 of  433)  them   13% | hubfood  7.9 | our idle while >=8 hub pearls: 53
+614175 Stockfish    W idle% us   12% (  52 of  417)  them    8% | hubfood  7.2 | our idle while >=8 hub pearls: 18
+616943 3.14159265   L idle% us   34% ( 265 of  780)  them   16% | hubfood  8.5 | our idle while >=8 hub pearls: 150
+617117 SSS          W idle% us    9% (  44 of  499)  them   24% | hubfood  6.6 | our idle while >=8 hub pearls: 13
+617036 3.14159265   L idle% us   33% ( 108 of  326)  them    5% | hubfood  5.4 | our idle while >=8 hub pearls: 26
+617155 WeHaveQuizze W idle% us   18% ( 314 of 1736)  them   33% | hubfood  8.3 | our idle while >=8 hub pearls: 155
+617092 Cutlery      L idle% us   21% ( 206 of  967)  them   34% | hubfood  8.7 | our idle while >=8 hub pearls: 154
+617102 中国必须人能飞😡     L idle% us   29% ( 121 of  424)  them    8% | hubfood  8.5 | our idle while >=8 hub pearls: 75
+617075 calc         W idle% us   17% ( 159 of  920)  them   53% | hubfood  8.9 | our idle while >=8 hub pearls: 100
+617607 Hypr Series  W idle% us   20% ( 266 of 1357)  them   40% | hubfood  6.1 | our idle while >=8 hub pearls: 60
+618023 PPP          W idle% us   20% ( 298 of 1496)  them   41% | hubfood  5.0 | our idle while >=8 hub pearls: 22
+619857 bread first  W idle% us   19% ( 253 of 1310)  them   33% | hubfood  6.5 | our idle while >=8 hub pearls: 79
+620786 Sabotage-d   W idle% us   17% ( 225 of 1313)  them   49% | hubfood  6.1 | our idle while >=8 hub pearls: 29
+618381 Cutlery      W idle% us   15% ( 302 of 1950)  them   58% | hubfood  5.6 | our idle while >=8 hub pearls: 46
+622216 Stockfish    W idle% us   21% ( 300 of 1422)  them   29% | hubfood  6.3 | our idle while >=8 hub pearls: 54
+625447 BloodBath    W idle% us   22% ( 107 of  479)  them   10% | hubfood  9.8 | our idle while >=8 hub pearls: 56
+625525 Sponge(Alber W idle% us   24% ( 257 of 1092)  them    0% | hubfood  7.7 | our idle while >=8 hub pearls: 85
+627737 bread first  W idle% us   17% ( 220 of 1284)  them   29% | hubfood  7.1 | our idle while >=8 hub pearls: 113
+L 12 mean idle us 28% them 15% hubfood 7.7 idle&food 69
+W 20 mean idle us 18% them 31% hubfood 7.5 idle&food 85

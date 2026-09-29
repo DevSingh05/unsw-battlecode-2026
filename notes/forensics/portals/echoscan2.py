@@ -48,7 +48,7 @@ for gid in games:
     dd = {d['id']: d for d in S['deaths']}
     cands = []
     for s in S['sonars']:
-        if s['team'] != T or s['hitKind'] not in ('allyHead', 'enemyHead'): continue
+        if s['team'] != T or s['hitKind'] not in ('allyHead', 'enemyHead', 'ally', 'enemy'): continue
         o_ = s['origin']; d = s['dir']; x = m.step(o_, d)
         if x is None or x == m.wrap(o_[0] + DV[d][0], o_[1] + DV[d][1]): continue
         k = 1; y = x
@@ -61,16 +61,20 @@ for gid in games:
         if nxt is not None and nxt['head'] != o_: continue
         # alternatives = the other 3 neighbours of the prober's head
         alts = [m.step(o_, dd_) for dd_ in 'NESW' if dd_ != d]
+        back = {'N': 'S', 'S': 'N', 'E': 'W', 'W': 'E'}[d]
+        xn = [m.step(x, dd_) for dd_ in 'NESW' if dd_ != back]
+        xn = [t for t in xn if t is not None]
         cands.append(dict(game=gid, round=r + 1, id=i, dir=d, head=o_, exit=x, hit_end=s['end'], hitKind=s['hitKind'], hitId=s['hitId'], past=k - 1,
                           L=(nxt or {}).get('len_before') or sp['L'], nxt=nxt, sp=sp, alts=[a for a in alts if a is not None],
-                          death=dd.get(i), opp=g['opp'], win=g['win']))
+                          death=dd.get(i), opp=g['opp'], win=g['win'], xn=xn))
     q = collections.defaultdict(list)
-    for c in cands: q[(c['round'], c['id'])] += [c['exit']] + c['alts']
+    for c in cands: q[(c['round'], c['id'])] += [c['exit']] + c['alts'] + c['xn']
     occ = occupancy_at(path, m, q)
     for c in cands:
         oc = occ.get((c['round'], c['id']), {})
         c['exit_occ'] = oc.get(c['exit'])
         c['free_alts'] = sum(1 for a in c['alts'] if oc.get(a) is None)
+        c['x_onward_free'] = sum(1 for a in c['xn'] if oc.get(a) is None)
         if c['sp']: c['what'] = 'split'
         elif 'move' in c['nxt']['act']: c['what'] = 'cross' if c['nxt']['act']['move'][0] == c['dir'] else 'other'
         else: c['what'] = 'suicide'

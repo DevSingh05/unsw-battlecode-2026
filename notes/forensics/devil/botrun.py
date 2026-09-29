@@ -33,7 +33,7 @@ def run(gid, did, r0, r1=None, binary=None, quiet=False):
     for e in R.load(path)['events']:
         if e['t'] == 'roundStart': rnd = e['round']
         elif e['t'] == 'dragonAction' and e['id'] == did: real[rnd] = e['action']
-    outs, dbg = BV.run_bot(binary or os.path.join(SCR, 'v29'), did, turns)
+    outs, dbg = BV.run_bot(binary or os.path.join(SCR, 'devil_fx', 'v29'), did, turns)
     blocks = re.split(r'\n(?=R\d+ id=)', dbg)
     res = {}
     for blk in blocks:

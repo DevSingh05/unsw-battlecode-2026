@@ -1,0 +1,35 @@
+--- variants/v29/main.cpp	2026-09-29 14:34:15
++++ /private/tmp/claude-501/-Users-devsingh-Developer-UNSW-Battlecode/4107a3b1-a08f-4826-9eaa-522a1a1ebd84/scratchpad/v29dbg/main.cpp	2026-09-29 17:09:52
+@@ -1585,6 +1585,7 @@
+                 }
+         }
+         echoBodyDir[0] = echoBodyDir[1] = echoBodyDir[2] = echoBodyDir[3] = false;
++        if (dbg) std::fprintf(dbg, "  ECHODBG mask=%d pround=%d ptile=%d head=%d rays=%d echoes=%d,%d,%d,%d,%d\n", probeMask, probeRound, probeTile, myHead, probeRays, in.echoes[0], in.echoes[1], in.echoes[2], in.echoes[3], in.echoes[4]);
+         if (PORTAL_ECHO_GUARD && probeMask && probeRound == round - 1 && probeTile == myHead)
+         {
+             int heads = in.echoes[2] + in.echoes[4];  // ally_head + enemy_head
+@@ -1596,6 +1597,7 @@
+                 if (!((probeMask >> d) & 1))
+                     continue;
+                 int x = step(myHead, d);
++                if (dbg) std::fprintf(dbg, "  ECHOX d=%d x=%d plain=%d seen=%d\n", d, x, w.plainStep(myHead, d), w.lastSeen[x] == round);
+                 if (x < 0 || x == w.plainStep(myHead, d) || w.lastSeen[x] == round)
+                     continue;
+                 bool shortPath = false; // the ray dies on kelp soon after the exit
+@@ -1609,6 +1611,7 @@
+                         break;
+                     }
+                 }
++                if (dbg) std::fprintf(dbg, "  ECHODIR d=%d x=%d heads=%d bodies=%d short=%d\n", d, x, heads, bodies, (int)shortPath);
+                 if (PORTAL_ECHO_BODY_PEN > 0 && heads == 0 && bodies > 0 && !shortPath)
+                     echoBodyDir[d] = true; // a body somewhere past the exit: risky, not certain
+                 if (heads > 0 || (PORTAL_ECHO_GUARD >= 2 && bodies > 0 && shortPath))
+@@ -2416,6 +2419,8 @@
+         // ---- feeding the king: die just in front of it so it eats our body
+         bool feeding = shouldFeed();
+         int target = feeding ? feedTarget() : -1;
++        if (dbg)
++            std::fprintf(dbg, "  FEEDDBG feeding=%d kingId=%d kingLen=%d kingTile=%d age=%d target=%d units=%d kingSelf=%d iAmKing=%d myLen=%d nKings=%d\n", (int)feeding, kingId, kingLen, kingTile, round - kingRound, target, units, (int)kingSelf, (int)iAmKing(), myLen, freshKings(-1));
+         if (feeding && target >= 0)
+         {
+             bool kingVisible = false;

@@ -9,3 +9,57 @@
 617099 r272 id1022 L2 feed -> king 55 L4 (real longest L12) corpse eaten by {'ally': 1}
 617099 r343 id1257 L2 other:S -> king -1 L0 (real longest L22) corpse eaten by {'ally': 1}
 617099 r418 id1391 L2 feed -> king 399 L5 (real longest L32) corpse eaten by {'ally': 1}
+617099 r264 id1019 L2 other:E -> king 968 L3 (real longest L14) corpse eaten by {'ally': 1}
+617099 r385 id1364 L2 other:S -> king -1 L0 (real longest L29) corpse eaten by {'ally': 1}
+617099 r295 id997 L3 feed -> king 55 L9 (real longest L13) corpse eaten by {'ally': 2}
+617099 r256 id790 L2 other:E -> king 481 L3 (real longest L12) corpse eaten by {'ally': 1}
+617099 r271 id1016 L2 feed -> king 481 L4 (real longest L12) corpse eaten by {'ally': 1}
+616107 r337 id962 L2 feed -> king 716 L23 (real longest L23) corpse eaten by {'target': 1}
+616107 r333 id1307 L2 other:W -> king -1 L0 (real longest L21) corpse eaten by {'ally': 1}
+616107 r259 id1032 L2 other:E -> king -1 L0 (real longest L14) corpse eaten by {'target': 1}
+616107 r289 id1080 L2 feed -> king 910 L4 (real longest L20) corpse eaten by {'ally': 1}
+616107 r263 id930 L3 feed -> king 904 L7 (real longest L14) corpse eaten by {'ally': 2}
+616107 r374 id1441 L2 other:N -> king -1 L0 (real longest L26) corpse eaten by {'ally': 1}
+616107 r335 id1183 L3 feed -> king 716 L21 (real longest L21) corpse eaten by {'ally': 1, 'target': 1}
+616107 r258 id119 L2 feed -> king 904 L5 (real longest L14) corpse eaten by {'ally': 1}
+617089 r276 id1360 L3 feed -> king 912 L7 (real longest L14) corpse eaten by {'target': 1, 'ally': 1}
+617089 r305 id1507 L2 feed -> king 476 L21 (real longest L21) corpse eaten by {'target': 1}
+617089 r260 id659 L3 feed -> king 147 L8 (real longest L10) corpse eaten by {'ally': 2}
+617089 r394 id1855 L2 other:S -> king -1 L0 (real longest L26) corpse eaten by {'ally': 1}
+617089 r257 id1263 L2 feed -> king 912 L4 (real longest L10) corpse eaten by {'ally': 1}
+617089 r305 id1483 L2 other:S -> king 299 L3 (real longest L21) corpse eaten by {'ally': 1}
+617089 r256 id1348 L2 other:N -> king -1 L0 (real longest L10) corpse eaten by {'ally': 1}
+617089 r278 id1450 L2 other:E -> king -1 L0 (real longest L14) corpse eaten by {'ally': 1}
+612741 r321 id1488 L2 other:E -> king 276 L3 (real longest L23) corpse eaten by {'ally': 1}
+612741 r364 id1676 L2 other:E -> king -1 L0 (real longest L30) corpse eaten by {'ally': 1}
+612741 r271 id1233 L2 other:W -> king -1 L0 (real longest L14) corpse eaten by {'ally': 1}
+612741 r409 id1813 L2 feed -> king 713 L5 (real longest L32) corpse eaten by {'ally': 1}
+612741 r268 id1003 L2 feed -> king 659 L10 (real longest L14) corpse eaten by {'target': 1}
+612741 r428 id1865 L2 feed -> king 855 L4 (real longest L33) corpse eaten by {'target': 1}
+612741 r326 id1327 L2 feed -> king 191 L6 (real longest L23) corpse eaten by {'target': 1}
+612741 r414 id1777 L3 feed -> king 713 L5 (real longest L32) corpse eaten by {'ally': 2}
+625771 r429 id1812 L2 other:E -> king -1 L0 (real longest L44) corpse eaten by {'ally': 1}
+625771 r283 id1348 L2 other:N -> king 880 L3 (real longest L14) corpse eaten by {'ally': 1}
+625771 r268 id1181 L2 feed -> king 876 L9 (real longest L9) corpse eaten by {'ally': 1}
+625771 r387 id1328 L3 feed -> king 321 L11 (real longest L36) corpse eaten by {'target': 1, 'ally': 1}
+625771 r383 id1679 L2 other:E -> king -1 L0 (real longest L35) corpse eaten by {'ally': 1}
+625771 r410 id1742 L3 other:N -> king 618 L3 (real longest L39) corpse eaten by {'ally': 2}
+625771 r285 id330 L3 feed -> king 876 L12 (real longest L14) corpse eaten by {'ally': 1, 'target': 1}
+625771 r324 id1491 L2 other:E -> king -1 L0 (real longest L24) corpse eaten by {'ally': 1}
+618383 r272 id1492 L2 other:N -> king -1 L0 (real longest L8) corpse eaten by {'ally': 1}
+618383 r383 id1848 L3 feed -> king 33 L21 (real longest L27) corpse eaten by {'target': 2}
+618383 r267 id885 L3 other:E -> king 21 L3 (real longest L6) corpse eaten by {'ally': 2}
+618383 r395 id1898 L4 other:N -> king 875 L13 (real longest L27) corpse eaten by {'ally': 2}
+618383 r265 id1362 L2 feed -> king 10 L6 (real longest L6) corpse eaten by {'ally': 1}
+618383 r428 id1970 L2 other:E -> king 893 L3 (real longest L29) corpse eaten by {'ally': 1}
+618383 r290 id1580 L2 other:W -> king -1 L0 (real longest L14) corpse eaten by {'ally': 1}
+618383 r361 id1837 L2 feed -> king 283 L12 (real longest L25) corpse eaten by {'ally': 1}
+617109 r396 id1760 L3 feed -> king 992 L16 (real longest L30) corpse eaten by {'ally': 2}
+617109 r359 id1608 L3 other:N -> king -1 L0 (real longest L31) corpse eaten by {'ally': 2}
+617109 r330 id1533 L2 feed -> king 929 L24 (real longest L24) corpse eaten by {'target': 1}
+617109 r373 id1726 L2 feed -> king 668 L6 (real longest L31) corpse eaten by {'target': 1}
+617109 r431 id1900 L15 feed -> king 668 L17 (real longest L31) corpse eaten by {'target': 2, 'ally': 6}
+617109 r367 id1693 L3 feed -> king 232 L8 (real longest L31) corpse eaten by {'ally': 1, 'target': 1}
+617109 r345 id1526 L2 feed -> king 352 L7 (real longest L24) corpse eaten by {'target': 1}
+617109 r319 id1470 L3 feed -> king 260 L5 (real longest L24) corpse eaten by {'target': 2}
+{'n': 64, 'feed': 37, 'lesser': 27, 'kl<10': 22, 'pearls': 58, 'ate_target': 24, 'ate_ally': 34, 'other': 27}

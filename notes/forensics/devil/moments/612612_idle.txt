@@ -1,0 +1,200 @@
+R 30
+       10  12  14  16  18  20  22  24
+     ----  ----  ----  ----  ----  --
+  0  |. .|*|   | |* *| |   |*|. .|*|.
+                                     
+  1  |. .| |   | |* *| |   | |. .| |.
+                                     
+  2  |. *| |   | |u U| |   | |. .| |.
+                                     
+  3  |. .| |               | |. .| |.
+                                     
+  4  |. *| |    * *     u  | |. .| |.
+                                     
+  5  |. .| |. *| |: E| |u U| |. .| |.
+                                     
+  6  |. .| |. .|*|: e| |. .| |. .| |.
+                                     
+  7   . .      |*|: e|*|  u u u .   .
+                                     
+  8   e .      |*|: e|e|  U U . u   .
+                                     
+  9   e E   . .| |: E|e|U u   . U   .
+                                     
+ 10  |. .| |. .| |: :|e|u u| |. .| |.
+                                     
+ 11  |. .| |e e E   E e    | |. .| |.
+                                     
+ 12  |* *| |      u u      | |. *| |.
+                                     
+ 13  |. .| |   | |  U| |   | |. .| |.
+                                     
+ 14  |. .| |   | |   | |   | |. .| |.
+                                     
+ 15  |. *| |   | |* *| |   | |* .|*|.
+heads: EN0 L2@(16, 9), us1 L2@(22, 9), EN2 L3@(10, 9), us3 L3@(16, 13), EN4 L3@(16, 5), us5 L2@(16, 2), EN6 L5@(16, 11), us7 L3@(20, 8), EN8 L3@(14, 11), us9 L3@(19, 5), us10 L2@(19, 8), us15 L4@(18, 9)
+R 40
+       10  12  14  16  18  20  22  24
+     ----  ----  ----  ----  ----  --
+  0  |. .|*|   | |* *| |   |*|. .|*|.
+                                     
+  1  |. .| |   | |u U| |   | |. .| |.
+                                     
+  2  |. *| |   |E|  u| |   | |. .| |.
+                                     
+  3  |. .| |    e   U E    | |. .| |.
+                                     
+  4  |. *| |e E   e   e    | |. .| |.
+                                     
+  5  |. .| |. .| |E *| |. .| |. .| |.
+                                     
+  6  |. .| |. .| |* :|*|u .| |U .| |.
+                                     
+  7   . .   e e|*|* :|*|U     u .   .
+                                     
+  8   . .     E|*|: :|*|u U   . . U .
+                                     
+  9   . .   . .|E|: :| |. .   U . u .
+                                     
+ 10  |. .| |. .|e|: *| |. .| |u .| |.
+                                     
+ 11  |. .| |        E   u  | |. .| |.
+                                     
+ 12  |* *| |    e e e   U  | |. .| |.
+                                     
+ 13  |. .| |   | |  *| |   | |. .| |.
+                                     
+ 14  |. .| |   | |*  | |   | |. U| |.
+                                     
+ 15  |. *| |   | |* *| |   | |. u|*|.
+heads: us1 L2@(22, 14), EN2 L3@(13, 8), EN4 L2@(13, 4), us7 L2@(19, 8), EN8 L2@(14, 2), us10 L2@(18, 7), us12 L2@(23, 8), us18 L2@(18, 12), us23 L2@(16, 1), EN24 L4@(16, 11), EN25 L2@(17, 3), us26 L2@(21, 9), us27 L2@(21, 6), us28 L2@(16, 3), EN29 L2@(14, 9), EN30 L2@(15, 5)
+R 46
+       10  12  14  16  18  20  22  24
+     ----  ----  ----  ----  ----  --
+  0  |. .|*|   | |* *|u|   |*|. .|*|.
+                                     
+  1  |. .| |   | |* *|U|   | |. .| |.
+                                     
+  2  |. *| |   | |* *| |   | |. .| |.
+                                     
+  3  |. .| |      *   *    | |. .| |.
+                                     
+  4  |. *| |    e E *      | |. .| |.
+                                     
+  5  |. .| |. *|e|: *| |U .| |. .| |.
+                                     
+  6  |. .| |. .|e|: :|*|u .| |. U| |.
+                                     
+  7   . .      |*|: E|*|      u u   .
+                                     
+  8   . .      |*|: e|*|      U .   .
+                                     
+  9   . .   . *| |e :| |* .   . u U .
+                                     
+ 10  |. .| |e E| |e E| |. .| |. .| |.
+                                     
+ 11  |. .| |e           U u| |. .| |.
+                                     
+ 12  |* *| |    E   e      | |. .| |.
+                                     
+ 13  |. .| |   |e|E e| |   | |. .| |.
+                                     
+ 14  |. .| |   | |*  | |   | |. .| |.
+                                     
+ 15  |. *| |   | |* *| |   | |. .|*|.
+heads: us1 L2@(23, 9), EN2 L3@(13, 10), us7 L2@(18, 5), EN8 L2@(14, 12), us10 L2@(18, 11), us18 L2@(17, 1), EN24 L3@(16, 10), us26 L2@(22, 6), us27 L2@(21, 8), EN29 L4@(15, 4), EN30 L2@(16, 7), EN31 L3@(15, 13)
+=== R43 id7 real MOVE N
+   cand N t=(19,6) pearls=0.38 area=114 depth=12 threat=0 freeT=1 score=3.94
+   cand S t=(19,8) pearls=0.37 area=111 depth=12 threat=0 freeT=1 score=3.74
+   cand W t=(18,7) pearls=0.40 area=114 depth=12 threat=0 freeT=1 score=4.45
+   -> W
+=== R44 id7 real MOVE W
+   cand N t=(19,5) pearls=0.42 area=135 depth=12 threat=0 freeT=1 score=4.53
+   cand W t=(18,6) pearls=0.47 area=151 depth=12 threat=0 freeT=1 score=4.76
+   -> W
+=== R45 id7 real MOVE N
+   cand N t=(18,5) pearls=2.19 area=196 depth=12 threat=0 freeT=1 score=22.01
+   cand S t=(18,7) pearls=0.58 area=214 depth=12 threat=0 freeT=1 score=5.92
+   -> N
+=== R46 id7 real MOVE N
+   cand N t=(18,4) pearls=1.59 area=111 depth=12 threat=0 freeT=1 score=16.29
+   cand E t=(19,5) pearls=0.76 area=108 depth=12 threat=0 freeT=1 score=7.72
+   -> N
+-- IDLE_HOT_HOME=3
+=== R43 id7 real MOVE N
+   HOME N dist=7
+   cand N t=(19,6) pearls=0.38 area=114 depth=12 threat=0 freeT=1 score=-17.06
+   HOME S dist=8
+   cand S t=(19,8) pearls=0.37 area=111 depth=12 threat=0 freeT=1 score=-20.26
+   HOME W dist=7
+   cand W t=(18,7) pearls=0.40 area=114 depth=12 threat=0 freeT=1 score=-16.55
+   -> W
+=== R44 id7 real MOVE W
+   HOME N dist=6
+   cand N t=(19,5) pearls=0.42 area=135 depth=12 threat=0 freeT=1 score=-13.47
+   HOME W dist=6
+   cand W t=(18,6) pearls=0.47 area=151 depth=12 threat=0 freeT=1 score=-13.24
+   -> W
+=== R43 id10 real MOVE S
+   cand N t=(19,8) pearls=0.46 area=154 depth=12 threat=0 freeT=1 score=4.74
+   cand E t=(20,9) pearls=0.47 area=151 depth=12 threat=0 freeT=1 score=5.20
+   cand S t=(19,10) pearls=0.59 area=155 depth=12 threat=0 freeT=1 score=6.08
+   -> S
+=== R44 id10 real MOVE S
+   cand S t=(19,11) pearls=0.50 area=123 depth=12 threat=0 freeT=1 score=5.42
+   cand W t=(18,10) pearls=0.55 area=131 depth=12 threat=0 freeT=1 score=5.57
+   -> W
+=== R45 id10 real MOVE W
+   cand S t=(19,12) pearls=0.76 area=346 depth=12 threat=0 freeT=1 score=7.94
+   cand W t=(18,11) pearls=1.30 area=350 depth=12 threat=0 freeT=1 score=13.06
+   -> W
+=== R46 id10 real MOVE W
+   cand N t=(18,10) pearls=1.17 area=129 depth=12 threat=0 freeT=1 score=11.81
+   cand S t=(18,12) pearls=0.68 area=141 depth=12 threat=0 freeT=1 score=6.95
+   cand W t=(17,11) pearls=1.60 area=149 depth=12 threat=0 freeT=1 score=16.36
+   -> W
+-- IDLE_HOT_HOME=3
+=== R43 id10 real MOVE S
+   HOME N dist=8
+   cand N t=(19,8) pearls=0.46 area=154 depth=12 threat=0 freeT=1 score=-19.26
+   HOME E dist=7
+   cand E t=(20,9) pearls=0.47 area=151 depth=12 threat=0 freeT=1 score=-15.80
+   HOME S dist=6
+   cand S t=(19,10) pearls=0.59 area=155 depth=12 threat=0 freeT=1 score=-11.92
+   -> S
+=== R44 id10 real MOVE S
+   HOME S dist=5
+   cand S t=(19,11) pearls=0.50 area=123 depth=12 threat=0 freeT=1 score=-9.58
+   HOME W dist=5
+   cand W t=(18,10) pearls=0.55 area=131 depth=12 threat=0 freeT=1 score=-9.43
+   -> W
+=== R43 id27 real MOVE S
+   cand N t=(21,4) pearls=0.43 area=186 depth=12 threat=0 freeT=1 score=4.32
+   cand S t=(21,6) pearls=0.51 area=177 depth=12 threat=0 freeT=1 score=5.28
+   -> S
+=== R44 id27 real MOVE S
+   cand E t=(22,6) pearls=0.31 area=170 depth=12 threat=0 freeT=1 score=3.28
+   cand S t=(21,7) pearls=0.51 area=170 depth=12 threat=0 freeT=1 score=5.55
+   -> S
+=== R45 id27 real MOVE S
+   cand S t=(21,8) pearls=0.81 area=221 depth=12 threat=0 freeT=1 score=8.47
+   cand W t=(20,7) pearls=0.70 area=215 depth=12 threat=0 freeT=1 score=7.04
+   -> S
+=== R46 id27 real MOVE W
+   cand E t=(22,8) pearls=0.97 area=210 depth=12 threat=0 freeT=1 score=9.69
+   cand S t=(21,9) pearls=1.71 area=281 depth=12 threat=0 freeT=1 score=17.49
+   cand W t=(20,8) pearls=1.81 area=334 depth=12 threat=0 freeT=1 score=18.25
+   -> W
+-- IDLE_HOT_HOME=3
+=== R43 id27 real MOVE S
+   HOME N dist=11
+   cand N t=(21,4) pearls=0.43 area=186 depth=12 threat=0 freeT=1 score=-28.68
+   HOME S dist=9
+   cand S t=(21,6) pearls=0.51 area=177 depth=12 threat=0 freeT=1 score=-21.72
+   -> S
+=== R44 id27 real MOVE S
+   HOME E dist=9
+   cand E t=(22,6) pearls=0.31 area=170 depth=12 threat=0 freeT=1 score=-23.72
+   HOME S dist=8
+   cand S t=(21,7) pearls=0.51 area=170 depth=12 threat=0 freeT=1 score=-18.45
+   -> S

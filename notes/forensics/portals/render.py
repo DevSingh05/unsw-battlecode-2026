@@ -57,10 +57,9 @@ def board(gid, rnd, did, box=None, focus=(), out=None):
 
 
 if __name__ == '__main__':
-    a = [x for x in sys.argv[1:] if not x.startswith('--')]
-    focus = ()
-    if '--focus' in sys.argv:
-        fv = sys.argv[sys.argv.index('--focus') + 1]
-        focus = tuple(int(v) for v in fv.split(',')); a = [x for x in a if x != fv]
+    argv = sys.argv[1:]; focus = ()
+    if '--focus' in argv:
+        k = argv.index('--focus'); focus = tuple(int(v) for v in argv[k + 1].split(',')); argv = argv[:k] + argv[k + 2:]
+    a = argv
     box = tuple(map(int, a[3:7])) if len(a) >= 7 else None
     print(board(int(a[0]), int(a[1]), int(a[2]), box, focus))

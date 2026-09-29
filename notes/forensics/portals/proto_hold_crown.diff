@@ -1,0 +1,136 @@
+--- variants/v29/main.cpp	2026-09-29 14:34:15
++++ /private/tmp/claude-501/-Users-devsingh-Developer-UNSW-Battlecode/4107a3b1-a08f-4826-9eaa-522a1a1ebd84/scratchpad/v29hold/main.cpp	2026-09-29 17:25:01
+@@ -18,6 +18,15 @@
+ #include <string>
+ #include <vector>
+ #include <cstdlib>
++#ifndef CROWN_INHERIT
++#define CROWN_INHERIT 0
++#endif
++#ifndef ECHO_EXIT_HOLD
++#define ECHO_EXIT_HOLD 0
++#endif
++#ifndef ECHO_HOLD_MAX
++#define ECHO_HOLD_MAX 2
++#endif
+ 
+ namespace {
+ FILE* dbg = nullptr;
+@@ -891,6 +900,8 @@
+         updateTrail();
+         computeOtherDist();
+         readMessages();
++        if (birthRound < 0)
++            birthRound = round;
+         updateKingship();
+     }
+ 
+@@ -1585,6 +1596,7 @@
+                 }
+         }
+         echoBodyDir[0] = echoBodyDir[1] = echoBodyDir[2] = echoBodyDir[3] = false;
++        echoBlocked[0] = echoBlocked[1] = echoBlocked[2] = echoBlocked[3] = false;
+         if (PORTAL_ECHO_GUARD && probeMask && probeRound == round - 1 && probeTile == myHead)
+         {
+             int heads = in.echoes[2] + in.echoes[4];  // ally_head + enemy_head
+@@ -1613,6 +1625,8 @@
+                     echoBodyDir[d] = true; // a body somewhere past the exit: risky, not certain
+                 if (heads > 0 || (PORTAL_ECHO_GUARD >= 2 && bodies > 0 && shortPath))
+                 {
++                    if (occId[x] < 0)
++                        echoBlocked[d] = true; // blocked only by the echo, not by anything we see
+                     occId[x] = 1 << 20;
+                     occTeam[x] = w.myTeam;
+                     occHead[x] = heads > 0;
+@@ -1689,6 +1703,7 @@
+     // game by a dragon that hasn't heard of any king (a small chance per turn so
+     // a whole swarm doesn't declare at once); steps down if it hears a bigger one.
+     bool kingSelf = false;
++    int birthRound = -1; // first round this process played
+     struct KingInfo
+     {
+         int id, len, tile, dir, round;
+@@ -1713,6 +1728,15 @@
+             {
+                 if (freshKings(myLen + 2) >= 2)
+                     kingSelf = false;
++                return;
++            }
++            // CROWN_INHERIT (notes/forensics/portals): a child born this turn with >= CROWN_INHERIT segments is the
++            // body of a big dragon that just reverse-split (in practice a king). Keep the crown unless a king longer
++            // than our parent (whose last broadcast said myLen + 2) is fresh.
++            if (CROWN_INHERIT && birthRound == round && round >= RP.kingSeedRound && myLen >= CROWN_INHERIT &&
++                freshKings(myLen + 2) == 0)
++            {
++                kingSelf = true;
+                 return;
+             }
+             if (round >= RP.kingSeedRound && freshKings(-1) < 2 && myLen >= 3 && rng.uni() < KING_DECLARE_P)
+@@ -1798,6 +1822,35 @@
+     bool warnDirs[4] = {false, false, false, false};
+     int probeTile = -1, probeRound = -1000, probeMask = 0, probeRays = 0;
+     bool echoBodyDir[4] = {false, false, false, false};
++    bool echoBlocked[4] = {false, false, false, false};
++    int holdStreak = 0;
++    // ECHO_EXIT_HOLD (notes/forensics/portals): a big dragon whose only way on is a portal exit that the last
++    // probe found dirty does not reverse-split (crown lost, parent L2 dies) or cross blind: it splits 2 off its
++    // tail and stays, so the warn ray re-probes the same exit next turn.
++    bool tryEchoHold(int bestD, double best, double otherBest)
++    {
++        if (!ECHO_EXIT_HOLD || (myLen < ECHO_EXIT_HOLD && !(kingSelf && myLen >= 4)) || units >= w.unitLimit || holdStreak >= ECHO_HOLD_MAX)
++            return false;
++        bool want = false;
++        for (int d = 0; d < 4; d++)
++            if (echoBlocked[d] && (bestD < 0 || best < -100))
++                want = true; // the guard removed the only exit
++        if (bestD >= 0 && echoBodyDir[bestD] && otherBest < -100)
++        {
++            int t = step(myHead, bestD);
++            if (t >= 0 && !visible[t] && t != w.plainStep(myHead, bestD))
++                want = true; // about to cross blind into a body echo
++        }
++        if (!want)
++            return false;
++        out += "SPLIT 2\n";
++        pending.clear();
++        pendingSplit = true;
++        holdStreak++;
++        if (dbg)
++            std::fprintf(dbg, "  -> echo hold (split 2)\n");
++        return true;
++    }
+ 
+     // Tile a feeder should die on: a couple of steps in front of the king.
+     int feedTarget() const
+@@ -2533,6 +2586,7 @@
+         int bestD = -1;
+         int bestDepth = 0;
+         int areaCap = 3 * myLen + 30;
++        double candScore[4] = {-1e18, -1e18, -1e18, -1e18};
+         for (int d = 0; d < 4; d++)
+         {
+             int t = step(myHead, d);
+@@ -2637,6 +2691,7 @@
+             if (dbg)
+                 std::fprintf(dbg, "  cand %c t=(%d,%d) pearls=%.2f area=%d depth=%d threat=%d freeT=%d score=%.2f\n", DIRC[d],
+                              t % w.W, t / w.W, pearls, area, depth, threat, freeT[t], score);
++            candScore[d] = score;
+             if (score > best)
+             {
+                 best = score;
+@@ -2675,6 +2730,15 @@
+         }
+         if (KING_ESCAPE && tryKingEscape(bestD))
+             return;
++        {
++            double otherBest = -1e18;
++            for (int d = 0; d < 4; d++)
++                if (d != bestD)
++                    otherBest = std::max(otherBest, candScore[d]);
++            if (tryEchoHold(bestD, best, otherBest))
++                return;
++            holdStreak = 0;
++        }
+ 
+         // ---- trapped: reverse-split so the bulk of the body escapes backwards
+         bool trapped = bestD < 0 || (bestDepth < 4 && best < -100);

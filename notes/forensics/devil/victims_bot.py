@@ -26,6 +26,7 @@ for r in rows:
     bot = arrow[-1].strip() if arrow else '?'
     same = bot == r['act'][0] if len(bot) == 1 else False
     zone_of = {d: z for d, t, z in r['alts']}
+    box = {mm.group(1): float(mm.group(2)) for mm in re.finditer(r'BOX (\w) ([-\d.]+)', blk)}
     ch = cands.get(r['act'][0]); safe = [(c['score'], d, c) for d, c in cands.items() if zone_of.get(d) == 0]
     sb = max(safe) if safe else None
     stat['n'] += 1; stat['reproduced'] += same
@@ -33,10 +34,12 @@ for r in rows:
         margin = ch['score'] - sb[0]
         stat['z%d' % r['zone']] += 1
         stat['threat_flag_z%d' % r['zone']] += ch['threat'] > 0
+        stat['box_on_chosen_z%d' % r['zone']] += box.get(r['act'][0], 0) > 0
+        stat['box_decides_z%d' % r['zone']] += (box.get(r['act'][0], 0) > 0 and ch['score'] - box.get(r['act'][0], 0) < sb[0])
         out.append(dict(r, bot=bot, ch=ch, safe=sb[2], safe_d=sb[1], margin=margin))
-        print('%d r%d us%d L%d zone%d act %s bot %s | chosen %s sc %.1f p %.2f thr %d a %d | best safe %s sc %.1f p %.2f a %d | margin %.1f | local %d/%d' % (
+        print('%d r%d us%d L%d zone%d act %s bot %s | chosen %s sc %.1f p %.2f thr %d a %d | best safe %s sc %.1f p %.2f a %d | margin %.1f | box %.0f | local %d/%d' % (
             r['game'], r['lastr'], r['id'], r['L'], r['zone'], r['act'], bot, r['act'][0], ch['score'], ch['pearls'], ch['threat'], ch['area'],
-            sb[1], sb[0], sb[2]['pearls'], sb[2]['area'], margin, r['loc_a'], r['loc_e']), flush=True)
+            sb[1], sb[0], sb[2]['pearls'], sb[2]['area'], margin, box.get(r['act'][0], 0), r['loc_a'], r['loc_e']), flush=True)
 print(dict(stat))
 ms = sorted(o['margin'] for o in out)
 if ms: print('margin chosen-minus-best-safe: median %.1f, <5: %d, <10: %d, <15: %d of %d' % (ms[len(ms) // 2], sum(m < 5 for m in ms), sum(m < 10 for m in ms), sum(m < 15 for m in ms), len(ms)))

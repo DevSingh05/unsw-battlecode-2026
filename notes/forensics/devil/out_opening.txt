@@ -1,0 +1,34 @@
+608235 Peanut Butte L  hub@15/20/25 4/6/10 v 2/3/3 | eat30 hot  8+ 6 v  4+ 2 | len30 21 v 16 | idle  44 v  78
+608207 Sponge(Alber L  hub@15/20/25 3/2/4 v 3/5/6 | eat30 hot  2+ 5 v  2+ 7 | len30 11 v 10 | idle  60 v  24
+612612 3.14159265   L  hub@15/20/25 2/4/6 v 5/6/5 | eat30 hot  4+11 v  7+ 4 | len30 22 v 16 | idle  63 v  25
+612734 Team SKKU    W  hub@15/20/25 4/5/9 v 2/3/5 | eat30 hot 10+ 5 v  1+ 4 | len30 15 v 11 | idle  55 v  66
+612768 Peanut Butte W  hub@15/20/25 3/5/5 v 1/2/1 | eat30 hot  3+21 v  0+ 8 | len30 30 v 12 | idle  78 v 101
+612864 3.14159265   L  hub@15/20/25 4/5/4 v 6/6/9 | eat30 hot  4+ 1 v 11+ 5 | len30 13 v 21 | idle  73 v  13
+612747 dev test 1 : W  hub@15/20/25 4/5/8 v 2/2/3 | eat30 hot  1+21 v  9+ 8 | len30 26 v 21 | idle  48 v  56
+612998 Team SKKU    W  hub@15/20/25 3/5/6 v 4/4/4 | eat30 hot  6+17 v  4+13 | len30 20 v 15 | idle  66 v  42
+609890 PPP          W  hub@15/20/25 4/5/8 v 0/0/0 | eat30 hot  6+ 4 v  7+ 5 | len30 23 v 14 | idle  38 v 101
+613575 3.14159265   L  hub@15/20/25 2/5/4 v 4/5/6 | eat30 hot  6+ 7 v 10+20 | len30 15 v 35 | idle  60 v  64
+613711 Sabotage-d   L  hub@15/20/25 4/5/4 v 3/4/8 | eat30 hot  4+ 1 v  9+ 9 | len30  9 v 18 | idle  46 v  55
+613835 bread first  W  hub@15/20/25 4/5/3 v 3/4/2 | eat30 hot  2+ 6 v  5+10 | len30 11 v 20 | idle  53 v  52
+615642 bread first  W  hub@15/20/25 1/3/6 v 2/3/3 | eat30 hot  4+22 v 10+ 9 | len30 30 v 20 | idle  77 v  76
+616113 SSS          L  hub@15/20/25 4/5/6 v 4/4/4 | eat30 hot  8+ 3 v  4+ 6 | len30 13 v 11 | idle  35 v  51
+616123 SSS          L  hub@15/20/25 3/4/5 v 3/3/4 | eat30 hot  9+ 9 v  5+ 5 | len30 24 v 18 | idle  56 v  41
+614175 Stockfish    W  hub@15/20/25 4/4/7 v 3/5/4 | eat30 hot  5+ 9 v  1+ 2 | len30 19 v  7 | idle  35 v  32
+616943 3.14159265   L  hub@15/20/25 2/3/3 v 3/3/8 | eat30 hot  3+13 v  8+22 | len30 24 v 34 | idle  80 v  46
+617117 SSS          W  hub@15/20/25 3/4/9 v 1/1/1 | eat30 hot  5+19 v  0+ 5 | len30 33 v 14 | idle  51 v  33
+617036 3.14159265   L  hub@15/20/25 4/3/4 v 6/6/7 | eat30 hot  2+ 4 v 11+ 5 | len30 14 v 21 | idle  78 v  13
+617155 WeHaveQuizze W  hub@15/20/25 2/3/7 v 2/1/1 | eat30 hot  4+17 v  7+ 8 | len30 26 v 16 | idle  75 v  83
+617092 Cutlery      L  hub@15/20/25 3/4/7 v 1/2/2 | eat30 hot  6+ 7 v  7+ 6 | len30 23 v 18 | idle  39 v 102
+617102 中国必须人能飞😡     L  hub@15/20/25 3/5/4 v 3/6/8 | eat30 hot  4+10 v  2+16 | len30 16 v 16 | idle  48 v  14
+617075 calc         W  hub@15/20/25 4/5/7 v 1/1/2 | eat30 hot  4+12 v  4+ 4 | len30 22 v 15 | idle  52 v 117
+617607 Hypr Series  W  hub@15/20/25 4/5/7 v 0/2/3 | eat30 hot  8+ 5 v  4+ 3 | len30 18 v 14 | idle  41 v  87
+618023 PPP          W  hub@15/20/25 4/5/9 v 0/0/0 | eat30 hot  6+ 5 v  7+ 5 | len30 20 v 14 | idle  41 v 109
+619857 bread first  W  hub@15/20/25 2/4/8 v 0/3/3 | eat30 hot  7+ 9 v  6+ 7 | len30 28 v 21 | idle  48 v 106
+620786 Sabotage-d   W  hub@15/20/25 4/5/6 v 2/2/1 | eat30 hot  5+ 9 v  1+ 4 | len30 23 v 15 | idle  38 v  98
+618381 Cutlery      W  hub@15/20/25 4/7/10 v 0/0/0 | eat30 hot  6+15 v  2+ 5 | len30 28 v 14 | idle  36 v 129
+622216 Stockfish    W  hub@15/20/25 4/5/7 v 2/5/5 | eat30 hot  8+ 5 v  4+ 3 | len30 21 v 15 | idle  65 v  63
+625447 BloodBath    W  hub@15/20/25 2/3/2 v 3/2/3 | eat30 hot  0+13 v  0+17 | len30 13 v 12 | idle  55 v  49
+625525 Sponge(Alber W  hub@15/20/25 4/5/5 v 4/5/5 | eat30 hot  5+ 8 v  3+ 4 | len30 16 v 13 | idle  59 v  23
+627737 bread first  W  hub@15/20/25 4/6/5 v 3/4/2 | eat30 hot  6+ 4 v  5+ 5 | len30 17 v 15 | idle  49 v  44
+L 12 means us: 3.2 4.2 5.1 5.0 6.4 17.1 56.8 | them: 3.6 4.4 5.8 6.7 8.9 19.5 43.8
+W 20 means us: 3.4 4.7 6.7 5.0 11.3 21.9 53.0 | them: 1.8 2.5 2.4 4.0 6.5 14.9 73.3
