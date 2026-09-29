@@ -1,0 +1,122 @@
+--- variants/v22/main.cpp	2026-09-28 19:09:18
++++ /private/tmp/claude-501/-Users-devsingh-Developer-UNSW-Battlecode/4107a3b1-a08f-4826-9eaa-522a1a1ebd84/scratchpad/v23dd/main.cpp	2026-09-28 20:09:46
+@@ -107,6 +107,8 @@
+     }
+     if (n == "Portals" && PM_POR_KPORTAL >= 0)
+         RP.kingPortal = PM_POR_KPORTAL; // the Portals module routes the king through portals on purpose
++    if ((RAM_GUARD_LOCAL == 1 && (n == "Devil" || n == "Prisoners Dilemma")) || RAM_GUARD_LOCAL == 2)
++        RP.ramGuard = 2; // notes/19: local odds only
+     if (n == "Prisoners Dilemma" && PM_DIL_KEEP >= 0)
+         RP.keepLen = PM_DIL_KEEP;
+     if (n == "Trauma" && PM_TRA_LATEFEED >= 0)
+@@ -1732,9 +1734,36 @@
+     // threatAt[t] = how many enemy heads can reach t before our next turn,
+     // given their visible length limits how far they can sprint.
+     std::vector<int> threatAt, threatDist, tq;
++    std::vector<int> sprintThreatAt;       // SMALL_SPRINT_THREAT: 2-step sprint reach of enemy heads (len >= 3)
++    int localAllies = 0, localEnemies = 0; // heads in our view (allies include us)
+     void computeThreats()
+     {
+         threatAt.assign(w.N, 0);
++        if (SMALL_SPRINT_THREAT)
++        {
++            sprintThreatAt.assign(w.N, 0);
++            localAllies = localEnemies = 0;
++            for (auto& s : segs)
++                if (s.head)
++                    (s.team == w.myTeam ? localAllies : localEnemies)++;
++            for (auto& s : segs)
++            {
++                if (myLen >= KING_MIN_LEN || !s.head || s.team == w.myTeam || enemyVisibleLength(s.id) < 3)
++                    continue;
++                for (int d1 = 0; d1 < 4; d1++)
++                {
++                    int a = step(s.tile, d1);
++                    if (a < 0 || freeT[a] > 1)
++                        continue; // first sprint step must be free
++                    for (int d2 = 0; d2 < 4; d2++)
++                    {
++                        int b = step(a, d2);
++                        if (b >= 0 && b != s.tile)
++                            sprintThreatAt[b]++;
++                    }
++                }
++            }
++        }
+         if (static_cast<int>(threatDist.size()) != w.N)
+             threatDist.assign(w.N, INF);
+         for (auto& s : segs)
+@@ -1984,7 +2013,7 @@
+                 for (auto& o : segs)
+                     if (o.head && o.id != w.myId)
+                         (o.team == w.myTeam ? allyHeads : enemyHeads)++;
+-                if (units < RAM_MIN_UNITS || allyHeads < enemyHeads + 1)
++                if ((RP.ramGuard != 2 && units < RAM_MIN_UNITS) || allyHeads < enemyHeads + 1)
+                     worth = false;
+             }
+             if (!worth)
+@@ -2280,11 +2309,40 @@
+                 return;
+             }
+         }
+-        if (!(RP.kingDeclare && kingSelf) && !bigLate && (!SPLIT_NEEDS_EXIT || tailHasExit(2)) && myLen >= SPLIT_LEN && myLen >= 4 && units < w.unitLimit && units < SPLIT_MAX_UNITS &&
++        // PUMP_TIP_SPLIT (notes/19): inside a dead end with a pearl next to us, keep eating and split
++        // at the tip, where the child takes L-2 out (a 2-long head dies there, not a 3-long one)
++        int holdTile = -1;
++        if (PUMP_TIP_SPLIT && myLen >= 4 && myLen <= 6 && !threatened && tailHasExit(myLen - 2))
++        {
++            for (int d = 0; d < 4 && holdTile < 0; d++)
++            {
++                int t = step(myHead, d);
++                if (t < 0 || (occId[t] >= 0 && freeT[t] > 1) || !((visible[t] && w.pearlMem[t]) || (w.gmax[t] == 1 && w.gmin[t] == 1)))
++                    continue;
++                double pp;
++                int area;
++                bfsFrom(t, pp, area, myLen + 3);
++                if (area < myLen + 3)
++                    holdTile = t;
++            }
++        }
++        if (holdTile < 0 && !(RP.kingDeclare && kingSelf) && !bigLate && (!SPLIT_NEEDS_EXIT || tailHasExit(2)) && myLen >= SPLIT_LEN && myLen >= 4 && units < w.unitLimit && units < SPLIT_MAX_UNITS &&
+             (round < RP.splitStopRound || (LATE_SPLIT_ROUND > 0 && round < LATE_SPLIT_ROUND && myLen <= LATE_SPLIT_MAXLEN)) &&
+             !threatened)
+         {
+             int k = SPLIT_CHILD > 0 ? std::min(SPLIT_CHILD, myLen - 2) : myLen / 2;
++            if (PUMP_TIP_SPLIT)
++            {
++                int exits = 0; // at a dead-end tip the child (our tail end) takes the bulk out
++                for (int d = 0; d < 4; d++)
++                {
++                    int t = step(myHead, d);
++                    if (t >= 0 && !(occId[t] >= 0 && freeT[t] > 1))
++                        exits++;
++                }
++                if (exits == 0 && tailHasExit(myLen - 2))
++                    k = myLen - 2;
++            }
+             out += "SPLIT " + std::to_string(k) + "\n";
+             pending.clear();
+             pendingSplit = true;
+@@ -2309,7 +2367,7 @@
+             bfsFrom(t, pearls, area, areaCap);
+             score += 10.0 * pearls;
+             int need = myLen + 3;
+-            bool pump = POCKET_PUMP && area < need && pocketWorthPumping(t);
++            bool pump = POCKET_PUMP && area < need && (t == holdTile || pocketWorthPumping(t));
+             if (area < need && !pump)
+                 score -= AREA_WEIGHT * (need - area) / need + 20;
+             int wantDepth = myLen >= 10 ? std::max(SURVIVE_DEPTH, std::min(myLen, KING_SURVIVE_DEPTH)) : SURVIVE_DEPTH;
+@@ -2319,8 +2377,12 @@
+             if (pump)
+                 score += POCKET_PUMP_BONUS;
+             int threat = threatAt[t];
++            // SMALL_SPRINT_THREAT (notes/19): not locally ahead, a ram costs the dragon AND the corpse race
++            bool outnum = SMALL_SPRINT_THREAT && myLen < 6 && localAllies <= localEnemies;
+             if (threat > 0)
+-                score -= (myLen >= 6 ? 25.0 + 4.0 * myLen : SMALL_THREAT_PEN) * (units <= LAST_FEW_UNITS ? LAST_FEW_MULT : 1.0);
++                score -= (myLen >= 6 ? 25.0 + 4.0 * myLen : (outnum ? SMALL_THREAT_PEN_OUT : SMALL_THREAT_PEN)) * (units <= LAST_FEW_UNITS ? LAST_FEW_MULT : 1.0);
++            else if (outnum && sprintThreatAt[t] > 0)
++                score -= SMALL_SPRINT_PEN * (units <= LAST_FEW_UNITS ? LAST_FEW_MULT : 1.0);
+             score += mapScore(t, d);
+             if (KING_CORRIDOR_PENALTY > 0 && myLen >= 10)
+             {

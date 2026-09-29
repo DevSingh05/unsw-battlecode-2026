@@ -573,3 +573,26 @@
 #ifndef PORTAL_PROBE_SOLO
 #define PORTAL_PROBE_SOLO 1
 #endif
+
+// ---- notes/19 (Devil / Prisoners Dilemma diagnosis)
+// Ram guard that only asks for LOCAL odds (allies in view >= enemies in view, target included),
+// not RAM_MIN_UNITS. 1 = Devil + Prisoners Dilemma, 2 = every map that uses the guard or has it off.
+#ifndef RAM_GUARD_LOCAL
+#define RAM_GUARD_LOCAL 1
+#endif
+// Small dragons (<6) that are not locally ahead: stronger 1-step threat penalty and a penalty for
+// tiles an enemy (len>=3) can reach with a 2-step sprint (half of the rams we suffer on PD).
+#ifndef SMALL_SPRINT_THREAT
+#define SMALL_SPRINT_THREAT 0
+#endif
+#ifndef SMALL_THREAT_PEN_OUT
+#define SMALL_THREAT_PEN_OUT 30.0
+#endif
+#ifndef SMALL_SPRINT_PEN
+#define SMALL_SPRINT_PEN 10.0
+#endif
+// Pocket pump: don't split 2 off while a pearl in the dead end is next to us; at the tip give the
+// child L-2 (a 2-long head dies there instead of a 3-long one).
+#ifndef PUMP_TIP_SPLIT
+#define PUMP_TIP_SPLIT 0
+#endif
