@@ -3078,8 +3078,9 @@ struct Bot
                 }
                 if (bestStep >= 0 && tailHasExit(myLen - 2))
                     holdTile = bestStep; // keep eating toward the tip; the split happens there
-                else if (bestStep < 0 && tailHasExit(myLen - 2))
-                    tipK = myLen - 2; // nothing left ahead: the child (tail end, outside) takes the bulk out
+                else if (bestStep < 0 && tailHasExit(myLen - 2) &&
+                         (!PUMP_TIP2_ATE || round - lastGrowRound <= PUMP_TIP2_REGION))
+                    tipK = myLen - 2; // harvested and nothing left ahead: the child (tail end) takes the bulk out
                 if (dbg)
                     std::fprintf(dbg, "TIP2 reg=%zu hold=%d tipK=%d\n", reg.size(), holdTile, tipK);
             }

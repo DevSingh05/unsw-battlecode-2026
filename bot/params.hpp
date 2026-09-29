@@ -839,3 +839,8 @@
 #ifndef POCKET_CERTAIN
 #define POCKET_CERTAIN 0.0
 #endif
+// PUMP_TIP2: only split at the tip if we ate within the last PUMP_TIP2_REGION rounds (we harvested
+// this dead end); dragons that merely start/walk into a dead end must not throw away a stub
+#ifndef PUMP_TIP2_ATE
+#define PUMP_TIP2_ATE 1
+#endif
