@@ -816,3 +816,26 @@
 #ifndef SPLIT_VIABLE_DENSE
 #define SPLIT_VIABLE_DENSE 0
 #endif
+
+// ---- notes/autarky_calc/PLAN.md (Autarky vs calc): pocket treadmill fixes, all general (local geometry)
+// PUMP_TIP2: inside a static 1-wide dead end (kelp flood ahead of the head, not via the neck, <= REGION
+// tiles), L4..MAXLEN keeps eating toward a pearl/every-round tile instead of the normal SPLIT 2 one tile
+// early, and with nothing left ahead splits k=L-2 so the child (tail end, at/outside the mouth) takes the bulk.
+#ifndef PUMP_TIP2
+#define PUMP_TIP2 0
+#endif
+#ifndef PUMP_TIP2_REGION
+#define PUMP_TIP2_REGION 6
+#endif
+#ifndef PUMP_TIP2_MAXLEN
+#define PUMP_TIP2_MAXLEN 7
+#endif
+// POCKET_ENEMY_LOCAL: 0 = old veto (any enemy head within 3 of the entry tile); 1 = veto only an enemy head
+// within 1 of the entry tile; 2 = also when enemy heads within 3 outnumber ours (me included)
+#ifndef POCKET_ENEMY_LOCAL
+#define POCKET_ENEMY_LOCAL 0
+#endif
+// POCKET_CERTAIN: extra score per pocket pearl (pocketWorthPumping count) for a YES pump candidate
+#ifndef POCKET_CERTAIN
+#define POCKET_CERTAIN 0.0
+#endif

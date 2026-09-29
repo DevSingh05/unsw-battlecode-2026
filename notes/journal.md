@@ -118,3 +118,4 @@
 - 20:21 UTC: SPLIT_VIABLE=2: .469 -> reject both variants (off).
 - 20:36 UTC: auto_challenge now launches ranked series (+-5 ranks) first, unranked top-10 with leftover budget (was alternating; only 13 ranked series since 15:29 due to A/B tests + alternation).
 - 20:37 UTC: user: play MORE (others 300-750 battles/24h vs our 250). Loop -> --per-hour 55 --range 8 --top 15 --cycle 300 (max is 60 games/h = 1440/day).
+- 20:44 UTC: Autarky-vs-calc forensics (notes/autarky_calc/PLAN.md): dive splits 1 tile early (+0.2/dive vs calc +0.9); 'POCKET enemy' veto walks us off full pockets (13/20 non-entries, all takeover moments); certain pocket pearls under-valued. Fix flags PUMP_TIP2, POCKET_ENEMY_LOCAL=2, POCKET_CERTAIN=3 (applied, off). Mechanism: 145 dragons re-run, 99.3-99.9% baseline match; TIP2 changed 120 early splits to deeper moves. Testing TIP2 locally.

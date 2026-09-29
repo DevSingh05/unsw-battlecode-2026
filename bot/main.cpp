@@ -2149,9 +2149,38 @@ struct Bot
         auto why = [&](const char* r) { if (dbg) std::fprintf(dbg, "POCKET %s len=%d\n", r, myLen); return false; };
         if (myLen < 2 || myLen > 3 || units >= w.unitLimit || iAmKing())
             return why("len/units/king");
-        for (auto& o : segs)
-            if (o.head && o.team != w.myTeam && wrapDist(o.tile, t) <= 3)
-                return why("enemy");
+        pocketPearlsLast = 0;
+        if (POCKET_ENEMY_LOCAL == 0)
+        {
+            for (auto& o : segs)
+                if (o.head && o.team != w.myTeam && wrapDist(o.tile, t) <= 3)
+                    return why("enemy");
+        }
+        else
+        {
+            // POCKET_ENEMY_LOCAL (notes/autarky_calc/PLAN.md): an enemy head near the mouth is not by itself a
+            // reason to walk off a full pocket (that hands the pocket over). Veto only when an enemy head can
+            // reach the entry tile this turn (head-on / it dives first), or (mode 2) when enemy heads within 3
+            // of the entry outnumber ours (the child would come out into a local majority).
+            int en = 0, al = 1;
+            for (auto& o : segs)
+            {
+                if (!o.head || o.id == w.myId)
+                    continue;
+                int dd = wrapDist(o.tile, t);
+                if (o.team != w.myTeam)
+                {
+                    if (dd <= 1)
+                        return why("enemy");
+                    if (dd <= 3)
+                        en++;
+                }
+                else if (dd <= 3)
+                    al++;
+            }
+            if (POCKET_ENEMY_LOCAL >= 2 && en > al)
+                return why("enemy-local");
+        }
         // flood the pocket from its mouth, not crossing our own body or anything occupied
         std::vector<int> q{t}, seen{t};
         double pearls = 0;
@@ -2191,7 +2220,32 @@ struct Bot
             return why("fewpearls");
         if (dbg)
             std::fprintf(dbg, "POCKET YES len=%d pearls=%.1f\n", myLen, pearls);
+        pocketPearlsLast = pearls;
         return true;
+    }
+    double pocketPearlsLast = 0; // pearls counted by the last pocketWorthPumping() that said yes
+
+    // PUMP_TIP2 (notes/autarky_calc/PLAN.md): is the head inside a static 1-wide dead end? Flood from the
+    // head over kelp only (bodies ignored), never back through the neck. Returns the tiles ahead
+    // (head included) or an empty vector when the region is larger than `cap`.
+    std::vector<int> staticAhead(int cap)
+    {
+        std::vector<int> q;
+        if (static_cast<int>(trail.size()) < 2)
+            return q;
+        int neck = trail[1];
+        q.push_back(myHead);
+        for (size_t qi = 0; qi < q.size(); qi++)
+            for (int d = 0; d < 4; d++)
+            {
+                int v = step(q[qi], d);
+                if (v < 0 || v == neck || std::find(q.begin(), q.end(), v) != q.end())
+                    continue;
+                q.push_back(v);
+                if (static_cast<int>(q.size()) > cap)
+                    return {};
+            }
+        return q;
     }
 
     // Sprint 2-3 steps along pearls when an enemy head could take them first.
@@ -2982,13 +3036,63 @@ struct Bot
                     holdTile = t;
             }
         }
+        int tipK = 0;
+        if (PUMP_TIP2 && myLen >= 4 && myLen <= PUMP_TIP2_MAXLEN && !threatened && !(RP.kingDeclare && kingSelf) &&
+            !bigLate)
+        {
+            std::vector<int> reg = staticAhead(PUMP_TIP2_REGION);
+            bool clean = !reg.empty();
+            for (size_t i = 1; i < reg.size() && clean; i++)
+                if (occHead[reg[i]] && occId[reg[i]] != w.myId)
+                    clean = false; // someone else's head in there: not our treadmill
+            if (clean)
+            {
+                // nearest tile ahead that holds a pearl now or refills every round
+                int bestStep = -1, bestDist = 1 << 20;
+                for (int d = 0; d < 4; d++)
+                {
+                    int t = step(myHead, d);
+                    if (t < 0 || std::find(reg.begin(), reg.end(), t) == reg.end() || (occId[t] >= 0 && freeT[t] > 1))
+                        continue;
+                    // static BFS inside the region from t
+                    std::vector<int> q{t}, dist{0};
+                    for (size_t qi = 0; qi < q.size(); qi++)
+                    {
+                        int u = q[qi];
+                        if ((visible[u] && w.pearlMem[u]) || (w.gmax[u] == 1 && w.gmin[u] == 1))
+                        {
+                            if (dist[qi] < bestDist)
+                                bestDist = dist[qi], bestStep = t;
+                            break;
+                        }
+                        for (int d2 = 0; d2 < 4; d2++)
+                        {
+                            int v = step(u, d2);
+                            if (v < 0 || v == myHead || std::find(reg.begin(), reg.end(), v) == reg.end() ||
+                                std::find(q.begin(), q.end(), v) != q.end())
+                                continue;
+                            q.push_back(v);
+                            dist.push_back(dist[qi] + 1);
+                        }
+                    }
+                }
+                if (bestStep >= 0 && tailHasExit(myLen - 2))
+                    holdTile = bestStep; // keep eating toward the tip; the split happens there
+                else if (bestStep < 0 && tailHasExit(myLen - 2))
+                    tipK = myLen - 2; // nothing left ahead: the child (tail end, outside) takes the bulk out
+                if (dbg)
+                    std::fprintf(dbg, "TIP2 reg=%zu hold=%d tipK=%d\n", reg.size(), holdTile, tipK);
+            }
+        }
         if (holdTile < 0 && !(RP.kingDeclare && kingSelf) && !bigLate && (!SPLIT_NEEDS_EXIT || tailHasExit(2)) &&
             !(UNK_SEALED_FOOD && !w.known && UNK_SEALED_ROOM_MIN > 0 && roomSize(UNK_SEALED_ROOM_MIN) < UNK_SEALED_ROOM_MIN) && myLen >= SPLIT_LEN && myLen >= 4 && units < w.unitLimit && units < SPLIT_MAX_UNITS &&
             (round < RP.splitStopRound || (LATE_SPLIT_ROUND > 0 && round < LATE_SPLIT_ROUND && myLen <= LATE_SPLIT_MAXLEN)) &&
             !threatened)
         {
             int k = SPLIT_CHILD > 0 ? std::min(SPLIT_CHILD, myLen - 2) : myLen / 2;
-            if (PUMP_TIP_SPLIT)
+            if (tipK > 0)
+                k = tipK;
+            else if (PUMP_TIP_SPLIT)
             {
                 int exits = 0; // at a dead-end tip the child (our tail end) takes the bulk out
                 for (int d = 0; d < 4; d++)
@@ -3078,6 +3182,8 @@ struct Bot
                 score -= 150.0 + 40.0 * (wantDepth - depth);
             if (pump)
                 score += POCKET_PUMP_BONUS;
+            if (pump && POCKET_CERTAIN > 0 && t != holdTile)
+                score += POCKET_CERTAIN * pocketPearlsLast; // 3 pearls 1-3 steps away are certain, not a discounted guess
             if (REPLY_SEARCH && myLen >= REPLY_MIN_LEN && depth >= 2)
             {
                 PROF_BEGIN(rp);
