@@ -2225,6 +2225,223 @@ struct Bot
     }
     double pocketPearlsLast = 0; // pearls counted by the last pocketWorthPumping() that said yes
 
+    // ---- POCKET_FACTORY (notes/pocket_factory/LOG.md): a general dead-end pocket cycle.
+    // Pockets = tiles removed by leaf-pruning the (known) edge graph: 1-wide trees hanging off the core.
+    // A dragon facing inward in one can never turn round, so its front 2 segments are lost whatever it
+    // does; the cycle is worth (pearls eaten inside) - 2. So: dive only when >= PF_MIN_P pearls are
+    // expected along the path (timed countdowns), one diver per pocket, keep eating while food lies
+    // ahead, and split k=L-2 at the end so the tail-end child (facing out) carries the bulk out.
+    std::vector<int> pfDepth, pfComp; // depth 1 = mouth tile (touches the core); 0 = not a pocket tile
+    int pfRound = -1;
+    double pfLastP = 0;               // expected pearls of the last pfDiveOK() yes
+    void pfCompute()
+    {
+        if (pfRound >= 0 && (w.known || pfRound == round))
+            return;
+        pfRound = round;
+        pfDepth.assign(w.N, 0);
+        pfComp.assign(w.N, -1);
+        std::vector<int> deg(w.N, 0), q;
+        std::vector<char> pk(w.N, 0);
+        for (int t = 0; t < w.N; t++)
+        {
+            for (int d = 0; d < 4; d++)
+            {
+                int v = step(t, d);
+                if (v >= 0 && v != t)
+                    deg[t]++;
+            }
+            if (deg[t] <= 1)
+                q.push_back(t);
+        }
+        for (size_t i = 0; i < q.size(); i++)
+        {
+            int t = q[i];
+            if (pk[t])
+                continue;
+            pk[t] = 1;
+            for (int d = 0; d < 4; d++)
+            {
+                int v = step(t, d);
+                if (v >= 0 && v != t && !pk[v] && --deg[v] == 1)
+                    q.push_back(v);
+            }
+        }
+        std::vector<int> bq;
+        for (int t = 0; t < w.N; t++)
+        {
+            if (!pk[t])
+                continue;
+            for (int d = 0; d < 4; d++)
+            {
+                int v = step(t, d);
+                if (v >= 0 && !pk[v])
+                {
+                    pfDepth[t] = 1;
+                    pfComp[t] = t;
+                    bq.push_back(t);
+                    break;
+                }
+            }
+        }
+        for (size_t i = 0; i < bq.size(); i++)
+        {
+            int u = bq[i];
+            for (int d = 0; d < 4; d++)
+            {
+                int v = step(u, d);
+                if (v >= 0 && pk[v] && pfDepth[v] == 0)
+                {
+                    pfDepth[v] = pfDepth[u] + 1;
+                    pfComp[v] = pfComp[u];
+                    bq.push_back(v);
+                }
+            }
+        }
+        // isolated pruned trees (the whole map is a tree) have no mouth: leave them at depth 0
+    }
+    // Expected pearl on pocket tile u if our head arrives there on step s (s=1: this turn).
+    double pfPearl(int u, int s) const
+    {
+        int arrive = round + s - 1;
+        if (visible[u])
+        {
+            if (w.pearlMem[u])
+                return 1.0;
+            if (w.spawnAt[u] >= 0 && arrive >= w.spawnAt[u])
+                return 1.0; // countdown seen: it spawns before we get there (the tile is ahead of us, free)
+            return 0.0;
+        }
+        int ls = w.lastSeen[u];
+        if (ls >= 0 && w.pearlMem[u])
+            return 0.7;
+        if (w.spawnAt[u] >= 0 && w.spawnAt[u] > ls && arrive >= w.spawnAt[u])
+            return 0.7;
+        if (fastTile(u))
+            return (w.gmax[u] == 1 || (!w.gapSeen.empty() && w.gapSeen[u] == 1)) ? 0.7 : 0.4;
+        return 0.0;
+    }
+    // Best expected pearls along one inward branch starting at pocket tile t (entered on step s).
+    // Stops at tiles that will still be occupied when we arrive. firstStep = t.
+    double pfBranch(int t, int s, int depthLimit, int* endSteps = nullptr, bool certain = false) const
+    {
+        if (t < 0 || pfDepth[t] == 0 || s > depthLimit || freeT[t] > s)
+        {
+            if (endSteps)
+                *endSteps = s - 1;
+            return 0.0;
+        }
+        double here = pfPearl(t, s);
+        if (certain && here < 1.0)
+            here = 0.0;
+        double best = 0.0;
+        int bestEnd = s;
+        for (int d = 0; d < 4; d++)
+        {
+            int v = step(t, d);
+            if (v < 0 || v == t || pfDepth[v] <= pfDepth[t])
+                continue;
+            int e = s;
+            double b = pfBranch(v, s + 1, depthLimit, &e, certain);
+            if (b > best)
+                best = b, bestEnd = e;
+        }
+        if (endSteps)
+            *endSteps = bestEnd;
+        return here + best;
+    }
+    // Is the head in a pocket, facing inward, with the tail not parked in some other pocket?
+    // (Starters lying in 1-wide corridors between two dead ends fail the tail test and keep old play.)
+    bool pfInward() const
+    {
+        if (myHead < 0 || pfDepth.empty() || pfDepth[myHead] == 0 || static_cast<int>(trail.size()) < myLen || myLen < 2)
+            return false;
+        int neck = trail[1];
+        if (pfDepth[neck] >= pfDepth[myHead] && !(pfDepth[neck] == 0))
+            return false;
+        if (pfDepth[neck] != 0 && pfComp[neck] != pfComp[myHead])
+            return false;
+        int tail = trail[myLen - 1];
+        if (pfDepth[tail] != 0 && pfComp[tail] != pfComp[myHead])
+            return false;
+        return true;
+    }
+    // A split child's head is our tail, facing away from us. Born inside a pocket facing inward it is a
+    // diver with no choice: only allow that when the dive ahead of it is worth it.
+    bool pfChildInwardBad(int k)
+    {
+        if (pfDepth.empty() || static_cast<int>(trail.size()) < myLen || myLen < 3)
+            return false;
+        int tail = trail[myLen - 1], pre = trail[myLen - 2];
+        if (pfDepth[tail] == 0 || pfDepth[pre] >= pfDepth[tail])
+            return false;
+        if (units > w.unitLimit - PF_UNIT_RESERVE)
+            return true; // it could not split its way out at the end
+        for (auto& o : segs)
+            if (o.head && o.id != w.myId && pfDepth[o.tile] > 0 && pfComp[o.tile] == pfComp[tail])
+                return true;
+        double P = 0;
+        for (int d = 0; d < 4; d++)
+        {
+            int v = step(tail, d);
+            if (v < 0 || v == pre || pfDepth[v] <= pfDepth[tail])
+                continue;
+            P = std::max(P, pfBranch(v, 1, 24));
+        }
+        bool bad = k + P < 4.0 + PF_SAFETY || P < PF_MIN_P;
+        if (dbg)
+            std::fprintf(dbg, "PF child-inward k=%d P=%.2f bad=%d\n", k, P, bad ? 1 : 0);
+        return bad;
+    }
+    // Entry test for stepping from the core onto mouth tile t.
+    bool pfDiveOK(int t)
+    {
+        auto why = [&](const char* r) { if (dbg) std::fprintf(dbg, "PF no %s len=%d\n", r, myLen); return false; };
+        pfLastP = 0;
+        if (myLen < 2 || myLen > PF_ENTER_MAXLEN || units > w.unitLimit - PF_UNIT_RESERVE || iAmKing())
+            return why("len/units/king");
+        int comp = pfComp[t];
+        // one diver per pocket: nobody's head inside (a diver ahead blocks the food and its child
+        // comes out head-first into us; an exiting child would meet us head-on)
+        for (auto& o : segs)
+            if (o.head && o.id != w.myId && pfDepth[o.tile] > 0 && pfComp[o.tile] == comp)
+                return why("occupied");
+        int en = 0, al = 1, enAdj = 0;
+        for (auto& o : segs)
+        {
+            if (!o.head || o.id == w.myId)
+                continue;
+            int dd = wrapDist(o.tile, t);
+            if (o.team != w.myTeam)
+            {
+                if (dd <= 1)
+                    enAdj++;
+                if (dd <= 3)
+                    en++;
+            }
+            else if (dd <= 3)
+                al++;
+        }
+        if (enAdj > 0)
+            return why("enemy-adj");
+        if (PF_ENEMY == 0 && en > 0)
+            return why("enemy");
+        if (PF_ENEMY == 1 && en >= al)
+            return why("enemy-local");
+        if (PF_ENEMY == 2 && en > al)
+            return why("enemy-local2");
+        int endS = 0;
+        double P = pfBranch(t, 1, 24, &endS);
+        if (myLen + P < 4.0 + PF_SAFETY)
+            return why("cannot-split");
+        if (P < PF_MIN_P)
+            return why("fewpearls");
+        if (dbg)
+            std::fprintf(dbg, "PF YES len=%d P=%.2f end=%d en=%d al=%d\n", myLen, P, endS, en, al);
+        pfLastP = P;
+        return true;
+    }
+
     // PUMP_TIP2 (notes/autarky_calc/PLAN.md): is the head inside a static 1-wide dead end? Flood from the
     // head over kelp only (bodies ignored), never back through the neck. Returns the tiles ahead
     // (head included) or an empty vector when the region is larger than `cap`.
@@ -3085,7 +3302,78 @@ struct Bot
                     std::fprintf(dbg, "TIP2 reg=%zu hold=%d tipK=%d\n", reg.size(), holdTile, tipK);
             }
         }
-        if (holdTile < 0 && !(RP.kingDeclare && kingSelf) && !bigLate && (!SPLIT_NEEDS_EXIT || tailHasExit(2)) &&
+        bool pfIn = false;
+        if (POCKET_FACTORY)
+        {
+            pfCompute();
+            pfIn = pfInward() && myLen <= PF_MAXLEN;
+            if (pfIn)
+            {
+                // inside a pocket facing inward: eat on while food lies ahead, then split so the child
+                // (our tail end, facing out) takes everything but a 2-long stub out
+                holdTile = -1;
+                tipK = 0;
+                double bestP = 0;
+                int bestT = -1, anyFree = -1;
+                for (int d = 0; d < 4; d++)
+                {
+                    int t = step(myHead, d);
+                    if (t < 0 || t == trail[1] || pfDepth[t] <= pfDepth[myHead] || freeT[t] > 1)
+                        continue;
+                    anyFree = t;
+                    double P = pfBranch(t, 1, 24);
+                    if (P > bestP)
+                        bestP = P, bestT = t;
+                }
+                bool splitNow = bestT < 0 || bestP < PF_AHEAD_MIN;
+                if (!splitNow)
+                {
+                    holdTile = bestT;
+                    // early split (PF_EARLY): peel the bulk off now while the parent's own certain food
+                    // still gets it back to 4 at the end; same total length out, one more unit sooner
+                    if (PF_EARLY && myLen >= 4 && units <= w.unitLimit - PF_UNIT_RESERVE)
+                    {
+                        double Pc = pfBranch(bestT, 1, 24, nullptr, true);
+                        int k = std::min(myLen - 2, static_cast<int>(myLen + Pc - 4.0 + 1e-6));
+                        if (PF_CHILD_MAX > 0 && k > PF_CHILD_MAX)
+                            k = PF_CHILD_MAX;
+                        int A = std::min(PF_CHILD_AREA, k + 2);
+                        if (k >= 2 && splitSideArea(true, k, A) >= A)
+                        {
+                            if (dbg)
+                                std::fprintf(dbg, "PF early split k=%d Pc=%.1f\n", k, Pc);
+                            out += "SPLIT " + std::to_string(k) + "\n";
+                            pending.clear();
+                            pendingSplit = true;
+                            return;
+                        }
+                    }
+                }
+                else if (myLen >= 4 && units < w.unitLimit)
+                {
+                    int k = myLen - 2;
+                    if (PF_CHILD_MAX > 0 && k > PF_CHILD_MAX + 1)
+                        k = PF_CHILD_MAX; // several small children, one per turn (the parent stays >= 4)
+                    int A = std::min(PF_CHILD_AREA, k + 2);
+                    bool ok = splitSideArea(true, k, A) >= A;
+                    if (ok || anyFree < 0)
+                    {
+                        if (dbg)
+                            std::fprintf(dbg, "PF split k=%d aheadP=%.2f childOK=%d\n", k, bestP, ok ? 1 : 0);
+                        out += "SPLIT " + std::to_string(k) + "\n";
+                        pending.clear();
+                        pendingSplit = true;
+                        return;
+                    }
+                    holdTile = anyFree; // child blocked right now: step deeper and try again next turn
+                }
+                else if (anyFree >= 0)
+                    holdTile = bestT >= 0 ? bestT : anyFree;
+                if (dbg)
+                    std::fprintf(dbg, "PF in depth=%d len=%d aheadP=%.2f hold=%d units=%d/%d any=%d\n", pfDepth[myHead], myLen, bestP, holdTile, units, w.unitLimit, anyFree);
+            }
+        }
+        if (!pfIn && holdTile < 0 && !(RP.kingDeclare && kingSelf) && !bigLate && (!SPLIT_NEEDS_EXIT || tailHasExit(2)) &&
             !(UNK_SEALED_FOOD && !w.known && UNK_SEALED_ROOM_MIN > 0 && roomSize(UNK_SEALED_ROOM_MIN) < UNK_SEALED_ROOM_MIN) && myLen >= SPLIT_LEN && myLen >= 4 && units < w.unitLimit && units < SPLIT_MAX_UNITS &&
             (round < RP.splitStopRound || (LATE_SPLIT_ROUND > 0 && round < LATE_SPLIT_ROUND && myLen <= LATE_SPLIT_MAXLEN)) &&
             !threatened)
@@ -3116,7 +3404,9 @@ struct Bot
                     k = myLen - 2;
             }
             bool viable = true;
-            if (SPLIT_VIABLE > 0)
+            if (POCKET_FACTORY && pfChildInwardBad(k))
+                viable = false; // the child would be born inside a pocket facing in, with too little to eat
+            if (viable && SPLIT_VIABLE > 0)
             {
                 // don't give birth into a sealed spot (37% of our splits at 50+ units; notes/23)
                 int A = SPLIT_VIABLE + (units * 4 >= w.unitLimit * 3 ? SPLIT_VIABLE_DENSE : 0);
@@ -3137,6 +3427,47 @@ struct Bot
         if (UNK_EXPLORE && !w.known)
             computeExploreDesire();
         int hotTarget = -1;
+        // PF_PULL: a short free dragon that is the nearest of us to a free, stocked pocket mouth walks to it
+        int pfTarget = -1;
+        if (POCKET_FACTORY && PF_PULL > 0 && !pfIn && myLen >= 2 && myLen <= PF_ENTER_MAXLEN && !feeding && !iAmKing() &&
+            units <= w.unitLimit - PF_UNIT_RESERVE && !pfDepth.empty() && pfDepth[myHead] == 0)
+        {
+            int bd = PF_PULL_RANGE + 1;
+            for (int m = 0; m < w.N; m++)
+            {
+                if (pfDepth[m] != 1)
+                    continue;
+                int dd = wrapDist(myHead, m);
+                if (dd >= bd || dd < 2)
+                    continue; // adjacent: the entry test decides
+                bool busy = false, nearer = false;
+                int en = 0, al = 1;
+                for (auto& o : segs)
+                {
+                    if (!o.head || o.id == w.myId)
+                        continue;
+                    if (pfDepth[o.tile] > 0 && pfComp[o.tile] == pfComp[m])
+                        busy = true;
+                    int od = wrapDist(o.tile, m);
+                    if (o.team == w.myTeam)
+                    {
+                        if (od < dd || (od == dd && o.id < w.myId))
+                            nearer = true;
+                        if (od <= 3)
+                            al++;
+                    }
+                    else if (od <= 3)
+                        en++;
+                }
+                if (busy || nearer || en > al)
+                    continue;
+                if (pfBranch(m, dd, dd + 24) < PF_MIN_P)
+                    continue;
+                bd = dd, pfTarget = m;
+            }
+            if (dbg && pfTarget >= 0)
+                std::fprintf(dbg, "PF pull (%d,%d) d=%d\n", pfTarget % w.W, pfTarget / w.W, bd);
+        }
         if (HOT_PULL > 0 && myLen <= 3 && !feeding && !iAmKing())
         {
             if (hotMouthRound < 0 || (!w.known && round - hotMouthRound >= 25))
@@ -3174,7 +3505,12 @@ struct Bot
             bfsFrom(t, pearls, area, areaCap);
             score += 10.0 * pearls;
             int need = myLen + 3;
-            bool pump = POCKET_PUMP && area < need && (t == holdTile || pocketWorthPumping(t));
+            bool pfEntry = POCKET_FACTORY && !pfIn && !pfDepth.empty() && pfDepth[t] > pfDepth[myHead];
+            bool pump = POCKET_PUMP && area < need && (t == holdTile || (pfEntry ? pfDiveOK(t) : pocketWorthPumping(t)));
+            if (pfEntry && pump && PF_BONUS > 0)
+                score += PF_BONUS * (pfLastP - 2.0); // expected net length of the cycle, certain food
+            if (POCKET_FACTORY && pfIn && t != holdTile && holdTile >= 0)
+                score -= 50.0; // inside: the planned branch (the others are shorter or empty)
             if (area < need && !pump)
                 score -= AREA_WEIGHT * (need - area) / need + 20;
             int wantDepth = myLen >= 10 ? std::max(SURVIVE_DEPTH, std::min(myLen, KING_SURVIVE_DEPTH)) : SURVIVE_DEPTH;
@@ -3273,6 +3609,8 @@ struct Bot
                 int dt = bfsDist[target];
                 score -= FEED_PULL * std::min(dt, 80);
             }
+            if (pfTarget >= 0 && !pump)
+                score -= PF_PULL * std::min(bfsDist[pfTarget], PF_PULL_RANGE + 2);
             if (hotTarget >= 0 && !pump) // stay near fast pockets (presence wins them)
                 score -= HOT_PULL * std::min(bfsDist[hotTarget], HOT_PULL_RANGE);
             if (d == myDir)

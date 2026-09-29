@@ -88,6 +88,7 @@ def main():
     ap.add_argument('--jobs', type=int, default=3)
     ap.add_argument('--keep', default=None)
     ap.add_argument('--replay', nargs=2, default=None)
+    ap.add_argument('--reuse', action='store_true', help='reuse replays already in --keep')
     a = ap.parse_args()
     if a.replay:
         print(metrics(a.replay[0], a.replay[1])); return
@@ -103,13 +104,19 @@ def main():
                 for sw in (False, True):
                     x, y = (ba, ca) if sw else (ca, ba)
                     f = str(tmp / f'{mp}_{seed}_{"B" if sw else "A"}.replay')
+                    if a.reuse and os.path.exists(f):
+                        jobs.append((mp, seed, sw, f, None)); continue
                     jobs.append((mp, seed, sw, f, ex.submit(run_one, x, y, mp, seed, f)))
         agg = collections.defaultdict(lambda: collections.defaultdict(float))
         for mp, seed, sw, f, fut in jobs:
-            text = fut.result()
-            mm = WIN.search(text)
+            if fut is not None:
+                fut.result()
             ct, bt = ('B', 'A') if sw else ('A', 'B')
-            w = 0.5 if not mm else float(mm.group(1) == ct)
+            try:
+                win_ = simj.R.load(f)['result'].get('winner')
+            except Exception:  # noqa
+                win_ = None
+            w = 0.5 if win_ not in ('A', 'B') else float(win_ == ct)
             lines = []
             for who, T in (('cand', ct), ('base', bt)):
                 try:

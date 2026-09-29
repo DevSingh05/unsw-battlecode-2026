@@ -844,3 +844,47 @@
 #ifndef PUMP_TIP2_ATE
 #define PUMP_TIP2_ATE 1
 #endif
+// ---- POCKET_FACTORY (notes/pocket_factory/LOG.md): general dead-end pocket cycle (entry test from timed
+// expected pearls, one diver per pocket, eat to the end, split k=L-2 so the outward child carries the bulk).
+#ifndef POCKET_FACTORY
+#define POCKET_FACTORY 0
+#endif
+#ifndef PF_MAXLEN            // in-pocket control for dragons up to this length (longer: old play)
+#define PF_MAXLEN 10
+#endif
+#ifndef PF_ENTER_MAXLEN      // only dragons this short dive
+#define PF_ENTER_MAXLEN 3
+#endif
+#ifndef PF_MIN_P             // expected pearls along the dive path needed to enter (net = P - 2)
+#define PF_MIN_P 2.5
+#endif
+#ifndef PF_SAFETY            // margin on reaching length 4 (the split) with expected pearls
+#define PF_SAFETY 0.5
+#endif
+#ifndef PF_BONUS             // entry score per expected net pearl (P - 2)
+#define PF_BONUS 4.0
+#endif
+#ifndef PF_ENEMY             // 0: veto any enemy head within 3 of the entry; 1: veto when enemies>=allies within 3;
+#define PF_ENEMY 1           // 2: veto when enemies>allies; always veto an enemy head adjacent to the entry
+#endif
+#ifndef PF_AHEAD_MIN         // inside: keep going while at least this many expected pearls lie ahead
+#define PF_AHEAD_MIN 0.5
+#endif
+#ifndef PF_CHILD_AREA        // inside: the k=L-2 child needs this much room (time-aware) or we step deeper first
+#define PF_CHILD_AREA 4
+#endif
+#ifndef PF_UNIT_RESERVE      // no dives when fewer than this many free unit slots (a diver must split to get out)
+#define PF_UNIT_RESERVE 6
+#endif
+#ifndef PF_PULL              // score per BFS step toward a free stocked pocket mouth (nearest ally only), 0 = off
+#define PF_PULL 0.0
+#endif
+#ifndef PF_PULL_RANGE
+#define PF_PULL_RANGE 6
+#endif
+#ifndef PF_EARLY             // inside with certain food ahead: split k=L+Pc-4 now (parent refills to 4 by the end)
+#define PF_EARLY 0
+#endif
+#ifndef PF_CHILD_MAX         // >0: children of at most this size (tip: repeat one split per turn); 0 = one k=L-2 child
+#define PF_CHILD_MAX 0
+#endif
