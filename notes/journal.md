@@ -116,3 +116,4 @@
 - 20:06 UTC: big-board study (notes/23): not size - mass RETENTION (Slithery .10 v .27, Schooltime .22 v .42, Autarky .01 v .33); we split children into sealed spots (37% at 50-60 units vs top 12-19%; ~102 v 40 stillborn/game). Implemented SPLIT_VIABLE (+_DENSE); testing.
 - 20:19 UTC: SPLIT_VIABLE=4+DENSE4: big boards .396 (Trauma 1/8), gen .475 lesson .375 -> reject; clusters of 5-7 of our heads idle 18-32 rounds near Autarky pockets in 625768 (forensics workflow running). Trying SPLIT_VIABLE=2.
 - 20:21 UTC: SPLIT_VIABLE=2: .469 -> reject both variants (off).
+- 20:36 UTC: auto_challenge now launches ranked series (+-5 ranks) first, unranked top-10 with leftover budget (was alternating; only 13 ranked series since 15:29 due to A/B tests + alternation).

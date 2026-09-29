@@ -93,13 +93,9 @@ def main():
             near = [t for t in L if t["name"] != US and abs(t["rank"] - me["rank"]) <= a.range and t.get("hasBot", True)]
             near.sort(key=lambda t: t["rank"])  # higher-ranked first
             top = [t for t in L if t["name"] != US and t["rank"] <= a.top and t.get("hasBot", True)]
-            # alternate ranked (near) and unranked (top) series
-            plan = []
-            for i in range(max(len(near), len(top))):
-                if i < len(near):
-                    plan.append(("ranked", near[(i + k) % len(near)]))
-                if i < len(top):
-                    plan.append(("unranked", top[(i + k) % len(top)]))
+            # ranked series first (user: more ranked games vs +-RANGE), unranked vs top-N with what's left
+            plan = [("ranked", near[(i + k) % len(near)]) for i in range(len(near))]
+            plan += [("unranked", top[(i + k) % len(top)]) for i in range(len(top))]
             for kind, t in plan:
                 if room < 5:
                     break
