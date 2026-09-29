@@ -2170,7 +2170,7 @@ struct Bot
         if (myLen >= KING_MIN_LEN || w.portalSide.empty() || myHead < 0)
             return;
         int hunger = round - lastGrowRound;
-        bool closed = true;
+        bool closed = true, allSeen = true, regionSmall = false;
         {
             std::vector<int> q{myHead};
             std::vector<char> seen(w.N, 0);
@@ -2183,7 +2183,7 @@ struct Bot
                         continue;
                     seen[v] = 1;
                     if (w.lastSeen[v] < 0)
-                        closed = false;
+                        closed = false, allSeen = false;
                     q.push_back(v);
                 }
             if (q.size() >= static_cast<size_t>(UNK_EXPLORE_BFS_CAP))
@@ -2191,12 +2191,18 @@ struct Bot
             // only "sealed in" if our portal-free region is a minor part of the board
             if (static_cast<double>(q.size()) >= UNK_EXPLORE_REGION_FRAC * w.N)
                 closed = false;
+            // UNK_EXPLORE=2: sealed in = a sizeable share of the board lies beyond portals
+            regionSmall = q.size() < static_cast<size_t>(UNK_EXPLORE_BFS_CAP) &&
+                          static_cast<double>(q.size()) < UNK_EXPLORE_SEALED_FRAC * w.N;
         }
         bool pearlNear = false;
         for (int t = 0; t < w.N && !pearlNear; t++)
             if (visible[t] && w.pearlMem[t] && wrapDist(t, myHead) <= 6)
                 pearlNear = true;
         exploreDesire = (closed && hunger >= UNK_EXPLORE_HUNGER_CLOSED) || (hunger >= UNK_EXPLORE_HUNGER && !pearlNear);
+        if (UNK_EXPLORE >= 2)
+            exploreDesire = regionSmall && ((allSeen && hunger >= UNK_EXPLORE_HUNGER_CLOSED) ||
+                                            (hunger >= UNK_EXPLORE_HUNGER && !pearlNear));
         if (UNK_EXPLORE_LURE > 0)
         {
             lureTile.assign(w.N, 0);
