@@ -9,7 +9,7 @@ Runs a candidate against a baseline on:
   4. holdout  - maps/genhold, ONLY when --holdout is given (final pass/fail; don't tune on it)
   5. ladder   - the 10 ranked maps WITH map knowledge (must not regress)
 
-usage: unseen_eval.py "bot:-DFLAG=1" [--base variants/v15] [--seeds 1] [--jobs 6] [--holdout] [--sets gen,blind,lesson,ladder]
+usage: unseen_eval.py "bot:-DFLAG=1" [--base variants/v15] [--seeds 1] [--jobs 6] [--holdout] [--sets gen,blind,lesson,ladder,gated,blindvk]\n  gated   - portal-gated lesson/gen maps\n  blindvk - candidate WITHOUT map knowledge vs the map-aware base (+ the base-blind reference line); not pooled
 Prints one line per set plus a pooled unseen score. A change is worth keeping only if the pooled
 unseen score is clearly above 0.50 and no set is clearly below it.
 """
@@ -19,6 +19,11 @@ import subprocess
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
+# portal-gated maps (notes/unseen/PLAN.md): most food sits behind portals
+GATED = ["lesson/islands_a", "lesson/islands_b", "lesson/vault_a", "lesson/vault_b", "lesson/vault_c",
+         "gen/g2026_23", "gen/g2026_28", "gen/g2026_32", "genhold/g2027_13", "genhold/g2027_16"]
+# candidate WITHOUT map knowledge vs the map-aware base: the real-opponent view of an unseen map
+BLINDVK = ["default", "queen_of_spades", "portals", "schooltime", "trauma"]
 RANKED = ["devil", "schooltime", "portals", "default", "queen_of_spades", "trophy",
           "autarky", "dilemma", "slithery_fight", "trauma"]
 
@@ -69,13 +74,20 @@ def main():
             res = run(a.cand, a.base, ms, a.seeds, a.jobs, a.seed_base)
         elif s == "holdout":
             res = run(a.cand, a.base, maps_in("genhold"), a.seeds, a.jobs, a.seed_base)
+        elif s == "gated":
+            res = run(a.cand, a.base, GATED, max(2, a.seeds * 2), a.jobs, a.seed_base)
+        elif s == "blindvk":
+            # compare against the same run with the base itself blind (printed as 'blindvk-base')
+            res = run(with_flag(a.cand, "-DNO_KNOWN_MAPS=1"), a.base, BLINDVK, max(2, a.seeds * 2), a.jobs, a.seed_base)
+            ref = run(with_flag(a.base, "-DNO_KNOWN_MAPS=1"), a.base, BLINDVK, max(2, a.seeds * 2), a.jobs, a.seed_base)
+            print(f"blindvk-base {ref[2]}", flush=True)
         elif s == "ladder":
             res = run(a.cand, a.base, RANKED, max(2, a.seeds * 2), a.jobs, a.seed_base)
         else:
             continue
         score, n, text = res
         print(f"{s:8s} {text}", flush=True)
-        if score is not None and s != "ladder":
+        if score is not None and s not in ("ladder", "blindvk"):
             total_s += score
             total_n += n
     if total_n:
