@@ -1,0 +1,240 @@
+[
+  {
+    "map": "tiny7_empty.map",
+    "width": 7,
+    "height": 7,
+    "food": [
+      0,
+      0
+    ],
+    "unit_limit": 64,
+    "starts": [
+      1,
+      1
+    ],
+    "longest_start": 3,
+    "kelp": 0,
+    "portal_edges": 0
+  },
+  {
+    "map": "tiny8_rich.map",
+    "width": 8,
+    "height": 8,
+    "food": [
+      1,
+      1
+    ],
+    "unit_limit": 64,
+    "starts": [
+      1,
+      1
+    ],
+    "longest_start": 3,
+    "kelp": 0,
+    "portal_edges": 0
+  },
+  {
+    "map": "tiny8_portals.map",
+    "width": 8,
+    "height": 8,
+    "food": [
+      1,
+      5
+    ],
+    "unit_limit": 64,
+    "starts": [
+      1,
+      1
+    ],
+    "longest_start": 3,
+    "kelp": 0,
+    "portal_edges": 32
+  },
+  {
+    "map": "wide64x7_sparse.map",
+    "width": 64,
+    "height": 7,
+    "food": [
+      400,
+      500
+    ],
+    "unit_limit": 64,
+    "starts": [
+      1,
+      1
+    ],
+    "longest_start": 3,
+    "kelp": 0,
+    "portal_edges": 0
+  },
+  {
+    "map": "tall7x64_sparse.map",
+    "width": 7,
+    "height": 64,
+    "food": [
+      400,
+      500
+    ],
+    "unit_limit": 64,
+    "starts": [
+      1,
+      1
+    ],
+    "longest_start": 3,
+    "kelp": 0,
+    "portal_edges": 0
+  },
+  {
+    "map": "max64_empty.map",
+    "width": 64,
+    "height": 64,
+    "food": [
+      0,
+      0
+    ],
+    "unit_limit": 64,
+    "starts": [
+      1,
+      1
+    ],
+    "longest_start": 3,
+    "kelp": 0,
+    "portal_edges": 0
+  },
+  {
+    "map": "max64_rich_many.map",
+    "width": 64,
+    "height": 64,
+    "food": [
+      1,
+      1
+    ],
+    "unit_limit": 64,
+    "starts": [
+      16,
+      16
+    ],
+    "longest_start": 3,
+    "kelp": 0,
+    "portal_edges": 0
+  },
+  {
+    "map": "portal32_rich.map",
+    "width": 32,
+    "height": 32,
+    "food": [
+      1,
+      2
+    ],
+    "unit_limit": 64,
+    "starts": [
+      4,
+      4
+    ],
+    "longest_start": 3,
+    "kelp": 0,
+    "portal_edges": 400
+  },
+  {
+    "map": "portal32_empty.map",
+    "width": 32,
+    "height": 32,
+    "food": [
+      0,
+      0
+    ],
+    "unit_limit": 64,
+    "starts": [
+      1,
+      1
+    ],
+    "longest_start": 3,
+    "kelp": 0,
+    "portal_edges": 400
+  },
+  {
+    "map": "walls16_rich.map",
+    "width": 16,
+    "height": 16,
+    "food": [
+      1,
+      1
+    ],
+    "unit_limit": 64,
+    "starts": [
+      1,
+      1
+    ],
+    "longest_start": 3,
+    "kelp": 480,
+    "portal_edges": 0
+  },
+  {
+    "map": "walls16_forced.map",
+    "width": 16,
+    "height": 16,
+    "food": [
+      0,
+      0
+    ],
+    "unit_limit": 64,
+    "starts": [
+      1,
+      1
+    ],
+    "longest_start": 3,
+    "kelp": 484,
+    "portal_edges": 0
+  },
+  {
+    "map": "max64_long320_no_split.map",
+    "width": 64,
+    "height": 64,
+    "food": [
+      0,
+      0
+    ],
+    "unit_limit": 1,
+    "starts": [
+      1,
+      1
+    ],
+    "longest_start": 320,
+    "kelp": 0,
+    "portal_edges": 0
+  },
+  {
+    "map": "asymmetric_one_vs16.map",
+    "width": 32,
+    "height": 64,
+    "food": [
+      1,
+      30
+    ],
+    "unit_limit": 64,
+    "starts": [
+      1,
+      16
+    ],
+    "longest_start": 3,
+    "kelp": 0,
+    "portal_edges": 0
+  },
+  {
+    "map": "king_tail_escape.map",
+    "width": 16,
+    "height": 16,
+    "food": [
+      0,
+      0
+    ],
+    "unit_limit": 2,
+    "starts": [
+      2,
+      2
+    ],
+    "longest_start": 8,
+    "kelp": 2,
+    "portal_edges": 0
+  }
+]

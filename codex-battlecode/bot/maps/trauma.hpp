@@ -104,9 +104,12 @@ void traBfs(std::vector<int>& D, const std::vector<int>& src)
 
 void traInit()
 {
-    if (!traPenD.empty())
+    // TRA_FRAME_BY_POS (via FRAME_FIX): the pen side follows where our team STARTED,
+    // not the team letter (the server swaps starts in ~half of games).
+    bool wantB = (FRAME_FIX ? frameTeam() : w.myTeam) == 'B';
+    if (!traPenD.empty() && wantB == traIsB)
         return;
-    traIsB = w.myTeam == 'B';
+    traIsB = wantB;
     traRev.assign(w.N, {});
     for (int u = 0; u < w.N; u++)
         for (int d = 0; d < 4; d++)

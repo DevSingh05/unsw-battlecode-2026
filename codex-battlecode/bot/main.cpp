@@ -13,6 +13,7 @@
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
+#include <functional>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -104,6 +105,10 @@ void applyMapParams(const char* name)
                 RP.kingKeepExtra = PM_SCH_KKEEP;
         }
     }
+    if (n == "Portals" && PM_POR_KPORTAL >= 0)
+        RP.kingPortal = PM_POR_KPORTAL; // the Portals module routes the king through portals on purpose
+    if ((RAM_GUARD_LOCAL == 1 && (n == "Devil" || n == "Prisoners Dilemma")) || RAM_GUARD_LOCAL == 2)
+        RP.ramGuard = 2; // notes/19: local odds only
     if (n == "Prisoners Dilemma" && PM_DIL_KEEP >= 0)
         RP.keepLen = PM_DIL_KEEP;
     if (n == "Trauma" && PM_TRA_LATEFEED >= 0)
@@ -263,6 +268,9 @@ struct World
     int sym = -1; // 0 none, 1 x, 2 y, 3 xy, -1 unknown
     const KnownMap* known = nullptr;
     std::vector<int> candidates; // indices into KNOWN_MAPS still consistent
+    // FRAME_FIX: did the server swap the teams' start positions vs the map file?
+    int swapState = -1;     // -1 unknown, 0 as in the file, 1 swapped
+    bool swapKnown = false; // learned from our own start or an ally's sonar (not a guess)
 
     std::vector<int> nxt;        // N*4, -1 blocked
     std::vector<int> gmin, gmax; // gap range, gmax 0 = never spawns, -1 unknown
@@ -325,6 +333,141 @@ struct World
     // Edge letter seen in vision: '.', 'w', or a portal id.
     static int edgeKind(const std::string& s) { return s == "." ? 0 : s == "w" ? 1 : 2; }
 
+    // ---- unknown-map learning: portal pairs share an id; once both ends are
+    // seen we know exactly where crossing leads.
+    std::vector<std::pair<int, std::vector<int>>> portalSeen; // id -> canonical edges (tile*2 + 0 horiz / 1 vert)
+    std::vector<int> gapSeen;                                  // largest countdown+1 seen per tile
+    std::vector<char> portalSide;                              // tile*4+dir is a portal edge (unknown maps)
+    bool pearlDistrust = false;                                // built-in pearl gaps contradicted by what we see
+    int pearlContradictions = 0;
+    int canonEdge(int t, int d) const
+    {
+        switch (d)
+        {
+        case 0: return t * 2 + 0;
+        case 2: return plainStep(t, 2) * 2 + 0;
+        case 3: return t * 2 + 1;
+        default: return plainStep(t, 1) * 2 + 1;
+        }
+    }
+    void linkPortal(int e1, int e2)
+    {
+        auto link = [&](int a, int b, bool horiz) {
+            if (horiz)
+            {
+                nxt[a * 4 + 0] = plainStep(b, 0);          // crossing north from a
+                nxt[plainStep(a, 0) * 4 + 2] = b;          // crossing south into a's edge
+            }
+            else
+            {
+                nxt[a * 4 + 3] = plainStep(b, 3);          // crossing west from a
+                nxt[plainStep(a, 3) * 4 + 1] = b;          // crossing east into a's edge
+            }
+        };
+        if ((e1 & 1) != (e2 & 1))
+            return;
+        link(e1 / 2, e2 / 2, (e1 & 1) == 0);
+        link(e2 / 2, e1 / 2, (e1 & 1) == 0);
+    }
+    void notePortal(int t, int d, int pid)
+    {
+        int e = canonEdge(t, d);
+        for (auto& [id, edges] : portalSeen)
+            if (id == pid)
+            {
+                if (std::find(edges.begin(), edges.end(), e) == edges.end())
+                    edges.push_back(e);
+                if (edges.size() == 2)
+                    linkPortal(edges[0], edges[1]);
+                return;
+            }
+        portalSeen.push_back({pid, {e}});
+    }
+    // ---- unknown maps: work out the map's symmetry from walls we've seen, then
+    // mirror every wall we learn (each observation also teaches us the far side).
+    std::vector<signed char> edgeObs; // tile*4+dir -> -1 unknown, 0 open, 1 kelp, 2 portal
+    int symBad[4] = {0, 0, 0, 0}, symGood[4] = {0, 0, 0, 0};
+    int mirrorTileAs(int t, int sy) const
+    {
+        int x = t % W, y = t / W;
+        if (sy == 1) return idx(x, H - 1 - y);
+        if (sy == 2) return idx(W - 1 - x, y);
+        return idx(W - 1 - x, H - 1 - y);
+    }
+    static int mirrorDirAs(int d, int sy)
+    {
+        bool flipNS = sy == 1 || sy == 3, flipEW = sy == 2 || sy == 3;
+        if ((d == 0 || d == 2) && flipNS) return d ^ 2;
+        if ((d == 1 || d == 3) && flipEW) return d ^ 2;
+        return d;
+    }
+    void inferSymmetry(const std::vector<std::pair<int, int>>& obs)
+    {
+        if (edgeObs.size() != nxt.size())
+            edgeObs.assign(nxt.size(), -1);
+        for (auto& [td, k] : obs)
+            edgeObs[td] = static_cast<signed char>(k);
+        if (sym < 0)
+        {
+            // score each candidate on the walls we've seen from both mirrored sides
+            for (auto& [td, k] : obs)
+            {
+                int t = td / 4, d = td % 4;
+                for (int sy = 1; sy <= 3; sy++)
+                {
+                    int mt = mirrorTileAs(t, sy), md = mirrorDirAs(d, sy);
+                    int other = edgeObs[mt * 4 + md];
+                    if (other < 0 || (mt == t && md == d))
+                        continue;
+                    if (other != k)
+                        symBad[sy]++;
+                    else if (k != 0)
+                        symGood[sy]++;
+                }
+            }
+            int alive = 0, pick = -1;
+            for (int sy = 1; sy <= 3; sy++)
+                if (symBad[sy] == 0)
+                {
+                    alive++;
+                    pick = sy;
+                }
+            if (alive == 1 && symGood[pick] >= INFER_SYM_MIN)
+            {
+                sym = pick;
+                if (dbg)
+                    std::fprintf(dbg, "SYMINFER %d good=%d bad=%d,%d,%d\n", sym, symGood[pick], symBad[1], symBad[2], symBad[3]);
+            }
+        }
+        if (sym > 0)
+        {
+            // copy what we know onto the mirrored edges we haven't seen yet
+            for (int td = 0; td < static_cast<int>(edgeObs.size()); td++)
+            {
+                int k = edgeObs[td];
+                if (k < 0)
+                    continue;
+                int mt = mirrorTileAs(td / 4, sym), md = mirrorDirAs(td % 4, sym);
+                int m = mt * 4 + md;
+                if (edgeObs[m] >= 0)
+                    continue;
+                if (k == 0)
+                    nxt[m] = plainStep(mt, md);
+                else
+                    nxt[m] = -1;
+            }
+        }
+    }
+
+    bool portalKnown(int t, int d) const
+    {
+        int e = canonEdge(t, d);
+        for (auto& [id, edges] : portalSeen)
+            if (edges.size() == 2 && (edges[0] == e || edges[1] == e))
+                return true;
+        return false;
+    }
+
     // Tile t, side d has edge kind k. Check it against a known map.
     static bool consistent(const KnownMap& m, int W, int t, int d, int k)
     {
@@ -344,6 +487,7 @@ struct World
     {
         auto tileAt = [&](int col, int row) { return idx(wrapX(headX + col - R), wrapY(headY + row - R)); };
         std::vector<std::pair<int, int>> obs; // (tile*4+dir, kind)
+        std::vector<std::pair<int, int>> portalObs; // (tile*4+dir, portal id)
         for (int row = 0; row <= VS; row++)
             for (int col = 0; col < VS; col++)
             {
@@ -352,6 +496,9 @@ struct World
                     obs.push_back({tileAt(col, row) * 4 + 0, k});
                 if (row > 0)
                     obs.push_back({tileAt(col, row - 1) * 4 + 2, k});
+                if (k == 2)
+                    portalObs.push_back({(row < VS ? tileAt(col, row) * 4 + 0 : tileAt(col, row - 1) * 4 + 2),
+                                         std::atoi(in.hEdges[row][col].c_str())});
             }
         for (int row = 0; row < VS; row++)
             for (int col = 0; col <= VS; col++)
@@ -361,6 +508,9 @@ struct World
                     obs.push_back({tileAt(col, row) * 4 + 3, k});
                 if (col > 0)
                     obs.push_back({tileAt(col - 1, row) * 4 + 1, k});
+                if (k == 2)
+                    portalObs.push_back({(col < VS ? tileAt(col, row) * 4 + 3 : tileAt(col - 1, row) * 4 + 1),
+                                         std::atoi(in.vEdges[row][col].c_str())});
             }
         if (!candidates.empty())
         {
@@ -401,9 +551,18 @@ struct World
                 int t = td / 4, d = td % 4;
                 if (k == 0)
                     nxt[td] = plainStep(t, d);
-                else
-                    nxt[td] = -1; // kelp, or a portal whose far side we don't know
+                else if (k == 1 || !LEARN_PORTALS || !portalKnown(t, d))
+                    nxt[td] = -1; // kelp, or a portal whose far side we don't know yet
             }
+            if (LEARN_PORTALS)
+                for (auto& [td, pid] : portalObs)
+                    notePortal(td / 4, td % 4, pid);
+            if (portalSide.size() != nxt.size())
+                portalSide.assign(nxt.size(), 0);
+            for (auto& [td, pid] : portalObs)
+                portalSide[td] = 1;
+            if (INFER_SYM)
+                inferSymmetry(obs);
         }
     }
 
@@ -417,8 +576,13 @@ struct World
                 continue;
             const int16_t* d = m.dragons + myId * 4;
             char team = d[0] == 0 ? 'A' : 'B';
-            if (team == myTeam && d[2] == headX && d[3] == headY)
+            if ((team == myTeam || FRAME_FIX) && d[2] == headX && d[3] == headY)
             {
+                if (FRAME_FIX)
+                {
+                    swapState = team != myTeam;
+                    swapKnown = true;
+                }
                 // Prefer this candidate by moving it to the front.
                 std::vector<int> keep{c};
                 for (int o : candidates)
@@ -436,7 +600,14 @@ struct World
         if (gmax[t] == 0)
             return 0;
         if (gmax[t] < 0)
-            return 0.01; // unknown map: guess
+        {
+            // unknown map: estimate from the largest countdown we've seen here
+            if ((LEARN_GAPS || pearlDistrust) && !gapSeen.empty() && gapSeen[t] > 0)
+                return 1.0 / std::max(1.0, 0.75 * gapSeen[t]);
+            if (pearlDistrust)
+                return DISTRUST_PRIOR; // unseen tile on a distrusted map: assume a typical rate so we still explore
+            return UNK_PRIOR;
+        }
         return 2.0 / (gmin[t] + gmax[t]);
     }
 };
@@ -466,6 +637,9 @@ struct Bot
     std::vector<Seg> segs;
     std::vector<int> segAt;     // tile -> index into segs, -1
     std::string out;
+    bool unkParamsSet = false; // generic settings chosen for an unseen map
+    std::vector<std::pair<int, int>> allyHeadMemory; // (tile, round) of ally heads seen lately
+    int lastPortalRound = -100;                       // last round we stepped through a portal
     std::vector<int> trail;    // our body, head first (tracked across turns)
     std::vector<int> freeOther; // like freeT but ignoring our own body
     std::vector<int> bodyCnt;   // survival search: our simulated body
@@ -580,8 +754,45 @@ struct Bot
         if (round == 0 || (w.known == nullptr && !w.candidates.empty() && w.lastSeen[myHead] < 0))
             w.identifyByStart(hx, hy);
         w.observeEdges(in, hx, hy);
+        if (FRAME_FIX && w.swapState < 0 && w.known)
+            guessFrame();
 
         filterByCountdowns();
+        if (UNK_SIZE_PARAMS && !w.known && !unkParamsSet)
+        {
+            // Unseen map: pick king timing from the board size (big boards reward one
+            // big king, small ones end in swarm fights).
+            unkParamsSet = true;
+            if (w.N >= UNK_BIG_TILES)
+            {
+                RP.kingDeclare = 1;
+                RP.kingSeedRound = UNK_KS;
+                RP.splitStopRound = UNK_SS;
+                RP.feedStart = UNK_FS;
+                RP.feedReserve = 4;
+            }
+        }
+        if (PEARL_DISTRUST && w.known && !w.pearlDistrust)
+        {
+            // Same walls can come with a different pearl layout (the server runs
+            // variants). If what we see contradicts the built-in gaps, stop trusting
+            // them: keep walls/portals, learn pearls from our own observations.
+            int bad = 0;
+            for (int i = 0; i < 49; i++)
+            {
+                int t = w.idx(in.tx[i], in.ty[i]);
+                int tin = in.tin[i];
+                if ((tin >= 0 && w.gmax[t] == 0) || (tin < 0 && w.gmax[t] > 0) || (w.gmax[t] > 0 && tin > w.gmax[t]))
+                    bad++;
+            }
+            w.pearlContradictions += bad;
+            if (w.pearlContradictions >= PEARL_DISTRUST_MIN)
+            {
+                w.pearlDistrust = true;
+                std::fill(w.gmin.begin(), w.gmin.end(), -1);
+                std::fill(w.gmax.begin(), w.gmax.end(), -1);
+            }
+        }
         for (int i = 0; i < 49; i++)
         {
             int t = w.idx(in.tx[i], in.ty[i]);
@@ -597,6 +808,9 @@ struct Bot
             {
                 if (w.gmax[t] == 0)
                     w.gmax[t] = -1; // learned map said never, but it does spawn
+                if (static_cast<int>(w.gapSeen.size()) != w.N)
+                    w.gapSeen.assign(w.N, 0);
+                w.gapSeen[t] = std::max(w.gapSeen[t], in.tin[i] + 1);
                 w.spawnAt[t] = round + in.tin[i];
                 int m = w.mirror(t);
                 if (m >= 0 && m != t)
@@ -604,6 +818,15 @@ struct Bot
             }
         }
 
+        if (PORTAL_ALLY_COST)
+        {
+            for (auto& sg : segs)
+                if (sg.head && sg.team == w.myTeam && sg.id != w.myId)
+                    allyHeadMemory.push_back({sg.tile, round});
+            allyHeadMemory.erase(std::remove_if(allyHeadMemory.begin(), allyHeadMemory.end(),
+                                                [&](const std::pair<int, int>& e) { return round - e.second > 5; }),
+                                 allyHeadMemory.end());
+        }
         computePortalExits();
         computeFreeTimes();
         updateTrail();
@@ -788,6 +1011,7 @@ struct Bot
     // Time-aware BFS from a tile we enter on step 1. Returns pearl score and
     // number of reachable tiles (capped).
     std::vector<int> bfsDist, bfsQ;
+#include "pearl_route.hpp"
     void bfsFrom(int start, double& pearlScore, int& area, int areaCap)
     {
         if (bfsDist.size() != static_cast<size_t>(w.N))
@@ -827,6 +1051,8 @@ struct Bot
             }
         }
         (void)areaCap;
+        if (PEARL_ROUTE)
+            pearlScore = PEARL_ROUTE_REGION * pearlScore + PEARL_ROUTE_SCALE * bestPearlRoute();
     }
 
     int enemyVisibleLength(int id) const
@@ -1035,6 +1261,8 @@ struct Bot
         int t = step(myHead, d);
         if (t >= 0)
             pending.push_back(t);
+        if (t >= 0 && t != w.plainStep(myHead, d))
+            lastPortalRound = round;
     }
 
     // Keep an exact copy of our own body, including parts out of view (e.g.
@@ -1073,6 +1301,23 @@ struct Bot
         }
         if (static_cast<int>(trail.size()) > myLen)
             trail.resize(myLen);
+        if (NEWBORN_NECK_GUARD && myLen >= 2 && trail.size() == 1)
+        {
+            // A plain-adjacent neck would be in view, so an unseen neck (typically a
+            // child born straddling a portal) sits on a portal exit next to the head.
+            std::vector<int> cand;
+            for (int d = 0; d < 4; d++)
+            {
+                int v = step(myHead, d);
+                if (v >= 0 && v != w.plainStep(myHead, d) && occId[v] < 0)
+                    cand.push_back(v);
+            }
+            if (cand.size() == 1)
+                trail.push_back(cand[0]);
+            else
+                for (int v : cand)
+                    freeT[v] = std::max(freeT[v], myLen);
+        }
         freeOther = freeT;
         for (int t : trail)
             if (occId[t] == w.myId)
@@ -1104,21 +1349,67 @@ struct Bot
     }
     static constexpr uint64_t SECRET = 0x5d1c0ffee15b00b5ULL;
 
+    // ---- FRAME_FIX: which side of the map file are we? ("A" = the file's team 0 starts)
+    char frameTeam() const
+    {
+        if (!FRAME_FIX || w.swapState != 1)
+            return w.myTeam;
+        return w.myTeam == 'A' ? 'B' : 'A';
+    }
+    // Split children never see the start: guess from the nearest start position
+    // (children are born near home early on); an ally's sonar overrides the guess.
+    void guessFrame()
+    {
+        const KnownMap* m = w.known;
+        if (myHead < 0 || !m->dragons || m->dragonCount <= 0)
+            return;
+        int best = 1 << 30, bestTeam = -1;
+        for (int i = 0; i < m->dragonCount; i++)
+        {
+            const int16_t* d = m->dragons + i * 4;
+            int dd = wrapDist(myHead, w.idx(d[2], d[3]));
+            if (dd < best)
+                best = dd, bestTeam = d[0];
+        }
+        if (bestTeam >= 0)
+            w.swapState = (bestTeam == 0 ? 'A' : 'B') != w.myTeam;
+    }
+    // Salt mixed into our sonar checksums: 0 with FRAME_FIX off (v16-compatible);
+    // otherwise 1 + (0 as file / 1 swapped / 2 unknown) so receivers learn the frame.
+    uint64_t frameSalt(int fr) const { return FRAME_FIX ? static_cast<uint64_t>(fr + 1) << 58 : 0; }
+    int myFrameCode() const { return w.swapKnown ? w.swapState : 2; }
+    int lastFrameCode = 2; // frame code of the last message decoded
+    void learnFrame(int fr)
+    {
+        if (FRAME_FIX && fr < 2 && !w.swapKnown)
+        {
+            w.swapState = fr;
+            w.swapKnown = true;
+        }
+    }
+
     uint64_t encodeKing(int tile, int len, int id, int hop, int dir, int rnd) const
     {
         uint64_t x = static_cast<uint64_t>(tile % w.W) | (static_cast<uint64_t>(tile / w.W) << 6) |
                      (static_cast<uint64_t>(std::min(len, 255)) << 12) | (static_cast<uint64_t>(id & 1023) << 20) |
                      (static_cast<uint64_t>(hop & 3) << 30) | (static_cast<uint64_t>(dir & 3) << 32) |
                      (static_cast<uint64_t>(rnd & 511) << 34);
-        uint64_t check = mix(x ^ SECRET ^ (static_cast<uint64_t>(w.myTeam) << 50)) & ((1ULL << 21) - 1);
+        uint64_t check =
+            mix(x ^ SECRET ^ (static_cast<uint64_t>(w.myTeam) << 50) ^ frameSalt(myFrameCode())) & ((1ULL << 21) - 1);
         return x | (check << 43);
     }
 
-    bool decodeKing(uint64_t m, int& tile, int& len, int& id, int& hop, int& dir, int& rnd) const
+    bool decodeKing(uint64_t m, int& tile, int& len, int& id, int& hop, int& dir, int& rnd)
     {
         uint64_t x = m & ((1ULL << 43) - 1);
-        uint64_t check = mix(x ^ SECRET ^ (static_cast<uint64_t>(w.myTeam) << 50)) & ((1ULL << 21) - 1);
-        if ((m >> 43) != check)
+        bool ok = false;
+        for (int fr = 0; fr < (FRAME_FIX ? 3 : 1) && !ok; fr++)
+        {
+            uint64_t check = mix(x ^ SECRET ^ (static_cast<uint64_t>(w.myTeam) << 50) ^ frameSalt(fr)) & ((1ULL << 21) - 1);
+            if ((m >> 43) == check)
+                ok = true, lastFrameCode = fr;
+        }
+        if (!ok)
             return false;
         int px = static_cast<int>(x & 63), py = static_cast<int>((x >> 6) & 63);
         if (px >= w.W || py >= w.H)
@@ -1137,18 +1428,32 @@ struct Bot
     // "Someone is standing on this portal exit": sent back through the portal
     // so an ally about to cross (and unable to see the exit) doesn't land on us.
     static constexpr uint64_t WARN_SECRET = 0x9a3c55e1d2b47f08ULL;
+    // PORTAL_WARN_MEMO: the sender's length rides along (bits 21-26), so receivers
+    // keep the exit blocked while its body drains off it.
+    static constexpr int WARN_XB = PORTAL_WARN_MEMO ? 27 : 21;
     uint64_t encodeWarn(int tile, int rnd) const
     {
         uint64_t x = static_cast<uint64_t>(tile % w.W) | (static_cast<uint64_t>(tile / w.W) << 6) |
                      (static_cast<uint64_t>(rnd & 511) << 12);
-        uint64_t check = mix(x ^ WARN_SECRET ^ (static_cast<uint64_t>(w.myTeam) << 50)) & ((1ULL << 43) - 1);
-        return x | (check << 21);
+        if (PORTAL_WARN_MEMO)
+            x |= static_cast<uint64_t>(std::min(myLen, 63)) << 21;
+        uint64_t check = mix(x ^ WARN_SECRET ^ (static_cast<uint64_t>(w.myTeam) << 50) ^ frameSalt(myFrameCode())) &
+                         ((1ULL << (64 - WARN_XB)) - 1);
+        return x | (check << WARN_XB);
     }
-    bool decodeWarn(uint64_t m, int& tile, int& rnd) const
+    int lastWarnLen = 0;
+    bool decodeWarn(uint64_t m, int& tile, int& rnd)
     {
-        uint64_t x = m & ((1ULL << 21) - 1);
-        uint64_t check = mix(x ^ WARN_SECRET ^ (static_cast<uint64_t>(w.myTeam) << 50)) & ((1ULL << 43) - 1);
-        if ((m >> 21) != check)
+        uint64_t x = m & ((1ULL << WARN_XB) - 1);
+        bool ok = false;
+        for (int fr = 0; fr < (FRAME_FIX ? 3 : 1) && !ok; fr++)
+        {
+            uint64_t check = mix(x ^ WARN_SECRET ^ (static_cast<uint64_t>(w.myTeam) << 50) ^ frameSalt(fr)) &
+                             ((1ULL << (64 - WARN_XB)) - 1);
+            if ((m >> WARN_XB) == check)
+                ok = true, lastFrameCode = fr;
+        }
+        if (!ok)
             return false;
         int px = static_cast<int>(x & 63), py = static_cast<int>((x >> 6) & 63);
         if (px >= w.W || py >= w.H)
@@ -1156,16 +1461,23 @@ struct Bot
         tile = w.idx(px, py);
         int r9 = static_cast<int>((x >> 12) & 511);
         rnd = round - ((round - r9) & 511);
+        lastWarnLen = static_cast<int>((x >> 21) & 63);
         return true;
     }
+    std::vector<std::pair<int, int>> warnMem; // (exit tile, round its last ally segment leaves)
 
     void readMessages()
     {
         for (uint64_t m : in.msgs)
         {
             int tile, rnd;
-            if (!PORTAL_WARN || !decodeWarn(m, tile, rnd) || round - rnd > 1)
+            if (!PORTAL_WARN || !decodeWarn(m, tile, rnd))
                 continue;
+            if (PORTAL_WARN_MEMO && lastWarnLen > 0 && rnd + lastWarnLen + PORTAL_WARN_MEMO_SLACK > round)
+                warnMem.push_back({tile, rnd + lastWarnLen + PORTAL_WARN_MEMO_SLACK});
+            if (round - rnd > 1)
+                continue;
+            learnFrame(lastFrameCode);
             if (occId[tile] < 0)
             {
                 // treat the exit as holding an ally head this turn
@@ -1176,6 +1488,58 @@ struct Bot
                 freeOther[tile] = std::max(freeOther[tile], WARN_FREE_T);
             }
         }
+        if (PORTAL_WARN_MEMO)
+        {
+            warnMem.erase(std::remove_if(warnMem.begin(), warnMem.end(),
+                                         [&](const std::pair<int, int>& e) { return e.second <= round; }),
+                          warnMem.end());
+            for (auto& [tile, until] : warnMem)
+                if (w.lastSeen[tile] != round && (occId[tile] < 0 || occId[tile] == (1 << 20)))
+                {
+                    // an ally's body is still draining off this unseen exit
+                    occId[tile] = 1 << 20;
+                    occTeam[tile] = w.myTeam;
+                    freeT[tile] = std::max(freeT[tile], until - round + 1);
+                    freeOther[tile] = std::max(freeOther[tile], until - round + 1);
+                }
+        }
+        echoBodyDir[0] = echoBodyDir[1] = echoBodyDir[2] = echoBodyDir[3] = false;
+        if (PORTAL_ECHO_GUARD && probeMask && probeRound == round - 1 && probeTile == myHead)
+        {
+            int heads = in.echoes[2] + in.echoes[4];  // ally_head + enemy_head
+            int bodies = in.echoes[1] + in.echoes[3]; // ally (incl. own) + enemy bodies
+            if (probeRays > __builtin_popcount(static_cast<unsigned>(probeMask)))
+                bodies = 0; // king/relay rays in other directions pollute the body count
+            for (int d = 0; d < 4; d++)
+            {
+                if (!((probeMask >> d) & 1))
+                    continue;
+                int x = step(myHead, d);
+                if (x < 0 || x == w.plainStep(myHead, d) || w.lastSeen[x] == round)
+                    continue;
+                bool shortPath = false; // the ray dies on kelp soon after the exit
+                int y = x;
+                for (int k = 0; k <= PORTAL_ECHO_RANGE; k++)
+                {
+                    y = step(y, d);
+                    if (y < 0)
+                    {
+                        shortPath = true;
+                        break;
+                    }
+                }
+                if (PORTAL_ECHO_BODY_PEN > 0 && heads == 0 && bodies > 0 && !shortPath)
+                    echoBodyDir[d] = true; // a body somewhere past the exit: risky, not certain
+                if (heads > 0 || (PORTAL_ECHO_GUARD >= 2 && bodies > 0 && shortPath))
+                {
+                    occId[x] = 1 << 20;
+                    occTeam[x] = w.myTeam;
+                    occHead[x] = heads > 0;
+                    freeT[x] = std::max(freeT[x], 2);
+                    freeOther[x] = std::max(freeOther[x], 2);
+                }
+            }
+        }
         haveRelay = false;
         int bestHopRelay = 99;
         for (uint64_t m : in.msgs)
@@ -1183,6 +1547,7 @@ struct Bot
             int tile, len, id, hop, dir, rnd;
             if (!decodeKing(m, tile, len, id, hop, dir, rnd))
                 continue;
+            learnFrame(lastFrameCode);
             if (round - rnd > 4)
                 continue;
             if (id == (w.myId & 1023))
@@ -1300,14 +1665,15 @@ struct Bot
         bool anyWarn = warnDirs[0] || warnDirs[1] || warnDirs[2] || warnDirs[3];
         if (anyWarn)
             warn = encodeWarn(pending.empty() ? myHead : pending.back(), round);
-        if (iAmKing() && (round >= KING_BROADCAST_START || kingSelf))
+        bool probing = PORTAL_PROBE_SOLO && anyWarn; // keep the echo counts clean (notes/20)
+        if (!probing && iAmKing() && (round >= KING_BROADCAST_START || kingSelf))
         {
             uint64_t m = encodeKing(myHead, myLen, w.myId, 0, myDir, round);
             for (int d = 0; d < 4; d++)
                 if (!warnDirs[d])
                     out += std::string("SONAR ") + DIRC[d] + " " + std::to_string(m) + "\n";
         }
-        else if (haveRelay)
+        else if (!probing && haveRelay)
         {
             for (int d = 0; d < 4; d++)
                 if (!warnDirs[d])
@@ -1316,9 +1682,25 @@ struct Bot
         for (int d = 0; d < 4; d++)
             if (warnDirs[d])
                 out += std::string("SONAR ") + DIRC[d] + " " + std::to_string(warn) + "\n";
+        if (PORTAL_ECHO_GUARD)
+        {
+            // remember what our warn rays probed: next turn's echo counts tell us
+            // whether someone was standing on (or just past) the exit (notes/17)
+            probeMask = 0;
+            for (int d = 0; d < 4; d++)
+                if (warnDirs[d])
+                    probeMask |= 1 << d;
+            probeRays = 0;
+            for (size_t q = out.find("SONAR "); q != std::string::npos; q = out.find("SONAR ", q + 1))
+                probeRays++;
+            probeTile = pending.empty() ? myHead : pending.back();
+            probeRound = round;
+        }
         warnDirs[0] = warnDirs[1] = warnDirs[2] = warnDirs[3] = false;
     }
     bool warnDirs[4] = {false, false, false, false};
+    int probeTile = -1, probeRound = -1000, probeMask = 0, probeRays = 0;
+    bool echoBodyDir[4] = {false, false, false, false};
 
     // Tile a feeder should die on: a couple of steps in front of the king.
     int feedTarget() const
@@ -1344,6 +1726,10 @@ struct Bot
 
     bool shouldFeed() const
     {
+        // FEED_FRESH: only feed a king we heard from recently (a dead king's remembered
+        // length pulled our real longest dragon into suicide, e.g. L21 at r435)
+        if (FEED_FRESH > 0 && (kingId < 0 || round - kingRound > FEED_FRESH || kingLen < myLen + 2))
+            return false;
         if (KING_V2 && RP.kingDeclare)
             return FEED_ENABLE && feedPhase() && kingId >= 0 && kingLen >= myLen + 2 && !iAmKing() &&
                    units > RP.feedReserve &&
@@ -1356,9 +1742,36 @@ struct Bot
     // threatAt[t] = how many enemy heads can reach t before our next turn,
     // given their visible length limits how far they can sprint.
     std::vector<int> threatAt, threatDist, tq;
+    std::vector<int> sprintThreatAt;       // SMALL_SPRINT_THREAT: 2-step sprint reach of enemy heads (len >= 3)
+    int localAllies = 0, localEnemies = 0; // heads in our view (allies include us)
     void computeThreats()
     {
         threatAt.assign(w.N, 0);
+        if (SMALL_SPRINT_THREAT)
+        {
+            sprintThreatAt.assign(w.N, 0);
+            localAllies = localEnemies = 0;
+            for (auto& s : segs)
+                if (s.head)
+                    (s.team == w.myTeam ? localAllies : localEnemies)++;
+            for (auto& s : segs)
+            {
+                if (myLen >= KING_MIN_LEN || !s.head || s.team == w.myTeam || enemyVisibleLength(s.id) < 3)
+                    continue;
+                for (int d1 = 0; d1 < 4; d1++)
+                {
+                    int a = step(s.tile, d1);
+                    if (a < 0 || freeT[a] > 1)
+                        continue; // first sprint step must be free
+                    for (int d2 = 0; d2 < 4; d2++)
+                    {
+                        int b = step(a, d2);
+                        if (b >= 0 && b != s.tile)
+                            sprintThreatAt[b]++;
+                    }
+                }
+            }
+        }
         if (static_cast<int>(threatDist.size()) != w.N)
             threatDist.assign(w.N, INF);
         for (auto& s : segs)
@@ -1366,7 +1779,25 @@ struct Bot
             if (!s.head || s.team == w.myTeam)
                 continue;
             int maxReach = myLen >= KING_MIN_LEN ? KING_THREAT_REACH : MAX_THREAT_REACH;
-            int reach = std::min(std::max(1, enemyVisibleLength(s.id) - 1), maxReach);
+            int reach = std::max(1, enemyVisibleLength(s.id) - 1);
+            if (THREAT_TAIL_UNKNOWN > 0 && myLen >= KING_MIN_LEN && reach < THREAT_TAIL_UNKNOWN)
+            {
+                // its tail is out of view: it may be longer (and sprint further) than it looks
+                bool tailSeen = false;
+                for (int j = 0; j < static_cast<int>(segs.size()) && !tailSeen; j++)
+                {
+                    if (segs[j].id != s.id || segs[j].head || !tailIsVisibleTail(j))
+                        continue;
+                    bool hasPrev = false; // some segment of it steps into j: j isn't the tail
+                    for (auto& o : segs)
+                        if (o.id == s.id && !o.head && step(o.tile, o.facing) == segs[j].tile)
+                            hasPrev = true;
+                    tailSeen = !hasPrev;
+                }
+                if (!tailSeen)
+                    reach = THREAT_TAIL_UNKNOWN;
+            }
+            reach = std::min(reach, maxReach);
             tq.clear();
             tq.push_back(s.tile);
             threatDist[s.tile] = 0;
@@ -1432,6 +1863,143 @@ struct Bot
         }
     }
 
+    // Pocket pumping: a short dragon dives into a dead end with pearls, eats up to
+    // length 4+ at the tip, then (reverse-)splits so the rear half walks back out.
+    // Worth it only if the pocket's pearls get us to 4, no enemy guards the mouth,
+    // and at most one teammate is already inside.
+    bool pocketWorthPumping(int t)
+    {
+        auto why = [&](const char* r) { if (dbg) std::fprintf(dbg, "POCKET %s len=%d\n", r, myLen); return false; };
+        if (myLen < 2 || myLen > 3 || units >= w.unitLimit || iAmKing())
+            return why("len/units/king");
+        for (auto& o : segs)
+            if (o.head && o.team != w.myTeam && wrapDist(o.tile, t) <= 3)
+                return why("enemy");
+        // flood the pocket from its mouth, not crossing our own body or anything occupied
+        std::vector<int> q{t}, seen{t};
+        double pearls = 0;
+        int allies = 0, hot = 0;
+        for (size_t qi = 0; qi < q.size() && q.size() <= 24; qi++)
+        {
+            int u = q[qi];
+            if (visible[u] && w.pearlMem[u])
+                pearls += 1.0;
+            else if (w.gmax[u] > 0 && w.gmax[u] <= POCKET_FAST_GAP)
+                pearls += 0.5, hot++;
+            else if (POCKET_OBSERVED && !w.gapSeen.empty() && w.gapSeen[u] > 0 && w.gapSeen[u] <= POCKET_FAST_GAP)
+                pearls += 0.5, hot++; // we've watched this tile respawn quickly
+            else if (POCKET_OBSERVED && w.spawnAt[u] >= 0 && w.spawnAt[u] - round <= 6)
+                pearls += 0.7; // a pearl is about to appear here
+            if (occHead[u] && occTeam[u] == w.myTeam && occId[u] != w.myId)
+                allies++;
+            for (int d = 0; d < 4; d++)
+            {
+                int v = step(u, d);
+                if (v < 0 || v == myHead || std::find(seen.begin(), seen.end(), v) != seen.end())
+                    continue;
+                if (occId[v] >= 0 && !(occHead[v] && occTeam[v] == w.myTeam))
+                    continue;
+                seen.push_back(v);
+                q.push_back(v);
+            }
+        }
+        if (q.size() > 24)
+            return why("big"); // not a pocket, just a region the area check didn't like
+        if (allies > POCKET_MAX_ALLIES)
+            return why("allies");
+        // on an unseen map, only dive when we've seen evidence of fast pearls in there
+        if ((POCKET_PUMP_HOT || (POCKET_UNK_NEEDS_HOT && !w.known)) && hot == 0)
+            return why("nohot");
+        if (myLen + pearls < POCKET_NEED)
+            return why("fewpearls");
+        if (dbg)
+            std::fprintf(dbg, "POCKET YES len=%d pearls=%.1f\n", myLen, pearls);
+        return true;
+    }
+
+    // Sprint 2-3 steps along pearls when an enemy head could take them first.
+    // Each extra step costs a segment, but a step onto a pearl pays it back, so a
+    // run over pearls is free (or better) and denies them to the enemy.
+    bool tryEatSprint()
+    {
+        if (myLen < 3 || feedPhase() && iAmKing() || threatAt[myHead] > 0)
+            return false;
+        auto pearlAt = [&](int t) { return t >= 0 && visible[t] && w.pearlMem[t]; };
+        auto enemyNear = [&](int t) {
+            for (auto& o : segs)
+                if (o.head && o.team != w.myTeam && wrapDist(o.tile, t) <= EAT_SPRINT_CONTEST)
+                    return true;
+            return false;
+        };
+        auto inBody = [&](int t, int skipTail) {
+            int L = static_cast<int>(trail.size());
+            for (int i = 0; i < L - skipTail; i++)
+                if (trail[i] == t)
+                    return true;
+            return false;
+        };
+        double bestVal = 0.0;
+        std::string bestCmd;
+        std::vector<int> bestPath;
+        int maxSteps = std::min(EAT_SPRINT_MAX, myLen - 1);
+        // depth-first over 2..maxSteps step paths
+        std::vector<int> path;
+        std::vector<int> dirs;
+        std::function<void(int, int, int)> go = [&](int at, int eaten, int contested) {
+            int steps = static_cast<int>(path.size());
+            if (steps >= 2)
+            {
+                // net length change: +eaten - (steps-1); worth it only if it grabs contested pearls
+                int net = eaten - (steps - 1);
+                double val = net + 1.5 * contested;
+                int landing = path.back();
+                int exits = 0;
+                for (int d = 0; d < 4; d++)
+                {
+                    int v = step(landing, d);
+                    if (v >= 0 && freeOther[v] <= 1 && std::find(path.begin(), path.end(), v) == path.end() && !inBody(v, steps))
+                        exits++;
+                }
+                if (exits >= 2 && threatAt[landing] == 0 && net >= 0 && contested > 0 && val > bestVal)
+                {
+                    bestVal = val;
+                    bestPath = path;
+                    bestCmd = "MOVE ";
+                    for (int d : dirs)
+                        bestCmd += DIRC[d];
+                }
+            }
+            if (steps >= maxSteps)
+                return;
+            for (int d = 0; d < 4; d++)
+            {
+                int v = step(at, d);
+                if (v < 0 || freeOther[v] > 1 || occId[v] >= 0 && occId[v] != w.myId)
+                    continue;
+                // our own body before this step: each earlier non-eating step moved the
+                // tail once, and each paid step (2nd onwards) moved it once more; the
+                // engine checks the destination before this step's tail moves
+                int tailFreed = (steps - eaten) + std::max(0, steps - 1);
+                if (inBody(v, std::max(0, tailFreed)) || std::find(path.begin(), path.end(), v) != path.end())
+                    continue;
+                bool p = pearlAt(v);
+                if ((steps >= 1 || EAT_SPRINT_STRICT) && !p)
+                    continue; // only extend a sprint over pearls (strict: every step is a pearl)
+                path.push_back(v);
+                dirs.push_back(d);
+                go(v, eaten + (p ? 1 : 0), contested + (p && enemyNear(v) ? 1 : 0));
+                path.pop_back();
+                dirs.pop_back();
+            }
+        };
+        go(myHead, 0, 0);
+        if (bestCmd.empty())
+            return false;
+        out += bestCmd + "\n";
+        pending = bestPath;
+        return true;
+    }
+
     // Try a head-on ram at distance 1 or 2. Returns true if we emitted it.
     bool tryRam()
     {
@@ -1453,7 +2021,7 @@ struct Bot
                 for (auto& o : segs)
                     if (o.head && o.id != w.myId)
                         (o.team == w.myTeam ? allyHeads : enemyHeads)++;
-                if (units < RAM_MIN_UNITS || allyHeads < enemyHeads + 1)
+                if ((RP.ramGuard != 2 && units < RAM_MIN_UNITS) || allyHeads < enemyHeads + 1)
                     worth = false;
             }
             if (!worth)
@@ -1488,6 +2056,107 @@ struct Bot
         out += bestCmd + "\n";
         pending.clear();
         return true;
+    }
+
+    // KING_ESCAPE (notes/18): a big dragon whose every 1-step move is inside an enemy
+    // head's reach sprints 2 (or 3) steps to a threat-free tile, or reverse-splits.
+    bool tryKingEscape(int bestD)
+    {
+        if (myLen < KING_MIN_LEN || bestD < 0 || threatAt[step(myHead, bestD)] == 0)
+            return false;
+        for (int d = 0; d < 4; d++)
+        {
+            int t = step(myHead, d);
+            if (t >= 0 && !(occId[t] >= 0 && freeT[t] > 1) && threatAt[t] == 0)
+                return false; // a plain step is safe after all
+        }
+        auto ownIdx = [&](int t) {
+            for (int i = 0; i < static_cast<int>(trail.size()); i++)
+                if (trail[i] == t)
+                    return i;
+            return -1;
+        };
+        std::string bestSeq;
+        std::vector<int> bestPath;
+        double bs = -1e18;
+        for (int n = 2; n <= 3 && bestSeq.empty(); n++)
+        {
+            if (myLen - (n - 1) < 2)
+                break;
+            for (int code = 0; code < (n == 2 ? 16 : 64); code++)
+            {
+                int dirs[3] = {code & 3, (code >> 2) & 3, (code >> 4) & 3};
+                int cur = myHead;
+                bool ok = true;
+                std::vector<int> path;
+                for (int k = 0; k < n && ok; k++)
+                {
+                    int t = step(cur, dirs[k]);
+                    if (t < 0 || t == myHead)
+                    {
+                        ok = false;
+                        break;
+                    }
+                    for (int q : path)
+                        if (q == t)
+                            ok = false;
+                    int oi = ownIdx(t);
+                    if (oi >= 0)
+                    {
+                        if (oi < myLen - (k + 1)) // still part of our body at this step
+                            ok = false;
+                    }
+                    else if (occId[t] >= 0 || (!visible[t] && t != w.plainStep(cur, dirs[k])))
+                        ok = false; // other dragons don't move during our turn; no blind crossings
+                    path.push_back(t);
+                    cur = t;
+                }
+                if (!ok || threatAt[cur] > 0)
+                    continue;
+                double pv;
+                int area;
+                bfsFrom(cur, pv, area, 3 * myLen + 30);
+                int dep = surviveDepth(cur, SURVIVE_DEPTH);
+                if (area < myLen - (n - 1) || dep < SURVIVE_DEPTH / 2)
+                    continue;
+                double sc = 10.0 * pv + dep - ESC_SPRINT_COST * (n - 1);
+                if (sc > bs)
+                {
+                    bs = sc;
+                    bestSeq.clear();
+                    for (int k = 0; k < n; k++)
+                        bestSeq += DIRC[dirs[k]];
+                    bestPath = path;
+                }
+            }
+        }
+        if (!bestSeq.empty())
+        {
+            out += "MOVE " + bestSeq + "\n";
+            pending = bestPath;
+            if (dbg)
+                std::fprintf(dbg, "  -> king escape sprint %s\n", bestSeq.c_str());
+            return true;
+        }
+        int tail = static_cast<int>(trail.size()) >= myLen ? trail[myLen - 1] : -1;
+        if (tail >= 0 && units < w.unitLimit && tailHasExit(myLen - 2) && threatAt[tail] == 0)
+        {
+            bool enemyNearTail = false;
+            for (auto& o : segs)
+                if (o.head && o.team != w.myTeam && wrapDist(o.tile, tail) <= 2)
+                    enemyNearTail = true;
+            if (!enemyNearTail)
+            {
+                out += "SPLIT " + std::to_string(myLen - 2) + "\n";
+                pending.clear();
+                pendingSplit = true;
+                kingSelf = false;
+                if (dbg)
+                    std::fprintf(dbg, "  -> king escape reverse split\n");
+                return true;
+            }
+        }
+        return false;
     }
 
     // Can a split-off child whose head is our current tail get away?
@@ -1629,6 +2298,10 @@ struct Bot
             }
         }
 
+        // ---- sprint to grab contested pearls before an enemy can (EAT_SPRINT)
+        if (EAT_SPRINT && tryEatSprint())
+            return;
+
         // ---- splitting
         bool threatened = threatAt[myHead] > 0 || (PORTAL_NO_SPLIT && portalExit[myHead]);
         bool bigLate = RP.kingDeclare && round >= RP.kingSeedRound && myLen >= KING_MIN_LEN;
@@ -1644,10 +2317,40 @@ struct Bot
                 return;
             }
         }
-        if (!(RP.kingDeclare && kingSelf) && !bigLate && (!SPLIT_NEEDS_EXIT || tailHasExit(2)) && myLen >= SPLIT_LEN && myLen >= 4 && units < w.unitLimit && units < SPLIT_MAX_UNITS &&
-            round < RP.splitStopRound && !threatened)
+        // PUMP_TIP_SPLIT (notes/19): inside a dead end with a pearl next to us, keep eating and split
+        // at the tip, where the child takes L-2 out (a 2-long head dies there, not a 3-long one)
+        int holdTile = -1;
+        if (PUMP_TIP_SPLIT && myLen >= 4 && myLen <= 6 && !threatened && tailHasExit(myLen - 2))
+        {
+            for (int d = 0; d < 4 && holdTile < 0; d++)
+            {
+                int t = step(myHead, d);
+                if (t < 0 || (occId[t] >= 0 && freeT[t] > 1) || !((visible[t] && w.pearlMem[t]) || (w.gmax[t] == 1 && w.gmin[t] == 1)))
+                    continue;
+                double pp;
+                int area;
+                bfsFrom(t, pp, area, myLen + 3);
+                if (area < myLen + 3)
+                    holdTile = t;
+            }
+        }
+        if (holdTile < 0 && !(RP.kingDeclare && kingSelf) && !bigLate && (!SPLIT_NEEDS_EXIT || tailHasExit(2)) && myLen >= SPLIT_LEN && myLen >= 4 && units < w.unitLimit && units < SPLIT_MAX_UNITS &&
+            (round < RP.splitStopRound || (LATE_SPLIT_ROUND > 0 && round < LATE_SPLIT_ROUND && myLen <= LATE_SPLIT_MAXLEN)) &&
+            !threatened)
         {
             int k = SPLIT_CHILD > 0 ? std::min(SPLIT_CHILD, myLen - 2) : myLen / 2;
+            if (PUMP_TIP_SPLIT)
+            {
+                int exits = 0; // at a dead-end tip the child (our tail end) takes the bulk out
+                for (int d = 0; d < 4; d++)
+                {
+                    int t = step(myHead, d);
+                    if (t >= 0 && !(occId[t] >= 0 && freeT[t] > 1))
+                        exits++;
+                }
+                if (exits == 0 && tailHasExit(myLen - 2))
+                    k = myLen - 2;
+            }
             out += "SPLIT " + std::to_string(k) + "\n";
             pending.clear();
             pendingSplit = true;
@@ -1672,15 +2375,22 @@ struct Bot
             bfsFrom(t, pearls, area, areaCap);
             score += 10.0 * pearls;
             int need = myLen + 3;
-            if (area < need)
+            bool pump = POCKET_PUMP && area < need && (t == holdTile || pocketWorthPumping(t));
+            if (area < need && !pump)
                 score -= AREA_WEIGHT * (need - area) / need + 20;
             int wantDepth = myLen >= 10 ? std::max(SURVIVE_DEPTH, std::min(myLen, KING_SURVIVE_DEPTH)) : SURVIVE_DEPTH;
             int depth = surviveDepth(t, wantDepth);
-            if (depth < wantDepth)
+            if (depth < wantDepth && !pump)
                 score -= 150.0 + 40.0 * (wantDepth - depth);
+            if (pump)
+                score += POCKET_PUMP_BONUS;
             int threat = threatAt[t];
+            // SMALL_SPRINT_THREAT (notes/19): not locally ahead, a ram costs the dragon AND the corpse race
+            bool outnum = SMALL_SPRINT_THREAT && myLen < 6 && localAllies <= localEnemies;
             if (threat > 0)
-                score -= (myLen >= 6 ? 25.0 + 4.0 * myLen : 12.0) * (units <= LAST_FEW_UNITS ? LAST_FEW_MULT : 1.0);
+                score -= (myLen >= 6 ? 25.0 + 4.0 * myLen : (outnum ? SMALL_THREAT_PEN_OUT : SMALL_THREAT_PEN)) * (units <= LAST_FEW_UNITS ? LAST_FEW_MULT : 1.0);
+            else if (outnum && sprintThreatAt[t] > 0)
+                score -= SMALL_SPRINT_PEN * (units <= LAST_FEW_UNITS ? LAST_FEW_MULT : 1.0);
             score += mapScore(t, d);
             if (KING_CORRIDOR_PENALTY > 0 && myLen >= 10)
             {
@@ -1716,7 +2426,22 @@ struct Bot
             }
             // stepping through a portal onto a tile we can't see: someone may be standing there
             if (!visible[t] && t != w.plainStep(myHead, d))
-                score -= PORTAL_BLIND_PENALTY + (myLen >= 10 ? RP.kingPortal : 0.0);
+            {
+                score -= PORTAL_BLIND_PENALTY + (myLen >= 10 ? RP.kingPortal : 0.0) + (w.known ? 0.0 : UNK_BLIND_PEN);
+                if (PORTAL_ECHO_BODY_PEN > 0 && echoBodyDir[d])
+                    score -= PORTAL_ECHO_BODY_PEN;
+                if (PORTAL_ALLY_COST)
+                {
+                    // allies we've recently seen near the (invisible) exit make a blind crossing risky
+                    int near = 0;
+                    for (auto& [tile, rnd] : allyHeadMemory)
+                        if (round - rnd <= 5 && wrapDist(tile, t) <= 3)
+                            near++;
+                    score -= PORTAL_COST_A + PORTAL_COST_B * near;
+                    if (round - lastPortalRound <= 4)
+                        score -= PORTAL_COST_C; // bouncing straight back through
+                }
+            }
             // standing on a portal exit: others can arrive on us blind
             if (portalExit[t])
                 score -= PORTAL_EXIT_PENALTY;
@@ -1749,9 +2474,15 @@ struct Bot
             }
         }
 
+        if (KING_ESCAPE && tryKingEscape(bestD))
+            return;
+
         // ---- trapped: reverse-split so the bulk of the body escapes backwards
         bool trapped = bestD < 0 || (bestDepth < 4 && best < -100);
-        if (trapped && myLen >= 4 && units < w.unitLimit && tailHasExit(myLen - 2))
+        // TRAP_SPLIT_BLIND: when every move is lethal, split even if the tail is out of view
+        // (a young child's tail often is): losing both halves is no worse than dying whole.
+        if (trapped && myLen >= 4 && units < w.unitLimit &&
+            (tailHasExit(myLen - 2) || (TRAP_SPLIT_BLIND && bestD < 0 && static_cast<int>(trail.size()) < myLen)))
         {
             out += "SPLIT " + std::to_string(myLen - 2) + "\n";
             pending.clear();
@@ -1771,10 +2502,13 @@ struct Bot
             {
                 int t = step(myHead, d);
                 int rank;
-                if (t < 0)
+                // ranks: ally head 0 < kelp 1 < body 2 < unknown portal 3 < enemy head 4
+                if (t < 0 && UNK_PORTAL_ESCAPE && !w.known && !w.portalSide.empty() && w.portalSide[myHead * 4 + d])
+                    rank = 3; // an unknown portal is a gamble; certain death isn't
+                else if (t < 0)
                     rank = 1;
                 else if (occHead[t] && occId[t] != w.myId)
-                    rank = occTeam[t] == w.myTeam ? 0 : 3;
+                    rank = occTeam[t] == w.myTeam ? 0 : 4;
                 else
                     rank = 2;
                 if (rank > bestRank)

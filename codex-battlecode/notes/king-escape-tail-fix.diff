@@ -1,0 +1,38 @@
+--- a/bot/main.cpp
++++ b/bot/main.cpp
+@@ -2086,6 +2086,7 @@
+                 int cur = myHead;
+                 bool ok = true;
+                 std::vector<int> path;
++                int tailFreed = 0;
+                 for (int k = 0; k < n && ok; k++)
+                 {
+                     int t = step(cur, dirs[k]);
+@@ -2100,13 +2101,15 @@
+                     int oi = ownIdx(t);
+                     if (oi >= 0)
+                     {
+-                        if (oi < myLen - (k + 1)) // still part of our body at this step
++                        if (oi < myLen - (KING_ESCAPE_TAIL_FIX ? tailFreed : k + 1)) // test occupancy BEFORE moving
+                             ok = false;
+                     }
+                     else if (occId[t] >= 0 || (!visible[t] && t != w.plainStep(cur, dirs[k])))
+                         ok = false; // other dragons don't move during our turn; no blind crossings
+                     path.push_back(t);
+                     cur = t;
++                    if (KING_ESCAPE_TAIL_FIX)
++                        tailFreed += (visible[t] && w.pearlMem[t] ? 0 : 1) + (k > 0 ? 1 : 0);
+                 }
+                 if (!ok || threatAt[cur] > 0)
+                     continue;
+--- a/bot/params.hpp
++++ b/bot/params.hpp
+@@ -596,3 +596,8 @@
+ #ifndef PUMP_TIP_SPLIT
+ #define PUMP_TIP_SPLIT 0
+ #endif
++
++// Simulate tail releases after each completed king-escape step, including food and sprint cost.
++#ifndef KING_ESCAPE_TAIL_FIX
++#define KING_ESCAPE_TAIL_FIX 0
++#endif

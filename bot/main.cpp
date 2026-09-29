@@ -637,6 +637,7 @@ struct Bot
     std::vector<Seg> segs;
     std::vector<int> segAt;     // tile -> index into segs, -1
     std::string out;
+    bool unkKingSet = false;
     bool unkParamsSet = false; // generic settings chosen for an unseen map
     std::vector<std::pair<int, int>> allyHeadMemory; // (tile, round) of ally heads seen lately
     int lastPortalRound = -100;                       // last round we stepped through a portal
@@ -758,6 +759,25 @@ struct Bot
             guessFrame();
 
         filterByCountdowns();
+        if ((UNK_KING || UNK_SMALL_RAMGUARD) && !w.known && w.candidates.empty())
+        {
+            // unseen map (notes/unseen/PLAN.md Q2/Q7): turn the king + feeding machinery on
+            if (!unkKingSet)
+            {
+                unkKingSet = true;
+                if (UNK_KING)
+                {
+                    RP.kingDeclare = 1;
+                    RP.kingSeedRound = UNK_KING_SEED;
+                    RP.feedStart = UNK_KING_FEED;
+                }
+                if (UNK_SMALL_RAMGUARD && w.N <= 750)
+                    RP.ramGuard = 2;
+            }
+            // a full team has nothing left to gain from more foragers: crown early
+            if (UNK_KING && units >= w.unitLimit - 2)
+                RP.kingSeedRound = std::min(RP.kingSeedRound, std::max(110, round));
+        }
         if (UNK_SIZE_PARAMS && !w.known && !unkParamsSet)
         {
             // Unseen map: pick king timing from the board size (big boards reward one
@@ -1011,6 +1031,7 @@ struct Bot
     // Time-aware BFS from a tile we enter on step 1. Returns pearl score and
     // number of reachable tiles (capped).
     std::vector<int> bfsDist, bfsQ;
+#include "pearl_route.hpp"
     void bfsFrom(int start, double& pearlScore, int& area, int areaCap)
     {
         if (bfsDist.size() != static_cast<size_t>(w.N))
@@ -1050,6 +1071,10 @@ struct Bot
             }
         }
         (void)areaCap;
+        // PEARL_ROUTE (Codex, codex-battlecode/notes/pearl-route.md): value the best single route,
+        // not the sum over every branch. 1 = all maps, 2 = unknown maps only
+        if (PEARL_ROUTE == 1 || (PEARL_ROUTE == 2 && !w.known))
+            pearlScore = PEARL_ROUTE_REGION * pearlScore + PEARL_ROUTE_SCALE * bestPearlRoute();
     }
 
     int enemyVisibleLength(int id) const
@@ -1721,6 +1746,13 @@ struct Bot
         return std::min(dx, w.W - dx) + std::min(dy, w.H - dy);
     }
 
+    // UNK_KING: every dragon computes the same shrinking reserve (14 at r300 -> 3 at r490)
+    int feedReserveNow() const
+    {
+        if (UNK_KING && !w.known)
+            return std::max(3, 14 - (std::clamp(round, 300, 490) - 300) * 11 / 190);
+        return RP.feedReserve;
+    }
     bool shouldFeed() const
     {
         // FEED_FRESH: only feed a king we heard from recently (a dead king's remembered
@@ -1729,7 +1761,7 @@ struct Bot
             return false;
         if (KING_V2 && RP.kingDeclare)
             return FEED_ENABLE && feedPhase() && kingId >= 0 && kingLen >= myLen + 2 && !iAmKing() &&
-                   units > RP.feedReserve &&
+                   units > feedReserveNow() &&
                    myLen <= (round >= KING_V2_MERGE_ROUND ? 1000 : round >= 380 ? 6 : KING_V2_FEED_LEN);
         return FEED_ENABLE && feedPhase() && kingId >= 0 && kingLen >= myLen + 2 && !iAmKing() &&
                (units > RP.feedReserve || (RP.lateFeedRound > 0 && round >= RP.lateFeedRound && units > 1)) && myLen <= FEED_MAX_LEN;
@@ -2086,6 +2118,7 @@ struct Bot
                 int cur = myHead;
                 bool ok = true;
                 std::vector<int> path;
+                int tailFreed = 0; // KING_ESCAPE_TAIL_FIX: own segments released so far
                 for (int k = 0; k < n && ok; k++)
                 {
                     int t = step(cur, dirs[k]);
@@ -2100,13 +2133,15 @@ struct Bot
                     int oi = ownIdx(t);
                     if (oi >= 0)
                     {
-                        if (oi < myLen - (k + 1)) // still part of our body at this step
+                        if (oi < myLen - (KING_ESCAPE_TAIL_FIX ? tailFreed : k + 1)) // occupied BEFORE this step moves
                             ok = false;
                     }
                     else if (occId[t] >= 0 || (!visible[t] && t != w.plainStep(cur, dirs[k])))
                         ok = false; // other dragons don't move during our turn; no blind crossings
                     path.push_back(t);
                     cur = t;
+                    if (KING_ESCAPE_TAIL_FIX) // the tail moves unless we ate; each extra step costs one more
+                        tailFreed += (visible[t] && w.pearlMem[t] ? 0 : 1) + (k > 0 ? 1 : 0);
                 }
                 if (!ok || threatAt[cur] > 0)
                     continue;
@@ -2283,6 +2318,20 @@ struct Bot
                     if (t2 >= 0 && visible[t2] && w.pearlMem[t2])
                         foodWaiting = true;
                 dieNow = kingVisible && !enemyNear && (spot || (KING_V2_LOOSE && dieNow)) && (!foodWaiting || KING_V2_LOOSE);
+                if (FEED_QUEUE && dieNow)
+                {
+                    // one feeder at a time: the ally head closest to the king (ties: lower id),
+                    // only right next to it, and not while its last meal is still lying there
+                    bool closest = true;
+                    for (auto& o : segs)
+                        if (o.head && o.team == w.myTeam && o.id != w.myId && (o.id & 1023) != (kingId & 1023))
+                        {
+                            int od = wrapDist(o.tile, k);
+                            if (od < dk || (od == dk && o.id < w.myId))
+                                closest = false;
+                        }
+                    dieNow = closest && dk <= 3 && !foodWaiting;
+                }
             }
             if (dieNow)
             {

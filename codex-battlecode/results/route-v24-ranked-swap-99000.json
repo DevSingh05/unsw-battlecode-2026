@@ -1,0 +1,122 @@
+{
+  "candidate": "codex-battlecode/bot:-DPEARL_ROUTE=1",
+  "pool": "variants/v24",
+  "maps": [
+    "devil",
+    "schooltime",
+    "portals",
+    "default",
+    "queen_of_spades",
+    "trophy",
+    "autarky",
+    "dilemma",
+    "slithery_fight",
+    "trauma",
+    "swap/devil",
+    "swap/schooltime",
+    "swap/portals",
+    "swap/default",
+    "swap/queen_of_spades",
+    "swap/trophy",
+    "swap/autarky",
+    "swap/dilemma",
+    "swap/slithery_fight",
+    "swap/trauma"
+  ],
+  "seed_base": 99000,
+  "sandbox": false,
+  "seeds": 2,
+  "games": 80,
+  "errors": 0,
+  "score": 42.0,
+  "rate": 0.525,
+  "wilson95": [
+    0.41695451180328746,
+    0.6307545013834838
+  ],
+  "elapsed_seconds": 155.83356704196194,
+  "file_limit": 8192,
+  "finished": "2026-09-29T01:29:54.772853+00:00",
+  "per_map": {
+    "devil": [
+      1.0,
+      4
+    ],
+    "schooltime": [
+      4.0,
+      4
+    ],
+    "portals": [
+      2.0,
+      4
+    ],
+    "default": [
+      3.0,
+      4
+    ],
+    "queen_of_spades": [
+      2.0,
+      4
+    ],
+    "trophy": [
+      2.0,
+      4
+    ],
+    "autarky": [
+      3.0,
+      4
+    ],
+    "dilemma": [
+      4.0,
+      4
+    ],
+    "slithery_fight": [
+      0.0,
+      4
+    ],
+    "trauma": [
+      0.0,
+      4
+    ],
+    "swap/devil": [
+      1.0,
+      4
+    ],
+    "swap/schooltime": [
+      4.0,
+      4
+    ],
+    "swap/portals": [
+      2.0,
+      4
+    ],
+    "swap/default": [
+      3.0,
+      4
+    ],
+    "swap/queen_of_spades": [
+      2.0,
+      4
+    ],
+    "swap/trophy": [
+      2.0,
+      4
+    ],
+    "swap/autarky": [
+      3.0,
+      4
+    ],
+    "swap/dilemma": [
+      4.0,
+      4
+    ],
+    "swap/slithery_fight": [
+      0.0,
+      4
+    ],
+    "swap/trauma": [
+      0.0,
+      4
+    ]
+  }
+}

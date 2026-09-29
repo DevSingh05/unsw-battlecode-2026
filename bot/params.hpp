@@ -596,3 +596,36 @@
 #ifndef PUMP_TIP_SPLIT
 #define PUMP_TIP_SPLIT 0
 #endif
+// ---- unseen maps (notes/unseen/PLAN.md)
+// Q2: declare kings + feed on unknown maps; seed/feed rounds; reserve schedule; crown early when full
+#ifndef UNK_KING
+#define UNK_KING 0
+#endif
+#ifndef UNK_KING_SEED
+#define UNK_KING_SEED 250
+#endif
+#ifndef UNK_KING_FEED
+#define UNK_KING_FEED 300
+#endif
+// one feeder at a time, within 3 of the king, never onto uneaten food
+#ifndef FEED_QUEUE
+#define FEED_QUEUE 0
+#endif
+// Q7: unknown boards with N <= 750 use the local-odds ram guard
+#ifndef UNK_SMALL_RAMGUARD
+#define UNK_SMALL_RAMGUARD 0
+#endif
+// ---- route-based food valuation (Codex): 1 = all maps, 2 = unknown maps only
+#ifndef PEARL_ROUTE
+#define PEARL_ROUTE 0
+#endif
+#ifndef PEARL_ROUTE_SCALE
+#define PEARL_ROUTE_SCALE 2.0
+#endif
+#ifndef PEARL_ROUTE_REGION
+#define PEARL_ROUTE_REGION 0.15
+#endif
+// ---- king-escape sprint: occupancy tested before each step moves the tail (found by Codex)
+#ifndef KING_ESCAPE_TAIL_FIX
+#define KING_ESCAPE_TAIL_FIX 1
+#endif

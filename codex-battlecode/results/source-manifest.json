@@ -1,0 +1,37 @@
+{
+  "codex-battlecode/bot": {
+    "bot.toml": "d56d20b38e5961083cba1d7e00ff47397f567bf55c2b4a4748ac0f32fcba9cd5",
+    "helper.hpp": "9f080746e6e18c73657245e00c9dda2581f6f534fa90d11d78556924b9290152",
+    "main.cpp": "493fe119e2f5aa68a68cf45bc53f188d9234bc66ab07cf7871258ee22b34414d",
+    "maps/autarky.hpp": "3f71e2659878d390c59d12b9e8bea74ae536c07527f0ea504859a1c4ee771afb",
+    "maps/default.hpp": "877dd942c60ce25268724a647f2babe56be7fe42076c255d91020aef4251237e",
+    "maps/devil.hpp": "81f3561aabee0880d75b0b93a4b7520162670bf543c81deeb412742787b0c99a",
+    "maps/dilemma.hpp": "0d98824b8ca23d3e302dc79256e0a5da4f93b7de6522a97dfa335d775feabad2",
+    "maps/portals.hpp": "bc55a1e49a920173f0d3a180361967bafd677a2e24179457cc11fb790cf86211",
+    "maps/queen_of_spades.hpp": "fe7795d5355c1cb3aa14a8a887dc7938ba3cfce716dcf03aa268d79d156dc5d7",
+    "maps/schooltime.hpp": "693f6fac721b4e470138b6b6744d3b87380f718e6b41b7008b8d4f79ee4409a6",
+    "maps/slithery_fight.hpp": "89f687c17ca78d977fe8c0de77be2d2e721f4dc683e5426dec7d8a5553bfd78e",
+    "maps/trauma.hpp": "baf83ffae056779ee0a43017ead48d7e31c00a93ca1389e19bd13d12295385a6",
+    "maps/trophy.hpp": "0f08f9c984eb0b5cd4db66eff87f011de1f1ffb0b7564129bea33a4c71a7ddf4",
+    "maps_data.hpp": "af9ab8e0f791690066bf45c8f23a7a2d1dbf40a92f71701879b1425548f891e0",
+    "params.hpp": "6549991e63c6f1dd8a4ad4b6319bdc84334c497c4440d6e4f2ab93a71fb669b8",
+    "unseen_symmetry.hpp": "d3c749a3a1994dc3ad8eb134c876195c64cda076c26d818e7c30abc2ad2c1676"
+  },
+  "variants/v13": {
+    "bot.toml": "d56d20b38e5961083cba1d7e00ff47397f567bf55c2b4a4748ac0f32fcba9cd5",
+    "helper.hpp": "9f080746e6e18c73657245e00c9dda2581f6f534fa90d11d78556924b9290152",
+    "main.cpp": "10d9fa138c83661f80ad3be9f40fc1128798c8e14a33e7219aa21878a8f7f24c",
+    "maps/autarky.hpp": "3f71e2659878d390c59d12b9e8bea74ae536c07527f0ea504859a1c4ee771afb",
+    "maps/default.hpp": "877dd942c60ce25268724a647f2babe56be7fe42076c255d91020aef4251237e",
+    "maps/devil.hpp": "81f3561aabee0880d75b0b93a4b7520162670bf543c81deeb412742787b0c99a",
+    "maps/dilemma.hpp": "0d98824b8ca23d3e302dc79256e0a5da4f93b7de6522a97dfa335d775feabad2",
+    "maps/portals.hpp": "bc55a1e49a920173f0d3a180361967bafd677a2e24179457cc11fb790cf86211",
+    "maps/queen_of_spades.hpp": "fe7795d5355c1cb3aa14a8a887dc7938ba3cfce716dcf03aa268d79d156dc5d7",
+    "maps/schooltime.hpp": "693f6fac721b4e470138b6b6744d3b87380f718e6b41b7008b8d4f79ee4409a6",
+    "maps/slithery_fight.hpp": "89f687c17ca78d977fe8c0de77be2d2e721f4dc683e5426dec7d8a5553bfd78e",
+    "maps/trauma.hpp": "baf83ffae056779ee0a43017ead48d7e31c00a93ca1389e19bd13d12295385a6",
+    "maps/trophy.hpp": "0f08f9c984eb0b5cd4db66eff87f011de1f1ffb0b7564129bea33a4c71a7ddf4",
+    "maps_data.hpp": "af9ab8e0f791690066bf45c8f23a7a2d1dbf40a92f71701879b1425548f891e0",
+    "params.hpp": "a11e029438c683f82f4559095140889e9bd3482739e9b5008761d0cf91b29257"
+  }
+}

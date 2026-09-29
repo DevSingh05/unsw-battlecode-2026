@@ -1,0 +1,32 @@
+{
+  "candidate": "codex-battlecode/build/sandbox_symmetry",
+  "pool": "codex-battlecode/build/sandbox_v13",
+  "maps": [
+    "gen/g2026_14",
+    "gen/g2026_16"
+  ],
+  "seed_base": 52000,
+  "sandbox": true,
+  "seeds": 1,
+  "games": 4,
+  "errors": 0,
+  "score": 2.0,
+  "rate": 0.5,
+  "wilson95": [
+    0.15003570882017148,
+    0.8499642911798285
+  ],
+  "elapsed_seconds": 134.49396133300615,
+  "file_limit": 8192,
+  "finished": "2026-09-28T15:22:57.035899+00:00",
+  "per_map": {
+    "gen/g2026_14": [
+      0.0,
+      2
+    ],
+    "gen/g2026_16": [
+      2.0,
+      2
+    ]
+  }
+}

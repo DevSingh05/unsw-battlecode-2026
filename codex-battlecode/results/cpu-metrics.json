@@ -1,0 +1,50 @@
+[
+  {
+    "map": "gen/g2026_14",
+    "candidate_side": "A",
+    "bot": "candidate",
+    "summary": "team A points per turn: p50 5.6M  p99 6.4M  mean 5.6M  max 6.9M  (29503 turns)"
+  },
+  {
+    "map": "gen/g2026_14",
+    "candidate_side": "A",
+    "bot": "v13",
+    "summary": "team B points per turn: p50 5.2M  p99 5.9M  mean 5.2M  max 6.4M  (25696 turns)"
+  },
+  {
+    "map": "gen/g2026_14",
+    "candidate_side": "B",
+    "bot": "v13",
+    "summary": "team A points per turn: p50 5.1M  p99 6.0M  mean 5.1M  max 6.4M  (25962 turns)"
+  },
+  {
+    "map": "gen/g2026_14",
+    "candidate_side": "B",
+    "bot": "candidate",
+    "summary": "team B points per turn: p50 5.6M  p99 6.4M  mean 5.6M  max 7.0M  (28140 turns)"
+  },
+  {
+    "map": "gen/g2026_16",
+    "candidate_side": "A",
+    "bot": "candidate",
+    "summary": "team A points per turn: p50 13.2M  p99 14.1M  mean 12.6M  max 16.3M  (28196 turns)"
+  },
+  {
+    "map": "gen/g2026_16",
+    "candidate_side": "A",
+    "bot": "v13",
+    "summary": "team B points per turn: p50 11.0M  p99 11.9M  mean 10.4M  max 13.8M  (27530 turns)"
+  },
+  {
+    "map": "gen/g2026_16",
+    "candidate_side": "B",
+    "bot": "v13",
+    "summary": "team A points per turn: p50 11.0M  p99 11.9M  mean 10.4M  max 13.8M  (28547 turns)"
+  },
+  {
+    "map": "gen/g2026_16",
+    "candidate_side": "B",
+    "bot": "candidate",
+    "summary": "team B points per turn: p50 13.2M  p99 14.1M  mean 12.5M  max 16.3M  (27936 turns)"
+  }
+]

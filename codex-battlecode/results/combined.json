@@ -1,0 +1,16 @@
+{
+  "score": 179.0,
+  "games": 320,
+  "rate": 0.559375,
+  "wilson95": [
+    0.504593646644884,
+    0.6127476708387252
+  ],
+  "map_bootstrap95": [
+    0.496875,
+    0.621875
+  ],
+  "bootstrap_seed": 64000,
+  "bootstrap_samples": 20000,
+  "verdict": "inconclusive: independent seed set fails acceptance interval"
+}

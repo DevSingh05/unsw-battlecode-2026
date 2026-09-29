@@ -1,0 +1,72 @@
+{
+  "candidate": "codex-battlecode/bot:-DPEARL_ROUTE=1",
+  "pool": "variants/v24",
+  "maps": [
+    "devil",
+    "schooltime",
+    "portals",
+    "default",
+    "queen_of_spades",
+    "trophy",
+    "autarky",
+    "dilemma",
+    "slithery_fight",
+    "trauma"
+  ],
+  "seed_base": 98000,
+  "sandbox": false,
+  "seeds": 2,
+  "games": 40,
+  "errors": 0,
+  "score": 19.0,
+  "rate": 0.475,
+  "wilson95": [
+    0.32935229550181694,
+    0.6250289314607027
+  ],
+  "elapsed_seconds": 78.02575495798374,
+  "file_limit": 8192,
+  "finished": "2026-09-29T01:24:51.004725+00:00",
+  "per_map": {
+    "devil": [
+      1.0,
+      4
+    ],
+    "schooltime": [
+      4.0,
+      4
+    ],
+    "portals": [
+      0.0,
+      4
+    ],
+    "default": [
+      3.0,
+      4
+    ],
+    "queen_of_spades": [
+      2.0,
+      4
+    ],
+    "trophy": [
+      0.0,
+      4
+    ],
+    "autarky": [
+      4.0,
+      4
+    ],
+    "dilemma": [
+      4.0,
+      4
+    ],
+    "slithery_fight": [
+      0.0,
+      4
+    ],
+    "trauma": [
+      1.0,
+      4
+    ]
+  }
+}

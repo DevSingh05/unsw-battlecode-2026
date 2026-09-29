@@ -1,4 +1,16 @@
 #pragma once
+
+// Route-based food valuation; default off pending validation on v24.
+#ifndef PEARL_ROUTE
+#define PEARL_ROUTE 0
+#endif
+#ifndef PEARL_ROUTE_SCALE
+#define PEARL_ROUTE_SCALE 2.0
+#endif
+#ifndef PEARL_ROUTE_REGION
+#define PEARL_ROUTE_REGION 0.15
+#endif
+
 // Tunable strategy knobs. Variants for local testing override these.
 
 // Split once a dragon reaches this length (child takes half).
@@ -302,7 +314,7 @@
 #endif
 // Extra penalty for a long dragon (10+) stepping blind through a portal.
 #ifndef KING_PORTAL_PENALTY
-#define KING_PORTAL_PENALTY 0.0
+#define KING_PORTAL_PENALTY 100.0
 #endif
 // Penalty per teammate head within 2 tiles of where we'd move (spread the swarm).
 #ifndef CROWD_PENALTY
@@ -387,4 +399,212 @@
 // Penalty for a big dragon (10+) stepping onto a corridor tile (<=2 open sides).
 #ifndef KING_CORRIDOR_PENALTY
 #define KING_CORRIDOR_PENALTY 0.0
+#endif
+// ---- unknown-map learning
+#ifndef LEARN_PORTALS
+#define LEARN_PORTALS 0
+#endif
+#ifndef LEARN_GAPS
+#define LEARN_GAPS 0
+#endif
+// Unknown maps: step through an unknown portal rather than die for certain.
+#ifndef UNK_PORTAL_ESCAPE
+#define UNK_PORTAL_ESCAPE 1
+#endif
+// Unknown maps: extra penalty for crossing a (learned) portal onto a tile we can't see.
+#ifndef UNK_BLIND_PEN
+#define UNK_BLIND_PEN 0.0
+#endif
+// Stop trusting built-in pearl gaps when visible countdowns contradict them
+// (the server runs pearl-layout variants of the same walls).
+#ifndef PEARL_DISTRUST
+#define PEARL_DISTRUST 0
+#endif
+#ifndef PEARL_DISTRUST_MIN
+#define PEARL_DISTRUST_MIN 3
+#endif
+// Assumed spawn rate for unseen tiles once built-in pearl data is distrusted.
+#ifndef DISTRUST_PRIOR
+#define DISTRUST_PRIOR 0.01
+#endif
+// ---- unseen maps
+// Assumed spawn rate for a tile we've never seen on an unknown map.
+#ifndef UNK_PRIOR
+#define UNK_PRIOR 0.01
+#endif
+// On unknown maps, choose king timing by board size.
+#ifndef UNK_SIZE_PARAMS
+#define UNK_SIZE_PARAMS 0
+#endif
+#ifndef UNK_BIG_TILES
+#define UNK_BIG_TILES 1000
+#endif
+#ifndef UNK_KS
+#define UNK_KS 250
+#endif
+#ifndef UNK_SS
+#define UNK_SS 360
+#endif
+#ifndef UNK_FS
+#define UNK_FS 300
+#endif
+// Unknown maps: infer the map's symmetry from seen walls and mirror what we learn.
+#ifndef INFER_SYM
+#define INFER_SYM 0
+#endif
+// Matching non-open edges needed before trusting a symmetry.
+#ifndef INFER_SYM_MIN
+#define INFER_SYM_MIN 4
+#endif
+// Sprint along pearls that an enemy head could reach first.
+#ifndef EAT_SPRINT
+#define EAT_SPRINT 0
+#endif
+#ifndef EAT_SPRINT_MAX
+#define EAT_SPRINT_MAX 3
+#endif
+// A pearl counts as contested if an enemy head is within this many tiles.
+#ifndef EAT_SPRINT_CONTEST
+#define EAT_SPRINT_CONTEST 3
+#endif
+#ifndef EAT_SPRINT_STRICT
+#define EAT_SPRINT_STRICT 0
+#endif
+// Penalty for a small dragon (<6) moving where an enemy head could reach it.
+#ifndef SMALL_THREAT_PEN
+#define SMALL_THREAT_PEN 12.0
+#endif
+// ---- pocket pumping (notes/14): dive into pearl dead ends, split out at the tip
+#ifndef POCKET_PUMP
+#define POCKET_PUMP 1
+#endif
+#ifndef POCKET_PUMP_HOT
+#define POCKET_PUMP_HOT 0
+#endif
+#ifndef POCKET_PUMP_BONUS
+#define POCKET_PUMP_BONUS 3.0
+#endif
+#ifndef POCKET_MAX_ALLIES
+#define POCKET_MAX_ALLIES 1
+#endif
+// Tiles with max gap at most this count as fast-respawning pocket food.
+#ifndef POCKET_FAST_GAP
+#define POCKET_FAST_GAP 10
+#endif
+#ifndef POCKET_OBSERVED
+#define POCKET_OBSERVED 1
+#endif
+// Expected length at the tip needed to dive (4 = can split out).
+#ifndef POCKET_NEED
+#define POCKET_NEED 4.0
+#endif
+// Unseen maps: require evidence of fast pearls in a pocket before diving.
+#ifndef POCKET_UNK_NEEDS_HOT
+#define POCKET_UNK_NEEDS_HOT 1
+#endif
+// ---- ally-scaled blind portal cost (notes/14)
+#ifndef PORTAL_ALLY_COST
+#define PORTAL_ALLY_COST 0
+#endif
+#ifndef PORTAL_COST_A
+#define PORTAL_COST_A 2.0
+#endif
+#ifndef PORTAL_COST_B
+#define PORTAL_COST_B 6.0
+#endif
+#ifndef PORTAL_COST_C
+#define PORTAL_COST_C 10.0
+#endif
+// ---- start-layout swap (notes/15): the server swaps which team starts where in ~half
+// of games. 1: identify our side by start POSITION (not team letter), share it with
+// split children through the sonar checksum, and let map modules use it.
+#ifndef FRAME_FIX
+#define FRAME_FIX 1
+#endif
+// ---- newborn neck guard (notes/15): a child born with its neck across a portal can't
+// see it and stepped back into it (9/game on Default, 60/game on Portals).
+#ifndef NEWBORN_NECK_GUARD
+#define NEWBORN_NECK_GUARD 1
+#endif
+// ---- portal warnings remembered for the sender's length (notes/16): 80% of our
+// crossing deaths into an ally body hit an ally that had just left the exit.
+#ifndef PORTAL_WARN_MEMO
+#define PORTAL_WARN_MEMO 1
+#endif
+// ---- trapped split with the tail out of view (game 517220 r398: a L10 child traded
+// itself for an enemy L2 head instead of splitting).
+#ifndef TRAP_SPLIT_BLIND
+#define TRAP_SPLIT_BLIND 1
+#endif
+// Portals: king portal penalty override (negative = keep the global KING_PORTAL_PENALTY)
+#ifndef PM_POR_KPORTAL
+#define PM_POR_KPORTAL 0.0
+#endif
+// ---- portal echo guard (notes/17): our warn ray from a mouth tile probes the exit for
+// free; 1 = an echoed head blocks the exit next turn, 2 = also echoed bodies when the
+// ray's path past the exit ends on kelp within PORTAL_ECHO_RANGE tiles.
+#ifndef PORTAL_ECHO_GUARD
+#define PORTAL_ECHO_GUARD 2
+#endif
+#ifndef PORTAL_ECHO_RANGE
+#define PORTAL_ECHO_RANGE 3
+#endif
+// keep a remembered warning this many extra rounds (off-by-one for lower-id crossers)
+#ifndef PORTAL_WARN_MEMO_SLACK
+#define PORTAL_WARN_MEMO_SLACK 1
+#endif
+// ---- feed only a king heard from within this many rounds (0 = off)
+#ifndef FEED_FRESH
+#define FEED_FRESH 0
+#endif
+// ---- late splitting (notes/15 #2, notes/16 #3): top teams keep doing 4->2+2 splits
+// until ~r450; small dragons (len <= LATE_SPLIT_MAXLEN) keep splitting until this round (0 = off)
+#ifndef LATE_SPLIT_ROUND
+#define LATE_SPLIT_ROUND 450
+#endif
+#ifndef LATE_SPLIT_MAXLEN
+#define LATE_SPLIT_MAXLEN 5
+#endif
+// ---- big-dragon escape when every 1-step move is threatened (notes/18)
+#ifndef KING_ESCAPE
+#define KING_ESCAPE 1
+#endif
+#ifndef ESC_SPRINT_COST
+#define ESC_SPRINT_COST 15.0
+#endif
+// ---- enemy with its tail out of view: assume at least this reach vs our big dragons (0 = off)
+#ifndef THREAT_TAIL_UNKNOWN
+#define THREAT_TAIL_UNKNOWN 2
+#endif
+// ---- Schooltime-style long exits (notes/20): a body echo past the exit makes a crossing
+// risky (~18% fatal) but the guard only blocks short exits; penalise instead (0 = off)
+#ifndef PORTAL_ECHO_BODY_PEN
+#define PORTAL_ECHO_BODY_PEN 30.0
+#endif
+// skip king/relay broadcasts on turns we probe a portal, so the body echo count is usable
+#ifndef PORTAL_PROBE_SOLO
+#define PORTAL_PROBE_SOLO 1
+#endif
+
+// ---- notes/19 (Devil / Prisoners Dilemma diagnosis)
+// Ram guard that only asks for LOCAL odds (allies in view >= enemies in view, target included),
+// not RAM_MIN_UNITS. 1 = Devil + Prisoners Dilemma, 2 = every map that uses the guard or has it off.
+#ifndef RAM_GUARD_LOCAL
+#define RAM_GUARD_LOCAL 1
+#endif
+// Small dragons (<6) that are not locally ahead: stronger 1-step threat penalty and a penalty for
+// tiles an enemy (len>=3) can reach with a 2-step sprint (half of the rams we suffer on PD).
+#ifndef SMALL_SPRINT_THREAT
+#define SMALL_SPRINT_THREAT 0
+#endif
+#ifndef SMALL_THREAT_PEN_OUT
+#define SMALL_THREAT_PEN_OUT 30.0
+#endif
+#ifndef SMALL_SPRINT_PEN
+#define SMALL_SPRINT_PEN 10.0
+#endif
+// Pocket pump: don't split 2 off while a pearl in the dead end is next to us; at the tip give the
+// child L-2 (a 2-long head dies there instead of a 3-long one).
+#ifndef PUMP_TIP_SPLIT
+#define PUMP_TIP_SPLIT 0
 #endif

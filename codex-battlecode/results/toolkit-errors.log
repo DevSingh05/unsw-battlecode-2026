@@ -1,0 +1,168 @@
+
+=== 2026-09-28 02:37:08  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_00.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 --seed 50000 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:08  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_00.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 --seed 50001 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:08  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_00.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 --seed 50001 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:08  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_00.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 --seed 50000 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:13  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_03.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 --seed 50001 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:20  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_12.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 --seed 50000 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:22  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_12.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 --seed 50000 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:22  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_12.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 --seed 50001 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:23  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_12.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 --seed 50001 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:25  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_14.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 --seed 50000 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:25  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_14.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 --seed 50000 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:25  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_14.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 --seed 50001 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:26  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_14.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 --seed 50001 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:27  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_16.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 --seed 50000 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:27  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_16.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 --seed 50000 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:27  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_16.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 --seed 50001 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:28  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_16.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 --seed 50001 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:33  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_21.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 --seed 50000 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:33  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_21.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 --seed 50000 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:33  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_21.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 --seed 50001 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:34  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_21.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 --seed 50001 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:35  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_22.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 --seed 50000 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:35  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_22.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 --seed 50000 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:35  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_22.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 --seed 50001 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:36  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_22.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 --seed 50001 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:37  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_23.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 --seed 50000 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:37  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_23.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 --seed 50000 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:38  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_23.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 --seed 50001 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:38  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_23.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 --seed 50001 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:47  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_30.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 --seed 50000 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:47  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_30.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 --seed 50000 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:47  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_30.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 --seed 50001 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:48  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_30.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 --seed 50001 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:51  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_33.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 --seed 50000 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:52  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_33.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 --seed 50001 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:52  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_33.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 --seed 50000 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:53  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_33.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 --seed 50001 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:55  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_35.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 --seed 50001 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:55  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_35.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 --seed 50000 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:55  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_35.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 --seed 50000 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:56  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_35.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 --seed 50001 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:57  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_36.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 --seed 50000 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:58  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_37.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 --seed 50000 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:58  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_36.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 --seed 50001 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:59  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_36.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 --seed 50000 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:37:59  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_36.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 --seed 50001 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:38:00  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_37.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 --seed 50000 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:38:00  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_37.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 --seed 50001 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:38:00  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_37.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 --seed 50001 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:38:02  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_39.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 --seed 50000 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:38:02  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_39.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 --seed 50000 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:38:03  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_39.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 --seed 50001 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:38:03  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_39.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 --seed 50001 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:38:06  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_38.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 --seed 50001 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:38:07  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_38.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 --seed 50000 --no-debug --no-replay
+[Errno 24] Too many open files
+
+=== 2026-09-28 02:38:07  unswbc run /Users/devsingh/Developer/UNSW_Battlecode/maps/gen/g2026_38.map /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/variants_v13 /Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/build/codex-battlecode_bot_UNSEEN_SYMMETRY1 --seed 50001 --no-debug --no-replay
+[Errno 24] Too many open files
