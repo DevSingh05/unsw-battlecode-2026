@@ -629,3 +629,7 @@
 #ifndef KING_ESCAPE_TAIL_FIX
 #define KING_ESCAPE_TAIL_FIX 1
 #endif
+// ---- Q5: learn hot (every-round) pearl tiles on unknown maps from observed countdowns
+#ifndef HOT_LEARN
+#define HOT_LEARN 0
+#endif

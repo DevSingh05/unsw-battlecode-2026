@@ -638,6 +638,7 @@ struct Bot
     std::vector<int> segAt;     // tile -> index into segs, -1
     std::string out;
     bool unkKingSet = false;
+    std::vector<int> hotRun, hotLast; // HOT_LEARN
     bool unkParamsSet = false; // generic settings chosen for an unseen map
     std::vector<std::pair<int, int>> allyHeadMemory; // (tile, round) of ally heads seen lately
     int lastPortalRound = -100;                       // last round we stepped through a portal
@@ -832,6 +833,22 @@ struct Bot
                     w.gapSeen.assign(w.N, 0);
                 w.gapSeen[t] = std::max(w.gapSeen[t], in.tin[i] + 1);
                 w.spawnAt[t] = round + in.tin[i];
+                if (HOT_LEARN && !w.known)
+                {
+                    // unseen map: a tile showing countdown 1 on 3 consecutive rounds respawns every
+                    // round ("hot"); wake the hot-tile logic for it. A longer countdown undoes it.
+                    if (static_cast<int>(hotRun.size()) != w.N)
+                        hotRun.assign(w.N, 0), hotLast.assign(w.N, -9);
+                    if (in.tin[i] <= 1)
+                        hotRun[t] = hotLast[t] == round - 1 ? hotRun[t] + 1 : 1;
+                    else
+                        hotRun[t] = 0;
+                    hotLast[t] = round;
+                    if (hotRun[t] >= 3 && w.gmax[t] != 1)
+                        w.gmin[t] = w.gmax[t] = 1;
+                    else if (in.tin[i] > 1 && w.gmin[t] == 1 && w.gmax[t] == 1)
+                        w.gmin[t] = w.gmax[t] = -1;
+                }
                 int m = w.mirror(t);
                 if (m >= 0 && m != t)
                     w.spawnAt[m] = round + in.tin[i];
