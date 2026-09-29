@@ -94,3 +94,4 @@
 - 07:10 UTC: v28 vs Abyss framework (Cat's paradise open-source, untuned, full 75M budget) on 20 gen + 24 lesson maps both sides: 74/88 = 0.841 [0.750, 0.903]. Added PORTAL_LOITER_PEN flag (Abyss idea).
 - 2026-09-29T15:11Z: back. rank 11 / 1993 (top: Cutlery 2104). Ranked since v28: 80/115 (Portals 2/7, Slithery 5/11, Autarky 7/13; Trauma 13/13, Default 8/9). Restarting PORTAL_LOITER_PEN test; Portals/Slithery diagnosis agent.
 - 15:27 UTC: user: use spare challenge budget always, ranked allowed, target +-5 ranks and top 10. Started tools/auto_challenge.py (40 games/h cap: ranked 5-game series vs +-5 ranks, unranked 5-map series vs top 10 weighted to weak maps; pauses on SERVER_LOCK; STOP file).
+- 15:29 UTC: SERVER blind28 (tournament proxy): 11/20 (Default 4/10 eats 348, Autarky 7/10 eats 395) vs blind27 6/20 (162/259), blind26 6/20, blind25 0/20. UNK_PRIOR 0.001 confirmed vs real opponents.

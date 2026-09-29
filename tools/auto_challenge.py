@@ -87,7 +87,7 @@ def main():
             if room < 5:
                 time.sleep(a.cycle)
                 continue
-            L = api.get("/api/v1/leaderboard")
+            L = [t for t in api.get("/api/v1/leaderboard") if isinstance(t.get("rank"), int)]
             me = next(t for t in L if t["name"] == US)
             busy = pending_opponents()
             near = [t for t in L if t["name"] != US and abs(t["rank"] - me["rank"]) <= a.range and t.get("hasBot", True)]
