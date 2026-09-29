@@ -108,3 +108,4 @@
 - 17:52 UTC: vs v28 (seed 124000): EXPLORE_LEARN gen .588 blind .475 lesson .625 gated .550 pooled .567; UNK_SEALED_FOOD pooled .514 (neutral; blind-vs-blind can't reward it -> server blind test). Confirming EXPLORE_LEARN fresh + holdout.
 - 18:07 UTC: EXPLORE_LEARN fresh seeds 125000: gen .425 lesson .396 holdout .438 (pooled .423) -> REJECT (first run noise).
 - 18:34 UTC: SERVER A/B Portals+Slithery vs 10 peers: v28 12/20 (Por 6/10 longest 33.0, Sli 6/10 47.3) vs v29c (+KING_FOCUS+FEED_STALE_GUARD+neck guard) 12/20 (Por 8/10 34.3, Sli 4/10 48.1) -> tie, not shipping king changes before freeze. v29 = v28 + UNK_NECK_ESCAPE_GUARD (zero-risk fix). Blind server test blind29s (+UNK_SEALED_FOOD) on Default+Autarky vs blind28 11/20; v29 goes live after.
+- 18:49 UTC: blind29s (UNK_SEALED_FOOD) server: 11/20 = blind28 (Default 5/10 eats 318 cross 19 vs 4/10 348 cross 0; Autarky 6/10 vs 7/10) -> mechanism fires but no win gain; off. v29 live 18:48.
