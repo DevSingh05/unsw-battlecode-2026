@@ -117,3 +117,4 @@
 - 20:19 UTC: SPLIT_VIABLE=4+DENSE4: big boards .396 (Trauma 1/8), gen .475 lesson .375 -> reject; clusters of 5-7 of our heads idle 18-32 rounds near Autarky pockets in 625768 (forensics workflow running). Trying SPLIT_VIABLE=2.
 - 20:21 UTC: SPLIT_VIABLE=2: .469 -> reject both variants (off).
 - 20:36 UTC: auto_challenge now launches ranked series (+-5 ranks) first, unranked top-10 with leftover budget (was alternating; only 13 ranked series since 15:29 due to A/B tests + alternation).
+- 20:37 UTC: user: play MORE (others 300-750 battles/24h vs our 250). Loop -> --per-hour 55 --range 8 --top 15 --cycle 300 (max is 60 games/h = 1440/day).
