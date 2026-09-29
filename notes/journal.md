@@ -87,3 +87,7 @@
 - 03:59 UTC: SPLIT_MAX_UNITS=60 on v27: gen .525 blind .575 lesson .479 gated .575 ladder .500 (pooled .534), HOLDOUT .487 -> marginal, hold. Queued blind27h45 Default-only server test at 04:10 (after ranked autoscrim), restores v27.
 - 04:16 UTC: SERVER blind Default: blind27 W2/10 eats 162 cross 0; blind27h45 W2/10 eats 253 cross 88 -> hunger-45 valve works vs real opponents. v27 restored 04:16.
 - 04:28 UTC: hunger-45 holdout 0.456; SERVER blind Autarky (shortcut portals): blind27 W4/10 eats 259 cross 1 vs blind27h45 W2/10 eats 165 cross 40 -> valve helps sealed maps (Default +56% eats) but hurts shortcut maps; no reliable runtime discriminator yet. Keep v27 live. Open problem: detect 'food behind doors' from partial vision.
+- 04:34 UTC: v27 sandbox stress on 14 extreme maps (7x7..64x64, thin, portal-dense, no/rich food, 1 vs 16, L320 starter): 0 crashes/invalid/timeouts, max 24.6M points; results side-biased (B wins both orders) -> v27 even with v26. v27 = Sprint candidate.
+- 04:49 UTC: UNK_PRIOR on v27 (seed 111000): 0.005 pooled .582; 0.0025 pooled .632 (gen .600 blind .675 lesson .615 gated .675). Confirming fresh seeds + 0.001.
+- 05:07 UTC: UNK_PRIOR fresh seeds 112000: 0.0025 pooled .553 (gen .463); 0.001 pooled .618 (gen .544 blind .800 lesson .583 gated .625), ladder .500. Holdout 0.001 next.
+- 05:12 UTC: UNK_PRIOR 0.001 holdout .519 -> submitted v28 = v27 + UNK_PRIOR 0.001. bot/ defaults synced to v28.

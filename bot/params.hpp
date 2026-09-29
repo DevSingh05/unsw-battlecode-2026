@@ -418,7 +418,7 @@
 // ---- unseen maps
 // Assumed spawn rate for a tile we've never seen on an unknown map.
 #ifndef UNK_PRIOR
-#define UNK_PRIOR 0.01
+#define UNK_PRIOR 0.001
 #endif
 // On unknown maps, choose king timing by board size.
 #ifndef UNK_SIZE_PARAMS
@@ -617,7 +617,7 @@
 #endif
 // ---- route-based food valuation (Codex): 1 = all maps, 2 = unknown maps only
 #ifndef PEARL_ROUTE
-#define PEARL_ROUTE 0
+#define PEARL_ROUTE 2
 #endif
 #ifndef PEARL_ROUTE_SCALE
 #define PEARL_ROUTE_SCALE 2.0
@@ -636,10 +636,10 @@
 // ---- Q4 unknown-portal exploration: knock (sonar) on unknown portals, cross only on a clean
 // echo and when the region is scouted/hungry; learned links kept out of w.nxt
 #ifndef UNK_EXPLORE
-#define UNK_EXPLORE 0
+#define UNK_EXPLORE 1
 #endif
 #ifndef UNK_EXPLORE_HUNGER
-#define UNK_EXPLORE_HUNGER 25
+#define UNK_EXPLORE_HUNGER 100000
 #endif
 #ifndef UNK_EXPLORE_HUNGER_CLOSED
 #define UNK_EXPLORE_HUNGER_CLOSED 3
