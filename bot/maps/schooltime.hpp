@@ -59,7 +59,26 @@
 #define SCH_NORUSH_KID 0 // (d) only r<=3 starters rush; split children near the mouths don't get the pull
 #endif
 
+// ---- pass 3 (notes/sch_b/LOG.txt): layout B top-strip keepers. Default OFF (defaults in params.hpp).
+// Forensics (notes/forensics/SUMMARY_AND_REPORTS.md, "SCH_B_KEEP"): on B all our starters leave the
+// top strip within ~10 rounds; top opponents farm it, including our half (18.9 v 1.4 eats by r200).
+// A keeper is a small dragon that stays next to one cluster of top-strip spawn tiles, walks to the
+// tile that is due next, and is released at SCH_B_KEEP_R. Extra keepers of one cluster yield by id.
+
 std::vector<int> schD, schYard, schMouthDist;
+#if SCH_B_KEEP
+// clusters in team-A (left) coordinates; team B mirrors x. 0/1 = our half, 2/3 = their half.
+static constexpr int SCH_KC_N = 4;
+static constexpr int SCH_KC_TILES[SCH_KC_N][3][2] = {{{8, 2}, {9, 5}, {10, 7}},      // 0: our west (wrap side)
+                                                     {{14, 3}, {14, 5}, {20, 4}},    // 1: our east
+                                                     {{45, 3}, {45, 5}, {39, 4}},    // 2: their east (via y0-3)
+                                                     {{51, 2}, {50, 5}, {49, 7}}};   // 3: their west (via wrap)
+std::vector<int> schKTD[SCH_KC_N][3]; // BFS steps to each cluster tile
+int schKTile[SCH_KC_N][3];
+int schKeep = -1;     // -1 undecided, -2 never/released, else cluster index
+int schKeepSeen = 0;  // consecutive turns a lower-id ally head sits in our cluster's zone
+int schKeepRound = -1; // last round the keeper state was updated (score runs once per candidate)
+#endif
 int schRusher = -1;
 // pass 2 state (per process)
 int schLayout = 0;          // 0 unknown (treated as A), 1 = A (pool), 2 = B (no pool)
@@ -203,6 +222,147 @@ double schFallbackScore(int t)
     return -SCH_FB_W * (band(t) - band(myHead)) - (band(t) ? 0.5 * SCH_FB_W : 0.0);
 }
 
+#if SCH_B_KEEP
+void schKeepInit()
+{
+    if (!schKTD[0][0].empty())
+        return;
+    const int INF = 1 << 20;
+    std::vector<std::vector<int>> rev(w.N);
+    for (int u = 0; u < w.N; u++)
+        for (int d = 0; d < 4; d++)
+        {
+            int v = step(u, d);
+            if (v >= 0)
+                rev[v].push_back(u);
+        }
+    bool right = w.myTeam != 'A';
+    for (int c = 0; c < SCH_KC_N; c++)
+        for (int k = 0; k < 3; k++)
+        {
+            int x = SCH_KC_TILES[c][k][0], y = SCH_KC_TILES[c][k][1];
+            if (right)
+                x = w.W - 1 - x;
+            int s = w.idx(x, y);
+            schKTile[c][k] = s;
+            auto& D = schKTD[c][k];
+            D.assign(w.N, INF);
+            D[s] = 0;
+            std::vector<int> q(1, s);
+            for (size_t i = 0; i < q.size(); i++)
+                for (int u : rev[q[i]])
+                    if (D[u] > D[q[i]] + 1)
+                    {
+                        D[u] = D[q[i]] + 1;
+                        q.push_back(u);
+                    }
+        }
+}
+
+int schKD(int c, int t) const
+{
+    int m = 1 << 20;
+    for (int k = 0; k < 3; k++)
+        m = std::min(m, schKTD[c][k][t]);
+    return m;
+}
+
+// rounds until cluster tile k of c has a pearl (0 = now / unknown-and-probably-ready)
+int schKDue(int c, int k) const
+{
+    int t = schKTile[c][k];
+    if (w.pearlMem[t])
+        return 0;
+    if (w.spawnAt[t] >= 0)
+        return std::max(0, w.spawnAt[t] - round);
+    int ls = w.lastSeen[t];
+    return ls < 0 ? 0 : std::max(0, ls + 20 - round);
+}
+
+// Keeper score on layout B (added inside the B branch of schooltimeScore).
+double schKeepScore(int t)
+{
+    schKeepInit();
+    if (schKeep == -1)
+    {
+        // decide once per process, at birth (a split child is a fresh process)
+        if (round - birthRound > 3 || round >= SCH_B_KEEP_R)
+            schKeep = -2;
+        else if (myLen <= SCH_B_KEEP_LEN)
+        {
+            int bc = -2, bd = SCH_B_KEEP_RANGE + 1;
+            for (int c = 0; c < SCH_KC_N; c++)
+                if ((SCH_B_KEEP_CL >> c) & 1)
+                {
+                    int dd = schKD(c, myHead);
+                    if (dd < bd)
+                        bd = dd, bc = c;
+                }
+            // a lower-id ally head already in that zone (our parent, our starter twin): not us
+            if (bc >= 0)
+                for (auto& o : segs)
+                    if (o.head && o.team == w.myTeam && o.id != w.myId && o.id < w.myId && schKD(bc, o.tile) <= SCH_B_KEEP_ZONE)
+                        bc = -2;
+            schKeep = bc;
+        }
+        else
+            schKeep = -2;
+    }
+    if (schKeep < 0)
+        return 0.0;
+    if (round >= SCH_B_KEEP_R)
+    {
+        schKeep = -2;
+        return 0.0;
+    }
+    if (myLen > SCH_B_KEEP_LEN || kingSelf)
+        return 0.0; // suspended while long (it splits back down soon)
+    int c = schKeep;
+    int kd0 = schKD(c, myHead);
+    // one keeper per cluster: yield to a lower-id ally head that stays in the zone
+    if (schKeepRound != round)
+    {
+        schKeepRound = round;
+        bool lower = false;
+        if (kd0 <= SCH_B_KEEP_ZONE)
+            for (auto& o : segs)
+                if (o.head && o.team == w.myTeam && o.id != w.myId && o.id < w.myId && schKD(c, o.tile) <= SCH_B_KEEP_ZONE)
+                    lower = true;
+        schKeepSeen = lower ? schKeepSeen + 1 : 0;
+        if (schKeepSeen >= SCH_B_KEEP_YIELD)
+            schKeep = -2;
+    }
+    if (schKeep < 0)
+        return 0.0;
+    double s = 0;
+    int kd1 = schKD(c, t);
+    if (kd0 > SCH_B_KEEP_ZONE)
+        s += SCH_B_KEEP_PULL * (kd0 - kd1);
+    else if (kd1 > SCH_B_KEEP_ZONE)
+        s -= SCH_B_KEEP_LEAVE;
+    // walk to the tile that is due first (arrival vs countdown), stay near it
+    int bk = -1, bcost = 1 << 20;
+    for (int k = 0; k < 3; k++)
+    {
+        int dd = schKTD[c][k][myHead];
+        int cost = std::max(dd, schKDue(c, k)) * 2 + dd;
+        if (cost < bcost)
+            bcost = cost, bk = k;
+    }
+    if (bk >= 0)
+    {
+        int d0 = schKTD[c][bk][myHead], d1 = schKTD[c][bk][t];
+        if (d0 >= 2 || d1 < d0)
+            s += SCH_B_KEEP_TW * (d0 - d1);
+    }
+#if SCH_DEBUGD
+    if (dbg)
+        std::fprintf(dbg, "  sch keep c=%d t=(%d,%d) kd=%d->%d tk=%d s=%.1f\n", c, t % w.W, t / w.W, kd0, kd1, bk, s);
+#endif
+    return s;
+}
+#endif
+
 // Extra score for moving onto tile t (direction d). Added to the normal score.
 double schooltimeScore(int t, int d)
 {
@@ -217,6 +377,9 @@ double schooltimeScore(int t, int d)
         schRusher = 0;
 #if SCH_FALLBACK
         s += schFallbackScore(t);
+#endif
+#if SCH_B_KEEP
+        s += schKeepScore(t);
 #endif
         return s;
     }
