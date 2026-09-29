@@ -33,6 +33,7 @@ def main():
     ap.add_argument("--maps", default="gen")
     ap.add_argument("--map-dir", help="Read all .map files from a custom fixture directory")
     ap.add_argument("--replays", action="store_true", help="Keep replays under this run's results directory")
+    ap.add_argument("--debug", action="store_true", help="Retain LOG/INDICATOR events for mechanism analysis")
     ap.add_argument("--seeds", type=int, default=2)
     ap.add_argument("--seed-base", type=int, required=True)
     ap.add_argument("--jobs", type=int, default=4, choices=range(1, 5))
@@ -80,7 +81,9 @@ def main():
         bots = [opponent, candidate] if swapped else [candidate, opponent]
         map_path = pathlib.Path(mp) if pathlib.Path(mp).is_absolute() else ROOT / "maps" / (mp + ".map")
         cmd = [toolkit_python, str(HERE / "tools" / "local_unswbc.py"), "run", str(map_path), *bots,
-               "--seed", str(seed), "--no-debug"]
+               "--seed", str(seed)]
+        if not a.debug:
+            cmd.append("--no-debug")
         if a.replays:
             replay_dir = dest.parent / (dest.stem + "-replays")
             replay_dir.mkdir(parents=True, exist_ok=True)

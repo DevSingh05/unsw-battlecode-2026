@@ -1,16 +1,31 @@
 #pragma once
 
-// Route-based food valuation; default off pending validation on v24.
-#ifndef PEARL_ROUTE
-#define PEARL_ROUTE 0
+// Record both faces of each observed unknown portal; never prefer a reverse
+// portal (the current neck) over an actual escape gamble.
+#ifndef UNK_PORTAL_SIDES
+#define UNK_PORTAL_SIDES 0
 #endif
-#ifndef PEARL_ROUTE_SCALE
-#define PEARL_ROUTE_SCALE 2.0
-#endif
-#ifndef PEARL_ROUTE_REGION
-#define PEARL_ROUTE_REGION 0.15
+#ifndef UNK_NECK_ESCAPE_GUARD
+#define UNK_NECK_ESCAPE_GUARD 0
 #endif
 
+// Unknown-map exploration only when nearby visible food needs a long walk
+// around observed walls. Existing clean-probe and length limits still apply.
+#ifndef UNK_BLOCKED_FOOD
+#define UNK_BLOCKED_FOOD 0
+#endif
+#ifndef UNK_BLOCKED_HUNGER
+#define UNK_BLOCKED_HUNGER 12
+#endif
+#ifndef UNK_BLOCKED_DIRECT
+#define UNK_BLOCKED_DIRECT 4
+#endif
+#ifndef UNK_BLOCKED_DETOUR
+#define UNK_BLOCKED_DETOUR 10
+#endif
+#ifndef UNK_BLOCKED_LOG
+#define UNK_BLOCKED_LOG 0
+#endif
 // Tunable strategy knobs. Variants for local testing override these.
 
 // Split once a dragon reaches this length (child takes half).
@@ -430,7 +445,7 @@
 // ---- unseen maps
 // Assumed spawn rate for a tile we've never seen on an unknown map.
 #ifndef UNK_PRIOR
-#define UNK_PRIOR 0.01
+#define UNK_PRIOR 0.001
 #endif
 // On unknown maps, choose king timing by board size.
 #ifndef UNK_SIZE_PARAMS
@@ -607,4 +622,68 @@
 // child L-2 (a 2-long head dies there instead of a 3-long one).
 #ifndef PUMP_TIP_SPLIT
 #define PUMP_TIP_SPLIT 0
+#endif
+// ---- unseen maps (notes/unseen/PLAN.md)
+// Q2: declare kings + feed on unknown maps; seed/feed rounds; reserve schedule; crown early when full
+#ifndef UNK_KING
+#define UNK_KING 0
+#endif
+#ifndef UNK_KING_SEED
+#define UNK_KING_SEED 250
+#endif
+#ifndef UNK_KING_FEED
+#define UNK_KING_FEED 300
+#endif
+// one feeder at a time, within 3 of the king, never onto uneaten food
+#ifndef FEED_QUEUE
+#define FEED_QUEUE 0
+#endif
+// Q7: unknown boards with N <= 750 use the local-odds ram guard
+#ifndef UNK_SMALL_RAMGUARD
+#define UNK_SMALL_RAMGUARD 0
+#endif
+// ---- route-based food valuation (Codex): 1 = all maps, 2 = unknown maps only
+#ifndef PEARL_ROUTE
+#define PEARL_ROUTE 2
+#endif
+#ifndef PEARL_ROUTE_SCALE
+#define PEARL_ROUTE_SCALE 2.0
+#endif
+#ifndef PEARL_ROUTE_REGION
+#define PEARL_ROUTE_REGION 0.15
+#endif
+// ---- king-escape sprint: occupancy tested before each step moves the tail (found by Codex)
+#ifndef KING_ESCAPE_TAIL_FIX
+#define KING_ESCAPE_TAIL_FIX 1
+#endif
+// ---- Q5: learn hot (every-round) pearl tiles on unknown maps from observed countdowns
+#ifndef HOT_LEARN
+#define HOT_LEARN 0
+#endif
+// ---- Q4 unknown-portal exploration: knock (sonar) on unknown portals, cross only on a clean
+// echo and when the region is scouted/hungry; learned links kept out of w.nxt
+#ifndef UNK_EXPLORE
+#define UNK_EXPLORE 1
+#endif
+#ifndef UNK_EXPLORE_HUNGER
+#define UNK_EXPLORE_HUNGER 100000
+#endif
+#ifndef UNK_EXPLORE_HUNGER_CLOSED
+#define UNK_EXPLORE_HUNGER_CLOSED 3
+#endif
+#ifndef UNK_EXPLORE_COOLDOWN
+#define UNK_EXPLORE_COOLDOWN 8
+#endif
+#ifndef UNK_EXPLORE_LURE
+#define UNK_EXPLORE_LURE 0.4
+#endif
+#ifndef UNK_EXPLORE_SCORE
+#define UNK_EXPLORE_SCORE 15.0
+#endif
+// explore only when our portal-free region is below this fraction of the board (sealed in)
+#ifndef UNK_EXPLORE_REGION_FRAC
+#define UNK_EXPLORE_REGION_FRAC 0.7
+#endif
+#ifndef UNK_EXPLORE_BFS_CAP
+#define UNK_EXPLORE_BFS_CAP 2000
 #endif

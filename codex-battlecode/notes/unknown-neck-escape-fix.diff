@@ -1,0 +1,31 @@
+--- a/bot/main.cpp
++++ b/bot/main.cpp
+@@ -1112,7 +1112,7 @@
+             }
+         }
+         (void)areaCap;
+-        // PEARL_ROUTE (Codex, codex-battlecode/notes/pearl-route.md): value the best single route,
++        // PEARL_ROUTE (see notes/pearl-route.md): value the best single route,
+         // not the sum over every branch. 1 = all maps, 2 = unknown maps only
+         if (PEARL_ROUTE == 1 || (PEARL_ROUTE == 2 && !w.known))
+             pearlScore = PEARL_ROUTE_REGION * pearlScore + PEARL_ROUTE_SCALE * bestPearlRoute();
+@@ -2703,7 +2703,7 @@
+                 int rank;
+                 // ranks: ally head 0 < kelp 1 < body 2 < unknown portal 3 < enemy head 4
+                 if (t < 0 && UNK_PORTAL_ESCAPE && !w.known && !w.portalSide.empty() && w.portalSide[myHead * 4 + d])
+-                    rank = 3; // an unknown portal is a gamble; certain death isn't
++                    rank = (UNK_NECK_ESCAPE_GUARD && d == (myDir + 2) % 4) ? 2 : 3; // reverse crosses into our neck
+                 else if (t < 0)
+                     rank = 1;
+                 else if (occHead[t] && occId[t] != w.myId)
+--- a/bot/params.hpp
++++ b/bot/params.hpp
+@@ -660,3 +660,8 @@
+ #ifndef UNK_EXPLORE_BFS_CAP
+ #define UNK_EXPLORE_BFS_CAP 2000
+ #endif
++
++// A reverse portal crosses into the current neck, even when its destination is unknown.
++#ifndef UNK_NECK_ESCAPE_GUARD
++#define UNK_NECK_ESCAPE_GUARD 0
++#endif

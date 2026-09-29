@@ -672,3 +672,32 @@
 #ifndef PORTAL_LOITER_PEN
 #define PORTAL_LOITER_PEN 0.0
 #endif
+// ---- Codex (notes: codex-battlecode/notes/portal-safety-v28.diff): record unknown portal edges
+// on both sides; in the all-lethal fallback never take the unknown portal behind our head
+#ifndef UNK_PORTAL_SIDES
+#define UNK_PORTAL_SIDES 0
+#endif
+#ifndef UNK_NECK_ESCAPE_GUARD
+#define UNK_NECK_ESCAPE_GUARD 0
+#endif
+// ---- notes/22: when sizing a pump split, a neighbour that is itself a 1-2 tile dead end is not an exit
+#ifndef PUMP_TIP_DEADEND
+#define PUMP_TIP_DEADEND 0
+#endif
+// ---- notes/22 F2: small dragons are drawn to entrances of fast-refilling dead-end pockets
+#ifndef HOT_PULL
+#define HOT_PULL 0.0
+#endif
+#ifndef HOT_PULL_RANGE
+#define HOT_PULL_RANGE 14
+#endif
+// ---- notes/21: king fragmentation and stale-king feed suicides
+#ifndef KING_FOCUS
+#define KING_FOCUS 0
+#endif
+#ifndef KING_FOCUS_GAP
+#define KING_FOCUS_GAP 6
+#endif
+#ifndef FEED_STALE_GUARD
+#define FEED_STALE_GUARD 0
+#endif

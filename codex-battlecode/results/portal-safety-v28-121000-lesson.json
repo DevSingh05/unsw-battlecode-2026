@@ -1,0 +1,142 @@
+{
+  "candidate": "codex-battlecode/variants/portal_safety_v28:-DUNK_PORTAL_SIDES=1 -DUNK_NECK_ESCAPE_GUARD=1",
+  "pool": "variants/v28",
+  "maps": [
+    "lesson/brawl_a",
+    "lesson/brawl_b",
+    "lesson/famine_a",
+    "lesson/famine_b",
+    "lesson/fountain_a",
+    "lesson/fountain_b",
+    "lesson/fountain_c",
+    "lesson/islands_a",
+    "lesson/islands_b",
+    "lesson/maze_a",
+    "lesson/maze_b",
+    "lesson/open_a",
+    "lesson/open_b",
+    "lesson/peel_a",
+    "lesson/peel_b",
+    "lesson/pockets_a",
+    "lesson/pockets_b",
+    "lesson/rush_a",
+    "lesson/rush_b",
+    "lesson/vault_a",
+    "lesson/vault_b",
+    "lesson/vault_c",
+    "lesson/webs_a",
+    "lesson/webs_b"
+  ],
+  "seed_base": 121000,
+  "sandbox": false,
+  "seeds": 1,
+  "games": 48,
+  "errors": 0,
+  "score": 25.0,
+  "rate": 0.5208333333333334,
+  "wilson95": [
+    0.3832899563598438,
+    0.6552890998421255
+  ],
+  "elapsed_seconds": 177.32609733298887,
+  "file_limit": 8192,
+  "finished": "2026-09-29T15:54:23.557437+00:00",
+  "per_map": {
+    "lesson/brawl_a": [
+      1.0,
+      2
+    ],
+    "lesson/brawl_b": [
+      1.0,
+      2
+    ],
+    "lesson/famine_a": [
+      1.0,
+      2
+    ],
+    "lesson/famine_b": [
+      1.0,
+      2
+    ],
+    "lesson/fountain_a": [
+      1.0,
+      2
+    ],
+    "lesson/fountain_b": [
+      1.0,
+      2
+    ],
+    "lesson/fountain_c": [
+      1.0,
+      2
+    ],
+    "lesson/islands_a": [
+      1.0,
+      2
+    ],
+    "lesson/islands_b": [
+      1.0,
+      2
+    ],
+    "lesson/maze_a": [
+      1.0,
+      2
+    ],
+    "lesson/maze_b": [
+      1.0,
+      2
+    ],
+    "lesson/open_a": [
+      1.0,
+      2
+    ],
+    "lesson/open_b": [
+      1.0,
+      2
+    ],
+    "lesson/peel_a": [
+      1.0,
+      2
+    ],
+    "lesson/peel_b": [
+      1.0,
+      2
+    ],
+    "lesson/pockets_a": [
+      1.0,
+      2
+    ],
+    "lesson/pockets_b": [
+      1.0,
+      2
+    ],
+    "lesson/rush_a": [
+      1.0,
+      2
+    ],
+    "lesson/rush_b": [
+      1.0,
+      2
+    ],
+    "lesson/vault_a": [
+      1.0,
+      2
+    ],
+    "lesson/vault_b": [
+      0.0,
+      2
+    ],
+    "lesson/vault_c": [
+      1.0,
+      2
+    ],
+    "lesson/webs_a": [
+      2.0,
+      2
+    ],
+    "lesson/webs_b": [
+      2.0,
+      2
+    ]
+  }
+}

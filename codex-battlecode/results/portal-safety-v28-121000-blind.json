@@ -1,0 +1,72 @@
+{
+  "candidate": "codex-battlecode/variants/portal_safety_v28:-DUNK_PORTAL_SIDES=1 -DUNK_NECK_ESCAPE_GUARD=1 -DNO_KNOWN_MAPS=1",
+  "pool": "variants/v28:-DNO_KNOWN_MAPS=1",
+  "maps": [
+    "devil",
+    "schooltime",
+    "portals",
+    "default",
+    "queen_of_spades",
+    "trophy",
+    "autarky",
+    "dilemma",
+    "slithery_fight",
+    "trauma"
+  ],
+  "seed_base": 121000,
+  "sandbox": false,
+  "seeds": 2,
+  "games": 40,
+  "errors": 0,
+  "score": 22.0,
+  "rate": 0.55,
+  "wilson95": [
+    0.39828829888440775,
+    0.6929492471905531
+  ],
+  "elapsed_seconds": 83.54941895796219,
+  "file_limit": 8192,
+  "finished": "2026-09-29T15:51:26.148484+00:00",
+  "per_map": {
+    "devil": [
+      2.0,
+      4
+    ],
+    "schooltime": [
+      2.0,
+      4
+    ],
+    "portals": [
+      3.0,
+      4
+    ],
+    "default": [
+      2.0,
+      4
+    ],
+    "queen_of_spades": [
+      2.0,
+      4
+    ],
+    "trophy": [
+      2.0,
+      4
+    ],
+    "autarky": [
+      3.0,
+      4
+    ],
+    "dilemma": [
+      2.0,
+      4
+    ],
+    "slithery_fight": [
+      2.0,
+      4
+    ],
+    "trauma": [
+      2.0,
+      4
+    ]
+  }
+}

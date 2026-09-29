@@ -1,0 +1,27 @@
+{
+  "candidate": "codex-battlecode/build/portal_safety_v28_sandbox",
+  "pool": "codex-battlecode/build/baseline_v28_sandbox",
+  "maps": [
+    "/Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/maps/targeted/unknown_neck.map"
+  ],
+  "seed_base": 121000,
+  "sandbox": true,
+  "seeds": 1,
+  "games": 2,
+  "errors": 0,
+  "score": 1.5,
+  "rate": 0.75,
+  "wilson95": [
+    0.19786250921045673,
+    0.9733234672343529
+  ],
+  "elapsed_seconds": 10.752884624991566,
+  "file_limit": 8192,
+  "finished": "2026-09-29T15:45:40.014107+00:00",
+  "per_map": {
+    "/Users/devsingh/Developer/UNSW_Battlecode/codex-battlecode/maps/targeted/unknown_neck.map": [
+      1.5,
+      2
+    ]
+  }
+}

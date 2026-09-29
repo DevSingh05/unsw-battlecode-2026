@@ -560,7 +560,11 @@ struct World
             if (portalSide.size() != nxt.size())
                 portalSide.assign(nxt.size(), 0);
             for (auto& [td, pid] : portalObs)
+            {
                 portalSide[td] = 1;
+                if (UNK_PORTAL_SIDES) // the edge is a portal from its other side too (Codex)
+                    portalSide[plainStep(td / 4, td % 4) * 4 + (td % 4 + 2) % 4] = 1;
+            }
             if (INFER_SYM)
                 inferSymmetry(obs);
         }
@@ -638,6 +642,7 @@ struct Bot
     std::vector<int> segAt;     // tile -> index into segs, -1
     std::string out;
     bool unkKingSet = false;
+    int birthRound = -1; // first round this process played
     std::vector<int> hotRun, hotLast; // HOT_LEARN
     // UNK_EXPLORE (notes/unseen/unknown-portals.md): knock on unknown portals, cross on a clean echo
     std::vector<int> learnDest, edgeCrossRound; // N*4; learned by crossing, never copied into w.nxt
@@ -747,6 +752,8 @@ struct Bot
         myLen = in.length;
         units = in.units;
         myDir = in.dir;
+        if (birthRound < 0)
+            birthRound = round;
         if (lastGrowRound < 0)
             lastGrowRound = round; // process start
         if (prevLen > 0 && myLen > prevLen)
@@ -1669,6 +1676,23 @@ struct Bot
                 haveRelay = true;
             }
         }
+        if (KING_FOCUS)
+        {
+            // notes/21: follow (feed, relay) the LONGEST fresh king, not the last one heard
+            const KingInfo* bk = nullptr;
+            for (auto& k : kingsSeen)
+                if (round - k.round <= 8 && (!bk || k.len > bk->len))
+                    bk = &k;
+            if (bk && (bk->len > kingLen || round - kingRound > 2))
+            {
+                if (bk->id != (kingId & 1023))
+                {
+                    haveRelay = bk->round >= round - 4;
+                    relayMsg = encodeKing(bk->tile, bk->len, bk->id, 1, bk->dir, bk->round);
+                }
+                kingId = bk->id, kingLen = bk->len, kingTile = bk->tile, kingDir = bk->dir, kingRound = bk->round;
+            }
+        }
         // we can see the king ourselves: use exact data
         if (kingId >= 0)
             for (auto& sg : segs)
@@ -1678,6 +1702,23 @@ struct Bot
                     kingDir = sg.facing;
                     kingRound = round;
                 }
+        if (FEED_STALE_GUARD && kingId >= 0)
+        {
+            // the whole "king" is in view and short: it's e.g. our 2-long parent after a U-turn split
+            int vis = 0;
+            bool inside = true;
+            for (auto& sg : segs)
+                if (sg.team == w.myTeam && (sg.id & 1023) == (kingId & 1023) && sg.id != w.myId)
+                {
+                    vis++;
+                    int dx = std::abs(sg.tile % w.W - myHead % w.W), dy = std::abs(sg.tile / w.W - myHead / w.W);
+                    dx = std::min(dx, w.W - dx), dy = std::min(dy, w.H - dy);
+                    if (std::max(dx, dy) > 2 || portalExit[sg.tile])
+                        inside = false;
+                }
+            if (vis > 0 && inside && vis < kingLen)
+                kingLen = vis;
+        }
         if (kingId >= 0 && round - kingRound > 12)
         {
             kingId = -1;
@@ -1709,13 +1750,15 @@ struct Bot
         if (KING_V2)
         {
             // up to two candidates grow side by side; the longest is the king
+            int clear = std::max(myLen + KING_FOCUS_GAP, 2 * myLen); // one clearly longer king
             if (kingSelf)
             {
-                if (freshKings(myLen + 2) >= 2)
+                if (freshKings(myLen + 2) >= 2 || (KING_FOCUS && freshKings(clear - 1) >= 1))
                     kingSelf = false;
                 return;
             }
-            if (round >= RP.kingSeedRound && freshKings(-1) < 2 && myLen >= 3 && rng.uni() < KING_DECLARE_P)
+            if (round >= RP.kingSeedRound && freshKings(-1) < 2 && myLen >= 3 &&
+                !(KING_FOCUS && freshKings(clear - 1) >= 1) && rng.uni() < KING_DECLARE_P)
                 kingSelf = true;
             return;
         }
@@ -1830,6 +1873,8 @@ struct Bot
     }
     bool shouldFeed() const
     {
+        if (FEED_STALE_GUARD && myLen >= 8 && birthRound >= 0 && round - birthRound < 3)
+            return false; // a big fresh split child must not obey its parent's stale king message
         // FEED_FRESH: only feed a king we heard from recently (a dead king's remembered
         // length pulled our real longest dragon into suicide, e.g. L21 at r435)
         if (FEED_FRESH > 0 && (kingId < 0 || round - kingRound > FEED_FRESH || kingLen < myLen + 2))
@@ -1971,6 +2016,72 @@ struct Bot
     // length 4+ at the tip, then (reverse-)splits so the rear half walks back out.
     // Worth it only if the pocket's pearls get us to 4, no enemy guards the mouth,
     // and at most one teammate is already inside.
+    // HOT_PULL (notes/22): entrances of dead-end pockets that hold a fast-refilling tile
+    std::vector<int> hotMouth;
+    int hotMouthRound = -1;
+    bool fastTile(int u) const
+    {
+        return (w.gmax[u] > 0 && w.gmax[u] <= POCKET_FAST_GAP) ||
+               (!w.gapSeen.empty() && w.gapSeen[u] > 0 && w.gapSeen[u] <= POCKET_FAST_GAP);
+    }
+    void computeHotMouths()
+    {
+        hotMouthRound = round;
+        hotMouth.clear();
+        std::vector<int> deg(w.N, 0);
+        std::vector<char> pk(w.N, 0);
+        std::vector<int> q;
+        for (int t = 0; t < w.N; t++)
+        {
+            for (int d = 0; d < 4; d++)
+                if (step(t, d) >= 0)
+                    deg[t]++;
+            if (deg[t] <= 1)
+                q.push_back(t);
+        }
+        for (size_t i = 0; i < q.size(); i++) // leaf pruning: what's removed is dead-end pocket
+        {
+            int t = q[i];
+            if (pk[t])
+                continue;
+            pk[t] = 1;
+            for (int d = 0; d < 4; d++)
+            {
+                int v = step(t, d);
+                if (v >= 0 && !pk[v] && --deg[v] == 1)
+                    q.push_back(v);
+            }
+        }
+        std::vector<int> comp(w.N, -1);
+        for (int s0 = 0; s0 < w.N; s0++)
+        {
+            if (!pk[s0] || comp[s0] >= 0)
+                continue;
+            std::vector<int> cq{s0}, mouths;
+            comp[s0] = s0;
+            bool hot = false;
+            for (size_t i = 0; i < cq.size(); i++)
+            {
+                int u = cq[i];
+                hot |= fastTile(u);
+                for (int d = 0; d < 4; d++)
+                {
+                    int v = step(u, d);
+                    if (v < 0)
+                        continue;
+                    if (!pk[v])
+                        mouths.push_back(u);
+                    else if (comp[v] < 0)
+                        comp[v] = s0, cq.push_back(v);
+                }
+            }
+            if (hot)
+                hotMouth.insert(hotMouth.end(), mouths.begin(), mouths.end());
+        }
+        if (dbg)
+            std::fprintf(dbg, "HOTMOUTH mouths=%zu\n", hotMouth.size());
+    }
+
     bool pocketWorthPumping(int t)
     {
         auto why = [&](const char* r) { if (dbg) std::fprintf(dbg, "POCKET %s len=%d\n", r, myLen); return false; };
@@ -2532,8 +2643,18 @@ struct Bot
                 for (int d = 0; d < 4; d++)
                 {
                     int t = step(myHead, d);
-                    if (t >= 0 && !(occId[t] >= 0 && freeT[t] > 1))
-                        exits++;
+                    if (t < 0 || (occId[t] >= 0 && freeT[t] > 1))
+                        continue;
+                    if (PUMP_TIP_DEADEND)
+                    {
+                        // a 1-2 tile tip only leads deeper into the pocket: not an exit (notes/22)
+                        double pp;
+                        int ar;
+                        bfsFrom(t, pp, ar, 4);
+                        if (ar < 3)
+                            continue;
+                    }
+                    exits++;
                 }
                 if (exits == 0 && tailHasExit(myLen - 2))
                     k = myLen - 2;
@@ -2546,6 +2667,26 @@ struct Bot
 
         if (UNK_EXPLORE && !w.known)
             computeExploreDesire();
+        int hotTarget = -1;
+        if (HOT_PULL > 0 && myLen <= 3 && !feeding && !iAmKing())
+        {
+            if (hotMouthRound < 0 || (!w.known && round - hotMouthRound >= 25))
+                computeHotMouths();
+            int bd = HOT_PULL_RANGE + 1;
+            for (int mt : hotMouth)
+            {
+                int dd = wrapDist(myHead, mt);
+                if (dd >= bd)
+                    continue;
+                int alliesAt = 0;
+                for (auto& o : segs)
+                    if (o.head && o.id != w.myId && o.team == w.myTeam && wrapDist(o.tile, mt) <= 2)
+                        alliesAt++;
+                if (alliesAt >= 2)
+                    continue; // enough of us there already
+                bd = dd, hotTarget = mt;
+            }
+        }
         // ---- score each direction
         double best = -1e18;
         int bestD = -1;
@@ -2651,6 +2792,8 @@ struct Bot
                 int dt = bfsDist[target];
                 score -= FEED_PULL * std::min(dt, 80);
             }
+            if (hotTarget >= 0 && !pump) // stay near fast pockets (presence wins them)
+                score -= HOT_PULL * std::min(bfsDist[hotTarget], HOT_PULL_RANGE);
             if (d == myDir)
                 score += 0.3;
             score += rng.uni() * 0.2;
@@ -2723,7 +2866,7 @@ struct Bot
                 int rank;
                 // ranks: ally head 0 < kelp 1 < body 2 < unknown portal 3 < enemy head 4
                 if (t < 0 && UNK_PORTAL_ESCAPE && !w.known && !w.portalSide.empty() && w.portalSide[myHead * 4 + d])
-                    rank = 3; // an unknown portal is a gamble; certain death isn't
+                    rank = (UNK_NECK_ESCAPE_GUARD && d == (myDir + 2) % 4) ? 2 : 3; // not back into our neck (Codex)
                 else if (t < 0)
                     rank = 1;
                 else if (occHead[t] && occId[t] != w.myId)

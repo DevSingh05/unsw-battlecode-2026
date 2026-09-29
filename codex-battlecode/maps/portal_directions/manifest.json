@@ -1,0 +1,22 @@
+[
+  {
+    "map": "portal_exit_east.map",
+    "rotation": 0,
+    "description": "ordinary length-2 starters, one unknown portal exit, two kelp sides and own neck behind"
+  },
+  {
+    "map": "portal_exit_south.map",
+    "rotation": 90,
+    "description": "ordinary length-2 starters, one unknown portal exit, two kelp sides and own neck behind"
+  },
+  {
+    "map": "portal_exit_west.map",
+    "rotation": 180,
+    "description": "ordinary length-2 starters, one unknown portal exit, two kelp sides and own neck behind"
+  },
+  {
+    "map": "portal_exit_north.map",
+    "rotation": 270,
+    "description": "ordinary length-2 starters, one unknown portal exit, two kelp sides and own neck behind"
+  }
+]
