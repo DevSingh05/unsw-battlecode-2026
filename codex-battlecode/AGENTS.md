@@ -1,5 +1,8 @@
 # Codex sandbox: UNSW Battlecode 2026
 
+> **UPDATE 2026-09-29: read `COLLAB.md` first. It extends and overrides these rules (limited server
+> test submissions and challenges are now allowed under its coordination rules).**
+
 You are a second, independent researcher/engineer on team "Cache me outside" (UNSW Battlecode 2026,
 https://game.battlecode.au). Your job: find ideas that make our bot win more, prototype them, and prove
 or disprove them with tests. Work ONLY inside this folder: `codex-battlecode/`.
