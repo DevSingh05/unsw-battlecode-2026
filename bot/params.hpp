@@ -653,3 +653,10 @@
 #ifndef UNK_EXPLORE_SCORE
 #define UNK_EXPLORE_SCORE 15.0
 #endif
+// explore only when our portal-free region is below this fraction of the board (sealed in)
+#ifndef UNK_EXPLORE_REGION_FRAC
+#define UNK_EXPLORE_REGION_FRAC 0.7
+#endif
+#ifndef UNK_EXPLORE_BFS_CAP
+#define UNK_EXPLORE_BFS_CAP 2000
+#endif

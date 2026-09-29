@@ -2175,7 +2175,7 @@ struct Bot
             std::vector<int> q{myHead};
             std::vector<char> seen(w.N, 0);
             seen[myHead] = 1;
-            for (size_t i = 0; i < q.size() && q.size() < 600; i++)
+            for (size_t i = 0; i < q.size() && q.size() < static_cast<size_t>(UNK_EXPLORE_BFS_CAP); i++)
                 for (int d = 0; d < 4; d++)
                 {
                     int v = step(q[i], d);
@@ -2186,7 +2186,10 @@ struct Bot
                         closed = false;
                     q.push_back(v);
                 }
-            if (q.size() >= 600)
+            if (q.size() >= static_cast<size_t>(UNK_EXPLORE_BFS_CAP))
+                closed = false;
+            // only "sealed in" if our portal-free region is a minor part of the board
+            if (static_cast<double>(q.size()) >= UNK_EXPLORE_REGION_FRAC * w.N)
                 closed = false;
         }
         bool pearlNear = false;
