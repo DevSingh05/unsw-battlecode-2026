@@ -633,3 +633,23 @@
 #ifndef HOT_LEARN
 #define HOT_LEARN 0
 #endif
+// ---- Q4 unknown-portal exploration: knock (sonar) on unknown portals, cross only on a clean
+// echo and when the region is scouted/hungry; learned links kept out of w.nxt
+#ifndef UNK_EXPLORE
+#define UNK_EXPLORE 0
+#endif
+#ifndef UNK_EXPLORE_HUNGER
+#define UNK_EXPLORE_HUNGER 25
+#endif
+#ifndef UNK_EXPLORE_HUNGER_CLOSED
+#define UNK_EXPLORE_HUNGER_CLOSED 3
+#endif
+#ifndef UNK_EXPLORE_COOLDOWN
+#define UNK_EXPLORE_COOLDOWN 8
+#endif
+#ifndef UNK_EXPLORE_LURE
+#define UNK_EXPLORE_LURE 0.4
+#endif
+#ifndef UNK_EXPLORE_SCORE
+#define UNK_EXPLORE_SCORE 15.0
+#endif

@@ -639,8 +639,16 @@ struct Bot
     std::string out;
     bool unkKingSet = false;
     std::vector<int> hotRun, hotLast; // HOT_LEARN
+    // UNK_EXPLORE (notes/unseen/unknown-portals.md): knock on unknown portals, cross on a clean echo
+    std::vector<int> learnDest, edgeCrossRound; // N*4; learned by crossing, never copied into w.nxt
+    std::vector<char> lureTile;
+    int lastGrowRound = -1, prevLen = 0;
+    int exploreFrom = -1, exploreDir = -1, exploreRound = -100;
+    int unkEchoRound = -100, unkEchoTile = -1, unkEchoMask = 0;
+    bool unkEchoClean = false, exploreDesire = false;
     bool unkParamsSet = false; // generic settings chosen for an unseen map
     std::vector<std::pair<int, int>> allyHeadMemory; // (tile, round) of ally heads seen lately
+    int lastMoveDir = 0;
     int lastPortalRound = -100;                       // last round we stepped through a portal
     std::vector<int> trail;    // our body, head first (tracked across turns)
     std::vector<int> freeOther; // like freeT but ignoring our own body
@@ -722,6 +730,15 @@ struct Bot
                 if (v >= 0 && v != w.plainStep(t, d))
                     portalExit[v] = 1;
             }
+        if (UNK_EXPLORE && !w.known && !w.portalSide.empty())
+            for (int t = 0; t < w.N; t++)
+                for (int d = 0; d < 4; d++)
+                {
+                    if (w.portalSide[t * 4 + d])
+                        portalExit[t] = 1; // someone crossing the partner edge lands here
+                    if (!learnDest.empty() && learnDest[t * 4 + d] >= 0)
+                        portalExit[learnDest[t * 4 + d]] = 1;
+                }
     }
 
     void analyse()
@@ -730,6 +747,11 @@ struct Bot
         myLen = in.length;
         units = in.units;
         myDir = in.dir;
+        if (lastGrowRound < 0)
+            lastGrowRound = round; // process start
+        if (prevLen > 0 && myLen > prevLen)
+            lastGrowRound = round; // ate
+        prevLen = myLen;
 
         std::fill(visible.begin(), visible.end(), 0);
         std::fill(freeT.begin(), freeT.end(), 1);
@@ -1035,13 +1057,15 @@ struct Bot
             }
         }
         if (v <= 0)
-            return 0;
+            return (UNK_EXPLORE && exploreDesire && !lureTile.empty() && lureTile[t]) ? UNK_EXPLORE_LURE : 0;
         // someone else closer: they will probably take it
         int od = otherDist[t];
         if (od < s)
             v *= 0.25;
         else if (od == s)
             v *= 0.55;
+        if (UNK_EXPLORE && exploreDesire && !lureTile.empty() && lureTile[t])
+            v = std::max(v, UNK_EXPLORE_LURE); // an unexplored door is worth walking to
         return v;
     }
 
@@ -1296,6 +1320,7 @@ struct Bot
         out += "MOVE ";
         out += DIRC[d];
         out += '\n';
+        lastMoveDir = d;
         pending.clear();
         int t = step(myHead, d);
         if (t >= 0)
@@ -1313,6 +1338,23 @@ struct Bot
                 trail.insert(trail.begin(), t);
         pending.clear();
         pendingSplit = false;
+        if (UNK_EXPLORE && exploreRound == round - 1 && exploreFrom >= 0)
+        {
+            int A = exploreFrom, d = exploreDir, X = myHead;
+            if (X != w.plainStep(A, d))
+            {
+                if (static_cast<int>(learnDest.size()) != w.N * 4)
+                    learnDest.assign(w.N * 4, -1);
+                int A2 = w.plainStep(A, d), C = w.plainStep(X, (d + 2) % 4);
+                learnDest[A * 4 + d] = X;
+                learnDest[X * 4 + (d + 2) % 4] = A;
+                learnDest[A2 * 4 + (d + 2) % 4] = C;
+                learnDest[C * 4 + d] = A2;
+                if (!trail.empty() && trail.front() == A)
+                    trail.insert(trail.begin(), X); // our body continues behind the portal
+            }
+            exploreRound = -100;
+        }
         if (trail.empty() || trail.front() != myHead)
         {
             // rebuild from what we can see: walk from the head along our own chain
@@ -1579,6 +1621,14 @@ struct Bot
                 }
             }
         }
+        if (UNK_EXPLORE && probeMask && probeRound == round - 1 && probeTile == myHead)
+        {
+            unkEchoRound = round;
+            unkEchoTile = myHead;
+            unkEchoMask = probeMask;
+            unkEchoClean = probeRays == __builtin_popcount(static_cast<unsigned>(probeMask)) &&
+                           in.echoes[1] + in.echoes[2] + in.echoes[3] + in.echoes[4] == 0;
+        }
         haveRelay = false;
         int bestHopRelay = 99;
         for (uint64_t m : in.msgs)
@@ -1699,6 +1749,14 @@ struct Bot
                     if (v >= 0 && v != w.plainStep(at, d))
                         warnDirs[d] = true;
                 }
+        }
+        if (UNK_EXPLORE && !w.known && pending.size() <= 1 && !w.portalSide.empty())
+        {
+            int at = pending.empty() ? myHead : pending.back();
+            int face = pending.empty() ? myDir : lastMoveDir;
+            for (int d = 0; d < 4; d++)
+                if (at >= 0 && w.portalSide[at * 4 + d] && step(at, d) < 0 && d != (face + 2) % 4)
+                    warnDirs[d] = true; // knock: the ray passes the unknown portal
         }
         uint64_t warn = 0;
         bool anyWarn = warnDirs[0] || warnDirs[1] || warnDirs[2] || warnDirs[3];
@@ -2104,6 +2162,51 @@ struct Bot
         return true;
     }
 
+    // UNK_EXPLORE desire gate: our walkable region is fully scouted and we're a bit hungry,
+    // or we've been hungry a long time with no pearl in sight. Also marks door lures.
+    void computeExploreDesire()
+    {
+        exploreDesire = false;
+        if (myLen >= KING_MIN_LEN || w.portalSide.empty() || myHead < 0)
+            return;
+        int hunger = round - lastGrowRound;
+        bool closed = true;
+        {
+            std::vector<int> q{myHead};
+            std::vector<char> seen(w.N, 0);
+            seen[myHead] = 1;
+            for (size_t i = 0; i < q.size() && q.size() < 600; i++)
+                for (int d = 0; d < 4; d++)
+                {
+                    int v = step(q[i], d);
+                    if (v < 0 || seen[v])
+                        continue;
+                    seen[v] = 1;
+                    if (w.lastSeen[v] < 0)
+                        closed = false;
+                    q.push_back(v);
+                }
+            if (q.size() >= 600)
+                closed = false;
+        }
+        bool pearlNear = false;
+        for (int t = 0; t < w.N && !pearlNear; t++)
+            if (visible[t] && w.pearlMem[t] && wrapDist(t, myHead) <= 6)
+                pearlNear = true;
+        exploreDesire = (closed && hunger >= UNK_EXPLORE_HUNGER_CLOSED) || (hunger >= UNK_EXPLORE_HUNGER && !pearlNear);
+        if (UNK_EXPLORE_LURE > 0)
+        {
+            lureTile.assign(w.N, 0);
+            if (exploreDesire)
+                for (int t = 0; t < w.N; t++)
+                    for (int d = 0; d < 4; d++)
+                        if (w.portalSide[t * 4 + d] && step(t, d) < 0 &&
+                            (static_cast<int>(edgeCrossRound.size()) != w.N * 4 ||
+                             round - edgeCrossRound[t * 4 + d] >= UNK_EXPLORE_COOLDOWN))
+                            lureTile[t] = 1;
+        }
+    }
+
     // KING_ESCAPE (notes/18): a big dragon whose every 1-step move is inside an enemy
     // head's reach sprints 2 (or 3) steps to a threat-free tile, or reverse-splits.
     bool tryKingEscape(int bestD)
@@ -2420,6 +2523,8 @@ struct Bot
             return;
         }
 
+        if (UNK_EXPLORE && !w.known)
+            computeExploreDesire();
         // ---- score each direction
         double best = -1e18;
         int bestD = -1;
@@ -2537,6 +2642,34 @@ struct Bot
             }
         }
 
+        if (UNK_EXPLORE && exploreDesire && unkEchoRound == round && unkEchoTile == myHead && unkEchoClean)
+        {
+            int hunger = round - lastGrowRound;
+            int exD = -1;
+            for (int d = 0; d < 4; d++)
+            {
+                if (!((unkEchoMask >> d) & 1) || step(myHead, d) >= 0 || !w.portalSide[myHead * 4 + d])
+                    continue;
+                if (static_cast<int>(edgeCrossRound.size()) == w.N * 4 &&
+                    round - edgeCrossRound[myHead * 4 + d] < UNK_EXPLORE_COOLDOWN)
+                    continue;
+                if (threatAt[myHead] > 0 && myLen >= 6)
+                    continue;
+                double sc = UNK_EXPLORE_SCORE + 0.3 * std::min(hunger, 60);
+                if (sc > best)
+                    best = sc, bestD = d, bestDepth = SURVIVE_DEPTH, exD = d;
+            }
+            if (exD >= 0)
+            {
+                if (static_cast<int>(edgeCrossRound.size()) != w.N * 4)
+                    edgeCrossRound.assign(w.N * 4, -1000);
+                exploreFrom = myHead, exploreDir = exD, exploreRound = round;
+                edgeCrossRound[myHead * 4 + exD] = round;
+                lastPortalRound = round;
+                if (dbg)
+                    std::fprintf(dbg, "  -> explore unknown portal %c\n", DIRC[exD]);
+            }
+        }
         if (KING_ESCAPE && tryKingEscape(bestD))
             return;
 
