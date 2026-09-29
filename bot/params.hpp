@@ -701,3 +701,110 @@
 #ifndef FEED_STALE_GUARD
 #define FEED_STALE_GUARD 0
 #endif
+// ---- notes/levers/blocked-food.md: on unknown maps, open the UNK_EXPLORE gate (knock, cross on a
+// clean echo) when seen pearl spawners are provably unreachable without a portal.
+// 1 = strict (outside our portal-free component), 2 = also long nearby detours
+#ifndef UNK_SEALED_FOOD
+#define UNK_SEALED_FOOD 0
+#endif
+#ifndef UNK_SEALED_HUNGER
+#define UNK_SEALED_HUNGER 20
+#endif
+#ifndef UNK_SEALED_MIN
+#define UNK_SEALED_MIN 4
+#endif
+#ifndef UNK_SEALED_FRAC
+#define UNK_SEALED_FRAC 0.2
+#endif
+#ifndef UNK_SEALED_DETOUR_NEAR
+#define UNK_SEALED_DETOUR_NEAR 6
+#endif
+#ifndef UNK_SEALED_DETOUR
+#define UNK_SEALED_DETOUR 8
+#endif
+#ifndef UNK_SEALED_LOG
+#define UNK_SEALED_LOG 0
+#endif
+// sealed food per tile must be at least this multiple of the walkable food's rate
+#ifndef UNK_SEALED_RICH
+#define UNK_SEALED_RICH 1.0
+#endif
+// rounds after an explore crossing during which no explore desire (either gate) fires
+#ifndef UNK_SEALED_SETTLE
+#define UNK_SEALED_SETTLE 15
+#endif
+// no split while our portal-free room is smaller than this; a small room this crowded
+// (other segments >= 1/4 of its tiles) opens the explore gate at once
+#ifndef UNK_SEALED_ROOM_MIN
+#define UNK_SEALED_ROOM_MIN 32
+#endif
+// ---- notes/levers/frontier-explore.md: learned value of never-seen tiles (unknown maps only).
+// Every tile entering our view for the first time is a free sample of "what an unseen tile
+// holds". EXPLORE_LEARN replaces the time-growing UNK_PRIOR guess 0.5*min(1, r*UNK_PRIOR)
+// for never-seen tiles with a smoothed first-sight hit rate (pearl there, or a countdown
+// <= EXPLORE_CD). 0 off, 1 on.
+#ifndef EXPLORE_LEARN
+#define EXPLORE_LEARN 0
+#endif
+#ifndef EXPLORE_M0 // prior mean hit rate (Beta pseudo-count mean) before any samples
+#define EXPLORE_M0 0.03
+#endif
+#ifndef EXPLORE_N0 // prior weight in samples (~7 new tiles per straight step)
+#define EXPLORE_N0 30.0
+#endif
+#ifndef EXPLORE_DECAY // per-turn forgetting of old samples (window ~ 7/(1-d) samples)
+#define EXPLORE_DECAY 0.98
+#endif
+#ifndef EXPLORE_CD // a first-seen countdown <= this counts as food (we arrive ~3 steps after sight)
+#define EXPLORE_CD 3
+#endif
+#ifndef EXPLORE_MULT // scale on the estimate
+#define EXPLORE_MULT 1.0
+#endif
+#ifndef EXPLORE_MAX
+#define EXPLORE_MAX 0.5
+#endif
+// ---- notes/levers/budget-lookahead.md: spend spare CPU on a 1-ply enemy-reply check for big dragons
+// REPLY_SEARCH: for L >= REPLY_MIN_LEN, each candidate step is re-checked against every joint 1-step
+// reply of the (up to REPLY_MAX_ENEMIES) nearest enemy heads within REPLY_RADIUS: the reply tiles are
+// blocked, our next step may not enter a tile the replied heads can reach, and surviveDepth is re-run.
+// A reply that leaves no safe next step ("forced": every next step threatened or lethal) costs
+// REPLY_FORCED_PEN + REPLY_FORCED_PER_LEN*L; a shortfall in survival depth costs REPLY_SHORT_PEN per step.
+#ifndef REPLY_SEARCH
+#define REPLY_SEARCH 0
+#endif
+#ifndef REPLY_MIN_LEN
+#define REPLY_MIN_LEN 8
+#endif
+#ifndef REPLY_RADIUS
+#define REPLY_RADIUS 3
+#endif
+#ifndef REPLY_MAX_ENEMIES
+#define REPLY_MAX_ENEMIES 3
+#endif
+#ifndef REPLY_NODE_CAP
+#define REPLY_NODE_CAP 6000
+#endif
+#ifndef REPLY_FORCED_PEN
+#define REPLY_FORCED_PEN 40.0
+#endif
+#ifndef REPLY_FORCED_PER_LEN
+#define REPLY_FORCED_PER_LEN 3.0
+#endif
+#ifndef REPLY_SHORT_PEN
+#define REPLY_SHORT_PEN 12.0
+#endif
+// The reply penalty is capped at this fraction of the direct-threat penalty (25+4L) so a forced-next-turn
+// tile is never ranked below a tile an enemy head can ram right now.
+#ifndef REPLY_CAP_FRAC
+#define REPLY_CAP_FRAC 0.8
+#endif
+// Stop starting new reply checks once this many points (sandbox clock, 1e6 points = 1 ms) have been
+// spent this turn; the rest of the candidates keep their plain score. Keeps worst case far below 100M.
+#ifndef REPLY_BUDGET_M
+#define REPLY_BUDGET_M 45
+#endif
+// PROFILE_POINTS: append a LOG line with per-section points (sandbox clock) each turn. Local only.
+#ifndef PROFILE_POINTS
+#define PROFILE_POINTS 0
+#endif

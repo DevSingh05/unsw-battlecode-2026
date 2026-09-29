@@ -1,0 +1,381 @@
+--- bot/main.cpp	2026-09-29 13:00:54
++++ notes/levers/budget-lookahead/src/bot/main.cpp	2026-09-29 13:19:49
+@@ -18,10 +18,27 @@
+ #include <string>
+ #include <vector>
+ #include <cstdlib>
++#include <chrono>
+ 
+ namespace {
+ FILE* dbg = nullptr;
+ 
++// Sandbox clock: the judge's clock is virtual and advances with CPU points (100M points = 0.1 s),
++// so milliseconds here are millions of points (notes/levers/budget-lookahead.md).
++inline double pointsM()
++{
++    static const auto start = std::chrono::steady_clock::now();
++    return std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - start).count();
++}
++#if PROFILE_POINTS
++double profAcc[8]; // 0 parse, 1 analyse, 2 threats, 3 bfsFrom, 4 surviveDepth, 5 reply, 6 decide total, 7 sonar
++#define PROF_BEGIN(k) const double prof_t0_##k = pointsM()
++#define PROF_END(k, slot) profAcc[slot] += pointsM() - prof_t0_##k
++#else
++#define PROF_BEGIN(k)
++#define PROF_END(k, slot)
++#endif
++
+ // Strategy settings that can differ per map (see applyMapParams).
+ struct RuntimeParams
+ {
+@@ -661,6 +678,10 @@
+     std::vector<int> simBody;   // ring buffer
+     std::vector<char> eatenMark; // survival search: pearls eaten on this path
+     long long nodes = 0;
++    long long nodeCap = 60000;   // surviveDepth node limit (REPLY_SEARCH lowers it for its re-runs)
++    std::vector<char> replyBan;  // REPLY_SEARCH: tiles our 2nd step may not enter (replied heads reach them)
++    bool replyBanOn = false;
++    double turnT0 = 0;           // sandbox clock (millions of points) when this turn's input was read
+     std::vector<int> pending;  // tiles our last move stepped onto, in order
+     bool pendingSplit = false;
+ 
+@@ -1081,7 +1102,15 @@
+     std::vector<int> bfsDist, bfsQ;
+ #include "pearl_route.hpp"
+     void bfsFrom(int start, double& pearlScore, int& area, int areaCap)
++    {
++#if PROFILE_POINTS
++        PROF_BEGIN(b);
++        bfsFromImpl(start, pearlScore, area, areaCap);
++        PROF_END(b, 3);
++    }
++    void bfsFromImpl(int start, double& pearlScore, int& area, int areaCap)
+     {
++#endif
+         if (bfsDist.size() != static_cast<size_t>(w.N))
+             bfsDist.assign(w.N, INF);
+         std::fill(bfsDist.begin(), bfsDist.end(), INF);
+@@ -1154,6 +1183,15 @@
+     // dragons' segments as vacating on schedule. Assumes we don't eat.
+     int surviveDepth(int firstTile, int maxDepth)
+     {
++#if PROFILE_POINTS
++        PROF_BEGIN(s);
++        int r = surviveDepthImpl(firstTile, maxDepth);
++        PROF_END(s, 4);
++        return r;
++    }
++    int surviveDepthImpl(int firstTile, int maxDepth)
++    {
++#endif
+         if (static_cast<int>(bodyCnt.size()) != w.N)
+             bodyCnt.assign(w.N, 0);
+         if (static_cast<int>(eatenMark.size()) != w.N)
+@@ -1182,6 +1220,8 @@
+         auto canEnter = [&](int v, int t) {
+             if (v < 0 || bodyCnt[v] > 0)
+                 return false;
++            if (REPLY_SEARCH && replyBanOn && t == 2 && replyBan[v])
++                return false;
+             return freeOther[v] <= t;
+         };
+         // a pearl we'd eat on this tile (seen now, or a pearl-every-round tile)
+@@ -1254,9 +1294,9 @@
+         {
+             Frame& f = stack.back();
+             int depth = static_cast<int>(stack.size());
+-            if (depth >= maxDepth || f.dir >= 4 || nodes > 60000)
++            if (depth >= maxDepth || f.dir >= 4 || nodes > nodeCap)
+             {
+-                if (depth >= maxDepth || nodes > 60000)
++                if (depth >= maxDepth || nodes > nodeCap)
+                 {
+                     best = std::max(best, depth);
+                     if (depth >= maxDepth)
+@@ -2339,6 +2379,152 @@
+         }
+     }
+ 
++    // REPLY_SEARCH (notes/levers/budget-lookahead.md, PLAN Q8): 1-ply opponent-reply check for big dragons.
++    // Same reach rule as computeThreats (visible length - 1, tail-unknown bump, king cap).
++    int replyEnemyReach(int si)
++    {
++        const Seg& s = segs[si];
++        int reach = std::max(1, enemyVisibleLength(s.id) - 1);
++        if (THREAT_TAIL_UNKNOWN > 0 && reach < THREAT_TAIL_UNKNOWN)
++        {
++            bool tailSeen = false;
++            for (int j = 0; j < static_cast<int>(segs.size()) && !tailSeen; j++)
++            {
++                if (segs[j].id != s.id || segs[j].head || !tailIsVisibleTail(j))
++                    continue;
++                bool hasPrev = false;
++                for (auto& o : segs)
++                    if (o.id == s.id && !o.head && step(o.tile, o.facing) == segs[j].tile)
++                        hasPrev = true;
++                tailSeen = !hasPrev;
++            }
++            if (!tailSeen)
++                reach = THREAT_TAIL_UNKNOWN;
++        }
++        return std::min(reach, KING_THREAT_REACH);
++    }
++    // After we step onto t, every nearby enemy head makes a 1-step reply (all joint combinations of the
++    // nearest REPLY_MAX_ENEMIES within REPLY_RADIUS). Per combination: reply tiles become body, tiles the
++    // replied heads can reach next turn are closed to our 2nd step, and surviveDepth is re-run.
++    // Returns the penalty for the worst combination (0 if none hurts). -1 = skipped (budget).
++    int replyWorst = -1, replyCombos = 0;
++    double replyPenalty(int t, int baseDepth, int wantDepth)
++    {
++        replyWorst = -1;
++        replyCombos = 0;
++        if (pointsM() - turnT0 > REPLY_BUDGET_M)
++            return -1;
++        struct En
++        {
++            int si, dist, reach, len;
++            int rep[4];
++            int nrep;
++        };
++        En en[8];
++        int ne = 0;
++        for (int i = 0; i < static_cast<int>(segs.size()); i++)
++        {
++            const Seg& o = segs[i];
++            if (!o.head || o.team == w.myTeam)
++                continue;
++            int dd = wrapDist(o.tile, t);
++            if (dd > REPLY_RADIUS)
++                continue;
++            En e{i, dd, 0, enemyVisibleLength(o.id), {0, 0, 0, 0}, 0};
++            for (int d = 0; d < 4; d++)
++            {
++                int r = step(o.tile, d);
++                if (r < 0 || r == t || freeT[r] > 1)
++                    continue; // kelp, the ram itself (threatAt covers it), or occupied when it moves
++                e.rep[e.nrep++] = r;
++            }
++            if (e.nrep == 0)
++                continue; // it dies anyway
++            if (ne < 8)
++                en[ne++] = e;
++        }
++        if (ne == 0)
++            return 0;
++        std::sort(en, en + ne, [](const En& a, const En& b) { return a.dist < b.dist; });
++        ne = std::min(ne, static_cast<int>(REPLY_MAX_ENEMIES));
++        for (int k = 0; k < ne; k++)
++            en[k].reach = replyEnemyReach(en[k].si);
++        if (static_cast<int>(replyBan.size()) != w.N)
++            replyBan.assign(w.N, 0);
++        if (static_cast<int>(threatDist.size()) != w.N)
++            threatDist.assign(w.N, INF);
++        int total = 1;
++        for (int k = 0; k < ne; k++)
++            total *= en[k].nrep;
++        int worst = baseDepth;
++        std::vector<int> banned, blocked, blockedOld;
++        for (int code = 0; code < total && worst > 1; code++)
++        {
++            int c = code;
++            banned.clear();
++            blocked.clear();
++            blockedOld.clear();
++            for (int k = 0; k < ne; k++)
++            {
++                int r = en[k].rep[c % en[k].nrep];
++                c /= en[k].nrep;
++                // the replied head's old tile and r are now its body for at least its visible length
++                blocked.push_back(r);
++                blockedOld.push_back(freeOther[r]);
++                freeOther[r] = std::max(freeOther[r], en[k].len + 2);
++                // tiles it can reach on its next move (BFS over tiles free now, bodies stop it)
++                tq.clear();
++                tq.push_back(r);
++                threatDist[r] = 0;
++                for (size_t qi = 0; qi < tq.size(); qi++)
++                {
++                    int u = tq[qi];
++                    if (threatDist[u] >= en[k].reach)
++                        continue;
++                    for (int d = 0; d < 4; d++)
++                    {
++                        int v = step(u, d);
++                        if (v < 0 || threatDist[v] != INF)
++                            continue;
++                        threatDist[v] = threatDist[u] + 1;
++                        tq.push_back(v);
++                        if (!replyBan[v])
++                        {
++                            replyBan[v] = 1;
++                            banned.push_back(v);
++                        }
++                        if (freeT[v] > 1)
++                            threatDist[v] = en[k].reach;
++                    }
++                }
++                for (int u : tq)
++                    threatDist[u] = INF;
++            }
++            replyBanOn = true;
++            nodeCap = REPLY_NODE_CAP;
++            int dep = surviveDepth(t, wantDepth);
++            nodeCap = 60000;
++            replyBanOn = false;
++            for (int v : banned)
++                replyBan[v] = 0;
++            for (int i = static_cast<int>(blocked.size()) - 1; i >= 0; i--)
++                freeOther[blocked[i]] = blockedOld[i];
++            replyCombos++;
++            worst = std::min(worst, dep);
++            if (pointsM() - turnT0 > REPLY_BUDGET_M + 10)
++                break; // hard stop inside a candidate
++        }
++        replyWorst = worst;
++        if (worst >= baseDepth)
++            return 0;
++        double pen = REPLY_SHORT_PEN * std::min(baseDepth - worst, 10);
++        if (worst <= 1)
++            pen += REPLY_FORCED_PEN + REPLY_FORCED_PER_LEN * myLen; // every 2nd step threatened or lethal
++        // being forced next turn is less bad than a head that can ram us now (KING_ESCAPE still has
++        // sprints/splits then): never outweigh the direct-threat penalty for a big dragon
++        return std::min(pen, REPLY_CAP_FRAC * (25.0 + 4.0 * myLen));
++    }
++
+     // KING_ESCAPE (notes/18): a big dragon whose every 1-step move is inside an enemy
+     // head's reach sprints 2 (or 3) steps to a threat-free tile, or reverse-splits.
+     bool tryKingEscape(int bestD)
+@@ -2534,7 +2720,9 @@
+             emitMove(myDir);
+             return;
+         }
++        PROF_BEGIN(th);
+         computeThreats();
++        PROF_END(th, 2);
+         if (mapOverride())
+             return;
+ 
+@@ -2714,6 +2902,16 @@
+                 score -= 150.0 + 40.0 * (wantDepth - depth);
+             if (pump)
+                 score += POCKET_PUMP_BONUS;
++            if (REPLY_SEARCH && myLen >= REPLY_MIN_LEN && depth >= 2)
++            {
++                PROF_BEGIN(rp);
++                double rpen = replyPenalty(t, std::min(depth, wantDepth), wantDepth);
++                PROF_END(rp, 5);
++                if (rpen > 0)
++                    score -= rpen;
++                if (dbg && replyCombos > 0)
++                    std::fprintf(dbg, "  reply %c combos=%d worst=%d pen=%.1f\n", DIRC[d], replyCombos, replyWorst, rpen);
++            }
+             int threat = threatAt[t];
+             // SMALL_SPRINT_THREAT (notes/19): not locally ahead, a ram costs the dragon AND the corpse race
+             bool outnum = SMALL_SPRINT_THREAT && myLen < 6 && localAllies <= localEnemies;
+@@ -2897,12 +3095,19 @@
+             std::string path = std::string(dd) + "/" + std::to_string(w.myId) + ".txt";
+             dbg = std::fopen(path.c_str(), "w");
+         }
+-        while (readTurn(in))
++        while (true)
+         {
++            PROF_BEGIN(parse);
++            if (!readTurn(in))
++                break;
++            PROF_END(parse, 0);
++            turnT0 = pointsM();
+             out.clear();
+             try
+             {
++                PROF_BEGIN(an);
+                 analyse();
++                PROF_END(an, 1);
+                 if (dbg)
+                 {
+                     std::fprintf(dbg, "R%d id=%d len=%d dir=%c head=(%d,%d) map=%s\n", round, w.myId, myLen, DIRC[myDir],
+@@ -2911,7 +3116,9 @@
+                         std::fprintf(dbg, "  seg %c%d (%d,%d) %c%s freeT=%d\n", sg.team, sg.id, sg.tile % w.W, sg.tile / w.W,
+                                      DIRC[sg.facing], sg.head ? " H" : "", freeT[sg.tile]);
+                 }
++                PROF_BEGIN(de);
+                 decide();
++                PROF_END(de, 6);
+             }
+             catch (...)
+             {
+@@ -2921,12 +3128,24 @@
+             }
+             try
+             {
++                PROF_BEGIN(so);
+                 if (myHead >= 0)
+                     emitSonar();
++                PROF_END(so, 7);
+             }
+             catch (...)
+             {
+             }
++#if PROFILE_POINTS
++            {
++                char pb[200];
++                std::snprintf(pb, sizeof pb, "LOG prof L=%d N=%d parse=%.2f an=%.2f thr=%.2f bfs=%.2f surv=%.2f reply=%.2f dec=%.2f son=%.2f\n",
++                              myLen, w.N, profAcc[0], profAcc[1], profAcc[2], profAcc[3], profAcc[4], profAcc[5], profAcc[6], profAcc[7]);
++                out += pb;
++                for (double& x : profAcc)
++                    x = 0;
++            }
++#endif
+             out += "PROTOCOL 3\nENDTURN\n";
+             std::fwrite(out.data(), 1, out.size(), stdout);
+             std::fflush(stdout);
+--- bot/params.hpp	2026-09-29 12:39:25
++++ notes/levers/budget-lookahead/src/bot/params.hpp	2026-09-29 13:19:49
+@@ -700,4 +700,48 @@
+ #endif
+ #ifndef FEED_STALE_GUARD
+ #define FEED_STALE_GUARD 0
++#endif
++// ---- notes/levers/budget-lookahead.md: spend spare CPU on a 1-ply enemy-reply check for big dragons
++// REPLY_SEARCH: for L >= REPLY_MIN_LEN, each candidate step is re-checked against every joint 1-step
++// reply of the (up to REPLY_MAX_ENEMIES) nearest enemy heads within REPLY_RADIUS: the reply tiles are
++// blocked, our next step may not enter a tile the replied heads can reach, and surviveDepth is re-run.
++// A reply that leaves no safe next step ("forced": every next step threatened or lethal) costs
++// REPLY_FORCED_PEN + REPLY_FORCED_PER_LEN*L; a shortfall in survival depth costs REPLY_SHORT_PEN per step.
++#ifndef REPLY_SEARCH
++#define REPLY_SEARCH 0
++#endif
++#ifndef REPLY_MIN_LEN
++#define REPLY_MIN_LEN 8
++#endif
++#ifndef REPLY_RADIUS
++#define REPLY_RADIUS 3
++#endif
++#ifndef REPLY_MAX_ENEMIES
++#define REPLY_MAX_ENEMIES 3
++#endif
++#ifndef REPLY_NODE_CAP
++#define REPLY_NODE_CAP 6000
++#endif
++#ifndef REPLY_FORCED_PEN
++#define REPLY_FORCED_PEN 40.0
+ #endif
++#ifndef REPLY_FORCED_PER_LEN
++#define REPLY_FORCED_PER_LEN 3.0
++#endif
++#ifndef REPLY_SHORT_PEN
++#define REPLY_SHORT_PEN 12.0
++#endif
++// The reply penalty is capped at this fraction of the direct-threat penalty (25+4L) so a forced-next-turn
++// tile is never ranked below a tile an enemy head can ram right now.
++#ifndef REPLY_CAP_FRAC
++#define REPLY_CAP_FRAC 0.8
++#endif
++// Stop starting new reply checks once this many points (sandbox clock, 1e6 points = 1 ms) have been
++// spent this turn; the rest of the candidates keep their plain score. Keeps worst case far below 100M.
++#ifndef REPLY_BUDGET_M
++#define REPLY_BUDGET_M 45
++#endif
++// PROFILE_POINTS: append a LOG line with per-section points (sandbox clock) each turn. Local only.
++#ifndef PROFILE_POINTS
++#define PROFILE_POINTS 0
++#endif

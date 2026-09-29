@@ -18,9 +18,26 @@
 #include <string>
 #include <vector>
 #include <cstdlib>
+#include <chrono>
 
 namespace {
 FILE* dbg = nullptr;
+
+// Sandbox clock: the judge's clock is virtual and advances with CPU points (100M points = 0.1 s),
+// so milliseconds here are millions of points (notes/levers/budget-lookahead.md).
+inline double pointsM()
+{
+    static const auto start = std::chrono::steady_clock::now();
+    return std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - start).count();
+}
+#if PROFILE_POINTS
+double profAcc[8]; // 0 parse, 1 analyse, 2 threats, 3 bfsFrom, 4 surviveDepth, 5 reply, 6 decide total, 7 sonar
+#define PROF_BEGIN(k) const double prof_t0_##k = pointsM()
+#define PROF_END(k, slot) profAcc[slot] += pointsM() - prof_t0_##k
+#else
+#define PROF_BEGIN(k)
+#define PROF_END(k, slot)
+#endif
 
 // Strategy settings that can differ per map (see applyMapParams).
 struct RuntimeParams
@@ -644,6 +661,13 @@ struct Bot
     bool unkKingSet = false;
     int birthRound = -1; // first round this process played
     std::vector<int> hotRun, hotLast; // HOT_LEARN
+    // EXPLORE_LEARN: decayed first-sight samples (hits, total) -> value of a never-seen tile
+    double exploreHits = 0, exploreN = 0;
+    double exploreEst() const
+    {
+        double e = (exploreHits + EXPLORE_N0 * EXPLORE_M0) / (exploreN + EXPLORE_N0);
+        return std::min(EXPLORE_MAX, EXPLORE_MULT * e);
+    }
     // UNK_EXPLORE (notes/unseen/unknown-portals.md): knock on unknown portals, cross on a clean echo
     std::vector<int> learnDest, edgeCrossRound; // N*4; learned by crossing, never copied into w.nxt
     std::vector<char> lureTile;
@@ -661,6 +685,10 @@ struct Bot
     std::vector<int> simBody;   // ring buffer
     std::vector<char> eatenMark; // survival search: pearls eaten on this path
     long long nodes = 0;
+    long long nodeCap = 60000;   // surviveDepth node limit (REPLY_SEARCH lowers it for its re-runs)
+    std::vector<char> replyBan;  // REPLY_SEARCH: tiles our 2nd step may not enter (replied heads reach them)
+    bool replyBanOn = false;
+    double turnT0 = 0;           // sandbox clock (millions of points) when this turn's input was read
     std::vector<int> pending;  // tiles our last move stepped onto, in order
     bool pendingSplit = false;
 
@@ -843,10 +871,23 @@ struct Bot
                 std::fill(w.gmax.begin(), w.gmax.end(), -1);
             }
         }
+        if (EXPLORE_LEARN && !w.known)
+        {
+            exploreHits *= EXPLORE_DECAY;
+            exploreN *= EXPLORE_DECAY;
+        }
         for (int i = 0; i < 49; i++)
         {
             int t = w.idx(in.tx[i], in.ty[i]);
             visible[t] = 1;
+            // EXPLORE_LEARN: a tile we see for the first time is a sample of the never-seen
+            // population (skip our birth view: it is the parent's picked-over neighbourhood)
+            if (EXPLORE_LEARN && !w.known && w.lastSeen[t] < 0 && round > birthRound)
+            {
+                exploreN += 1;
+                if (in.tpearl[i] || (in.tin[i] >= 0 && in.tin[i] <= EXPLORE_CD))
+                    exploreHits += 1;
+            }
             w.lastSeen[t] = round;
             w.pearlMem[t] = static_cast<char>(in.tpearl[i]);
             if (in.tin[i] < 0)
@@ -1054,7 +1095,9 @@ struct Bot
             else
             {
                 double r = w.rate(t);
-                if (r > 0)
+                if (EXPLORE_LEARN && !w.known && ls < 0 && w.spawnAt[t] < 0 && w.gmax[t] < 0)
+                    v = exploreEst(); // learned from first sightings, not a time-growing guess
+                else if (r > 0)
                 {
                     int since = arrive - std::max(ls, w.spawnAt[t] >= 0 ? w.spawnAt[t] : 0);
                     if (ls < 0 && w.spawnAt[t] < 0)
@@ -1082,6 +1125,14 @@ struct Bot
 #include "pearl_route.hpp"
     void bfsFrom(int start, double& pearlScore, int& area, int areaCap)
     {
+#if PROFILE_POINTS
+        PROF_BEGIN(b);
+        bfsFromImpl(start, pearlScore, area, areaCap);
+        PROF_END(b, 3);
+    }
+    void bfsFromImpl(int start, double& pearlScore, int& area, int areaCap)
+    {
+#endif
         if (bfsDist.size() != static_cast<size_t>(w.N))
             bfsDist.assign(w.N, INF);
         std::fill(bfsDist.begin(), bfsDist.end(), INF);
@@ -1154,6 +1205,15 @@ struct Bot
     // dragons' segments as vacating on schedule. Assumes we don't eat.
     int surviveDepth(int firstTile, int maxDepth)
     {
+#if PROFILE_POINTS
+        PROF_BEGIN(s);
+        int r = surviveDepthImpl(firstTile, maxDepth);
+        PROF_END(s, 4);
+        return r;
+    }
+    int surviveDepthImpl(int firstTile, int maxDepth)
+    {
+#endif
         if (static_cast<int>(bodyCnt.size()) != w.N)
             bodyCnt.assign(w.N, 0);
         if (static_cast<int>(eatenMark.size()) != w.N)
@@ -1181,6 +1241,8 @@ struct Bot
         std::vector<Frame> stack;
         auto canEnter = [&](int v, int t) {
             if (v < 0 || bodyCnt[v] > 0)
+                return false;
+            if (REPLY_SEARCH && replyBanOn && t == 2 && replyBan[v])
                 return false;
             return freeOther[v] <= t;
         };
@@ -1254,9 +1316,9 @@ struct Bot
         {
             Frame& f = stack.back();
             int depth = static_cast<int>(stack.size());
-            if (depth >= maxDepth || f.dir >= 4 || nodes > 60000)
+            if (depth >= maxDepth || f.dir >= 4 || nodes > nodeCap)
             {
-                if (depth >= maxDepth || nodes > 60000)
+                if (depth >= maxDepth || nodes > nodeCap)
                 {
                     best = std::max(best, depth);
                     if (depth >= maxDepth)
@@ -1676,7 +1738,7 @@ struct Bot
                 haveRelay = true;
             }
         }
-        if (KING_FOCUS)
+        if (KING_FOCUS && RP.kingDeclare)
         {
             // notes/21: follow (feed, relay) the LONGEST fresh king, not the last one heard
             const KingInfo* bk = nullptr;
@@ -2285,6 +2347,94 @@ struct Bot
         return false;
     }
 
+    // UNK_SEALED_FOOD: BFS the portal-free walkable component from our head (unseen edges are
+    // open, so "unreached" is a proof, not a guess). Count pearl spawners we have seen (any
+    // countdown observed) inside vs outside it. Fire when enough seen food is sealed off and an
+    // unexplored door is reachable. Mode 2 also counts nearby spawners whose only walk is a long
+    // detour (weaker evidence: kelp corridors on shortcut maps can look like this).
+    int sealedLogged = 0, lastExploreCross = -1000;
+    // portal-free region around our head (bodies ignored), capped; crowd = other dragons' segments in it
+    int roomSize(int cap, int* crowd = nullptr)
+    {
+        std::vector<char> seen(w.N, 0);
+        std::vector<int> q{myHead};
+        seen[myHead] = 1;
+        int c = 0;
+        for (size_t i = 0; i < q.size() && static_cast<int>(q.size()) < cap; i++)
+            for (int d = 0; d < 4; d++)
+            {
+                int v = step(q[i], d);
+                if (v < 0 || seen[v])
+                    continue;
+                seen[v] = 1;
+                q.push_back(v);
+                if (occId[v] >= 0 && occId[v] != w.myId)
+                    c++;
+            }
+        if (crowd)
+            *crowd = c;
+        return static_cast<int>(q.size());
+    }
+    bool sealedFoodEvidence()
+    {
+        if (static_cast<int>(w.gapSeen.size()) != w.N || w.portalSide.empty())
+            return false;
+        std::vector<int> dist(w.N, -1), q{myHead};
+        dist[myHead] = 0;
+        bool door = false;
+        for (size_t i = 0; i < q.size(); i++)
+        {
+            int u = q[i];
+            for (int d = 0; d < 4; d++)
+            {
+                if (!door && w.portalSide[u * 4 + d] && step(u, d) < 0 &&
+                    (static_cast<int>(edgeCrossRound.size()) != w.N * 4 ||
+                     round - edgeCrossRound[u * 4 + d] >= UNK_EXPLORE_COOLDOWN))
+                    door = true;
+                int v = step(u, d);
+                if (v < 0 || dist[v] >= 0)
+                    continue;
+                dist[v] = dist[u] + 1;
+                q.push_back(v);
+            }
+        }
+        if (!door)
+            return false;
+        // rate estimate from the largest countdown seen (a lower bound on the gap)
+        int sealed = 0, reach = 0;
+        double sealedRate = 0, reachRate = 0;
+        for (int t = 0; t < w.N; t++)
+        {
+            if (w.gapSeen[t] <= 0 || w.gmax[t] == 0)
+                continue;
+            bool off = dist[t] < 0;
+            if (!off && UNK_SEALED_FOOD >= 2)
+            {
+                int wd = wrapDist(t, myHead);
+                off = wd <= UNK_SEALED_DETOUR_NEAR && dist[t] >= 2 * wd + UNK_SEALED_DETOUR;
+            }
+            double r = 1.0 / std::max(2, w.gapSeen[t]);
+            if (off)
+                sealed++, sealedRate += r;
+            else
+                reach++, reachRate += r;
+        }
+        // enough food is sealed off, it is a real share of the food we know, and per tile it is
+        // at least as rich as what we can walk to (so a dragon that just entered a rich room
+        // does not immediately want to leave it again)
+        bool fire = sealed >= UNK_SEALED_MIN && sealedRate >= UNK_SEALED_FRAC * (sealedRate + reachRate) &&
+                    sealedRate * std::max(1, reach) >= UNK_SEALED_RICH * reachRate * sealed;
+        if (fire && UNK_SEALED_LOG && sealedLogged < 3)
+        {
+            sealedLogged++;
+            char buf[160];
+            std::snprintf(buf, sizeof buf, "LOG sealed-food r%d sealed=%d/%.3f reach=%d/%.3f comp=%d\n", round, sealed,
+                          sealedRate, reach, reachRate, static_cast<int>(q.size()));
+            out += buf;
+        }
+        return fire;
+    }
+
     // UNK_EXPLORE desire gate: our walkable region is fully scouted and we're a bit hungry,
     // or we've been hungry a long time with no pearl in sight. Also marks door lures.
     void computeExploreDesire()
@@ -2326,6 +2476,24 @@ struct Bot
         if (UNK_EXPLORE >= 2)
             exploreDesire = regionSmall && ((allSeen && hunger >= UNK_EXPLORE_HUNGER_CLOSED) ||
                                             (hunger >= UNK_EXPLORE_HUNGER && !pearlNear));
+        // UNK_SEALED_FOOD (notes/levers/blocked-food.md): food we have SEEN but provably cannot
+        // walk to (portals as kelp, unseen edges assumed open) means doors lead somewhere worth
+        // going. Shortcut-only portal maps never produce this evidence, so v28 behaviour is kept.
+        if (UNK_SEALED_FOOD)
+        {
+            // hunger counts from the later of our last meal and our last explore crossing
+            int since = round - std::max(lastGrowRound, lastExploreCross);
+            if (!exploreDesire && since >= UNK_SEALED_HUNGER && !pearlNear && sealedFoodEvidence())
+                exploreDesire = true;
+            // settle: after crossing into a new region give it a chance before leaving again,
+            // unless the room is small and crowded with other dragons (then leave at once)
+            int crowd = 0, room = roomSize(UNK_SEALED_ROOM_MIN, &crowd);
+            bool cramped = room < UNK_SEALED_ROOM_MIN && crowd * 4 >= room;
+            if (cramped)
+                exploreDesire = true;
+            else if (round - lastExploreCross < UNK_SEALED_SETTLE)
+                exploreDesire = false;
+        }
         if (UNK_EXPLORE_LURE > 0)
         {
             lureTile.assign(w.N, 0);
@@ -2337,6 +2505,152 @@ struct Bot
                              round - edgeCrossRound[t * 4 + d] >= UNK_EXPLORE_COOLDOWN))
                             lureTile[t] = 1;
         }
+    }
+
+    // REPLY_SEARCH (notes/levers/budget-lookahead.md, PLAN Q8): 1-ply opponent-reply check for big dragons.
+    // Same reach rule as computeThreats (visible length - 1, tail-unknown bump, king cap).
+    int replyEnemyReach(int si)
+    {
+        const Seg& s = segs[si];
+        int reach = std::max(1, enemyVisibleLength(s.id) - 1);
+        if (THREAT_TAIL_UNKNOWN > 0 && reach < THREAT_TAIL_UNKNOWN)
+        {
+            bool tailSeen = false;
+            for (int j = 0; j < static_cast<int>(segs.size()) && !tailSeen; j++)
+            {
+                if (segs[j].id != s.id || segs[j].head || !tailIsVisibleTail(j))
+                    continue;
+                bool hasPrev = false;
+                for (auto& o : segs)
+                    if (o.id == s.id && !o.head && step(o.tile, o.facing) == segs[j].tile)
+                        hasPrev = true;
+                tailSeen = !hasPrev;
+            }
+            if (!tailSeen)
+                reach = THREAT_TAIL_UNKNOWN;
+        }
+        return std::min(reach, KING_THREAT_REACH);
+    }
+    // After we step onto t, every nearby enemy head makes a 1-step reply (all joint combinations of the
+    // nearest REPLY_MAX_ENEMIES within REPLY_RADIUS). Per combination: reply tiles become body, tiles the
+    // replied heads can reach next turn are closed to our 2nd step, and surviveDepth is re-run.
+    // Returns the penalty for the worst combination (0 if none hurts). -1 = skipped (budget).
+    int replyWorst = -1, replyCombos = 0;
+    double replyPenalty(int t, int baseDepth, int wantDepth)
+    {
+        replyWorst = -1;
+        replyCombos = 0;
+        if (pointsM() - turnT0 > REPLY_BUDGET_M)
+            return -1;
+        struct En
+        {
+            int si, dist, reach, len;
+            int rep[4];
+            int nrep;
+        };
+        En en[8];
+        int ne = 0;
+        for (int i = 0; i < static_cast<int>(segs.size()); i++)
+        {
+            const Seg& o = segs[i];
+            if (!o.head || o.team == w.myTeam)
+                continue;
+            int dd = wrapDist(o.tile, t);
+            if (dd > REPLY_RADIUS)
+                continue;
+            En e{i, dd, 0, enemyVisibleLength(o.id), {0, 0, 0, 0}, 0};
+            for (int d = 0; d < 4; d++)
+            {
+                int r = step(o.tile, d);
+                if (r < 0 || r == t || freeT[r] > 1)
+                    continue; // kelp, the ram itself (threatAt covers it), or occupied when it moves
+                e.rep[e.nrep++] = r;
+            }
+            if (e.nrep == 0)
+                continue; // it dies anyway
+            if (ne < 8)
+                en[ne++] = e;
+        }
+        if (ne == 0)
+            return 0;
+        std::sort(en, en + ne, [](const En& a, const En& b) { return a.dist < b.dist; });
+        ne = std::min(ne, static_cast<int>(REPLY_MAX_ENEMIES));
+        for (int k = 0; k < ne; k++)
+            en[k].reach = replyEnemyReach(en[k].si);
+        if (static_cast<int>(replyBan.size()) != w.N)
+            replyBan.assign(w.N, 0);
+        if (static_cast<int>(threatDist.size()) != w.N)
+            threatDist.assign(w.N, INF);
+        int total = 1;
+        for (int k = 0; k < ne; k++)
+            total *= en[k].nrep;
+        int worst = baseDepth;
+        std::vector<int> banned, blocked, blockedOld;
+        for (int code = 0; code < total && worst > 1; code++)
+        {
+            int c = code;
+            banned.clear();
+            blocked.clear();
+            blockedOld.clear();
+            for (int k = 0; k < ne; k++)
+            {
+                int r = en[k].rep[c % en[k].nrep];
+                c /= en[k].nrep;
+                // the replied head's old tile and r are now its body for at least its visible length
+                blocked.push_back(r);
+                blockedOld.push_back(freeOther[r]);
+                freeOther[r] = std::max(freeOther[r], en[k].len + 2);
+                // tiles it can reach on its next move (BFS over tiles free now, bodies stop it)
+                tq.clear();
+                tq.push_back(r);
+                threatDist[r] = 0;
+                for (size_t qi = 0; qi < tq.size(); qi++)
+                {
+                    int u = tq[qi];
+                    if (threatDist[u] >= en[k].reach)
+                        continue;
+                    for (int d = 0; d < 4; d++)
+                    {
+                        int v = step(u, d);
+                        if (v < 0 || threatDist[v] != INF)
+                            continue;
+                        threatDist[v] = threatDist[u] + 1;
+                        tq.push_back(v);
+                        if (!replyBan[v])
+                        {
+                            replyBan[v] = 1;
+                            banned.push_back(v);
+                        }
+                        if (freeT[v] > 1)
+                            threatDist[v] = en[k].reach;
+                    }
+                }
+                for (int u : tq)
+                    threatDist[u] = INF;
+            }
+            replyBanOn = true;
+            nodeCap = REPLY_NODE_CAP;
+            int dep = surviveDepth(t, wantDepth);
+            nodeCap = 60000;
+            replyBanOn = false;
+            for (int v : banned)
+                replyBan[v] = 0;
+            for (int i = static_cast<int>(blocked.size()) - 1; i >= 0; i--)
+                freeOther[blocked[i]] = blockedOld[i];
+            replyCombos++;
+            worst = std::min(worst, dep);
+            if (pointsM() - turnT0 > REPLY_BUDGET_M + 10)
+                break; // hard stop inside a candidate
+        }
+        replyWorst = worst;
+        if (worst >= baseDepth)
+            return 0;
+        double pen = REPLY_SHORT_PEN * std::min(baseDepth - worst, 10);
+        if (worst <= 1)
+            pen += REPLY_FORCED_PEN + REPLY_FORCED_PER_LEN * myLen; // every 2nd step threatened or lethal
+        // being forced next turn is less bad than a head that can ram us now (KING_ESCAPE still has
+        // sprints/splits then): never outweigh the direct-threat penalty for a big dragon
+        return std::min(pen, REPLY_CAP_FRAC * (25.0 + 4.0 * myLen));
     }
 
     // KING_ESCAPE (notes/18): a big dragon whose every 1-step move is inside an enemy
@@ -2534,7 +2848,9 @@ struct Bot
             emitMove(myDir);
             return;
         }
+        PROF_BEGIN(th);
         computeThreats();
+        PROF_END(th, 2);
         if (mapOverride())
             return;
 
@@ -2632,7 +2948,8 @@ struct Bot
                     holdTile = t;
             }
         }
-        if (holdTile < 0 && !(RP.kingDeclare && kingSelf) && !bigLate && (!SPLIT_NEEDS_EXIT || tailHasExit(2)) && myLen >= SPLIT_LEN && myLen >= 4 && units < w.unitLimit && units < SPLIT_MAX_UNITS &&
+        if (holdTile < 0 && !(RP.kingDeclare && kingSelf) && !bigLate && (!SPLIT_NEEDS_EXIT || tailHasExit(2)) &&
+            !(UNK_SEALED_FOOD && !w.known && UNK_SEALED_ROOM_MIN > 0 && roomSize(UNK_SEALED_ROOM_MIN) < UNK_SEALED_ROOM_MIN) && myLen >= SPLIT_LEN && myLen >= 4 && units < w.unitLimit && units < SPLIT_MAX_UNITS &&
             (round < RP.splitStopRound || (LATE_SPLIT_ROUND > 0 && round < LATE_SPLIT_ROUND && myLen <= LATE_SPLIT_MAXLEN)) &&
             !threatened)
         {
@@ -2714,6 +3031,16 @@ struct Bot
                 score -= 150.0 + 40.0 * (wantDepth - depth);
             if (pump)
                 score += POCKET_PUMP_BONUS;
+            if (REPLY_SEARCH && myLen >= REPLY_MIN_LEN && depth >= 2)
+            {
+                PROF_BEGIN(rp);
+                double rpen = replyPenalty(t, std::min(depth, wantDepth), wantDepth);
+                PROF_END(rp, 5);
+                if (rpen > 0)
+                    score -= rpen;
+                if (dbg && replyCombos > 0)
+                    std::fprintf(dbg, "  reply %c combos=%d worst=%d pen=%.1f\n", DIRC[d], replyCombos, replyWorst, rpen);
+            }
             int threat = threatAt[t];
             // SMALL_SPRINT_THREAT (notes/19): not locally ahead, a ram costs the dragon AND the corpse race
             bool outnum = SMALL_SPRINT_THREAT && myLen < 6 && localAllies <= localEnemies;
@@ -2830,6 +3157,7 @@ struct Bot
                 if (static_cast<int>(edgeCrossRound.size()) != w.N * 4)
                     edgeCrossRound.assign(w.N * 4, -1000);
                 exploreFrom = myHead, exploreDir = exD, exploreRound = round;
+                lastExploreCross = round;
                 edgeCrossRound[myHead * 4 + exD] = round;
                 lastPortalRound = round;
                 if (dbg)
@@ -2897,21 +3225,32 @@ struct Bot
             std::string path = std::string(dd) + "/" + std::to_string(w.myId) + ".txt";
             dbg = std::fopen(path.c_str(), "w");
         }
-        while (readTurn(in))
+        while (true)
         {
+            PROF_BEGIN(parse);
+            if (!readTurn(in))
+                break;
+            PROF_END(parse, 0);
+            turnT0 = pointsM();
             out.clear();
             try
             {
+                PROF_BEGIN(an);
                 analyse();
+                PROF_END(an, 1);
                 if (dbg)
                 {
                     std::fprintf(dbg, "R%d id=%d len=%d dir=%c head=(%d,%d) map=%s\n", round, w.myId, myLen, DIRC[myDir],
                                  myHead % w.W, myHead / w.W, w.known ? w.known->name : "?");
+                    if (EXPLORE_LEARN && !w.known)
+                        std::fprintf(dbg, "  explore est=%.4f n=%.1f\n", exploreEst(), exploreN);
                     for (auto& sg : segs)
                         std::fprintf(dbg, "  seg %c%d (%d,%d) %c%s freeT=%d\n", sg.team, sg.id, sg.tile % w.W, sg.tile / w.W,
                                      DIRC[sg.facing], sg.head ? " H" : "", freeT[sg.tile]);
                 }
+                PROF_BEGIN(de);
                 decide();
+                PROF_END(de, 6);
             }
             catch (...)
             {
@@ -2921,12 +3260,24 @@ struct Bot
             }
             try
             {
+                PROF_BEGIN(so);
                 if (myHead >= 0)
                     emitSonar();
+                PROF_END(so, 7);
             }
             catch (...)
             {
             }
+#if PROFILE_POINTS
+            {
+                char pb[200];
+                std::snprintf(pb, sizeof pb, "LOG prof L=%d N=%d parse=%.2f an=%.2f thr=%.2f bfs=%.2f surv=%.2f reply=%.2f dec=%.2f son=%.2f\n",
+                              myLen, w.N, profAcc[0], profAcc[1], profAcc[2], profAcc[3], profAcc[4], profAcc[5], profAcc[6], profAcc[7]);
+                out += pb;
+                for (double& x : profAcc)
+                    x = 0;
+            }
+#endif
             out += "PROTOCOL 3\nENDTURN\n";
             std::fwrite(out.data(), 1, out.size(), stdout);
             std::fflush(stdout);

@@ -1,0 +1,93 @@
+--- bot/main.cpp	2026-09-29 13:00:54
++++ notes/levers/frontier-explore/src/main.cpp	2026-09-29 13:16:04
+@@ -644,6 +644,13 @@
+     bool unkKingSet = false;
+     int birthRound = -1; // first round this process played
+     std::vector<int> hotRun, hotLast; // HOT_LEARN
++    // EXPLORE_LEARN: decayed first-sight samples (hits, total) -> value of a never-seen tile
++    double exploreHits = 0, exploreN = 0;
++    double exploreEst() const
++    {
++        double e = (exploreHits + EXPLORE_N0 * EXPLORE_M0) / (exploreN + EXPLORE_N0);
++        return std::min(EXPLORE_MAX, EXPLORE_MULT * e);
++    }
+     // UNK_EXPLORE (notes/unseen/unknown-portals.md): knock on unknown portals, cross on a clean echo
+     std::vector<int> learnDest, edgeCrossRound; // N*4; learned by crossing, never copied into w.nxt
+     std::vector<char> lureTile;
+@@ -843,10 +850,23 @@
+                 std::fill(w.gmax.begin(), w.gmax.end(), -1);
+             }
+         }
++        if (EXPLORE_LEARN && !w.known)
++        {
++            exploreHits *= EXPLORE_DECAY;
++            exploreN *= EXPLORE_DECAY;
++        }
+         for (int i = 0; i < 49; i++)
+         {
+             int t = w.idx(in.tx[i], in.ty[i]);
+             visible[t] = 1;
++            // EXPLORE_LEARN: a tile we see for the first time is a sample of the never-seen
++            // population (skip our birth view: it is the parent's picked-over neighbourhood)
++            if (EXPLORE_LEARN && !w.known && w.lastSeen[t] < 0 && round > birthRound)
++            {
++                exploreN += 1;
++                if (in.tpearl[i] || (in.tin[i] >= 0 && in.tin[i] <= EXPLORE_CD))
++                    exploreHits += 1;
++            }
+             w.lastSeen[t] = round;
+             w.pearlMem[t] = static_cast<char>(in.tpearl[i]);
+             if (in.tin[i] < 0)
+@@ -1054,7 +1074,9 @@
+             else
+             {
+                 double r = w.rate(t);
+-                if (r > 0)
++                if (EXPLORE_LEARN && !w.known && ls < 0 && w.spawnAt[t] < 0 && w.gmax[t] < 0)
++                    v = exploreEst(); // learned from first sightings, not a time-growing guess
++                else if (r > 0)
+                 {
+                     int since = arrive - std::max(ls, w.spawnAt[t] >= 0 ? w.spawnAt[t] : 0);
+                     if (ls < 0 && w.spawnAt[t] < 0)
+@@ -2907,6 +2929,8 @@
+                 {
+                     std::fprintf(dbg, "R%d id=%d len=%d dir=%c head=(%d,%d) map=%s\n", round, w.myId, myLen, DIRC[myDir],
+                                  myHead % w.W, myHead / w.W, w.known ? w.known->name : "?");
++                    if (EXPLORE_LEARN && !w.known)
++                        std::fprintf(dbg, "  explore est=%.4f n=%.1f\n", exploreEst(), exploreN);
+                     for (auto& sg : segs)
+                         std::fprintf(dbg, "  seg %c%d (%d,%d) %c%s freeT=%d\n", sg.team, sg.id, sg.tile % w.W, sg.tile / w.W,
+                                      DIRC[sg.facing], sg.head ? " H" : "", freeT[sg.tile]);
+--- bot/params.hpp	2026-09-29 12:39:25
++++ notes/levers/frontier-explore/src/params.hpp	2026-09-29 13:13:25
+@@ -700,4 +700,30 @@
+ #endif
+ #ifndef FEED_STALE_GUARD
+ #define FEED_STALE_GUARD 0
++#endif
++// ---- notes/levers/frontier-explore.md: learned value of never-seen tiles (unknown maps only).
++// Every tile entering our view for the first time is a free sample of "what an unseen tile
++// holds". EXPLORE_LEARN replaces the time-growing UNK_PRIOR guess 0.5*min(1, r*UNK_PRIOR)
++// for never-seen tiles with a smoothed first-sight hit rate (pearl there, or a countdown
++// <= EXPLORE_CD). 0 off, 1 on.
++#ifndef EXPLORE_LEARN
++#define EXPLORE_LEARN 0
++#endif
++#ifndef EXPLORE_M0 // prior mean hit rate (Beta pseudo-count mean) before any samples
++#define EXPLORE_M0 0.03
++#endif
++#ifndef EXPLORE_N0 // prior weight in samples (~7 new tiles per straight step)
++#define EXPLORE_N0 30.0
+ #endif
++#ifndef EXPLORE_DECAY // per-turn forgetting of old samples (window ~ 7/(1-d) samples)
++#define EXPLORE_DECAY 0.98
++#endif
++#ifndef EXPLORE_CD // a first-seen countdown <= this counts as food (we arrive ~3 steps after sight)
++#define EXPLORE_CD 3
++#endif
++#ifndef EXPLORE_MULT // scale on the estimate
++#define EXPLORE_MULT 1.0
++#endif
++#ifndef EXPLORE_MAX
++#define EXPLORE_MAX 0.5
++#endif
