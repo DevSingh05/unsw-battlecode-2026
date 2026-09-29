@@ -2162,6 +2162,18 @@ struct Bot
         return true;
     }
 
+    // a tile with a portal on one of its sides (known or not): crossers land here
+    bool isMouth(int t) const
+    {
+        for (int d = 0; d < 4; d++)
+        {
+            int v = step(t, d);
+            if ((v >= 0 && v != w.plainStep(t, d)) || (!w.portalSide.empty() && w.portalSide[t * 4 + d]))
+                return true;
+        }
+        return false;
+    }
+
     // UNK_EXPLORE desire gate: our walkable region is fully scouted and we're a bit hungry,
     // or we've been hungry a long time with no pearl in sight. Also marks door lures.
     void computeExploreDesire()
@@ -2623,6 +2635,8 @@ struct Bot
             if (portalExit[t])
                 score -= PORTAL_EXIT_PENALTY;
             score += boxEffect(t);
+            if (PORTAL_LOITER_PEN > 0 && t == w.plainStep(myHead, d) && isMouth(t) && isMouth(myHead))
+                score -= PORTAL_LOITER_PEN; // pacing beside portals is what crossers crash into
             if (RP.crowd > 0)
             {
                 // spread out: teammate heads close to where we'd go

@@ -91,3 +91,4 @@
 - 04:49 UTC: UNK_PRIOR on v27 (seed 111000): 0.005 pooled .582; 0.0025 pooled .632 (gen .600 blind .675 lesson .615 gated .675). Confirming fresh seeds + 0.001.
 - 05:07 UTC: UNK_PRIOR fresh seeds 112000: 0.0025 pooled .553 (gen .463); 0.001 pooled .618 (gen .544 blind .800 lesson .583 gated .625), ladder .500. Holdout 0.001 next.
 - 05:12 UTC: UNK_PRIOR 0.001 holdout .519 -> submitted v28 = v27 + UNK_PRIOR 0.001. bot/ defaults synced to v28.
+- 07:10 UTC: v28 vs Abyss framework (Cat's paradise open-source, untuned, full 75M budget) on 20 gen + 24 lesson maps both sides: 74/88 = 0.841 [0.750, 0.903]. Added PORTAL_LOITER_PEN flag (Abyss idea).

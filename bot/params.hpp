@@ -668,3 +668,7 @@
 #ifndef TURN_ORDER_TIES
 #define TURN_ORDER_TIES 0
 #endif
+// ---- penalty for moving from one portal mouth tile to another without crossing (Abyss idea)
+#ifndef PORTAL_LOITER_PEN
+#define PORTAL_LOITER_PEN 0.0
+#endif
