@@ -1099,3 +1099,49 @@
 #ifndef KING_V2_FEED6_ROUND
 #define KING_V2_FEED6_ROUND 380
 #endif
+
+// ---- notes/early_king/FIXES.md A: king safety before contact (KING_DEATHS.md fix 1)
+#ifndef KING_SAFE_PRE
+#define KING_SAFE_PRE 0       // 1: king-class dragons: pearl-extended enemy reach, few-exit penalty, earlier KING_ESCAPE
+#endif
+#ifndef KSP_PEARL_MAX
+#define KSP_PEARL_MAX 2       // max extra reach from pearls on an enemy head's approach
+#endif
+#ifndef KSP_EXIT_MARGIN
+#define KSP_EXIT_MARGIN 2     // few-exit penalty applies when an enemy head is within reach + this
+#endif
+#ifndef KSP_EXIT1_PEN
+#define KSP_EXIT1_PEN 40.0    // tile with exactly 1 free exit next to a threat
+#endif
+#ifndef KSP_EXIT0_PEN
+#define KSP_EXIT0_PEN 90.0    // tile with 0 free exits next to a threat
+#endif
+#ifndef KSP_EXIT_PER_LEN
+#define KSP_EXIT_PER_LEN 1.5  // extra penalty per unit of our length
+#endif
+#ifndef KSP_ESC_MARGIN
+#define KSP_ESC_MARGIN 1      // early escape: chosen tile within reach + this of an enemy head (0 = off)
+#endif
+#ifndef KSP_ESC_MAXN
+#define KSP_ESC_MAXN 2        // early escape: longest sprint (2 = costs 1 length); no reverse split
+#endif
+
+// ---- notes/early_king/FIXES.md B: keep king food for the king (KING_DEATHS.md fix 2)
+#ifndef KING_FOOD
+#define KING_FOOD 0           // 1: non-king dragons near the king value pearls near it at KF_MULT
+#endif
+#ifndef KF_RADIUS
+#define KF_RADIUS 4           // our head within this (wrap Manhattan) of the king's head
+#endif
+#ifndef KF_MULT
+#define KF_MULT 0.1
+#endif
+#ifndef KF_PEARL_R
+#define KF_PEARL_R 6          // only pearls within this of the king's head are discounted
+#endif
+#ifndef KF_FRESH
+#define KF_FRESH 6            // king position heard/seen within this many rounds
+#endif
+#ifndef KF_FEEDLEN
+#define KF_FEEDLEN 0          // >0: before KING_V2_MERGE_ROUND a dragon that fed keeps feeding while myLen <= this
+#endif

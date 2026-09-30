@@ -1126,6 +1126,8 @@ struct Bot
         }
         if (v <= 0)
             return (UNK_EXPLORE && exploreDesire && !lureTile.empty() && lureTile[t]) ? UNK_EXPLORE_LURE : 0;
+        if (KING_FOOD && kfOn && wrapDist(t, kingTile) <= KF_PEARL_R)
+            v *= KF_MULT; // KING_FOOD: food next to the king is the king's
         // someone else closer: they will probably take it
         int od = otherDist[t];
         if (od < s)
@@ -2089,6 +2091,11 @@ struct Bot
             return std::max(3, 14 - (std::clamp(round, 300, 490) - 300) * 11 / 190);
         return RP.feedReserve;
     }
+    // KF_FEEDLEN: a feeder that ate some of the king's food stays a feeder up to this length
+    bool wasFeeder = false;
+    int kfFeedLen() const { return KF_FEEDLEN > 0 && wasFeeder ? std::max(KING_V2_FEED_LEN, KF_FEEDLEN) : KING_V2_FEED_LEN; }
+    // KING_FOOD: set per turn in decide(); pearlValue discounts food near the king
+    bool kfOn = false;
     bool shouldFeed() const
     {
         if (FEED_STALE_GUARD && myLen >= 8 && birthRound >= 0 && round - birthRound < 3)
@@ -2103,7 +2110,7 @@ struct Bot
         if (KING_V2 && RP.kingDeclare)
             return FEED_ENABLE && feedPhase() && kingId >= 0 && kingLen >= myLen + 2 && !iAmKing() &&
                    units > feedReserveNow() &&
-                   myLen <= (round >= KING_V2_MERGE_ROUND ? 1000 : round >= KING_V2_FEED6_ROUND ? 6 : KING_V2_FEED_LEN);
+                   myLen <= (round >= KING_V2_MERGE_ROUND ? 1000 : round >= KING_V2_FEED6_ROUND ? std::max(6, kfFeedLen()) : kfFeedLen());
         return FEED_ENABLE && feedPhase() && kingId >= 0 && kingLen >= myLen + 2 && !iAmKing() &&
                (units > RP.feedReserve || (RP.lateFeedRound > 0 && round >= RP.lateFeedRound && units > 1)) && myLen <= FEED_MAX_LEN;
     }
@@ -2284,9 +2291,21 @@ struct Bot
     std::vector<int> threatAt, threatDist, tq;
     std::vector<int> sprintThreatAt;       // SMALL_SPRINT_THREAT: 2-step sprint reach of enemy heads (len >= 3)
     int localAllies = 0, localEnemies = 0; // heads in our view (allies include us)
+    // KING_SAFE_PRE: king-class dragons (notes/early_king/FIXES.md A)
+    std::vector<std::pair<int, int>> enemyReach; // (head tile, reach) of every visible enemy head, KING_SAFE_PRE only
+    bool kspOn() const { return KING_SAFE_PRE && (iAmKing() || (myLen >= KING_MIN_LEN && round >= RP.kingSeedRound)); }
+    bool nearEnemy(int t, int margin) const
+    {
+        for (auto& [et, er] : enemyReach)
+            if (wrapDist(et, t) <= er + margin)
+                return true;
+        return false;
+    }
     void computeThreats()
     {
         threatAt.assign(w.N, 0);
+        enemyReach.clear();
+        const bool ksp = kspOn();
         if (SMALL_SPRINT_THREAT)
         {
             sprintThreatAt.assign(w.N, 0);
@@ -2338,6 +2357,37 @@ struct Bot
                     reach = THREAT_TAIL_UNKNOWN;
             }
             reach = std::min(reach, maxReach);
+            if (ksp && KSP_PEARL_MAX > 0)
+            {
+                // each pearl it can eat on the way buys one more sprint step (2/19 rams in KING_DEATHS.md)
+                int pearls = 0;
+                tq.clear();
+                tq.push_back(s.tile);
+                threatDist[s.tile] = 0;
+                for (size_t qi = 0; qi < tq.size(); qi++)
+                {
+                    int u = tq[qi];
+                    if (threatDist[u] >= reach)
+                        continue;
+                    for (int d = 0; d < 4; d++)
+                    {
+                        int v = step(u, d);
+                        if (v < 0 || threatDist[v] != INF)
+                            continue;
+                        threatDist[v] = threatDist[u] + 1;
+                        tq.push_back(v);
+                        if (visible[v] && w.pearlMem[v])
+                            pearls++;
+                        if (freeT[v] > 1)
+                            threatDist[v] = reach;
+                    }
+                }
+                for (int u : tq)
+                    threatDist[u] = INF;
+                reach += std::min(pearls, static_cast<int>(KSP_PEARL_MAX));
+            }
+            if (ksp)
+                enemyReach.push_back({s.tile, reach});
             tq.clear();
             tq.push_back(s.tile);
             threatDist[s.tile] = 0;
@@ -3336,12 +3386,20 @@ struct Bot
     // head's reach sprints 2 (or 3) steps to a threat-free tile, or reverse-splits.
     bool tryKingEscape(int bestD)
     {
-        if (myLen < KING_MIN_LEN || bestD < 0 || threatAt[step(myHead, bestD)] == 0)
+        if (myLen < KING_MIN_LEN || bestD < 0)
             return false;
+        // KING_SAFE_PRE: act one turn earlier, when the chosen tile is only just outside an enemy's reach
+        bool early = false;
+        if (threatAt[step(myHead, bestD)] == 0)
+        {
+            if (!(KING_SAFE_PRE && KSP_ESC_MARGIN > 0 && !enemyReach.empty() && step(myHead, bestD) >= 0 && nearEnemy(step(myHead, bestD), KSP_ESC_MARGIN)))
+                return false;
+            early = true;
+        }
         for (int d = 0; d < 4; d++)
         {
             int t = step(myHead, d);
-            if (t >= 0 && !(occId[t] >= 0 && freeT[t] > 1) && threatAt[t] == 0)
+            if (t >= 0 && !(occId[t] >= 0 && freeT[t] > 1) && threatAt[t] == 0 && !(early && nearEnemy(t, KSP_ESC_MARGIN)))
             {
                 if (ESCAPE_DEADEND_FIX)
                 {
@@ -3364,7 +3422,7 @@ struct Bot
         std::string bestSeq;
         std::vector<int> bestPath;
         double bs = -1e18;
-        for (int n = 2; n <= 3 && bestSeq.empty(); n++)
+        for (int n = 2; n <= (early ? static_cast<int>(KSP_ESC_MAXN) : 3) && bestSeq.empty(); n++)
         {
             if (myLen - (n - 1) < 2)
                 break;
@@ -3399,7 +3457,7 @@ struct Bot
                     if (KING_ESCAPE_TAIL_FIX) // the tail moves unless we ate; each extra step costs one more
                         tailFreed += (visible[t] && w.pearlMem[t] ? 0 : 1) + (k > 0 ? 1 : 0);
                 }
-                if (!ok || threatAt[cur] > 0)
+                if (!ok || threatAt[cur] > 0 || (early && nearEnemy(cur, KSP_ESC_MARGIN)))
                     continue;
                 double pv;
                 int area;
@@ -3423,9 +3481,11 @@ struct Bot
             out += "MOVE " + bestSeq + "\n";
             pending = bestPath;
             if (dbg)
-                std::fprintf(dbg, "  -> king escape sprint %s\n", bestSeq.c_str());
+                std::fprintf(dbg, "  -> king escape sprint %s%s\n", bestSeq.c_str(), early ? " (early)" : "");
             return true;
         }
+        if (early)
+            return false; // not yet threatened: a reverse split costs too much
         int tail = static_cast<int>(trail.size()) >= myLen ? trail[myLen - 1] : -1;
         if (tail >= 0 && units < w.unitLimit && tailHasExit(myLen - 2) && threatAt[tail] == 0)
         {
@@ -3575,6 +3635,9 @@ struct Bot
         PROF_BEGIN(th);
         computeThreats();
         PROF_END(th, 2);
+        if (KING_FOOD)
+            kfOn = feedPhase() && !iAmKing() && kingId >= 0 && kingTile >= 0 && (kingId & 1023) != (w.myId & 1023) &&
+                   round - kingRound <= KF_FRESH && kingLen >= myLen + 2 && wrapDist(myHead, kingTile) <= KF_RADIUS;
         if (mapOverride())
             return;
 
@@ -3604,6 +3667,8 @@ struct Bot
         }
         // ---- feeding the king: die just in front of it so it eats our body
         bool feeding = shouldFeed() && !consActive; // consActive is false with CONS_R off
+        if (KF_FEEDLEN > 0 && feeding)
+            wasFeeder = true;
         int target = feeding ? feedTarget() : -1;
         if (feeding && target >= 0)
         {
@@ -4022,6 +4087,19 @@ struct Bot
                 score -= (myLen >= 6 ? 25.0 + 4.0 * myLen : (outnum ? SMALL_THREAT_PEN_OUT : SMALL_THREAT_PEN)) * (units <= LAST_FEW_UNITS ? LAST_FEW_MULT : 1.0);
             else if (outnum && sprintThreatAt[t] > 0)
                 score -= SMALL_SPRINT_PEN * (units <= LAST_FEW_UNITS ? LAST_FEW_MULT : 1.0);
+            if (KING_SAFE_PRE && !enemyReach.empty() && nearEnemy(t, KSP_EXIT_MARGIN))
+            {
+                // a cornered king can't dodge the next sprint (8/19 rams had no safe step left)
+                int ex = 0;
+                for (int d2 = 0; d2 < 4; d2++)
+                {
+                    int v = step(t, d2);
+                    if (v >= 0 && v != myHead && v != t && freeT[v] <= 2 && threatAt[v] == 0)
+                        ex++;
+                }
+                if (ex <= 1)
+                    score -= (ex == 0 ? KSP_EXIT0_PEN : KSP_EXIT1_PEN) + KSP_EXIT_PER_LEN * myLen;
+            }
             score += mapScore(t, d);
             if (KING_CORRIDOR_PENALTY > 0 && myLen >= 10)
             {
