@@ -2113,7 +2113,7 @@ struct Bot
         if (KING_V2 && RP.kingDeclare)
             return FEED_ENABLE && feedPhase() && kingId >= 0 && kingLen >= myLen + 2 && !iAmKing() &&
                    units > feedReserveNow() &&
-                   myLen <= (round >= KING_V2_MERGE_ROUND ? 1000 : round >= KING_V2_FEED6_ROUND ? std::max(6, kfFeedLen()) : kfFeedLen());
+                   myLen <= (round >= (EF_RACE_ONLY && !RP.kingRace ? 420 : KING_V2_MERGE_ROUND) ? 1000 : round >= (EF_RACE_ONLY && !RP.kingRace ? 380 : KING_V2_FEED6_ROUND) ? std::max(6, kfFeedLen()) : kfFeedLen());
         return FEED_ENABLE && feedPhase() && kingId >= 0 && kingLen >= myLen + 2 && !iAmKing() &&
                (units > RP.feedReserve || (RP.lateFeedRound > 0 && round >= RP.lateFeedRound && units > 1)) && myLen <= FEED_MAX_LEN;
     }

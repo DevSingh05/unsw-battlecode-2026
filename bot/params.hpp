@@ -1150,3 +1150,8 @@
 #ifndef KSP_SCH_ONLY
 #define KSP_SCH_ONLY 0
 #endif
+
+// Early feeding (KING_V2_FEED6_ROUND/MERGE_ROUND) only on king-race maps (Sch/Sli/Por/QoS); others keep 380/420
+#ifndef EF_RACE_ONLY
+#define EF_RACE_ONLY 0
+#endif
