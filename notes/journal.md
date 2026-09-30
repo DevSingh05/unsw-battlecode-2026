@@ -169,3 +169,8 @@
 - 07:56 UTC: SERVER Schooltime vs top-20: v34 13/20 vs ksp35 (KING_SAFE_PRE Sch-only) 9/20 -> REJECT king safety (self-play-invisible cost is real). v34 restored/active. (collect KeyError fixed: template needs rank/elo.)
 - 08:04 UTC: local vs v34: FEED6 260/MERGE 360 .575 (Sli 7/10); FEED6 300/MERGE 350 .575. Server A/B v34b vs ek35 (260/360) on Sch/Por/Sli vs top-10.
 - 08:57 UTC: SERVER vs top-10 Sch/Por/Sli: v34 15/30 (6/4/5) vs ek35 (260/360) 17/30 (4/8/5) -> within noise, NOT shipped; v34 stays (restored 08:56). Portals noisy (v34 4/10 here vs 7/10 before).
+- 08:57 UTC: testing UNK_KING (king+feeding on unknown maps) on v34 base locally (unseen gen/lesson/gated + holdout, jobs 2).
+- 09:40 UTC: UNK_KING on v34 (seed 143000): gen .453 lesson .562 gated .662 holdout .553 pooled .540 -> confirming fresh seeds (147000) gen/blind/lesson.
+- 09:58 UTC: rank 3 (2081). Ranked since v34 net ~-12 (many 2-3). Per-map all games v32/33 era vs v34 era: total .703 vs .689; Por .55->.77, Sli .51->.65 up; Devil .67->.45 (no code change there -> opponent mix), Dilemma .95->.72, Default .92->.74 (early feeding active there, untested). Local v34 vs v33 on Dil/Def/Aut/Tra.
+- 10:00 UTC: UNK_KING confirm (seed 147000): gen .466 lesson .615 (blind set empty) pooled .521. Across both runs gen is <.5 twice (.453,.466), lesson/gated/holdout >.5. Mixed -> HOLD (not for Sprint; revisit for Qualifier with server blind test).
+- 10:02 UTC: local v34 vs v33 Dil/Def/Aut 6/12 each (mirror = identical play), Tra 7/12 -> early feeding not behind the server Dil/Def drops (opponent mix, like Devil). Keep v34; ef35 not needed.
