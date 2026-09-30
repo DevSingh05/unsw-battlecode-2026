@@ -999,3 +999,7 @@
 #ifndef DV_PARTS             // DIVE_VALUE parts: 1 factory entry gate, 2 old pump gate, 4 inward-born child, 8 scoring
 #define DV_PARTS 15
 #endif
+// ---- king beacon carries the POST-move head/facing (sonar is cast after the move; IMP_FINDINGS.md #3)
+#ifndef KING_POS_POSTMOVE
+#define KING_POS_POSTMOVE 0
+#endif

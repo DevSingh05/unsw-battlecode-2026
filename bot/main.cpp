@@ -1919,7 +1919,9 @@ struct Bot
         bool probing = PORTAL_PROBE_SOLO && anyWarn; // keep the echo counts clean (notes/20)
         if (!probing && iAmKing() && (round >= KING_BROADCAST_START || kingSelf))
         {
-            uint64_t m = encodeKing(myHead, myLen, w.myId, 0, myDir, round);
+            uint64_t m = KING_POS_POSTMOVE && !pending.empty()
+                             ? encodeKing(pending.back(), myLen, w.myId, 0, lastMoveDir, round) // where we are after this move
+                             : encodeKing(myHead, myLen, w.myId, 0, myDir, round);
             for (int d = 0; d < 4; d++)
                 if (!warnDirs[d])
                     out += std::string("SONAR ") + DIRC[d] + " " + std::to_string(m) + "\n";
