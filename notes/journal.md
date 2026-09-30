@@ -152,3 +152,7 @@
 - 05:45 UTC: REVISIT_PEN=1.5 gen .575 ladder .450 (mixed, hold); PM_TROPHY_RG=2 local Trophy 10/24 (.417; needs server check vs real swarms). SPAWN_BLOCK_PEN=5 confirmation running.
 - 05:53 UTC: Elo per ranked series (41 today): 200-350 below us +3.3 avg (67% 5-0), 0-100 below +1.0 (3-2/2-3 coin flips). Loop now targets ranked series at teams 150-350 Elo below us (--band-lo 150 --band-hi 350); unranked stays top-15 for learning. 45/h.
 - 05:53 UTC: SERVER RULE: 'Ranked battles need an opponent rated [our elo - 50] or higher' -> cannot farm lower teams ourselves (they can challenge us; autoscrims can pair us down). Loop ranked targets: teams with elo >= ours - 50 (--band-lo -1000 --band-hi 50), strongest first.
+- 06:01 UTC: SPAWN_BLOCK_PEN=5 confirmation FAILED (fresh seeds): gen .463 lesson .417 ladder .500 holdout .463, pooled 0.452 -> rejected (earlier .56/.575 was noise).
+- 06:02 UTC: loop 400s explained: 'Ranked battles are turned off for one of these teams' (SSS, Cutlery, 中国 disabled ranked). Legal ranked pool now ~cheji + forgot to mention. Rank 2, 2079.
+- 06:02 UTC: added KING_V2_FEED6_ROUND (default 380 = v32) for early-king test; agent measuring our longest@r300 vs top-10 (notes/early_king/MEASURE.md).
+- 06:06 UTC: local vs v32: KING_POS_POSTMOVE .521 (Sli 6/12), SONAR_ENCRYPT .500 (behaviour-neutral). Submitted v33 = v32 + SONAR_ENCRYPT (devil sandbox max 5.5M).

@@ -1094,3 +1094,8 @@
 #ifndef CONS_HOST_FRAC
 #define CONS_HOST_FRAC 0.75   // a host must be at least this fraction of the longest ally heard (0 = any longer ally)
 #endif
+
+// Early king (IMP_FINDINGS s5): round from which L<=6 dragons feed the king (v32: 380)
+#ifndef KING_V2_FEED6_ROUND
+#define KING_V2_FEED6_ROUND 380
+#endif
