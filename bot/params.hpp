@@ -1145,3 +1145,8 @@
 #ifndef KF_FEEDLEN
 #define KF_FEEDLEN 0          // >0: before KING_V2_MERGE_ROUND a dragon that fed keeps feeding while myLen <= this
 #endif
+
+// KING_SAFE_PRE only on Schooltime (most king deaths there: 10/24 losses)
+#ifndef KSP_SCH_ONLY
+#define KSP_SCH_ONLY 0
+#endif

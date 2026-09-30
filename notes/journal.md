@@ -164,3 +164,6 @@
 - 07:09 UTC: unseen eval ek34 vs v33 (seed 141000): gen .500 lesson .500 ladder .475 holdout .500 -> no harm on unseen maps (feeding gate only acts on king-declare maps).
 - 07:22 UTC: FIXES local (40g vs v33): KING_SAFE_PRE .425 (king deaths 6->2, Sch king 44.5 vs 37, Sli 2/8); KING_FOOD .450; +KF_FEEDLEN=5 .500. Testing KSP-lite (EXIT_MARGIN=1, PEARL_MAX=1).
 - 07:26 UTC: SERVER A/B vs top-10 Sch/Por/Sli: v33 12/30 (4/4/4) vs ek34 16/30 (Sch 4, Por 7, Sli 5); +local .625, unseen .500 -> SHIPPED v34 = ek34. Watch ranked; revert to v33 if it bleeds.
+- 07:27 UTC: KSP-lite local .444 (Por 3/12). Added KSP_SCH_ONLY (king safety on Schooltime only; off on unknown maps). variants/ksp35 = v34 + KING_SAFE_PRE + KSP_SCH_ONLY. Local check vs v34.
+- 07:31 UTC: ksp35 local vs v34: .528 (Sch 7/12; Devil/Default identical 6/12). Sandbox max 14.4M. Server A/B Schooltime-only vs top-20 (20g/arm): v34sch then ksp35, auto-restore v34.
+- 07:56 UTC: SERVER Schooltime vs top-20: v34 13/20 vs ksp35 (KING_SAFE_PRE Sch-only) 9/20 -> REJECT king safety (self-play-invisible cost is real). v34 restored/active. (collect KeyError fixed: template needs rank/elo.)

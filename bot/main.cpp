@@ -58,6 +58,7 @@ struct RuntimeParams
     int kingRace = 0;                        // set for the KING_V2 king-race maps (v2() table)
     int lateSplitRound = LATE_SPLIT_ROUND;   // small dragons keep splitting until this round (0 = off)
     int diveStopRound = 0;                   // no pocket dives from this round (0 = off)
+    int ksp = KSP_SCH_ONLY ? 0 : KING_SAFE_PRE; // KING_SAFE_PRE, optionally Schooltime only (KSP_SCH_ONLY)
 };
 RuntimeParams RP;
 
@@ -67,6 +68,8 @@ void applyMapParams(const char* name)
 {
     RP = RuntimeParams{};
     std::string n(name ? name : "");
+    if (KSP_SCH_ONLY && n == "Schooltime")
+        RP.ksp = KING_SAFE_PRE;
     auto set = [&](const char* map, int rg, int kd, int ks, int ss, int fs) {
         if (n == map)
         {
@@ -2293,7 +2296,7 @@ struct Bot
     int localAllies = 0, localEnemies = 0; // heads in our view (allies include us)
     // KING_SAFE_PRE: king-class dragons (notes/early_king/FIXES.md A)
     std::vector<std::pair<int, int>> enemyReach; // (head tile, reach) of every visible enemy head, KING_SAFE_PRE only
-    bool kspOn() const { return KING_SAFE_PRE && (iAmKing() || (myLen >= KING_MIN_LEN && round >= RP.kingSeedRound)); }
+    bool kspOn() const { return RP.ksp && (iAmKing() || (myLen >= KING_MIN_LEN && round >= RP.kingSeedRound)); }
     bool nearEnemy(int t, int margin) const
     {
         for (auto& [et, er] : enemyReach)
@@ -3392,7 +3395,7 @@ struct Bot
         bool early = false;
         if (threatAt[step(myHead, bestD)] == 0)
         {
-            if (!(KING_SAFE_PRE && KSP_ESC_MARGIN > 0 && !enemyReach.empty() && step(myHead, bestD) >= 0 && nearEnemy(step(myHead, bestD), KSP_ESC_MARGIN)))
+            if (!(RP.ksp && KSP_ESC_MARGIN > 0 && !enemyReach.empty() && step(myHead, bestD) >= 0 && nearEnemy(step(myHead, bestD), KSP_ESC_MARGIN)))
                 return false;
             early = true;
         }
@@ -4087,7 +4090,7 @@ struct Bot
                 score -= (myLen >= 6 ? 25.0 + 4.0 * myLen : (outnum ? SMALL_THREAT_PEN_OUT : SMALL_THREAT_PEN)) * (units <= LAST_FEW_UNITS ? LAST_FEW_MULT : 1.0);
             else if (outnum && sprintThreatAt[t] > 0)
                 score -= SMALL_SPRINT_PEN * (units <= LAST_FEW_UNITS ? LAST_FEW_MULT : 1.0);
-            if (KING_SAFE_PRE && !enemyReach.empty() && nearEnemy(t, KSP_EXIT_MARGIN))
+            if (RP.ksp && !enemyReach.empty() && nearEnemy(t, KSP_EXIT_MARGIN))
             {
                 // a cornered king can't dodge the next sprint (8/19 rams had no safe step left)
                 int ex = 0;
