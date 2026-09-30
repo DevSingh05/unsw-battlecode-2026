@@ -135,3 +135,4 @@
 - 01:01 UTC: v30 vs v29 unseen: gen .512 lesson .500 gated .475 HOLDOUT .500 (pooled .500) -> pocket factory neutral on unseen, keep v30.
 - 01:01 UTC: SERVER Schooltime vs top-10: v30 4/10, schb31 (SCH_B_KEEP) 5/10 (all 20 classified layout B) -> inconclusive, hold for longer test. KC A/B running.
 - 01:06 UTC: SERVER KC A/B vs top-10: v30 6/20 (Por 3/10, Sli 3/10 longest 42.2 v 50.8) vs kc31 10/20 (Por 3/10, Sli 7/10 longest 54.0 v 44.6). v31 = v30 + KING_CONSENSUS + ESCAPE_DEADEND_FIX, active.
+- 02:14 UTC: Portals study (notes/portals_v31): king share 0.29 v 0.64 at r450, longest 26.7 v 43.9 at r499, 96 v 22 small splits r360-450. Flags PM_POR_LATESPLIT=0, PM_POR_DIVESTOP=360, CROWN_INHERIT=5, ECHO_EXIT_HOLD=15: local 4/6. Server test por32 on Portals vs top-10 (baseline kc31 3/10).
