@@ -1,0 +1,9 @@
+vs opponent
+  variants/v29            20.0/40   0.50  [0.35, 0.65]
+per map
+  slithery_fight           5.0/8    0.62  [0.31, 0.86]
+  schooltime               3.0/8    0.38  [0.14, 0.69]
+  portals                  3.0/8    0.38  [0.14, 0.69]
+  trauma                   5.0/8    0.62  [0.31, 0.86]
+  queen_of_spades          4.0/8    0.50  [0.22, 0.78]
+OVERALL bot:-DKING_CONSENSUS=1: 20.0/40 = 0.500  95% [0.352, 0.648]

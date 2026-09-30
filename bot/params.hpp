@@ -701,6 +701,25 @@
 #ifndef FEED_STALE_GUARD
 #define FEED_STALE_GUARD 0
 #endif
+// ---- notes/forensics (Slithery RC1/RC2, Schooltime A1): one king per team.
+// kingId = the LONGEST king heard in KC_MEM rounds (relay it); a crowned dragon steps down when ONE king
+// >= myLen+max(3,myLen/4) was heard in KC_STEP_MEM rounds; no self-crown while a king >= myLen+2 is known;
+// feed only a king >= KC_FEED_FRAC of the longest heard in KC_FEED_MEM rounds.
+#ifndef KING_CONSENSUS
+#define KING_CONSENSUS 0
+#endif
+#ifndef KC_MEM
+#define KC_MEM 12
+#endif
+#ifndef KC_STEP_MEM
+#define KC_STEP_MEM 30
+#endif
+#ifndef KC_FEED_MEM
+#define KC_FEED_MEM 40
+#endif
+#ifndef KC_FEED_FRAC
+#define KC_FEED_FRAC 0.75
+#endif
 // ---- notes/levers/blocked-food.md: on unknown maps, open the UNK_EXPLORE gate (knock, cross on a
 // clean echo) when seen pearl spawners are provably unreachable without a portal.
 // 1 = strict (outside our portal-free component), 2 = also long nearby detours
@@ -887,4 +906,36 @@
 #endif
 #ifndef PF_CHILD_MAX         // >0: children of at most this size (tip: repeat one split per turn); 0 = one k=L-2 child
 #define PF_CHILD_MAX 0
+#endif
+
+// ---- Schooltime layout B keepers (bot/maps/schooltime.hpp, notes/sch_b/LOG.txt). Default OFF.
+#ifndef SCH_B_KEEP           // on layout B, small dragons born near a top-strip cluster keep farming it
+#define SCH_B_KEEP 0
+#endif
+#ifndef SCH_B_KEEP_CL        // cluster mask: 1 our west (8,2)(9,5)(10,7), 2 our east (14,3)(14,5)(20,4),
+#define SCH_B_KEEP_CL 3      // 4 their east (mirror of 2), 8 their west (mirror of 1); team B mirrors x
+#endif
+#ifndef SCH_B_KEEP_R         // keepers are released at this round
+#define SCH_B_KEEP_R 400
+#endif
+#ifndef SCH_B_KEEP_LEN       // keeper duty only while myLen <= this (and not a self-declared king)
+#define SCH_B_KEEP_LEN 6
+#endif
+#ifndef SCH_B_KEEP_RANGE     // at birth: become the keeper of the nearest cluster within this many steps
+#define SCH_B_KEEP_RANGE 6
+#endif
+#ifndef SCH_B_KEEP_ZONE      // the zone: tiles within this many steps of a cluster tile
+#define SCH_B_KEEP_ZONE 4
+#endif
+#ifndef SCH_B_KEEP_PULL      // per step back towards the zone when outside it
+#define SCH_B_KEEP_PULL 3.0
+#endif
+#ifndef SCH_B_KEEP_LEAVE     // penalty for stepping out of the zone
+#define SCH_B_KEEP_LEAVE 12.0
+#endif
+#ifndef SCH_B_KEEP_TW        // per step towards the cluster tile that is due first
+#define SCH_B_KEEP_TW 1.5
+#endif
+#ifndef SCH_B_KEEP_YIELD     // turns a lower-id ally head must share the zone before we give it up
+#define SCH_B_KEEP_YIELD 3
 #endif

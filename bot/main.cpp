@@ -1755,6 +1755,23 @@ struct Bot
                 kingId = bk->id, kingLen = bk->len, kingTile = bk->tile, kingDir = bk->dir, kingRound = bk->round;
             }
         }
+        if (KING_CONSENSUS && KING_V2 && RP.kingDeclare)
+        {
+            // forensics RC1a: the longest king heard in KC_MEM rounds wins (a short fresh one can't replace it)
+            const KingInfo* bk = nullptr;
+            for (auto& k : kingsSeen)
+                if (round - k.round <= KC_MEM && (!bk || k.len > bk->len))
+                    bk = &k;
+            if (bk && (bk->len >= kingLen || round - kingRound > KC_MEM))
+            {
+                if (bk->id != (kingId & 1023))
+                {
+                    haveRelay = round - bk->round <= 4; // relay the longest, not the last heard
+                    relayMsg = encodeKing(bk->tile, bk->len, bk->id, 1, bk->dir, bk->round);
+                }
+                kingId = bk->id, kingLen = bk->len, kingTile = bk->tile, kingDir = bk->dir, kingRound = bk->round;
+            }
+        }
         // we can see the king ourselves: use exact data
         if (kingId >= 0)
             for (auto& sg : segs)
@@ -1805,6 +1822,14 @@ struct Bot
                 n++;
         return n;
     }
+    int bestKingLen(int mem) const // KING_CONSENSUS: longest king heard within mem rounds
+    {
+        int b = 0;
+        for (auto& k : kingsSeen)
+            if (round - k.round <= mem)
+                b = std::max(b, k.len);
+        return b;
+    }
     void updateKingship()
     {
         if (!RP.kingDeclare)
@@ -1813,14 +1838,17 @@ struct Bot
         {
             // up to two candidates grow side by side; the longest is the king
             int clear = std::max(myLen + KING_FOCUS_GAP, 2 * myLen); // one clearly longer king
+            int bestK = KING_CONSENSUS ? bestKingLen(KC_STEP_MEM) : 0; // RC1b: one clearly longer king is enough
             if (kingSelf)
             {
-                if (freshKings(myLen + 2) >= 2 || (KING_FOCUS && freshKings(clear - 1) >= 1))
+                if (freshKings(myLen + 2) >= 2 || (KING_FOCUS && freshKings(clear - 1) >= 1) ||
+                    (KING_CONSENSUS && bestK >= myLen + std::max(3, myLen / 4)))
                     kingSelf = false;
                 return;
             }
             if (round >= RP.kingSeedRound && freshKings(-1) < 2 && myLen >= 3 &&
-                !(KING_FOCUS && freshKings(clear - 1) >= 1) && rng.uni() < KING_DECLARE_P)
+                !(KING_FOCUS && freshKings(clear - 1) >= 1) && !(KING_CONSENSUS && bestK >= myLen + 2) &&
+                rng.uni() < KING_DECLARE_P)
                 kingSelf = true;
             return;
         }
@@ -1940,6 +1968,9 @@ struct Bot
         // FEED_FRESH: only feed a king we heard from recently (a dead king's remembered
         // length pulled our real longest dragon into suicide, e.g. L21 at r435)
         if (FEED_FRESH > 0 && (kingId < 0 || round - kingRound > FEED_FRESH || kingLen < myLen + 2))
+            return false;
+        // RC2: never feed a lesser king (< KC_FEED_FRAC of the longest heard in KC_FEED_MEM rounds)
+        if (KING_CONSENSUS && KING_V2 && RP.kingDeclare && kingLen < KC_FEED_FRAC * bestKingLen(KC_FEED_MEM))
             return false;
         if (KING_V2 && RP.kingDeclare)
             return FEED_ENABLE && feedPhase() && kingId >= 0 && kingLen >= myLen + 2 && !iAmKing() &&
