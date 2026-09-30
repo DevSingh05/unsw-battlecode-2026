@@ -671,6 +671,7 @@ struct Bot
     std::string out;
     bool unkKingSet = false;
     int birthRound = -1; // first round this process played
+    std::vector<int> headSeen; // REVISIT_PEN: last round our head was on each tile
     std::vector<int> hotRun, hotLast; // HOT_LEARN
     // EXPLORE_LEARN: decayed first-sight samples (hits, total) -> value of a never-seen tile
     double exploreHits = 0, exploreN = 0;
@@ -820,6 +821,12 @@ struct Bot
                 myHead = t;
         }
         int hx = myHead % w.W, hy = myHead / w.W;
+        if (REVISIT_PEN > 0 && myHead >= 0)
+        {
+            if (static_cast<int>(headSeen.size()) != w.N)
+                headSeen.assign(w.N, -1);
+            headSeen[myHead] = round;
+        }
 
         if (round == 0 || (w.known == nullptr && !w.candidates.empty() && w.lastSeen[myHead] < 0))
             w.identifyByStart(hx, hy);
@@ -3849,6 +3856,12 @@ struct Bot
                 score -= HOT_PULL * std::min(bfsDist[hotTarget], HOT_PULL_RANGE);
             if (d == myDir)
                 score += 0.3;
+            if (SPAWN_BLOCK_PEN > 0 && w.spawnAt[t] >= round && w.spawnAt[t] - round <= myLen &&
+                !(visible[t] && w.pearlMem[t]))
+                score -= SPAWN_BLOCK_PEN; // our body would sit on it when it spawns: the pearl is lost (IMP_FINDINGS)
+            if (REVISIT_PEN > 0 && !headSeen.empty() && headSeen[t] >= 0 && round - headSeen[t] <= REVISIT_WIN &&
+                !(visible[t] && w.pearlMem[t]))
+                score -= REVISIT_PEN; // coiling over our own recent path finds no new food (IMP_FINDINGS)
             score += rng.uni() * 0.2;
             if (dbg)
                 std::fprintf(dbg, "  cand %c t=(%d,%d) pearls=%.2f area=%d depth=%d threat=%d freeT=%d score=%.2f\n", DIRC[d],

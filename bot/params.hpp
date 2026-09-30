@@ -1007,3 +1007,13 @@
 #ifndef SONAR_ENCRYPT
 #define SONAR_ENCRYPT 0
 #endif
+// ---- IMP_FINDINGS (durr cheji micro study): don't park our body on tiles about to spawn; don't coil over our own path
+#ifndef SPAWN_BLOCK_PEN
+#define SPAWN_BLOCK_PEN 0.0
+#endif
+#ifndef REVISIT_PEN
+#define REVISIT_PEN 0.0
+#endif
+#ifndef REVISIT_WIN
+#define REVISIT_WIN 20
+#endif
