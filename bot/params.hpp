@@ -1017,3 +1017,80 @@
 #ifndef REVISIT_WIN
 #define REVISIT_WIN 20
 #endif
+// ---- CONSOLIDATION (notes/consolidation/LOG.txt; notes/top3/PLAN.txt B, IMP_FINDINGS.md 2).
+// From CONS_R, a small dragon (L <= CONS_MAXLEN) that is not needed as reserve picks the nearest heard/seen
+// longer ally (king beacons, CONS status beacons, visible ally heads) as its host, walks toward it while it
+// keeps foraging, stops its own growth splits, and dies 1-2 tiles in front of / beside the host when it is
+// first in line, no enemy head is near and the previous meal has been eaten. Default 0 = off (v32 identical).
+#ifndef CONS_R
+#define CONS_R 0              // start round (0 = off); test 330
+#endif
+#ifndef CONS_MAPS
+#define CONS_MAPS 0           // 0 = king-race maps (Slithery, Schooltime, Portals, QoS), 1 = any king-declare map, 2 = all
+#endif
+#ifndef CONS_MAXLEN
+#define CONS_MAXLEN 5         // feeders are this long or shorter
+#endif
+#ifndef CONS_HOST_MIN
+#define CONS_HOST_MIN 5       // a host is at least this long ...
+#endif
+#ifndef CONS_GAP
+#define CONS_GAP 3            // ... and at least this much longer than the feeder
+#endif
+#ifndef CONS_KEEP
+#define CONS_KEEP 8           // no consolidation while our unit count is at or below this (reserve)
+#endif
+#ifndef CONS_RANGE
+#define CONS_RANGE 24         // ignore hosts farther than this (wrap Manhattan)
+#endif
+#ifndef CONS_MEM
+#define CONS_MEM 6            // host info older than this many rounds is ignored
+#endif
+#ifndef CONS_LEN_W
+#define CONS_LEN_W 0.5        // host choice: minimise distance - CONS_LEN_W * length
+#endif
+#ifndef CONS_PULL
+#define CONS_PULL 2.0         // score per BFS step toward the host's feed spot (one pearl = 10)
+#endif
+#ifndef CONS_PULL_CAP
+#define CONS_PULL_CAP 30
+#endif
+#ifndef CONS_ENEMY_R
+#define CONS_ENEMY_R 4        // never feed while an enemy head is this close to the host
+#endif
+#ifndef CONS_WAIT_R
+#define CONS_WAIT_R 5         // throttle: a consolidator that is not first in line stops pulling inside this radius
+#endif
+#ifndef CONS_CLEAR
+#define CONS_CLEAR 6.0        // throttle: ... and pays this to step within 2 of the host's head
+#endif
+#ifndef CONS_NOSPLIT
+#define CONS_NOSPLIT 1        // consolidating feeders (and would-be hosts L>=CONS_HOST_MIN) skip growth splits
+#endif
+#ifndef CONS_BEACON
+#define CONS_BEACON 1         // L >= CONS_BEACON_MIN dragons with idle rays send a status beacon (pos, len, id, dir)
+#endif
+#ifndef CONS_BEACON_MIN
+#define CONS_BEACON_MIN 5
+#endif
+#ifndef CONS_BEACON_LEAD
+#define CONS_BEACON_LEAD 10   // beacons start this many rounds before CONS_R
+#endif
+#ifndef CONS_TRACE
+#define CONS_TRACE 0          // local diagnostics only: per-turn consolidation state to $CONS_TRACE_DIR/<id>.txt
+#endif
+#ifndef CONS_OVER_KING
+#define CONS_OVER_KING 1      // 1: a (king-class) host replaces the KING_V2 feed pipeline (0: king feeding keeps priority)
+#endif
+#ifndef CONS_LOOSE
+#define CONS_LOOSE 1          // also die within 2 of the host's 2-ahead tile (not only on the 4 exact spots)
+#endif
+#ifndef CONS_RELAY_HOPS
+#define CONS_RELAY_HOPS 2     // dragons with idle rays re-send the longest status beacon they heard (0 = no relay)
+#endif
+#ifndef CONS_STEAL
+#define CONS_STEAL 1          // wait while another small ally head is as close to our head as the host is
+#endif
+#ifndef CONS_HOST_FRAC
+#define CONS_HOST_FRAC 0.75   // a host must be at least this fraction of the longest ally heard (0 = any longer ally)
+#endif

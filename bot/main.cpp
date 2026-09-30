@@ -1578,24 +1578,26 @@ struct Bot
         }
     }
 
-    uint64_t encodeKing(int tile, int len, int id, int hop, int dir, int rnd) const
+    // CONS status beacons use the king layout under their own key, so decodeKing (SECRET) rejects them
+    static constexpr uint64_t STATUS_SECRET = 0x3c6ef372fe94f82bULL;
+    uint64_t encodeKing(int tile, int len, int id, int hop, int dir, int rnd, uint64_t key = SECRET) const
     {
         uint64_t x = static_cast<uint64_t>(tile % w.W) | (static_cast<uint64_t>(tile / w.W) << 6) |
                      (static_cast<uint64_t>(std::min(len, 255)) << 12) | (static_cast<uint64_t>(id & 1023) << 20) |
                      (static_cast<uint64_t>(hop & 3) << 30) | (static_cast<uint64_t>(dir & 3) << 32) |
                      (static_cast<uint64_t>(rnd & 511) << 34);
         uint64_t check =
-            mix(x ^ SECRET ^ (static_cast<uint64_t>(w.myTeam) << 50) ^ frameSalt(myFrameCode())) & ((1ULL << 21) - 1);
+            mix(x ^ key ^ (static_cast<uint64_t>(w.myTeam) << 50) ^ frameSalt(myFrameCode())) & ((1ULL << 21) - 1);
         return x | (check << 43);
     }
 
-    bool decodeKing(uint64_t m, int& tile, int& len, int& id, int& hop, int& dir, int& rnd)
+    bool decodeKing(uint64_t m, int& tile, int& len, int& id, int& hop, int& dir, int& rnd, uint64_t key = SECRET)
     {
         uint64_t x = m & ((1ULL << 43) - 1);
         bool ok = false;
         for (int fr = 0; fr < (FRAME_FIX ? 3 : 1) && !ok; fr++)
         {
-            uint64_t check = mix(x ^ SECRET ^ (static_cast<uint64_t>(w.myTeam) << 50) ^ frameSalt(fr)) & ((1ULL << 21) - 1);
+            uint64_t check = mix(x ^ key ^ (static_cast<uint64_t>(w.myTeam) << 50) ^ frameSalt(fr)) & ((1ULL << 21) - 1);
             if ((m >> 43) == check)
                 ok = true, lastFrameCode = fr;
         }
@@ -1815,6 +1817,40 @@ struct Bot
                 kingId = bk->id, kingLen = bk->len, kingTile = bk->tile, kingDir = bk->dir, kingRound = bk->round;
             }
         }
+        if (CONS_R && CONS_BEACON)
+        {
+            // CONS status beacons: position/length of longer allies (hosts); CONS_RELAY_HOPS relays the longest
+            haveConsRelay = false;
+            int relayLen = 0;
+            for (uint64_t m : in.msgs)
+            {
+                int tile, len, id, hop, dir, rnd;
+                if (!decodeKing(m, tile, len, id, hop, dir, rnd, STATUS_SECRET))
+                    continue;
+                learnFrame(lastFrameCode);
+                if (round - rnd > CONS_MEM || id == (w.myId & 1023))
+                    continue;
+                if (hop < CONS_RELAY_HOPS && round - rnd <= 2 && len > relayLen)
+                {
+                    relayLen = len;
+                    consRelayMsg = encodeKing(tile, len, id, hop + 1, dir, rnd, STATUS_SECRET);
+                    haveConsRelay = true;
+                }
+                bool found = false;
+                for (auto& k : statusSeen)
+                    if (k.id == id)
+                    {
+                        if (rnd >= k.round)
+                            k = {id, len, tile, dir, rnd};
+                        found = true;
+                    }
+                if (!found)
+                    statusSeen.push_back({id, len, tile, dir, rnd});
+            }
+            statusSeen.erase(std::remove_if(statusSeen.begin(), statusSeen.end(),
+                                            [&](const KingInfo& k) { return round - k.round > 2 * CONS_MEM; }),
+                             statusSeen.end());
+        }
         // we can see the king ourselves: use exact data
         if (kingId >= 0)
             for (auto& sg : segs)
@@ -1964,6 +2000,22 @@ struct Bot
                 if (!warnDirs[d])
                     out += std::string("SONAR ") + DIRC[d] + " " + std::to_string(sonarOut(relayMsg)) + "\n";
         }
+        else if (!probing && CONS_R && CONS_BEACON && consMapOn() && round >= CONS_R - CONS_BEACON_LEAD &&
+                 myLen >= CONS_BEACON_MIN)
+        {
+            // CONS status beacon on the idle rays: where we are after this move, how long we are
+            uint64_t m = pending.empty() ? encodeKing(myHead, myLen, w.myId, 0, myDir, round, STATUS_SECRET)
+                                         : encodeKing(pending.back(), myLen, w.myId, 0, lastMoveDir, round, STATUS_SECRET);
+            for (int d = 0; d < 4; d++)
+                if (!warnDirs[d])
+                    out += std::string("SONAR ") + DIRC[d] + " " + std::to_string(sonarOut(m)) + "\n";
+        }
+        else if (!probing && CONS_R && CONS_BEACON && haveConsRelay && consMapOn() && round >= CONS_R - CONS_BEACON_LEAD)
+        {
+            for (int d = 0; d < 4; d++)
+                if (!warnDirs[d])
+                    out += std::string("SONAR ") + DIRC[d] + " " + std::to_string(sonarOut(consRelayMsg)) + "\n";
+        }
         for (int d = 0; d < 4; d++)
             if (warnDirs[d])
                 out += std::string("SONAR ") + DIRC[d] + " " + std::to_string(sonarOut(warn)) + "\n";
@@ -2054,6 +2106,176 @@ struct Bot
                    myLen <= (round >= KING_V2_MERGE_ROUND ? 1000 : round >= 380 ? 6 : KING_V2_FEED_LEN);
         return FEED_ENABLE && feedPhase() && kingId >= 0 && kingLen >= myLen + 2 && !iAmKing() &&
                (units > RP.feedReserve || (RP.lateFeedRound > 0 && round >= RP.lateFeedRound && units > 1)) && myLen <= FEED_MAX_LEN;
+    }
+
+    // ---- CONSOLIDATION (params.hpp CONS_*): local merge of small dragons into longer allies
+    std::vector<KingInfo> statusSeen; // CONS status beacons heard
+    bool haveConsRelay = false;
+    uint64_t consRelayMsg = 0;
+    bool consActive = false, consHostVis = false, consFirst = false;
+    int consHostId = -1, consHostTile = -1, consHostDir = 0, consHostLen = 0, consTarget = -1;
+    bool consMapOn() const
+    {
+        if (!CONS_R)
+            return false;
+        if (CONS_MAPS == 0)
+            return RP.kingRace;
+        if (CONS_MAPS == 1)
+            return RP.kingDeclare;
+        return true;
+    }
+    // would-be host: long enough to be fed, so it keeps its body together
+    bool consHostKeep() const
+    {
+        return CONS_NOSPLIT && consMapOn() && round >= CONS_R && myLen >= CONS_HOST_MIN;
+    }
+    void pickConsHost()
+    {
+        consActive = consHostVis = consFirst = false;
+        consHostId = consHostTile = consTarget = -1;
+        if (!consMapOn() || round < CONS_R || myLen > CONS_MAXLEN || kingSelf || iAmKing())
+            return;
+        if (units <= std::max(CONS_KEEP, feedReserveNow()) || threatAt[myHead] > 0)
+            return;
+        int need = std::max(CONS_HOST_MIN, myLen + CONS_GAP);
+        struct C
+        {
+            int id, len, tile, dir;
+            bool vis;
+        };
+        C cand[96];
+        int nc = 0;
+        auto add = [&](int id, int len, int tile, int dir, bool vis) {
+            for (int i = 0; i < nc; i++)
+                if (cand[i].id == id)
+                {
+                    cand[i].len = std::max(cand[i].len, len);
+                    if (vis)
+                        cand[i].tile = tile, cand[i].dir = dir, cand[i].vis = true;
+                    return;
+                }
+            if (nc < 96)
+                cand[nc++] = {id, len, tile, dir, vis};
+        };
+        for (auto& sg : segs)
+            if (sg.head && sg.team == w.myTeam && sg.id != w.myId)
+            {
+                int n = 0; // visible segments: a lower bound on its length
+                for (auto& s2 : segs)
+                    if (s2.id == sg.id)
+                        n++;
+                add(sg.id & 1023, n, sg.tile, sg.facing, true);
+            }
+        for (auto& k : kingsSeen)
+            if (round - k.round <= CONS_MEM && k.id != (w.myId & 1023))
+                add(k.id, k.len, k.tile, k.dir, false);
+        for (auto& k : statusSeen)
+            if (round - k.round <= CONS_MEM)
+                add(k.id, k.len, k.tile, k.dir, false);
+        // one king, not a tier: only hosts within CONS_HOST_FRAC of the longest ally we know of
+        // (the local-host version fed 4 big dragons evenly and lost the king race)
+        int longest = KING_CONSENSUS ? bestKingLen(KC_FEED_MEM) : 0;
+        for (int i = 0; i < nc; i++)
+            longest = std::max(longest, cand[i].len);
+        double bestC = 1e18;
+        int bi = -1;
+        for (int i = 0; i < nc; i++)
+        {
+            if (cand[i].len < need || cand[i].tile < 0 || cand[i].len < CONS_HOST_FRAC * longest)
+                continue;
+            int dd = wrapDist(myHead, cand[i].tile);
+            if (dd > CONS_RANGE)
+                continue;
+            double c = dd - CONS_LEN_W * cand[i].len;
+            if (c < bestC)
+                bestC = c, bi = i;
+        }
+        if (bi < 0)
+            return;
+        const C& h = cand[bi];
+        consActive = true;
+        consHostId = h.id, consHostLen = h.len, consHostTile = h.tile, consHostDir = h.dir, consHostVis = h.vis;
+        // first in line: the closest of our visible heads to the host (ties: lower id)
+        int dk = wrapDist(myHead, h.tile);
+        consFirst = true;
+        for (auto& o : segs)
+            if (o.head && o.team == w.myTeam && o.id != w.myId && (o.id & 1023) != h.id)
+            {
+                int n = 0; // only other small heads (would-be feeders) queue with us
+                for (auto& s2 : segs)
+                    if (s2.id == o.id)
+                        n++;
+                if (n > CONS_MAXLEN)
+                    continue;
+                int od = wrapDist(o.tile, h.tile);
+                if (od < dk || (od == dk && o.id < w.myId))
+                    consFirst = false;
+            }
+        // walk to 2 ahead of the host (1 ahead, then its sides, when that is kelp or occupied)
+        int a1 = step(h.tile, h.dir), a2 = a1 >= 0 ? step(a1, h.dir) : -1;
+        int sl = step(h.tile, (h.dir + 3) % 4), sr = step(h.tile, (h.dir + 1) % 4);
+        for (int t : {a2, a1, sl, sr, h.tile})
+            if (t >= 0 && (t == myHead || occId[t] < 0 || t == h.tile))
+            {
+                consTarget = t;
+                break;
+            }
+    }
+    // die in the host's path when it is our turn in line (returns true when the suicide is emitted)
+    bool tryConsFeed()
+    {
+        if (!consActive || !consHostVis || !consFirst)
+            return false;
+        int k = consHostTile, f = consHostDir;
+        int dk = wrapDist(myHead, k);
+        if (dk > 3)
+            return false;
+        int a1 = step(k, f), a2 = a1 >= 0 ? step(a1, f) : -1;
+        int sl = step(k, (f + 3) % 4), sr = step(k, (f + 1) % 4);
+        bool spot = myHead == a1 || myHead == a2 || myHead == sl || myHead == sr;
+        if (CONS_LOOSE && !spot)
+        {
+            // in front of the host (not behind its head), close to where it goes next
+            int ref = a2 >= 0 ? a2 : a1 >= 0 ? a1 : k;
+            spot = dk >= 1 && wrapDist(myHead, ref) <= 2 && wrapDist(myHead, ref) <= dk;
+        }
+        if (!spot)
+            return false;
+        for (auto& o : segs)
+            if (o.head && o.team != w.myTeam && wrapDist(o.tile, k) <= CONS_ENEMY_R)
+                return false; // the corpse would feed them
+        for (int t2 : {a1, a2, sl, sr})
+            if (t2 >= 0 && visible[t2] && w.pearlMem[t2] && t2 != myHead)
+                return false; // the last meal is still lying there
+        if (CONS_STEAL)
+        {
+            // precise: no other small ally head is nearer than the host to where our head pearl lands
+            // (43% of the first version's pearls went to bystanders)
+            for (auto& o : segs)
+                if (o.head && o.team == w.myTeam && o.id != w.myId && (o.id & 1023) != consHostId &&
+                    wrapDist(o.tile, myHead) <= dk)
+                {
+                    int n = 0;
+                    for (auto& s2 : segs)
+                        if (s2.id == o.id)
+                            n++;
+                    if (n <= CONS_MAXLEN + 2)
+                        return false;
+                }
+        }
+        out += std::string("MOVE ") + DIRC[(myDir + 2) % 4] + "\n";
+        pending.clear();
+        if (dbg)
+            std::fprintf(dbg, "  -> cons feed host=%d L%d\n", consHostId, consHostLen);
+#if CONS_TRACE
+        if (const char* ct = std::getenv("CONS_TRACE_DIR"))
+            if (FILE* tf = std::fopen((std::string(ct) + "/" + std::to_string(w.myId) + ".txt").c_str(), "a"))
+            {
+                std::fprintf(tf, "%d %d FEED host%d hl%d\n", round, w.myId, consHostId, consHostLen);
+                std::fclose(tf);
+            }
+#endif
+        return true;
     }
 
     // BFS distance from each enemy head over tiles free now, up to 6 steps.
@@ -3360,8 +3582,28 @@ struct Bot
         if (tryRam())
             return;
 
+        // ---- CONSOLIDATION: a small dragon with a longer ally in range merges into it (replaces king feeding)
+        if (CONS_R)
+        {
+            pickConsHost();
+            if (!CONS_OVER_KING && consActive && shouldFeed())
+                consActive = false; // the king's own feeder pipeline keeps priority
+#if CONS_TRACE
+            if (round >= CONS_R && myLen <= CONS_MAXLEN)
+                if (const char* ct = std::getenv("CONS_TRACE_DIR"))
+                    if (FILE* tf = std::fopen((std::string(ct) + "/" + std::to_string(w.myId) + ".txt").c_str(), "a"))
+                    {
+                        std::fprintf(tf, "%d %d L%d u%d act%d host%d hl%d vis%d first%d dk%d thr%d king%d kl%d\n", round, w.myId, myLen,
+                                     units, consActive, consHostId, consHostLen, consHostVis, consFirst,
+                                     consHostTile >= 0 ? wrapDist(myHead, consHostTile) : -1, threatAt[myHead], kingId, kingLen);
+                        std::fclose(tf);
+                    }
+#endif
+            if (tryConsFeed())
+                return;
+        }
         // ---- feeding the king: die just in front of it so it eats our body
-        bool feeding = shouldFeed();
+        bool feeding = shouldFeed() && !consActive; // consActive is false with CONS_R off
         int target = feeding ? feedTarget() : -1;
         if (feeding && target >= 0)
         {
@@ -3573,6 +3815,7 @@ struct Bot
             }
         }
         if (!pfIn && holdTile < 0 && !(RP.kingDeclare && kingSelf) && !bigLate && (!SPLIT_NEEDS_EXIT || tailHasExit(2)) &&
+            !(CONS_R && CONS_NOSPLIT && (consActive || consHostKeep())) &&
             !(UNK_SEALED_FOOD && !w.known && UNK_SEALED_ROOM_MIN > 0 && roomSize(UNK_SEALED_ROOM_MIN) < UNK_SEALED_ROOM_MIN) && myLen >= SPLIT_LEN && myLen >= 4 && units < w.unitLimit && units < SPLIT_MAX_UNITS &&
             (round < RP.splitStopRound || (RP.lateSplitRound > 0 && round < RP.lateSplitRound && myLen <= LATE_SPLIT_MAXLEN)) &&
             !threatened)
@@ -3628,7 +3871,7 @@ struct Bot
         int hotTarget = -1;
         // PF_PULL: a short free dragon that is the nearest of us to a free, stocked pocket mouth walks to it
         int pfTarget = -1;
-        if (POCKET_FACTORY && PF_PULL > 0 && !pfIn && myLen >= 2 && myLen <= PF_ENTER_MAXLEN && !feeding && !iAmKing() &&
+        if (POCKET_FACTORY && PF_PULL > 0 && !pfIn && myLen >= 2 && myLen <= PF_ENTER_MAXLEN && !feeding && !consActive && !iAmKing() &&
             units <= w.unitLimit - PF_UNIT_RESERVE && !pfDepth.empty() && pfDepth[myHead] == 0)
         {
             int bd = PF_PULL_RANGE + 1;
@@ -3667,7 +3910,7 @@ struct Bot
             if (dbg && pfTarget >= 0)
                 std::fprintf(dbg, "PF pull (%d,%d) d=%d\n", pfTarget % w.W, pfTarget / w.W, bd);
         }
-        if (HOT_PULL > 0 && myLen <= 3 && !feeding && !iAmKing())
+        if (HOT_PULL > 0 && myLen <= 3 && !feeding && !consActive && !iAmKing())
         {
             if (hotMouthRound < 0 || (!w.known && round - hotMouthRound >= 25))
                 computeHotMouths();
@@ -3849,6 +4092,17 @@ struct Bot
             {
                 int dt = bfsDist[target];
                 score -= FEED_PULL * std::min(dt, 80);
+            }
+            if (consActive)
+            {
+                bool waiting = consHostVis && !consFirst && wrapDist(myHead, consHostTile) <= CONS_WAIT_R;
+                if (waiting)
+                {
+                    if (wrapDist(t, consHostTile) <= 2)
+                        score -= CONS_CLEAR; // keep the host's front clear for the one feeder in line
+                }
+                else if (consTarget >= 0)
+                    score -= CONS_PULL * std::min(bfsDist[consTarget], CONS_PULL_CAP);
             }
             if (pfTarget >= 0 && !pump)
                 score -= PF_PULL * std::min(bfsDist[pfTarget], PF_PULL_RANGE + 2);
