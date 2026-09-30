@@ -1155,3 +1155,8 @@
 #ifndef EF_RACE_ONLY
 #define EF_RACE_ONLY 0
 #endif
+
+// notes/stockfish/REPORT.md: big dragons are sprint-rammed inside modelled reach (39/50); a head-on costs ~10/segment
+#ifndef THREAT_BIG_PER_LEN
+#define THREAT_BIG_PER_LEN 4.0
+#endif

@@ -4087,7 +4087,7 @@ struct Bot
             // SMALL_SPRINT_THREAT (notes/19): not locally ahead, a ram costs the dragon AND the corpse race
             bool outnum = SMALL_SPRINT_THREAT && myLen < 6 && localAllies <= localEnemies;
             if (threat > 0)
-                score -= (myLen >= 6 ? 25.0 + 4.0 * myLen : (outnum ? SMALL_THREAT_PEN_OUT : SMALL_THREAT_PEN)) * (units <= LAST_FEW_UNITS ? LAST_FEW_MULT : 1.0);
+                score -= (myLen >= 6 ? 25.0 + THREAT_BIG_PER_LEN * myLen : (outnum ? SMALL_THREAT_PEN_OUT : SMALL_THREAT_PEN)) * (units <= LAST_FEW_UNITS ? LAST_FEW_MULT : 1.0);
             else if (outnum && sprintThreatAt[t] > 0)
                 score -= SMALL_SPRINT_PEN * (units <= LAST_FEW_UNITS ? LAST_FEW_MULT : 1.0);
             if (RP.ksp && !enemyReach.empty() && nearEnemy(t, KSP_EXIT_MARGIN))
