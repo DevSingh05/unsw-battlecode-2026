@@ -1160,3 +1160,36 @@
 #ifndef THREAT_BIG_PER_LEN
 #define THREAT_BIG_PER_LEN 4.0
 #endif
+
+// SPRINT_RAM (notes/stockfish/SPRINT_RAM.md): a length SR_MIN_LEN..SR_MAX_LEN dragon sprints 3..SR_MAX_STEPS
+// steps head-on into an enemy head of visible length >= max(SR_TARGET_MIN, 2*myLen). 0 = off.
+#ifndef SPRINT_RAM
+#define SPRINT_RAM 0
+#endif
+#ifndef SR_MIN_LEN
+#define SR_MIN_LEN 4
+#endif
+#ifndef SR_MAX_LEN
+#define SR_MAX_LEN 7
+#endif
+#ifndef SR_TARGET_MIN
+#define SR_TARGET_MIN 8
+#endif
+#ifndef SR_TARGET_MULT
+#define SR_TARGET_MULT 2.0    // target visible length >= this * myLen
+#endif
+#ifndef SR_MAX_STEPS
+#define SR_MAX_STEPS 5
+#endif
+#ifndef SR_MIN_UNITS
+#define SR_MIN_UNITS 3        // team units (incl. us) needed before we trade ourselves
+#endif
+#ifndef SR_COST
+#define SR_COST 1.0           // weight on our own length lost
+#endif
+#ifndef SR_PEARL_W
+#define SR_PEARL_W 0.5        // weight on the corpse pearls, times (allyHeads-enemyHeads+1)/(all heads+1) in view
+#endif
+#ifndef SR_MIN_EV
+#define SR_MIN_EV 0.0
+#endif

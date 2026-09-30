@@ -3067,6 +3067,95 @@ struct Bot
         return true;
     }
 
+#if SPRINT_RAM
+    // SPRINT_RAM (notes/stockfish/SPRINT_RAM.md): a medium dragon sprints 3..SR_MAX_STEPS steps into
+    // the head of a much longer enemy. Nothing else moves during our turn, so the head is where we see
+    // it; the path only has to be empty, visible, and payable (each step after the first costs 1).
+    bool trySprintRam()
+    {
+        if (myLen < SR_MIN_LEN || myLen > SR_MAX_LEN || units < SR_MIN_UNITS || myHead < 0 || iAmKing() || kfOn || shouldFeed())
+            return false;
+        if (POCKET_FACTORY && pfInward())
+            return false;
+        int maxSteps = std::min(SR_MAX_STEPS, myLen - 1); // no-pearl payable bound
+        if (maxSteps < 3)
+            return false;
+        int need = std::max(SR_TARGET_MIN, static_cast<int>(std::ceil(SR_TARGET_MULT * myLen)));
+        // candidate heads first (cheap), BFS only if one exists
+        int allyHeads = 0, enemyHeads = 0;
+        bool any = false;
+        for (auto& s : segs)
+            if (s.head && s.id != w.myId)
+            {
+                (s.team == w.myTeam ? allyHeads : enemyHeads)++;
+                if (s.team != w.myTeam && wrapDist(myHead, s.tile) <= 2 * SR_MAX_STEPS && enemyVisibleLength(s.id) >= need)
+                    any = true;
+            }
+        if (!any)
+            return false;
+        // BFS over empty visible tiles (bodies don't move during our sprint)
+        std::vector<int> dist(w.N, -1), par(w.N, -1), pdir(w.N, -1), q{myHead};
+        dist[myHead] = 0;
+        for (size_t i = 0; i < q.size(); i++)
+        {
+            int u = q[i];
+            if (dist[u] >= maxSteps || (u != myHead && occId[u] >= 0))
+                continue; // an enemy head tile is a leaf
+            for (int d = 0; d < 4; d++)
+            {
+                int v = step(u, d);
+                if (v < 0 || dist[v] >= 0 || !visible[v])
+                    continue;
+                bool enemyHead = occId[v] >= 0 && occHead[v] && occTeam[v] != w.myTeam;
+                if (occId[v] >= 0 && !enemyHead)
+                    continue;
+                dist[v] = dist[u] + 1;
+                par[v] = u;
+                pdir[v] = d;
+                q.push_back(v);
+            }
+        }
+        double bestVal = SR_MIN_EV;
+        int bestTile = -1;
+        for (auto& s : segs)
+        {
+            if (!s.head || s.team == w.myTeam)
+                continue;
+            int k = dist[s.tile];
+            if (k < 3 || k > maxSteps)
+                continue;
+            int theirs = enemyVisibleLength(s.id);
+            if (theirs < need)
+                continue;
+            int pearls = (theirs + 1) / 2 + (myLen + 1) / 2; // both corpses land here
+            double share = static_cast<double>(allyHeads - enemyHeads + 1) / (allyHeads + enemyHeads + 1);
+            double val = theirs - SR_COST * myLen + SR_PEARL_W * share * pearls - 0.1 * k;
+            if (val > bestVal)
+            {
+                bestVal = val;
+                bestTile = s.tile;
+            }
+        }
+        if (bestTile < 0)
+            return false;
+        std::string dirs;
+        for (int t = bestTile; t != myHead; t = par[t])
+            dirs += DIRC[pdir[t]];
+        std::reverse(dirs.begin(), dirs.end());
+        if (const char* td = std::getenv("SR_TRACE_DIR"))
+            if (FILE* tf = std::fopen((std::string(td) + "/sr.txt").c_str(), "a"))
+            {
+                std::fprintf(tf, "%d %d %c L%d tgt%d len%d steps%d a%d e%d u%d\n", round, w.myId, w.myTeam, myLen,
+                             occId[bestTile], enemyVisibleLength(occId[bestTile]), static_cast<int>(dirs.size()), allyHeads,
+                             enemyHeads, units);
+                std::fclose(tf);
+            }
+        out += "MOVE " + dirs + "\n";
+        pending.clear();
+        return true;
+    }
+#endif
+
     // a tile with a portal on one of its sides (known or not): crossers land here
     bool isMouth(int t) const
     {
@@ -3647,6 +3736,10 @@ struct Bot
         // ---- rams (distance 1-2)
         if (tryRam())
             return;
+#if SPRINT_RAM
+        if (trySprintRam())
+            return;
+#endif
 
         // ---- CONSOLIDATION: a small dragon with a longer ally in range merges into it (replaces king feeding)
         if (CONS_R)
