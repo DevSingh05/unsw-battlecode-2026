@@ -55,6 +55,7 @@ struct RuntimeParams
     int feedReserve = FEED_RESERVE;
     double kingPortal = KING_PORTAL_PENALTY; // extra cost for a big dragon crossing a portal blind
     int kingKeepExtra = 0;                   // extra tiles a big dragon keeps from enemy heads
+    int kingRace = 0;                        // set for the KING_V2 king-race maps (v2() table)
     int lateSplitRound = LATE_SPLIT_ROUND;   // small dragons keep splitting until this round (0 = off)
     int diveStopRound = 0;                   // no pocket dives from this round (0 = off)
 };
@@ -105,6 +106,7 @@ void applyMapParams(const char* name)
         auto v2 = [&](const char* map, int ks, int ss, int fs, int res) {
             if (n == map)
             {
+                RP.kingRace = 1;
                 RP.kingDeclare = 1;
                 RP.kingSeedRound = ks;
                 RP.splitStopRound = ss;
@@ -136,6 +138,9 @@ void applyMapParams(const char* name)
         RP.keepLen = PM_DIL_KEEP;
     if (n == "Trauma" && PM_TRA_LATEFEED >= 0)
         RP.lateFeedRound = PM_TRA_LATEFEED;
+    // notes/top3/PLAN.txt A: on king maps the top teams stop splitting ~r330 and consolidate
+    if (LATE_SPLIT_KING_MAPS > 0 && RP.kingRace && RP.lateSplitRound > LATE_SPLIT_KING_MAPS)
+        RP.lateSplitRound = LATE_SPLIT_KING_MAPS;
 }
 
 constexpr int INF = 1 << 29;

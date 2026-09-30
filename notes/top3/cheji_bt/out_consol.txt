@@ -1,0 +1,114 @@
+
+### cheji: 15 round-limit games, maps Counter({'Slithery Fight': 4, 'Portals': 4, 'Trauma': 3, 'Schooltime': 3, 'Autarky': 1})
+ win    0.5  nmax(200-350)   49.3  n<=half at  339.3  king>=20 at  355.8  king>=30 at  388.9
+  r250 n   45.0 tot  141.1 top1    8.1 top2    5.9 top3    5.5
+  r275 n   45.5 tot  140.9 top1    6.9 top2    5.7 top3    5.0
+  r300 n   45.9 tot  145.1 top1    7.6 top2    6.4 top3    5.7
+  r325 n   45.6 tot  151.3 top1   11.1 top2    8.0 top3    7.3
+  r350 n   14.1 tot  122.3 top1   18.9 top2   14.4 top3   12.9
+  r375 n    9.4 tot  126.1 top1   26.0 top2   20.1 top3   14.2
+  r400 n    7.5 tot  123.1 top1   27.7 top2   22.2 top3   18.0
+  r425 n    6.2 tot  116.7 top1   32.3 top2   21.5 top3   14.7
+  r450 n    5.2 tot  108.6 top1   37.3 top2   20.5 top3   16.1
+  r475 n    4.3 tot  110.2 top1   40.7 top2   22.5 top3   16.7
+  r201-300: king eats nat   10.3 own    5.5 en    0.7 | others eat  318.1 | own deaths   79.8 (lenSum  234.3) near-king(<=2)    2.7 lenSum    6.5 | king deaths    2.3
+  r301-350: king eats nat    6.1 own    8.1 en    0.5 | others eat  157.6 | own deaths   61.6 (lenSum  171.3) near-king(<=2)    2.6 lenSum    6.6 | king deaths    0.5
+  r351-400: king eats nat    4.8 own    6.9 en    0.1 | others eat   69.2 | own deaths   18.4 (lenSum   67.9) near-king(<=2)    1.2 lenSum    4.8 | king deaths    0.1
+  r401-450: king eats nat    4.5 own    8.2 en    0.3 | others eat   42.3 | own deaths   11.3 (lenSum   62.4) near-king(<=2)    1.3 lenSum   14.5 | king deaths    0.0
+  r451-500: king eats nat    3.9 own    5.2 en    0.2 | others eat   30.3 | own deaths    8.0 (lenSum   41.6) near-king(<=2)    0.7 lenSum    8.6 | king deaths    0.1
+  own corpse pearls made r250+  270.5  eaten by king   30.1 ally  198.9 enemy   24.2
+
+### cpeer: 15 round-limit games, maps Counter({'Slithery Fight': 4, 'Portals': 4, 'Trauma': 3, 'Schooltime': 3, 'Autarky': 1})
+ win    0.5  nmax(200-350)   40.2  n<=half at  345.7  king>=20 at  368.8  king>=30 at  395.5
+  r250 n   33.5 tot   94.8 top1    6.9 top2    5.1 top3    4.4
+  r275 n   33.5 tot   95.2 top1    8.2 top2    5.5 top3    4.6
+  r300 n   32.5 tot   96.3 top1   10.7 top2    6.3 top3    4.4
+  r325 n   31.0 tot   92.6 top1   12.2 top2    5.5 top3    4.4
+  r350 n   28.8 tot   91.5 top1   13.8 top2    7.1 top3    4.6
+  r375 n   24.8 tot   93.7 top1   17.8 top2    9.2 top3    5.4
+  r400 n   19.4 tot   91.1 top1   24.9 top2   11.4 top3    6.7
+  r425 n   18.2 tot   93.9 top1   28.6 top2   12.5 top3    7.8
+  r450 n   17.4 tot  101.9 top1   33.9 top2   13.8 top3    8.7
+  r475 n   15.6 tot  104.1 top1   36.8 top2   17.1 top3    7.7
+  r201-300: king eats nat    4.1 own    8.3 en    0.3 | others eat  295.3 | own deaths  107.5 (lenSum  279.9) near-king(<=2)    5.2 lenSum   14.3 | king deaths    3.3
+  r301-350: king eats nat    2.9 own    6.7 en    0.2 | others eat  133.1 | own deaths   52.6 (lenSum  133.3) near-king(<=2)    4.5 lenSum   11.8 | king deaths    2.0
+  r351-400: king eats nat    2.3 own    9.5 en    0.2 | others eat  122.7 | own deaths   48.9 (lenSum  130.3) near-king(<=2)    4.5 lenSum   13.9 | king deaths    0.3
+  r401-450: king eats nat    2.4 own    9.1 en    0.1 | others eat   96.4 | own deaths   33.1 (lenSum   90.6) near-king(<=2)    2.3 lenSum    7.0 | king deaths    0.1
+  r451-500: king eats nat    2.4 own    5.9 en    0.0 | others eat   83.9 | own deaths   26.2 (lenSum   79.8) near-king(<=2)    1.1 lenSum    6.1 | king deaths    0.1
+  own corpse pearls made r250+  338.5  eaten by king   35.4 ally  265.7 enemy   21.3
+
+### cvsus: 20 round-limit games, maps Counter({'Slithery Fight': 8, 'Portals': 6, 'Schooltime': 4, 'Autarky': 1, 'Default': 1})
+ win    0.8  nmax(200-350)   51.1  n<=half at  340.1  king>=20 at  354.6  king>=30 at  401.1
+  r250 n   46.8 tot  133.9 top1    6.5 top2    5.5 top3    5.0
+  r275 n   46.4 tot  135.4 top1    6.8 top2    5.5 top3    5.1
+  r300 n   47.3 tot  139.8 top1    7.4 top2    5.9 top3    5.5
+  r325 n   47.4 tot  146.6 top1   10.5 top2    7.9 top3    6.3
+  r350 n   14.6 tot  120.0 top1   18.4 top2   14.3 top3   12.2
+  r375 n    8.9 tot  119.8 top1   24.4 top2   18.4 top3   15.8
+  r400 n    6.9 tot  119.2 top1   28.1 top2   22.4 top3   17.6
+  r425 n    5.3 tot  107.3 top1   32.6 top2   24.2 top3   16.2
+  r450 n    4.7 tot  110.4 top1   39.1 top2   26.4 top3   17.4
+  r475 n    4.5 tot  109.0 top1   44.9 top2   25.9 top3   16.1
+  r201-300: king eats nat   11.6 own    5.1 en    1.4 | others eat  359.0 | own deaths   92.6 (lenSum  258.7) near-king(<=2)    2.8 lenSum    7.3 | king deaths    2.6
+  r301-350: king eats nat    5.3 own    7.1 en    0.4 | others eat  176.2 | own deaths   64.2 (lenSum  174.2) near-king(<=2)    2.6 lenSum    6.7 | king deaths    0.5
+  r351-400: king eats nat    4.8 own    8.7 en    0.1 | others eat   82.7 | own deaths   21.9 (lenSum   82.7) near-king(<=2)    0.8 lenSum    3.2 | king deaths    0.1
+  r401-450: king eats nat    6.0 own    8.2 en    0.1 | others eat   47.0 | own deaths   12.7 (lenSum   63.8) near-king(<=2)    0.8 lenSum    8.0 | king deaths    0.0
+  r451-500: king eats nat    7.4 own    7.0 en    0.2 | others eat   32.2 | own deaths   10.2 (lenSum   44.4) near-king(<=2)    0.6 lenSum    8.8 | king deaths    0.1
+  own corpse pearls made r250+  282.7  eaten by king   32.6 ally  208.4 enemy   26.7
+
+### usvc: 20 round-limit games, maps Counter({'Slithery Fight': 8, 'Portals': 6, 'Schooltime': 4, 'Autarky': 1, 'Default': 1})
+ win    0.2  nmax(200-350)   50.4  n<=half at  331.4  king>=20 at  360.4  king>=30 at  401.4
+  r250 n   45.3 tot  114.2 top1    6.0 top2    4.5 top3    3.8
+  r275 n   36.8 tot  103.8 top1    9.5 top2    6.2 top3    5.3
+  r300 n   31.4 tot   97.3 top1   12.7 top2    8.2 top3    6.2
+  r325 n   26.4 tot   93.8 top1   15.6 top2    9.3 top3    7.2
+  r350 n   22.9 tot   93.5 top1   18.9 top2   11.5 top3    8.1
+  r375 n   22.6 tot   96.8 top1   19.3 top2   13.2 top3    9.2
+  r400 n   22.0 tot  105.2 top1   21.8 top2   15.4 top3   10.6
+  r425 n   25.1 tot  120.8 top1   25.3 top2   17.1 top3   11.3
+  r450 n   23.8 tot  127.8 top1   28.9 top2   19.6 top3   12.2
+  r475 n   16.2 tot  132.6 top1   33.0 top2   21.1 top3   15.6
+  r201-300: king eats nat    4.2 own    7.8 en    0.2 | others eat  459.4 | own deaths  194.8 (lenSum  483.1) near-king(<=2)    7.8 lenSum   17.9 | king deaths    0.9
+  r301-350: king eats nat    2.7 own    5.0 en    0.3 | others eat  178.6 | own deaths   78.9 (lenSum  187.9) near-king(<=2)    2.5 lenSum    5.6 | king deaths    0.5
+  r351-400: king eats nat    2.6 own    4.8 en    0.0 | others eat  168.7 | own deaths   68.2 (lenSum  159.1) near-king(<=2)    1.4 lenSum    3.5 | king deaths    0.1
+  r401-450: king eats nat    2.9 own    6.6 en    0.1 | others eat  175.9 | own deaths   65.5 (lenSum  160.8) near-king(<=2)    2.2 lenSum    7.5 | king deaths    0.1
+  r451-500: king eats nat    5.3 own    4.5 en    0.3 | others eat  121.5 | own deaths   38.5 (lenSum  118.7) near-king(<=2)    0.8 lenSum    2.0 | king deaths    0.0
+  own corpse pearls made r250+  499.4  eaten by king   27.4 ally  415.4 enemy   30.6
+
+### uspeer: 61 round-limit games, maps Counter({'Portals': 16, 'Slithery Fight': 12, 'Schooltime': 11, 'Autarky': 8, 'Trauma': 6, 'Queen Of Spades': 5, 'Default': 3})
+ win    0.4  nmax(200-350)   48.6  n<=half at  382.5  king>=20 at  355.5  king>=30 at  390.9
+  r250 n   43.0 tot  115.0 top1    7.8 top2    4.8 top3    4.1
+  r275 n   39.1 tot  111.6 top1   10.3 top2    6.1 top3    5.0
+  r300 n   36.2 tot  112.8 top1   12.4 top2    7.6 top3    6.2
+  r325 n   33.5 tot  112.1 top1   14.1 top2    9.0 top3    7.0
+  r350 n   31.3 tot  112.9 top1   16.0 top2   10.3 top3    8.0
+  r375 n   30.7 tot  116.4 top1   18.7 top2   11.8 top3    8.5
+  r400 n   31.0 tot  123.3 top1   21.7 top2   12.8 top3    9.7
+  r425 n   28.7 tot  126.1 top1   25.0 top2   13.8 top3   10.8
+  r450 n   25.6 tot  126.4 top1   28.8 top2   15.0 top3   11.1
+  r475 n   18.8 tot  127.9 top1   32.2 top2   17.2 top3   12.9
+  r201-300: king eats nat    4.0 own    5.2 en    0.4 | others eat  371.0 | own deaths  145.4 (lenSum  368.7) near-king(<=2)    5.2 lenSum   11.9 | king deaths    1.5
+  r301-350: king eats nat    2.2 own    4.0 en    0.2 | others eat  163.0 | own deaths   69.4 (lenSum  166.2) near-king(<=2)    2.6 lenSum    6.1 | king deaths    0.4
+  r351-400: king eats nat    2.9 own    5.1 en    0.1 | others eat  150.1 | own deaths   59.5 (lenSum  145.4) near-king(<=2)    2.0 lenSum    4.8 | king deaths    0.1
+  r401-450: king eats nat    3.1 own    6.2 en    0.1 | others eat  144.0 | own deaths   58.5 (lenSum  148.3) near-king(<=2)    2.0 lenSum    6.0 | king deaths    0.1
+  r451-500: king eats nat    4.2 own    5.4 en    0.0 | others eat   99.0 | own deaths   33.7 (lenSum  108.0) near-king(<=2)    0.7 lenSum    4.7 | king deaths    0.0
+  own corpse pearls made r250+  437.3  eaten by king   24.3 ally  366.3 enemy   23.8
+
+### uspeerop: 61 round-limit games, maps Counter({'Portals': 16, 'Slithery Fight': 12, 'Schooltime': 11, 'Autarky': 8, 'Trauma': 6, 'Queen Of Spades': 5, 'Default': 3})
+ win    0.6  nmax(200-350)   40.8  n<=half at  376.1  king>=20 at  367.3  king>=30 at  401.2
+  r250 n   35.6 tot  107.4 top1    8.5 top2    5.8 top3    4.8
+  r275 n   36.9 tot  110.5 top1    8.2 top2    5.7 top3    4.7
+  r300 n   36.3 tot  112.4 top1    8.8 top2    6.0 top3    4.9
+  r325 n   35.3 tot  114.0 top1   10.6 top2    6.8 top3    5.2
+  r350 n   33.1 tot  113.8 top1   11.9 top2    8.0 top3    6.0
+  r375 n   26.5 tot  108.5 top1   16.0 top2    9.6 top3    6.9
+  r400 n   20.6 tot  102.8 top1   20.2 top2   11.5 top3    7.8
+  r425 n   13.8 tot   92.3 top1   25.1 top2   14.3 top3    8.6
+  r450 n   11.2 tot   90.2 top1   29.5 top2   15.2 top3    9.7
+  r475 n    9.2 tot   89.0 top1   33.0 top2   16.1 top3   10.0
+  r201-300: king eats nat    7.4 own    5.6 en    0.5 | others eat  244.2 | own deaths   82.7 (lenSum  226.4) near-king(<=2)    3.1 lenSum    7.7 | king deaths    1.9
+  r301-350: king eats nat    3.1 own    4.5 en    0.2 | others eat  120.9 | own deaths   43.4 (lenSum  116.6) near-king(<=2)    3.1 lenSum    7.8 | king deaths    1.0
+  r351-400: king eats nat    1.5 own    8.1 en    0.1 | others eat  103.2 | own deaths   40.8 (lenSum  117.9) near-king(<=2)    2.9 lenSum    9.6 | king deaths    0.2
+  r401-450: king eats nat    2.3 own    8.7 en    0.1 | others eat   67.9 | own deaths   25.2 (lenSum   86.1) near-king(<=2)    2.6 lenSum    9.9 | king deaths    0.1
+  r451-500: king eats nat    3.1 own    6.5 en    0.1 | others eat   43.4 | own deaths   15.1 (lenSum   50.5) near-king(<=2)    1.3 lenSum    6.1 | king deaths    0.0
+  own corpse pearls made r250+  281.0  eaten by king   30.1 ally  212.4 enemy   26.4

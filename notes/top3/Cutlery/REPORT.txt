@@ -1,0 +1,219 @@
+CUTLERY (team 306, elo ~2058) - how they play, and where it beats us
+======================================================================
+Written 30 Sep 2026 ~02:10 UTC.
+Data:
+  - 48 fresh Cutlery replays, 29 Sep 23:29 to 30 Sep 01:56 UTC (GET only). They are in notes/top3/Cutlery/replays, listed in index.json.
+    - 38 of them are against elo >= 1900 opponents: forgot to mention, free trip to sydney pls, glory to ra, Stockfish, Sabotage-d, bread first search.
+    - 10 are against 1700-1899 peers. All 10 maps are covered, 4-5 games each.
+  - Our 15 games vs Cutlery from the ledger (v28/v29 era, 29 Sep 15:34-18:28).
+  - 80 of our games vs elo >= 1950 (ledger, since 29 Sep 15:00, the 8 most recent per map).
+  - 70 v30/v31 server A/B games vs top-10: ab_kc31, ab_pf31, ab_v30kc, ab_v30sch (Portals, Slithery, Autarky, Schooltime only).
+Group names used below:
+  - cut = Cutlery in its own games.
+  - cutvus = Cutlery vs us.
+  - us = our games vs >= 1950.
+  - usC = us vs Cutlery.
+  - u31 = v30/v31 A/B.
+  - opp/usopp = the other side of those games.
+Scripts are in notes/top3/Cutlery/ and run from the project root. They reuse notes/tools/midgame/sim2.py.
+  - list.py, fetch.py: listing and download.
+  - collect.py: writes metrics.pkl. agg.py prints the tables, saved in agg_out.txt.
+  - Analysis scripts: curves.py, onset.py, feed.py, kingsrc.py, scav.py, churn.py, lendist.py, early.py, zones.py, sprints.py, rams.py, nva.py.
+"King maps" means Autarky, Portals, Schooltime, Slithery Fight and Trauma, in round-limit games only.
+
+CONTEXT: WHERE THE ELO GAP IS
+------------------------------
+- Head to head we are even with Cutlery: 8/15 (usC).
+- The gap is in how each team does against the rest of the field, map by map. Win rates since 29 Sep 15:00 vs >= 1800 opponents:
+
+    map            us            Cutlery (last 2.5 h vs >= 1800)
+    Schooltime     12/44  27%    9/10
+    Slithery       15/51  29%    5/10
+    Autarky        22/61  36%    6/8
+    Portals        32/62  52%    5/11
+    Trauma         24/24 100%    7/10
+    Default        36/47  77%    5/10
+    Devil          19/31  61%    3/8   (0/5 in our sample)
+    Dilemma        20/25  80%    4/8
+    QoS            21/30  70%    6/10  (we lost both QoS games vs them, eliminated r179/r225)
+    Trophy         13/20  65%    6/9
+
+- Cutlery also wins 88% against < 1800 opponents (201 games); we win 84%.
+- Our losses are on the big boards that go the full 500 rounds, where the longest dragon decides.
+- Cutlery is weak on Devil and Default, where we are strong. Their small-map play is NOT something to copy.
+
+KEY NUMBERS (means per team-game)
+----------------------------------
+Timeline: units / total length / longest, all maps (agg_out.txt):
+
+    group        r50        r100       r200       r300       r400        r500
+    cut-strong   14/36/3.7  21/56/4.1  29/81/4.7  27/84/7.2  14/68/18.4  10/68/23.3
+    us           16/38/3.7  24/57/3.9  32/82/5.1  32/90/8.0  30/97/12.7  22/98/18.9
+    usC          21/50/3.4  28/66/3.9  34/82/4.0  28/80/8.3  24/85/13.9  17/89/20.1
+    cutvus       18/46/4.3  24/63/4.4  31/89/6.2  30/98/6.1  16/77/14.9  13/83/20.7
+
+- Until ~r300 we match or lead them.
+- From r300 to r400 they cut their unit count in half and the king jumps.
+
+King maps, round-limit games, fine curve (curves.py). Columns: units / total / longest.
+
+    round       250         300         325         350         375         400         450         500
+    Cutlery     45/145/9.1  40/142/11.0 38/137/12.9 27/120/19.9 19/110/26.3 14/109/31.2 10/110/38.2  7/117/43.0
+    us          43/114/9.2  35/109/13.2 32/107/15.5 30/108/17.6 31/113/19.9 30/117/22.8 27/123/27.9 16/124/34.5
+    their opps  35/98/7.1   34/98/8.2   33/101/9.8  31/101/11.0 27/102/13.8 23/98/15.3  14/89/24.7   8/87/32.9
+
+King eats per 25-round window:
+- Cutlery: 2.0 at r300 → 7.4 at r325 → 6.6 → 5.3 → 4.1.
+- Ours: 2.7-3.4, flat until r425.
+
+Eats per 100 head-rounds (all sources) by phase (r0-60 / r61-200 / r201-350 / r351-500):
+- Cutlery: 10.3 / 8.6 / 8.1 / 10.7.
+- Us: 11.9 / 8.5 / 7.8 / 9.5.
+- Our harvest rate per head is NOT worse. Totals differ by map (below).
+
+Deaths:
+- Cutlery never dies by HitSelf or HitWall. All their non-ram deaths are NoValidAction with 0 free neighbours, i.e. a trapped pump parent or a feeder.
+- 94% of those pearls are eaten by Cutlery itself, 63% within 5 rounds.
+- This is the same thing as our HitSelf pump/feeder deaths, only labelled differently. It is not a behaviour gap by itself.
+
+Rams (head-on, both die):
+- Initiated / received per game: cut 22.3/16.9, us 20.8/16.4. Against us: Cutlery 22.9 / us 15.1.
+- Local heads within 6, own/enemy: at their initiations 3.6/3.0; when they get rammed 2.5/4.6.
+- The corpse race after rams is even: they collect 64, we collect 59 per game in our 15 games. So rams are NOT a big differentiator in unit or length terms, except on QoS (below).
+
+Portals:
+- Crossings per phase: cut 12/55/60/5, us 13/56/61/28. Deaths while crossing are about the same.
+- No difference, except they barely cross after r350 because they have few units left.
+
+Endgame:
+- Enemy heads within 6 of the king (r400-499): 0.53 vs 0.60 (same).
+- Own heads within 6 of the king: 0.57 vs 1.69.
+- King deaths per game: 0.34 vs 0.28.
+- Second longest at r500: 9.5 vs 10.3. On king maps their top-6 at r499 is 43/20/12/10/8/5 vs ours 34.5/17.7/13.3/9.7/8.0/6.6.
+
+BEHAVIOURS, RANKED BY HOW MUCH OF THEIR ADVANTAGE THEY EXPLAIN
+------------------------------------------------------------
+
+1. [GENERAL] A late, violent king rally: no feeding before ~r300, then collapse the swarm into one king by ~r400.
+   What they do:
+   - Keep the full swarm and do no king-feeding until r300-330.
+     - King at r300 is only 11.0 (ours 13.2).
+     - Near-king deaths r200-300: 1.2/window (ours 1.2-2.5, rising from r250).
+   - Then the unit count falls about 65% within 50 rounds:
+     - onset.py: steepest 50-round unit drop starts at r294-346 on every king map.
+     - Units 26→8 Portals, 49→21 Schooltime, 55→19 Slithery, 40→13 Autarky, 33→12 Trauma.
+   - Split stop (splits < 35% of the mid-game rate): r362-400. Ours (v28-v31): r450-489, and 381-397 on Schooltime.
+   - King +15-21 within 75 rounds of the drop (ours +7-14). King eats r300-399: 21.1 vs 11.9 (kingsrc.py). They come from:
+     - own corpses from feeders that died 3-6 tiles away: 17.7 vs 6.8. The feeders are mostly within 4-5 of the king and approaching it (+5.3 tiles over their last 6 rounds).
+     - spawns: 2.4 vs 4.4.
+   - Medium dragons are fed too: L>=4 own deaths r300-349 are 7.3/game vs ours 1.2-2.5. 23% of the corpse sources the king eats are L4-8, against 11% for us.
+   - Pearls go to the top: in r300-399, 34% of own-corpse pearls are eaten by the top-5 dragons (king 9.8+9.9 per game); ours 16% (king 3.5+3.7). Our pearls go to L2-3 dragons, which churn them again.
+   Result:
+   - Longest on king maps: r400 31.2 vs 22.8, r500 43.0 vs 34.5.
+   - Same numbers split by map (Cutlery / us):
+
+        map            r400 king   final king
+        Autarky        28          45 vs 19
+        Portals        29          39 vs 31
+        Schooltime     25          46 vs 29
+        Slithery       44          54 vs 41
+
+   Our current config does nearly the opposite on the big boards:
+   - main.cpp KING_V2 table: Slithery seed 170 / feed 250 / split stop 370; Schooltime 200/260/340; Portals 250/300/360. LATE_SPLIT_ROUND is 450.
+   - So we start feeding early, while the swarm is still growing, and keep small dragons splitting until 450-475.
+   - v31 A/B games still show it:
+     - Slithery+Schooltime: 51.7 voluntary (free-neighbour) own deaths per game in r100-320, against Cutlery 3.9 (churn.py).
+     - The unit drop comes at r263 on Schooltime and r302 on Slithery, but the king only reaches 15-30 by r+75.
+   Note: notes/16 (older top-10 sample) said "top teams keep splitting to r450 and feed from r350". Current Cutlery splits at 30/window until r325, 18 at r350, 12 at r375, 8 at r400. Treat the notes/16 LATE_SPLIT conclusion as stale for Cutlery.
+   Suggested lever:
+   - Per map, or better one global schedule: feedStart ~320-330, splitStop ~360-380, LATE_SPLIT_ROUND ~370.
+   - Allow L4-8 feeders from r320.
+   - Feed 3-5 tiles ahead on the king's path rather than 1-2 (FEED_DIST 4 is close; the KING_V2 "spot" rule forces 1-2 ahead).
+   - Needs a server A/B on Slithery+Schooltime vs top-10. Self-play cannot show it.
+
+2. [GENERAL for maps with dead ends/corridors; biggest on Slithery and Schooltime] Tip splits with variable k: bank length in L4-9 dragons instead of L2s.
+   Split parent L / child k in r100-300 (share of all splits; the remaining shares are small):
+
+      map         Cutlery                                           us / v31
+      Slithery    L4→2 39%, L5→3 19%, L6→4 19%, L7-9→5 18%          L4→2 69-71%, L5→2 6%
+                  (>=56 units)                                      (all at >=56 units), L5→3 2%
+      Schooltime  L4→2 62%, L9→5 10%, L5→3 9%, L6→4 7%, L7→5 4%     L4→2 84%, L5+→2 12%
+      Portals     L4→2 68%, L5→3 14%, L6→4 3%                       L4→2 90-95%
+      Trauma      L4→2 89%, k>=3 ~6%                                L4→2 >99%
+
+   - The rule is: keep 2 at the head, child = min(L-2, 5). The L2 parent is left at the dead-end tip and dies trapped (63% within 2 rounds); the child leaves from the old tail with L3-5.
+   - Tip splits r60-320: 114/game vs us 3, v31 22.
+   Result:
+   - Mean unit length (lendist.py):
+     - Slithery 3.1/3.6/3.8 at r150/250/320, against ours 2.5/2.6-2.7/3.9-4.0.
+     - Schooltime 3.4/3.6/4.1, against ours 2.7/2.8-3.2.
+     - 17-24% of their Slithery units are L4-5 and 6-10% are L6-9; ours 5-11% and 0-2%.
+   - Fewer splits and less churn: k=2 splits r60-320 202/game vs ours 345-407; Slithery+Schooltime deaths r100-320 312 vs 360-382.
+   - More total mass:
+     - Slithery total at r250-325: 225-230 vs 144-165.
+     - Schooltime: 191-208 vs 118-129.
+     - At the 64-unit cap they reach 225 total with 60 units; we hit the cap with L2s.
+   - Early totals r150 (early.py): Slithery 194 vs 148, Schooltime 120 vs 77, Autarky 76 vs 56.
+   Our levers:
+   - PUMP_TIP_SPLIT and POCKET_FACTORY with PF_CHILD_MAX (v30 ships PF_CHILD_MAX=2, i.e. 2-long children).
+   - Cutlery's evidence says the child should take the rest up to 5 (PF_CHILD_MAX=0 or 5). Allowing it at high unit counts (>=56) on corridor maps is the general form: grow to L5-9, then tip-split.
+
+3. [GENERAL] A full sprint repertoire. We only sprint to ram with L3 two-steppers.
+   Sprints per game (sprints.py):
+   - Cutlery: kill 13.8, eat 8.3, escape (enemy head <=4 and farther after) 5.5, other 10.4.
+   - Us: kill 9.6, everything else 0.6.
+   Detail:
+   - 26% of their sprints are 3 steps. Ours: 0.7%.
+   - 3-step rams: 4.0/game. Ours: 0 (tryRam only looks at distance 1-2).
+   - L4-7 sprint rams: 2.6/game vs 0.2. In games vs us: 3.2 vs 0.07.
+   - Kings sprint: 3.6 L10+ sprints per game.
+   - Vs us, 18.0 of their 22.9 rams hit a dragon that was already inside their 2-3 step reach before they moved; 4.1 walked into it that turn (rams.py).
+   - Our threat model is MAX_THREAT_REACH 1 for small dragons, so our L2-3s loiter inside sprint reach.
+   Impact: medium. It pays mainly through corpse position and small-map fights; on QoS vs us they rammed 13.5 vs 2.5 per game.
+   - EAT_SPRINT (0.46) and SMALL_SPRINT_THREAT were rejected in self-play only. Both deserve a server A/B, since self-play cannot reward them.
+   - Suggested: allow a 3-step ram (and L4-7 rams when locally ahead); make reach 2 for small dragons when not locally ahead.
+
+4. [GENERAL, strongest on large open boards] Wider early spread and harvest coverage.
+   - Nearest-own-head distance at r60: 4.8 vs 3.8.
+   - Share of map tiles visited by heads r0-60: 0.278 vs 0.238.
+   - Distinct spawn tiles eaten r0-150: Schooltime 100 vs 60, Slithery 91 vs 81, Autarky 38 vs 33 (early.py).
+   - Schooltime (zones.py): they farm the wrap strip y30-39 across the full width (82 spawn eats r0-150 vs our 19) and their home corner (50 vs 21). Our heads bunch in two mid columns.
+   - The strip part is map-specific. The general part is the dispersion: a stronger crowd penalty or a per-head territory.
+
+5. [MAP-SPECIFIC] QoS spade rooms plus ram dominance.
+   - In both QoS games vs us, Cutlery ate 91-101 spawns in r61-200 (ours 2-29) and grew from 9.5 to 21 units, while we stayed at 6.
+   - They rammed 13.5 vs 2.5 per game (local 3.0/1.6) and eliminated us at r179 and r225.
+   - Against the field on QoS: rams 14.6 vs 3.8 received, win 4/5.
+
+6. [GENERAL, low] Endgame hygiene.
+   - Few units left, so only 0.6 own heads near the king (ours 1.7).
+   - King deaths are about the same, enemy pressure on the king is the same, and they keep "lieutenants" of L15/10/8 at r400.
+   - Mostly a by-product of #1.
+
+7. [NO EDGE / THEY ARE WORSE]
+   - Opening: same r0 split count (1.8), first later split r10-15. 81% k=2 in r0-60 vs our 100% (their k=3 are early tip splits). r50 units 14 vs 16. No edge.
+   - Portal use: no edge.
+   - Raw harvest per head-round: no edge.
+   - Devil: 0/5; rams 31/26 per game with local odds 5.2/5.4, so they get out-traded.
+   - Default: 2/5.
+
+WHAT IS GENERAL (MAP-AGNOSTIC)
+------------------------------
+- #1 rally timing and intensity: every round-limit map, same ~r300-330 onset.
+- #3 sprint repertoire and threat reach.
+- #4 dispersion.
+- #2 is general for any map with dead ends or corridors (tip-split rule), largest on crowded boards near the unit cap.
+- #5 and the Schooltime wrap strip are map-specific.
+
+SUGGESTED TEST ORDER
+--------------------
+1. Rally schedule (one global table): feed ~325, split stop ~370, LATE_SPLIT 370, L4-8 feeders allowed. Server A/B Slithery+Schooltime (+Portals) vs top-10.
+2. Tip split with child up to 5 (PF_CHILD_MAX 5 / PUMP_TIP_SPLIT) when units >= 56 or exits <= 1. Slithery+Schooltime.
+3. 3-step / L4-7 rams plus 2-step reach for unescorted small dragons. QoS+Dilemma+Slithery.
+
+CAVEATS
+-------
+- Cutlery samples are 4-8 games per map. In 23 of 31 round-limit Cutlery games there is a 25-round window with >= 4 near-king feed deaths (feed.py). The per-map mean unit-drop onset is r294-346 on every king map (onset.py).
+- The "us" set is mostly v28/v29. v31 (u31) only covers 4 maps, but shows the same early feed and late split stop.
+- sim2 counts L14 starters as 1 long until their first split (Autarky), and the "king" is the longest dragon, not our declared king.
+- "Voluntary" death means >= 1 free neighbour at death. Our feed suicides are HitSelf into the neck.

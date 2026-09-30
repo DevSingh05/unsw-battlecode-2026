@@ -1,0 +1,221 @@
+cheji bt (team 70, elo ~2119, #1): what they do, measured against us
+=====================================================================
+Written 30 Sep 2026 (UTC). Read-only study; no games run.
+
+DATA
+- 40 of cheji's most recent games against strong peers (elo >= 1900, not us), <= 4 per map, all 10 maps:
+  forgot to mention 2039, 中国必须人能飞 2027, SSS 2026, Sabotage-d 1988, Sponge 1965.
+  Played 30 Sep 00:36-02:02 UTC. Files: replays/<id>.replay, index.json (kind=peer), listing.json (300 listed games).
+  cheji won 27/40.
+- 34 of our games against cheji: ledger (15), replays/ab_* (14) and 5 new ones from 30 Sep (649046-649050, kind=vsus).
+  We won 8/34. Round-limit games 4/20, elimination games 4/14.
+- Control: 107 of our games since 29 Sep 15:00 against the SAME peer teams (ledger). We won 56/107.
+- Groups used below:
+    cheji  = cheji vs peers        cpeer    = those peers
+    uspeer = us vs the same peers  uspeerop = those peers
+    cvsus  = cheji vs us           usvc     = us vs cheji
+  Unless marked "map-avg", numbers are per game.
+- Scripts are in this directory (all read-only over the replays):
+  - list.py / list2.py / fetch.py: listing and download (GET only, 1.2 s apart)
+  - analyze.py -> metrics.pkl; agg.py [section] (output in out_all.txt)
+  - consol.py (endgame consolidation, out_consol.txt, consol.pkl); wave.py (per-round unit counts)
+  - feedeff.py, survive.py, hazard.py, localfeed.py (who feeds whom)
+  - bigmerge.py (big-dragon merges and U-turn splits); splitline.py (splits/deaths/eats per 25 rounds)
+  - sprints.py, sprint_eat.py, corpserace.py (sprint use and the corpse race); bleed.py (where mass goes, r200-325)
+
+HOW CHEJI WINS
+- Elimination is 47% of their games (map-avg; ours 30%). They lose by elimination 15% of the time (ours 19%).
+- Against us they win 16/20 round-limit games, and on Portals, Slithery and Schooltime they win them on king length.
+- On Portals the two sides never touch (0 rams), so it is a pure economy plus conversion race. We have MORE mass at
+  r300 (84 v 69) and still lose 5/6: their final king is 42 against our 31.
+- Their weak spot: in 15 round-limit games against peers they are only 7/15.
+  - They spread the endgame mass over a top 3 (r400 top3 = 26/21/19, 38/25/23).
+  - A peer that grew ONE king early beats them on Slithery: SSS 79 v 40, Sabotage-d 84 v 35.
+
+KEY NUMBERS (cheji | us, same-peer control; "vs" = the direct cheji-v-us games)
+- Units n / total length / longest, map-avg:
+
+    round   cheji             us(peer)          vs: cheji        vs: us
+    r60     15.9/38.8/4.1     19.1/45.5/3.7     16.1/38.9/3.8    19.3/45.8/3.5
+    r100    24.8/59.3/3.9     26.1/63.3/4.0     22.0/53.4/3.8    26.5/63.7/3.5
+    r200    32.5/87.0/4.6     34.2/88.0/5.2     26.5/70.9/3.7    28.6/69.1/3.0
+    r300    35.5/98.1/4.9     32.3/94.7/9.1     28.8/79.1/4.2    22.4/60.7/5.6
+    r400    20.9/89.6/12.4    29.8/101.7/14.5   12.9/74.4/13.2   18.3/61.5/8.7
+    r500    19.5/80.4/18.1    20.8/101.6/20.8   11.6/68.8/23.0   15.7/79.6/15.9
+
+- Round-limit games vs us (20): n / total / top1
+    r250  cheji 46.8 / 133.9 / 6.5     us 45.3 / 114.2 / 6.0
+    r325  cheji 47.4 / 146.6 / 10.5    us 26.4 /  93.8 / 15.6
+    r350  cheji 14.6 / 120.0 / 18.4    us 22.9 /  93.5 / 18.9
+    r400  cheji  6.9 / 119.2 / 28.1    us 22.0 / 105.2 / 21.8
+    r475  cheji  4.5 / 109.0 / 44.9    us 16.2 / 132.6 / 33.0
+- King >= 20 at r355 for both teams. King >= 30 at about r401 for both, but by r475 theirs is 45 and ours 33.
+- Opening (r1-60), map-avg: first split r9.1 v 12.5; eats 56 v 91; deaths 11 v 26; nearest-own-head distance at
+  r30 6.5 v 4.6. We are AHEAD on mass at r60 (45.5 v 38.8).
+- Splits per game by phase (r1-60 / 61-200 / 201-350 / 351-500): cheji 21/69/52/12, us 40/125/116/73.
+  - 4 -> 2+2 splits in r351-500: cheji 0.55, us 63.
+- Deaths per game by phase: cheji 11/53/62/14, us 26/110/120/81.
+  - Cheji's non-ram deaths are all "NoValidAction": the bot outputs no action and the dragon dies in place. They never
+    use HitSelf or HitWall. Where the pearls land is the same either way, so this is cosmetic.
+- Rams per game (r61-200 / 201-350): cheji 12.8/6.4, us 13.4/9.0 (vs peers).
+  - Directly vs us: cheji 11.9/12.0, us 10.5/7.1.
+  - Schooltime vs us, r201-350: 48.8 v 22.2.
+- Sprints per game: cheji 83 (2-step 2581, 3-step 612, 4+ 112 over 40 games), us 14.
+  - Cheji's sprints: 37 to eat, 10 to kill, 10 to flee, 25 other.
+  - Ours are almost all L3 2-step rams: kill 13, eat 0.2.
+  - Sprint-eats per game: cheji 62 (27 of them corpse pearls, 31 contested with an enemy head within 3 of the pearl);
+    vs us, 110.
+- Corpse race, vs us (h2h corpses in r1-350, 178 pearls per game): cheji eats 106, we eat 71; 31 of cheji's are
+  eaten by sprint, 0.9 of ours.
+  - Enemy-corpse eats in r61-200 / 201-350: cheji 18.8/20.4, us 11.9/9.9.
+- Mass r200 -> r325, round-limit games vs us: cheji +14.7, us -20.1.
+  - Natural eats are equal (258 v 252) and enemy h2h deaths are equal (31 v 31).
+  - The gap: enemy-corpse eats 34 v 18, and our churn. We have 198 suicide deaths (480 length) v 73 (205), and
+    218 splits v 118.
+- Endgame "big merges", r300+ (non-king dragons of L >= 8 that die), vs us:
+  cheji 6.2 per game (98 length; the king eats 12.6 of the pearls), us 2.3 (29 length; the king eats 0.95).
+- Feeding target, r330-500: our own-corpse pearls go 63% to dragons outside the team's top 10 (the pump). For our
+  chosen small deaths, the nearest visible bigger ally is L<5 in 2048 of 2710 cases.
+  - Cheji in the wave (r325-360): 29.5 of 53 pearls per game go to the specific nearest visible bigger ally, which is
+    usually L5-14.
+- Portal crossings per game by phase: 11/57/60/5 v 14/62/59/30; fatal 0.3/4.8/6.1/0.3 v 1.6/5.1/6.0/3.0.
+  Not a gap except late, and late only because we still have many units.
+- King safety: king-to-nearest-enemy-head distance r400+ is 11.0 v 11.7. Deaths of L >= 10 dragons by enemy ram are
+  0.33 v 0.49 per game. Not a major gap.
+
+BEHAVIOURS, RANKED BY HOW MUCH OF THEIR ADVANTAGE THEY EXPLAIN
+------------------------------------------------------------------------------------------------
+1. THE r325 CONSOLIDATION WAVE (general, map-agnostic)
+   What they do:
+   - Until about r320 every dragon stays small (L2-5, top1 about 7). The team sits at the unit cap on the big boards
+     (64 on Slithery and Schooltime) and does about 21 growth splits per 25 rounds.
+   - At r325, on every map, splitting drops to 10 per 25 rounds, and to 3-5 after r350.
+   - Small dragons then die in place (no action), next to a LONGER ally that is in their 7x7 view.
+     - Death hazard per round for L<=5 in r325-360: 0.26 when an L>=10 ally is visible, 0.16 when an L5-9 ally is
+       visible, 0.027 when none is. In r250-320 it is 0.015-0.03 whatever is visible.
+     - The nearest visible bigger ally eats the corpse: 55% of the pearls go to that exact dragon, 92% to the team.
+   - Units fall 47 -> 15 in 25 rounds (the burst peaks at r330-342) and are down to about 5 by r450, while total
+     mass drops only 147 -> 120.
+   - The result is a local, tournament-style merge into a TIER of medium dragons, with top3 about 18/14/12 at r350
+     and 28/22/18 at r400. Nothing has to travel to one global king.
+   Evidence:
+   - wave.py: every round-limit game, on Slithery, Portals, Schooltime, Trauma and Autarky, starts at r320-330.
+   - splitline.py: cheji 21 -> 10 -> 7 splits per 25 rounds; deaths 21 -> 42 -> 12.
+   - hazard.py, localfeed.py, feedeff.py: eaters in the wave are L5-19 in 60% of cases.
+   - The same pattern holds in all 20 cheji-v-us round-limit games.
+   What we do instead:
+   - We keep 4 -> 2+2 splitting to r450: LATE_SPLIT_ROUND 450, LATE_SPLIT_MAXLEN 5
+     (variants/v31/params.hpp:550, main.cpp:3420). That makes 30-35 splits and 30-37 deaths per 25 rounds right up
+     to r450, and 22-25 units at r400-450.
+   - Our feeding goes to one consensus king only (shouldFeed, main.cpp:1965-1980: kingLen >= myLen+2, the
+     KC_FEED_FRAC 0.75 consensus, KING_V2_FEED_LEN 3 until r380 and 6 until KING_V2_MERGE_ROUND 420), so most small
+     dragons have no one to feed.
+   - Their pearls recycle among L2-4 pump dragons: 63% of our own-corpse pearls in r330-500 go to dragons outside
+     the top 10.
+   - Conversion on Portals, a pure race with no contact: cheji turns 62% of its r325 mass into the final king
+     (42/68); we turn 41% (31/76). At cheji's rate our r325 mass would make a king of about 47, which beats their 42.
+   Impact:
+   - This is the main reason for our round-limit losses: 16/20 against cheji, including 5/6 on Portals, where we had
+     more mass.
+   - Map-avg king at r475: 44.9 v 33.0.
+   Suggested flag, WAVE_R=325 (behind a flag; for the bot agent to build):
+   - From WAVE_R, no growth splits for L<=5. Only U-turn/escape splits stay.
+   - A non-king dragon with L<=5 that sees a longer own head within Chebyshev 3 moves to the tile in front of that
+     head (FEED_AHEAD logic) and dies there, with no requirement that the target is the global king.
+   - Keep FEED_RESERVE about 4 "far" dragons as elimination insurance.
+   - A cheap first test: LATE_SPLIT_ROUND=330 alone.
+   - Test on the server: Portals (a clean king race) plus Slithery against top-10. Self-play cannot see this
+     (journal: LATE_SPLIT was accepted on self-play).
+
+2. DON'T BUILD THE KING BEFORE THE WAVE; KEEP THE SWARM HARVESTING (general)
+   What they do:
+   - Top1 at r300 is 7.6 (vs peers) and 7.4 (vs us); on Portals it is 4.5 at r300 and 5.8 at r325.
+   - Everything stays a small harvester until the wave, and team mass keeps growing r250 -> r325 (+13 vs us,
+     +10 vs peers).
+   What we do instead:
+   - We seed kings from r170-250 (KING_SEED_ROUND / RP.kingSeedRound, per map) and feed and pump from r250.
+     Top1 at r300: 12.7 vs cheji, 18.8 on Slithery.
+   - Team mass FALLS 114 -> 94 (r250 -> r325, vs cheji) because of pump churn. In r200-325: 162 trapped suicides per
+     game against their 55, and own-corpse re-eats of 298 against 176, i.e. mass recycled at a loss.
+   - It fits notes/23 (mass retention) and notes/22 (pump nets -0.2 per cycle).
+   Impact:
+   - About 35 of mass by r325 in the direct games (tot325 94 v 147).
+   - On Slithery we lead the king race to r375 (25.5 v 26.5 at r375, bigger at r300) and still lose it at r450-500
+     (37.5 v 46.8), because their mass pool is 40 larger.
+   Caveat:
+   - Trauma is the counter-example: our single early king wins 6/6 against peers there, and cheji is 1/3 on Trauma.
+   - Keep the per-map king seed where it wins (Trauma), and test a later seed or no seed on Slithery and Portals only
+     together with WAVE_R.
+
+3. BIG-DRAGON MERGE INTO THE KING, r350-480 (general)
+   What they do:
+   - After the wave, the medium tier grows. Then the smaller big dragons (L8-32) die, with no action, within 1-2
+     tiles of the king.
+   - Examples: 650042 r436, an L28 dies next to the L38 king, which eats 12 of the 14 pearls. 650303 r433, an L26
+     dies next to the L27 king, which eats 12.
+   - Per game vs us: 6.2 such deaths (98 length); the king eats 12.6 of the pearls. Us: 2.3 deaths (29 length); the
+     king eats 0.95.
+   - They also U-turn big dragons: split k = L-2 and let the L2 front die at once (23.7 such L >= 10 splits per game
+     after r300, 5 of them by the king). We do 13.2 big splits per game.
+   What we do instead:
+   - Big non-kings only feed after KING_V2_MERGE_ROUND 420, and only a king that is 2 or more longer. Self-declared
+     kings step down only after hearing TWO longer kings (the notes/forensics A1 KING_MERGE_STEPDOWN proposal is not
+     in v31).
+   - Our big deaths after r300 are mostly HitSelf or rams, not merges.
+   Impact:
+   - About +12 king length per game in the direct games.
+   - Their own weak point: they keep a top 3 until too late (r400 top3 38/25/23), and single-king peers beat them.
+     So merge the tier into ONE king earlier: KING_V2_MERGE_ROUND of about 380 plus KING_MERGE_STEPDOWN.
+
+4. SPRINT-GRAB OF CONTESTED AND CORPSE PEARLS (general)
+   What they do:
+   - About 62 sprint-eats per game (110 vs us), 11% of all their eats.
+   - 44% are corpse pearls, 50% are contested (an enemy head within 3 of the pearl), and most happen in r61-350
+     around fights.
+   - Mostly L3-4 dragons doing 2-step moves (2581) and 3-step moves (612). Net length per sprint: -1 (1447),
+     0 (871), +1 (433).
+   - They pay about 1 length for tempo.
+   - Result: they win the post-fight corpse race 106 v 71 per game vs us (31 of theirs by sprint) and 73 v 41 vs
+     peers.
+   What we do instead:
+   - We sprint only to ram (EAT_SPRINT=0, params.hpp:448). It was rejected at 0.46 in v15 self-play, which cannot
+     show a corpse race against a sprinting opponent.
+   Impact:
+   - About +35 corpse pearls per game in the direct games, and 16 of the 35-mass r200-325 gap.
+   - It matters most on contact maps: Schooltime, Slithery, Autarky, Devil.
+   Suggestion:
+   - A narrow EAT_SPRINT: only when at least one pearl on the path is a fresh corpse pearl (dropped in the last 3
+     rounds) AND an enemy head is within 3 of it, with L >= 3, max 2-3 steps, and the usual step-by-step threat check.
+   - Server A/B on Schooltime and Slithery.
+
+5. MIDGAME FIGHT VOLUME vs US ON SCHOOLTIME (partly map-specific)
+   - Cheji rams us 48.8 times per game in r201-350 on Schooltime (28.6 of them sprint rams, 31 while locally ahead),
+     against our 22.
+   - Our units collapse r200-300 (41 -> 17) while theirs reach 64, and the mass gap at r300 is 199 v 63.
+   - Elsewhere, ram counts are even (Slithery 19 v 17) and the ramahead fractions are similar.
+   - This is the known Schooltime layout-B swarm war (notes/forensics); not new, and not a generic lever.
+
+6. EARLY FIGHTS ON SMALL POCKET MAPS (map-specific; known)
+   - We are eliminated on Autarky 6/6, QoS 2/2 and Devil 2/3.
+   - Devil (649048, 632910): cheji rams 8-11 times before r80 and eats 75-96 pearls by r60 against our 31. Units at
+     r60 are 25 v 5 and 14 v 2.
+   - QoS: our trapped HitSelf deaths (6-7) plus 3-4 rams leave us at 4-7 units at r60 v 9-11.
+   - Autarky is the pocket race of notes/22 and the POCKET_FACTORY work.
+   - Nothing cheji-specific beyond what notes/22 and notes/forensics already cover.
+
+NOT LEVERS (checked, no gap in our disfavour)
+- The opening (r1-60): we split and eat more and are ahead on mass at r60. Cheji spreads wider (nn30 6.5 v 4.6), but
+  notes/16 found SPREAD_GENERIC low-value.
+- Portal crossing rate and fatality in r1-350: equal.
+- King safety and distance to enemy heads late: equal. Their king actually dies slightly more (0.47 v 0.25 per game,
+  L >= 8 longest dying after r300).
+- Death style: cheji dies by "NoValidAction" (no action, dies in place); we die by HitSelf. The pearls land the same.
+- Correction to notes/16 #3 ("top teams keep splitting after r350"): cheji, the #1 team, does NOT. It makes 0.55
+  splits of 4 -> 2+2 after r350, against our 63. LATE_SPLIT_ROUND=450 came from that premise.
+
+WHAT TO TEST FIRST (server A/B against top-10; self-play cannot show king races)
+  a) LATE_SPLIT_ROUND=330 plus local feeding to any visible longer ally from r325 (#1).
+     Portals plus Slithery. Measure top1 at r475 and conversion (top1 at r475 / total at r325).
+  b) a) plus KING_V2_MERGE_ROUND=380 plus KING_MERGE_STEPDOWN (#3).
+  c) Corpse-only EAT_SPRINT (#4) on Schooltime plus Slithery. Measure the corpse race share
+     (corpserace.py; target > 50%).

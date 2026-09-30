@@ -964,3 +964,8 @@
 #ifndef CROWN_INHERIT
 #define CROWN_INHERIT 0
 #endif
+// ---- notes/top3/PLAN.txt A: top-3 teams stop splitting after ~r330 on king maps and consolidate;
+// no LATE_SPLIT small splits from this round on maps where we declare a king (0 = off)
+#ifndef LATE_SPLIT_KING_MAPS
+#define LATE_SPLIT_KING_MAPS 0
+#endif

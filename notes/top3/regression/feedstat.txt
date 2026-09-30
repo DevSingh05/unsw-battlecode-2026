@@ -1,0 +1,14 @@
+Portals          v30 n=30 W=16  own-corpse eats by L>=10 after r300: us 34.9 them 31.6 | final longest 32.3 v 30.7
+Portals          v31 n=21 W= 7  own-corpse eats by L>=10 after r300: us 25.7 them 39.7 | final longest 27.6 v 36.6
+Schooltime       v30 n=29 W=16  own-corpse eats by L>=10 after r300: us 36.9 them 42.0 | final longest 30.3 v 32.1
+Schooltime       v31 n= 5 W= 3  own-corpse eats by L>=10 after r300: us 57.0 them 35.8 | final longest 35.0 v 36.8
+Slithery Fight   v30 n=43 W=18  own-corpse eats by L>=10 after r300: us 80.3 them 69.3 | final longest 44.0 v 46.8
+Slithery Fight   v31 n=18 W=12  own-corpse eats by L>=10 after r300: us 75.1 them 76.9 | final longest 55.1 v 49.0
+Trauma           v30 n=13 W=11  own-corpse eats by L>=10 after r300: us 13.0 them 17.3 | final longest 42.3 v 28.2
+Trauma           v31 n= 7 W= 5  own-corpse eats by L>=10 after r300: us 15.4 them 19.1 | final longest 41.6 v 28.4
+Portals          v30 n=19 W= 6  own-corpse eats by L>=10 after r300: us 33.6 them 38.7 | final longest 30.0 v 35.8
+Portals          v31 n=19 W= 6  own-corpse eats by L>=10 after r300: us 26.9 them 41.8 | final longest 28.4 v 37.9
+Slithery Fight   v30 n=29 W= 7  own-corpse eats by L>=10 after r300: us 77.3 them 80.4 | final longest 44.9 v 52.5
+Slithery Fight   v31 n=16 W=10  own-corpse eats by L>=10 after r300: us 76.8 them 79.8 | final longest 55.5 v 50.8
+Trauma           v30 n= 9 W= 7  own-corpse eats by L>=10 after r300: us 14.4 them 20.8 | final longest 42.2 v 33.3
+Trauma           v31 n= 6 W= 4  own-corpse eats by L>=10 after r300: us 16.2 them 21.3 | final longest 38.8 v 30.0

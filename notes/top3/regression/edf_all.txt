@@ -1,0 +1,69 @@
+647114 Slithery Fight forgot to mention W EDF lives 1 id1288 r471 L41 v31=MOVE EE noEDF=MOVE E
+647115 Portals forgot to mention W EDF lives 0 
+647132 Slithery Fight Team SKKU L EDF lives 1 id930 r333 L25 v31=MOVE ENE noEDF=MOVE E
+647133 Portals Team SKKU L EDF lives 0 
+647110 Slithery Fight 中国必须人能飞😡 W EDF lives 0 
+647111 Portals 中国必须人能飞😡 L EDF lives 0 
+647108 Slithery Fight Stockfish L EDF lives 0 
+647109 Portals Stockfish L EDF lives 0 
+647130 Slithery Fight bread first search W EDF lives 0 
+647131 Portals bread first search W EDF lives 0 
+647118 Slithery Fight Sponge(Albert and  L EDF lives 1 id1185 r335 L17 v31=MOVE SSS noEDF=MOVE S
+647119 Portals Sponge(Albert and  L EDF lives 0 
+647116 Slithery Fight 3.14159265 W EDF lives 0 
+647117 Portals 3.14159265 L EDF lives 0 
+647134 Slithery Fight Peanut Butter W EDF lives 3 id670 r244 L8 v31=MOVE ESE noEDF=MOVE E; id1665 r495 L8 v31=MOVE EE noEDF=MOVE E; id1733 r439 L11 v31=MOVE SSW noEDF=MOVE S
+647135 Portals Peanut Butter W EDF lives 0 
+647112 Slithery Fight calc W EDF lives 0 
+647113 Portals calc L EDF lives 0 
+647106 Slithery Fight cheji bt W EDF lives 0 
+647107 Portals cheji bt L EDF lives 0 
+649071 Autarky Stockfish W EDF lives 0 
+649072 Trauma Stockfish L EDF lives 0 
+649073 Slithery Fight Stockfish L EDF lives 1 id1678 r497 L13 v31=MOVE EE noEDF=MOVE E
+649074 Portals Stockfish W EDF lives 0 
+649046 Schooltime cheji bt L EDF lives 0 
+649047 Portals cheji bt L EDF lives 0 
+649830 Schooltime Sponge(Albert and  L EDF lives 0 
+649983 Portals Sabotage-d W EDF lives 0 
+649984 Trauma Sabotage-d W EDF lives 0 
+650524 Queen Of Spades Hypr Series W EDF lives 0 
+650442 Portals bread first search W EDF lives 0 
+650443 Schooltime bread first search W EDF lives 1 id167 r305 L10 v31=SPLIT 8 noEDF=MOVE E
+650444 Slithery Fight bread first search W EDF lives 0 
+650521 Schooltime Hypr Series L EDF lives 0 
+650525 Default Hypr Series W EDF lives 0 
+650522 Portals Hypr Series L EDF lives 0 
+650532 Trauma Hypr Series W EDF lives 0 
+650523 Slithery Fight Hypr Series W EDF lives 1 id524 r335 L33 v31=MOVE SS noEDF=MOVE S
+647383 Schooltime SSS L EDF lives 4 id514 r323 L25 v31=SPLIT 23 noEDF=MOVE E; id627 r316 L15 v31=SPLIT 13 noEDF=MOVE S; id933 r352 L15 v31=MOVE EE noEDF=MOVE E; id1077 r449 L8 v31=SPLIT 6 noEDF=MOVE S
+647384 Slithery Fight SSS L EDF lives 0 
+647385 Trauma SSS W EDF lives 0 
+650889 Portals bread first search W EDF lives 0 
+650890 Schooltime bread first search W EDF lives 0 
+650891 Slithery Fight bread first search L EDF lives 1 id1399 r369 L24 v31=MOVE EE noEDF=MOVE E
+650892 Default bread first search W EDF lives 0 
+651477 Trauma Team SKKU W EDF lives 0 
+651478 Autarky Team SKKU W EDF lives 0 
+651472 Portals calc L EDF lives 0 
+651475 Slithery Fight calc L EDF lives 0 
+651718 Portals Sabotage-d L EDF lives 0 
+651720 Trauma Sabotage-d L EDF lives 0 
+651722 Portals 3.14159265 L EDF lives 0 
+651725 Trauma 3.14159265 W EDF lives 0 
+651754 Schooltime forgot to mention W EDF lives 3 id933 r360 L10 v31=SPLIT 8 noEDF=MOVE E; id956 r395 L12 v31=MOVE EE noEDF=MOVE E; id1090 r497 L34 v31=MOVE EE noEDF=MOVE E
+651755 Default forgot to mention W EDF lives 0 
+651741 Portals Stockfish L EDF lives 0 
+651742 Slithery Fight Stockfish W EDF lives 1 id1083 r298 L8 v31=MOVE NN noEDF=MOVE S
+651743 Autarky Stockfish W EDF lives 0 
+651745 Trauma Stockfish L EDF lives 0 
+652122 Slithery Fight Sabotage-d W EDF lives 1 id1337 r358 L9 v31=MOVE EN noEDF=MOVE E
+652125 Portals Sabotage-d L EDF lives 0 
+652126 Queen Of Spades Sabotage-d W EDF lives 0 
+652128 Trauma Team SKKU W EDF lives 0 
+652129 Slithery Fight Team SKKU W EDF lives 0 
+652130 Queen Of Spades Team SKKU W EDF lives 0 
+652131 Portals Team SKKU L EDF lives 0 
+652118 Portals calc W EDF lives 0 
+652119 Autarky calc W EDF lives 0 
+total EDF-changed lives 19

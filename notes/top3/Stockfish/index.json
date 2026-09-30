@@ -1,0 +1,1322 @@
+[
+{
+"id": 651742,
+"ranked": true,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:53:13.362Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 952,
+"name": "Cache me outside",
+"elo": 2026
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "vsus",
+"sf": "b"
+},
+{
+"id": 651745,
+"ranked": true,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:52:36.234Z",
+"mapName": "Trauma",
+"a": {
+"id": 952,
+"name": "Cache me outside",
+"elo": 2026
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "vsus",
+"sf": "b"
+},
+{
+"id": 651743,
+"ranked": true,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:52:34.460Z",
+"mapName": "Autarky",
+"a": {
+"id": 952,
+"name": "Cache me outside",
+"elo": 2026
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "vsus",
+"sf": "b"
+},
+{
+"id": 651741,
+"ranked": true,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:52:26.884Z",
+"mapName": "Portals",
+"a": {
+"id": 952,
+"name": "Cache me outside",
+"elo": 2026
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "vsus",
+"sf": "b"
+},
+{
+"id": 651744,
+"ranked": true,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:52:02.236Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 952,
+"name": "Cache me outside",
+"elo": 2026
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "vsus",
+"sf": "b"
+},
+{
+"id": 649073,
+"ranked": true,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:08:50.716Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 952,
+"name": "Cache me outside",
+"elo": 2026
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "vsus",
+"sf": "b"
+},
+{
+"id": 649071,
+"ranked": true,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:07:54.184Z",
+"mapName": "Autarky",
+"a": {
+"id": 952,
+"name": "Cache me outside",
+"elo": 2026
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "vsus",
+"sf": "b"
+},
+{
+"id": 649072,
+"ranked": true,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:07:53.649Z",
+"mapName": "Trauma",
+"a": {
+"id": 952,
+"name": "Cache me outside",
+"elo": 2026
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "vsus",
+"sf": "b"
+},
+{
+"id": 649074,
+"ranked": true,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:07:45.633Z",
+"mapName": "Portals",
+"a": {
+"id": 952,
+"name": "Cache me outside",
+"elo": 2026
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "vsus",
+"sf": "b"
+},
+{
+"id": 649075,
+"ranked": true,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:07:25.018Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 952,
+"name": "Cache me outside",
+"elo": 2026
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "vsus",
+"sf": "b"
+},
+{
+"id": 650461,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:37:02.958Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 507,
+"name": "bread first search",
+"elo": 1968
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 650327,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:31:11.068Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 649969,
+"ranked": true,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:23:46.182Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 647371,
+"ranked": true,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": false,
+"at": "2026-09-30T01:03:08.227Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+},
+"kind": "strong",
+"sf": "a"
+},
+{
+"id": 646745,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:49:01.032Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 249,
+"name": "Team SKKU",
+"elo": 1984
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 647372,
+"ranked": true,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": false,
+"at": "2026-09-30T01:34:55.842Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+},
+"kind": "strong",
+"sf": "a"
+},
+{
+"id": 650325,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:29:28.359Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 646743,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:47:22.734Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 249,
+"name": "Team SKKU",
+"elo": 1984
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 644963,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:16:45.350Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 55,
+"name": "𓎼𓃭𓅱𓂋𓇌 𓏏𓅱 𓂋𓄿",
+"elo": 1950
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 645006,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:17:11.170Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 249,
+"name": "Team SKKU",
+"elo": 1984
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 650460,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:32:47.509Z",
+"mapName": "Schooltime",
+"a": {
+"id": 507,
+"name": "bread first search",
+"elo": 1968
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 650326,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:30:14.015Z",
+"mapName": "Schooltime",
+"a": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 649967,
+"ranked": true,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:23:49.917Z",
+"mapName": "Schooltime",
+"a": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 647374,
+"ranked": true,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": false,
+"at": "2026-09-30T01:03:12.410Z",
+"mapName": "Schooltime",
+"a": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+},
+"kind": "strong",
+"sf": "a"
+},
+{
+"id": 646744,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:48:09.818Z",
+"mapName": "Schooltime",
+"a": {
+"id": 249,
+"name": "Team SKKU",
+"elo": 1984
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 650462,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:31:30.207Z",
+"mapName": "Default",
+"a": {
+"id": 507,
+"name": "bread first search",
+"elo": 1968
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 650321,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:29:31.051Z",
+"mapName": "Default",
+"a": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 649971,
+"ranked": true,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:23:00.363Z",
+"mapName": "Default",
+"a": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 646739,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:47:30.442Z",
+"mapName": "Default",
+"a": {
+"id": 249,
+"name": "Team SKKU",
+"elo": 1984
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 644959,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:16:50.315Z",
+"mapName": "Default",
+"a": {
+"id": 55,
+"name": "𓎼𓃭𓅱𓂋𓇌 𓏏𓅱 𓂋𓄿",
+"elo": 1950
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 650459,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:31:26.497Z",
+"mapName": "Portals",
+"a": {
+"id": 507,
+"name": "bread first search",
+"elo": 1968
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 650323,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:29:49.199Z",
+"mapName": "Portals",
+"a": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 647373,
+"ranked": true,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": false,
+"at": "2026-09-30T01:24:41.059Z",
+"mapName": "Portals",
+"a": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+},
+"kind": "strong",
+"sf": "a"
+},
+{
+"id": 646741,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:47:40.815Z",
+"mapName": "Portals",
+"a": {
+"id": 249,
+"name": "Team SKKU",
+"elo": 1984
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 644961,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:16:45.368Z",
+"mapName": "Portals",
+"a": {
+"id": 55,
+"name": "𓎼𓃭𓅱𓂋𓇌 𓏏𓅱 𓂋𓄿",
+"elo": 1950
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 650328,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:30:03.960Z",
+"mapName": "Trauma",
+"a": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 649860,
+"ranked": true,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:22:09.691Z",
+"mapName": "Trauma",
+"a": {
+"id": 213,
+"name": "Sponge(Albert and Bob)",
+"elo": 1965
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 647375,
+"ranked": true,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": false,
+"at": "2026-09-30T01:21:02.896Z",
+"mapName": "Trauma",
+"a": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+},
+"kind": "strong",
+"sf": "a"
+},
+{
+"id": 646746,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:47:54.720Z",
+"mapName": "Trauma",
+"a": {
+"id": 249,
+"name": "Team SKKU",
+"elo": 1984
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 642851,
+"ranked": true,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": false,
+"at": "2026-09-30T00:20:46.105Z",
+"mapName": "Trauma",
+"a": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"b": {
+"id": 801,
+"name": "中国必须人能飞😡",
+"elo": 2027
+},
+"kind": "strong",
+"sf": "a"
+},
+{
+"id": 650320,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:29:49.433Z",
+"mapName": "Autarky",
+"a": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 649857,
+"ranked": true,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:22:18.164Z",
+"mapName": "Autarky",
+"a": {
+"id": 213,
+"name": "Sponge(Albert and Bob)",
+"elo": 1965
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 646738,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:47:45.721Z",
+"mapName": "Autarky",
+"a": {
+"id": 249,
+"name": "Team SKKU",
+"elo": 1984
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 644958,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:16:50.449Z",
+"mapName": "Autarky",
+"a": {
+"id": 55,
+"name": "𓎼𓃭𓅱𓂋𓇌 𓏏𓅱 𓂋𓄿",
+"elo": 1950
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 642850,
+"ranked": true,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": false,
+"at": "2026-09-30T00:14:28.162Z",
+"mapName": "Autarky",
+"a": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"b": {
+"id": 801,
+"name": "中国必须人能飞😡",
+"elo": 2027
+},
+"kind": "strong",
+"sf": "a"
+},
+{
+"id": 650322,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:29:28.898Z",
+"mapName": "Devil",
+"a": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 649968,
+"ranked": true,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:22:48.603Z",
+"mapName": "Devil",
+"a": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 649859,
+"ranked": true,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:21:29.863Z",
+"mapName": "Devil",
+"a": {
+"id": 213,
+"name": "Sponge(Albert and Bob)",
+"elo": 1965
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 646740,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:47:24.756Z",
+"mapName": "Devil",
+"a": {
+"id": 249,
+"name": "Team SKKU",
+"elo": 1984
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 642853,
+"ranked": true,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": false,
+"at": "2026-09-30T00:28:42.367Z",
+"mapName": "Devil",
+"a": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"b": {
+"id": 801,
+"name": "中国必须人能飞😡",
+"elo": 2027
+},
+"kind": "strong",
+"sf": "a"
+},
+{
+"id": 650324,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:29:25.275Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 649858,
+"ranked": true,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:21:28.964Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 213,
+"name": "Sponge(Albert and Bob)",
+"elo": 1965
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 646742,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:47:21.698Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 249,
+"name": "Team SKKU",
+"elo": 1984
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 644962,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:16:38.323Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 55,
+"name": "𓎼𓃭𓅱𓂋𓇌 𓏏𓅱 𓂋𓄿",
+"elo": 1950
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 645005,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:17:02.467Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 249,
+"name": "Team SKKU",
+"elo": 1984
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 650329,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:29:24.973Z",
+"mapName": "Trophy",
+"a": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 649970,
+"ranked": true,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:22:47.711Z",
+"mapName": "Trophy",
+"a": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 649861,
+"ranked": true,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:21:29.679Z",
+"mapName": "Trophy",
+"a": {
+"id": 213,
+"name": "Sponge(Albert and Bob)",
+"elo": 1965
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 646747,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:47:28.794Z",
+"mapName": "Trophy",
+"a": {
+"id": 249,
+"name": "Team SKKU",
+"elo": 1984
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+},
+{
+"id": 644967,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:16:29.308Z",
+"mapName": "Trophy",
+"a": {
+"id": 55,
+"name": "𓎼𓃭𓅱𓂋𓇌 𓏏𓅱 𓂋𓄿",
+"elo": 1950
+},
+"b": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"kind": "strong",
+"sf": "b"
+}
+]

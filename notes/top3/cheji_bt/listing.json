@@ -1,0 +1,6002 @@
+[
+{
+"id": 652086,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T02:02:32.721Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 652082,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T02:00:39.373Z",
+"mapName": "Schooltime",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 652286,
+"ranked": true,
+"status": "pending",
+"winner": null,
+"hasReplay": false,
+"challenge": false,
+"at": "2026-09-30T02:00:00.000Z",
+"mapName": "Autarky",
+"a": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+},
+"b": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+}
+},
+{
+"id": 652285,
+"ranked": true,
+"status": "running",
+"winner": null,
+"hasReplay": false,
+"challenge": false,
+"at": "2026-09-30T02:00:00.000Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+},
+"b": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+}
+},
+{
+"id": 652284,
+"ranked": true,
+"status": "running",
+"winner": null,
+"hasReplay": false,
+"challenge": false,
+"at": "2026-09-30T02:00:00.000Z",
+"mapName": "Schooltime",
+"a": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+},
+"b": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+}
+},
+{
+"id": 652283,
+"ranked": true,
+"status": "pending",
+"winner": null,
+"hasReplay": false,
+"challenge": false,
+"at": "2026-09-30T02:00:00.000Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+},
+"b": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+}
+},
+{
+"id": 652282,
+"ranked": true,
+"status": "pending",
+"winner": null,
+"hasReplay": false,
+"challenge": false,
+"at": "2026-09-30T02:00:00.000Z",
+"mapName": "Default",
+"a": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+},
+"b": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+}
+},
+{
+"id": 651788,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:58:34.966Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 652085,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:56:50.337Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 652084,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:56:48.668Z",
+"mapName": "Default",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 652083,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:56:43.962Z",
+"mapName": "Trophy",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651789,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:56:16.892Z",
+"mapName": "Trauma",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651787,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:56:16.669Z",
+"mapName": "Schooltime",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651784,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:55:20.622Z",
+"mapName": "Portals",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651564,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:54:56.561Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 187,
+"name": "avid coders",
+"elo": 1684
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651782,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:53:56.093Z",
+"mapName": "Default",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651781,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:53:41.366Z",
+"mapName": "Autarky",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651783,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:52:59.171Z",
+"mapName": "Devil",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651790,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:52:52.475Z",
+"mapName": "Trophy",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651645,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:52:42.811Z",
+"mapName": "Trauma",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651644,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:52:37.176Z",
+"mapName": "Portals",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651785,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:52:24.806Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651786,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:52:23.428Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651404,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:51:45.716Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651560,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:51:35.369Z",
+"mapName": "Portals",
+"a": {
+"id": 187,
+"name": "avid coders",
+"elo": 1684
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651642,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:50:58.444Z",
+"mapName": "Autarky",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651565,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:50:25.533Z",
+"mapName": "Trauma",
+"a": {
+"id": 187,
+"name": "avid coders",
+"elo": 1684
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651400,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:50:04.430Z",
+"mapName": "Portals",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651643,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:50:02.861Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651563,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:50:02.086Z",
+"mapName": "Schooltime",
+"a": {
+"id": 187,
+"name": "avid coders",
+"elo": 1684
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651558,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:50:01.344Z",
+"mapName": "Default",
+"a": {
+"id": 187,
+"name": "avid coders",
+"elo": 1684
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651646,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:49:57.965Z",
+"mapName": "Devil",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651403,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:49:54.803Z",
+"mapName": "Schooltime",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651405,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:49:50.469Z",
+"mapName": "Trauma",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651566,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:49:19.264Z",
+"mapName": "Trophy",
+"a": {
+"id": 187,
+"name": "avid coders",
+"elo": 1684
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651559,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:49:15.694Z",
+"mapName": "Devil",
+"a": {
+"id": 187,
+"name": "avid coders",
+"elo": 1684
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651557,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:49:09.136Z",
+"mapName": "Autarky",
+"a": {
+"id": 187,
+"name": "avid coders",
+"elo": 1684
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651562,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:48:56.215Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 187,
+"name": "avid coders",
+"elo": 1684
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651561,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:48:54.594Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 187,
+"name": "avid coders",
+"elo": 1684
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651218,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:48:14.025Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 7,
+"name": "Just Keep Swimming",
+"elo": 1737
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651397,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:48:03.450Z",
+"mapName": "Autarky",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651406,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:47:48.022Z",
+"mapName": "Trophy",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651398,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:47:45.327Z",
+"mapName": "Default",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651399,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:46:56.233Z",
+"mapName": "Devil",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651402,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:46:41.178Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651401,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:46:32.989Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651225,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:45:49.166Z",
+"mapName": "Trauma",
+"a": {
+"id": 7,
+"name": "Just Keep Swimming",
+"elo": 1737
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651217,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:44:59.002Z",
+"mapName": "Portals",
+"a": {
+"id": 7,
+"name": "Just Keep Swimming",
+"elo": 1737
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651216,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:44:51.239Z",
+"mapName": "Schooltime",
+"a": {
+"id": 7,
+"name": "Just Keep Swimming",
+"elo": 1737
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650912,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:44:22.052Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651220,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:43:27.684Z",
+"mapName": "Default",
+"a": {
+"id": 7,
+"name": "Just Keep Swimming",
+"elo": 1737
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650908,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:43:21.556Z",
+"mapName": "Schooltime",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651223,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:43:16.125Z",
+"mapName": "Autarky",
+"a": {
+"id": 7,
+"name": "Just Keep Swimming",
+"elo": 1737
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651219,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:43:03.613Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 7,
+"name": "Just Keep Swimming",
+"elo": 1737
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651222,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:43:03.383Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 7,
+"name": "Just Keep Swimming",
+"elo": 1737
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651221,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:42:59.931Z",
+"mapName": "Trophy",
+"a": {
+"id": 7,
+"name": "Just Keep Swimming",
+"elo": 1737
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 651224,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:42:51.761Z",
+"mapName": "Devil",
+"a": {
+"id": 7,
+"name": "Just Keep Swimming",
+"elo": 1737
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650940,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:42:12.289Z",
+"mapName": "Autarky",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650938,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:40:58.630Z",
+"mapName": "Trauma",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650941,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:40:46.202Z",
+"mapName": "Portals",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650935,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:39:48.103Z",
+"mapName": "Schooltime",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650939,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:39:39.769Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650942,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:39:36.709Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650937,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:39:07.685Z",
+"mapName": "Devil",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650936,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:39:05.138Z",
+"mapName": "Trophy",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650933,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:38:56.470Z",
+"mapName": "Default",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650934,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:38:16.852Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650910,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:38:02.830Z",
+"mapName": "Default",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650307,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:37:36.094Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650911,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:37:34.621Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650909,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:37:32.129Z",
+"mapName": "Trophy",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650009,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:36:19.261Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650176,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:36:10.194Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 470,
+"name": "龙虎豹",
+"elo": 1816
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650298,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:33:45.812Z",
+"mapName": "Trauma",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650074,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:33:02.785Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 1034,
+"name": "wawow830",
+"elo": 1712
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650303,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:32:27.395Z",
+"mapName": "Portals",
+"a": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650003,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:32:19.251Z",
+"mapName": "Default",
+"a": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650042,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:32:12.962Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 213,
+"name": "Sponge(Albert and Bob)",
+"elo": 1965
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650297,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:32:05.345Z",
+"mapName": "Portals",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650296,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:31:44.964Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650295,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:31:40.845Z",
+"mapName": "Autarky",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650000,
+"ranked": true,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:31:28.935Z",
+"mapName": "Trauma",
+"a": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650306,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:31:09.267Z",
+"mapName": "Schooltime",
+"a": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650308,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:30:53.328Z",
+"mapName": "Trauma",
+"a": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650013,
+"ranked": true,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:30:38.328Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650309,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:30:13.465Z",
+"mapName": "Trophy",
+"a": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650302,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:29:49.154Z",
+"mapName": "Devil",
+"a": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650079,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:29:47.348Z",
+"mapName": "Autarky",
+"a": {
+"id": 1034,
+"name": "wawow830",
+"elo": 1712
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650301,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:29:34.942Z",
+"mapName": "Default",
+"a": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650170,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:29:30.050Z",
+"mapName": "Trophy",
+"a": {
+"id": 470,
+"name": "龙虎豹",
+"elo": 1816
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650299,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:29:21.474Z",
+"mapName": "Devil",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650304,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:29:20.118Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650300,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:29:19.114Z",
+"mapName": "Autarky",
+"a": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650305,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:29:18.705Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650172,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:29:00.400Z",
+"mapName": "Trauma",
+"a": {
+"id": 470,
+"name": "龙虎豹",
+"elo": 1816
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650015,
+"ranked": true,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:28:53.801Z",
+"mapName": "Schooltime",
+"a": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650175,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:28:36.262Z",
+"mapName": "Portals",
+"a": {
+"id": 470,
+"name": "龙虎豹",
+"elo": 1816
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650078,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:28:24.804Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 1034,
+"name": "wawow830",
+"elo": 1712
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 647370,
+"ranked": true,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": false,
+"at": "2026-09-30T01:28:18.770Z",
+"mapName": "Portals",
+"a": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+},
+"b": {
+"id": 801,
+"name": "中国必须人能飞😡",
+"elo": 2027
+}
+},
+{
+"id": 650081,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:28:18.315Z",
+"mapName": "Trauma",
+"a": {
+"id": 1034,
+"name": "wawow830",
+"elo": 1712
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650169,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:28:17.875Z",
+"mapName": "Schooltime",
+"a": {
+"id": 470,
+"name": "龙虎豹",
+"elo": 1816
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650073,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:28:09.292Z",
+"mapName": "Portals",
+"a": {
+"id": 1034,
+"name": "wawow830",
+"elo": 1712
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649448,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:27:45.070Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 91,
+"name": "SSS",
+"elo": 2026
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650167,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:27:41.836Z",
+"mapName": "Default",
+"a": {
+"id": 470,
+"name": "龙虎豹",
+"elo": 1816
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650174,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:27:38.158Z",
+"mapName": "Autarky",
+"a": {
+"id": 470,
+"name": "龙虎豹",
+"elo": 1816
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650168,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:27:30.573Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 470,
+"name": "龙虎豹",
+"elo": 1816
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650038,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:27:16.829Z",
+"mapName": "Portals",
+"a": {
+"id": 213,
+"name": "Sponge(Albert and Bob)",
+"elo": 1965
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650072,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:27:16.051Z",
+"mapName": "Schooltime",
+"a": {
+"id": 1034,
+"name": "wawow830",
+"elo": 1712
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650041,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:27:12.430Z",
+"mapName": "Schooltime",
+"a": {
+"id": 213,
+"name": "Sponge(Albert and Bob)",
+"elo": 1965
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650171,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:27:00.030Z",
+"mapName": "Devil",
+"a": {
+"id": 470,
+"name": "龙虎豹",
+"elo": 1816
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650173,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:26:52.583Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 470,
+"name": "龙虎豹",
+"elo": 1816
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650005,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:26:28.163Z",
+"mapName": "Portals",
+"a": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650043,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:26:04.029Z",
+"mapName": "Trauma",
+"a": {
+"id": 213,
+"name": "Sponge(Albert and Bob)",
+"elo": 1965
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650077,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:26:00.956Z",
+"mapName": "Trophy",
+"a": {
+"id": 1034,
+"name": "wawow830",
+"elo": 1712
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649912,
+"ranked": true,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:25:58.080Z",
+"mapName": "Portals",
+"a": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650016,
+"ranked": true,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:25:54.685Z",
+"mapName": "Trauma",
+"a": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650080,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:25:49.591Z",
+"mapName": "Devil",
+"a": {
+"id": 1034,
+"name": "wawow830",
+"elo": 1712
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650076,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:25:37.052Z",
+"mapName": "Default",
+"a": {
+"id": 1034,
+"name": "wawow830",
+"elo": 1712
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650064,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:25:25.961Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 816,
+"name": "Aha",
+"elo": 1543
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649914,
+"ranked": true,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:25:15.095Z",
+"mapName": "Trauma",
+"a": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650075,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:25:13.552Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 1034,
+"name": "wawow830",
+"elo": 1712
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650035,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:25:07.118Z",
+"mapName": "Autarky",
+"a": {
+"id": 213,
+"name": "Sponge(Albert and Bob)",
+"elo": 1965
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650001,
+"ranked": true,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:24:56.103Z",
+"mapName": "Default",
+"a": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649999,
+"ranked": true,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:24:50.974Z",
+"mapName": "Schooltime",
+"a": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650036,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:24:35.988Z",
+"mapName": "Default",
+"a": {
+"id": 213,
+"name": "Sponge(Albert and Bob)",
+"elo": 1965
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649548,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:24:32.341Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 835,
+"name": "天天开心 :(",
+"elo": 1543
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650014,
+"ranked": true,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:24:25.202Z",
+"mapName": "Trophy",
+"a": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650010,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:24:20.644Z",
+"mapName": "Trauma",
+"a": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650040,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:24:15.214Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 213,
+"name": "Sponge(Albert and Bob)",
+"elo": 1965
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650044,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:24:13.927Z",
+"mapName": "Trophy",
+"a": {
+"id": 213,
+"name": "Sponge(Albert and Bob)",
+"elo": 1965
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650037,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:24:10.328Z",
+"mapName": "Devil",
+"a": {
+"id": 213,
+"name": "Sponge(Albert and Bob)",
+"elo": 1965
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649446,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:24:06.725Z",
+"mapName": "Schooltime",
+"a": {
+"id": 91,
+"name": "SSS",
+"elo": 2026
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650008,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:24:02.872Z",
+"mapName": "Schooltime",
+"a": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650039,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:24:01.913Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 213,
+"name": "Sponge(Albert and Bob)",
+"elo": 1965
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649695,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:24:00.033Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649998,
+"ranked": true,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:23:50.033Z",
+"mapName": "Autarky",
+"a": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650012,
+"ranked": true,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:23:48.069Z",
+"mapName": "Default",
+"a": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649915,
+"ranked": true,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:23:39.102Z",
+"mapName": "Default",
+"a": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649997,
+"ranked": true,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:23:37.798Z",
+"mapName": "Trophy",
+"a": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650002,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:23:36.236Z",
+"mapName": "Autarky",
+"a": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650004,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:23:30.569Z",
+"mapName": "Devil",
+"a": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650007,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:23:30.531Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 650011,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:23:25.581Z",
+"mapName": "Trophy",
+"a": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649913,
+"ranked": true,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:23:25.295Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 647367,
+"ranked": true,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": false,
+"at": "2026-09-30T01:23:24.964Z",
+"mapName": "Trauma",
+"a": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+},
+"b": {
+"id": 801,
+"name": "中国必须人能飞😡",
+"elo": 2027
+}
+},
+{
+"id": 650006,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:23:20.808Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649916,
+"ranked": true,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:22:47.129Z",
+"mapName": "Autarky",
+"a": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649423,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:21:49.156Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 998,
+"name": "we love gru",
+"elo": 1542
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649549,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:20:14.573Z",
+"mapName": "Trauma",
+"a": {
+"id": 835,
+"name": "天天开心 :(",
+"elo": 1543
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649544,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:19:52.041Z",
+"mapName": "Portals",
+"a": {
+"id": 835,
+"name": "天天开心 :(",
+"elo": 1543
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649692,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:19:47.430Z",
+"mapName": "Trophy",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649455,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:19:13.794Z",
+"mapName": "Trauma",
+"a": {
+"id": 91,
+"name": "SSS",
+"elo": 2026
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649691,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:19:13.791Z",
+"mapName": "Schooltime",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649693,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:19:00.141Z",
+"mapName": "Default",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 647369,
+"ranked": true,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": false,
+"at": "2026-09-30T01:18:33.081Z",
+"mapName": "Default",
+"a": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+},
+"b": {
+"id": 801,
+"name": "中国必须人能飞😡",
+"elo": 2027
+}
+},
+{
+"id": 649694,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:18:24.901Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649447,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:18:13.114Z",
+"mapName": "Portals",
+"a": {
+"id": 91,
+"name": "SSS",
+"elo": 2026
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649542,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:17:41.989Z",
+"mapName": "Default",
+"a": {
+"id": 835,
+"name": "天天开心 :(",
+"elo": 1543
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649398,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:17:31.428Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 91,
+"name": "SSS",
+"elo": 2026
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649422,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:17:24.939Z",
+"mapName": "Schooltime",
+"a": {
+"id": 998,
+"name": "we love gru",
+"elo": 1542
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649453,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:16:54.244Z",
+"mapName": "Autarky",
+"a": {
+"id": 91,
+"name": "SSS",
+"elo": 2026
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649541,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:16:51.980Z",
+"mapName": "Autarky",
+"a": {
+"id": 835,
+"name": "天天开心 :(",
+"elo": 1543
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649405,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:16:39.989Z",
+"mapName": "Trauma",
+"a": {
+"id": 91,
+"name": "SSS",
+"elo": 2026
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649550,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:16:35.751Z",
+"mapName": "Trophy",
+"a": {
+"id": 835,
+"name": "天天开心 :(",
+"elo": 1543
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649397,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:16:32.857Z",
+"mapName": "Portals",
+"a": {
+"id": 91,
+"name": "SSS",
+"elo": 2026
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649396,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:16:28.609Z",
+"mapName": "Schooltime",
+"a": {
+"id": 91,
+"name": "SSS",
+"elo": 2026
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649543,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:16:24.675Z",
+"mapName": "Devil",
+"a": {
+"id": 835,
+"name": "天天开心 :(",
+"elo": 1543
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649420,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:16:20.017Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 998,
+"name": "we love gru",
+"elo": 1542
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649547,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:16:19.111Z",
+"mapName": "Schooltime",
+"a": {
+"id": 835,
+"name": "天天开心 :(",
+"elo": 1543
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649546,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:16:18.576Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 835,
+"name": "天天开心 :(",
+"elo": 1543
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649416,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:16:15.783Z",
+"mapName": "Autarky",
+"a": {
+"id": 998,
+"name": "we love gru",
+"elo": 1542
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649545,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:16:14.180Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 835,
+"name": "天天开心 :(",
+"elo": 1543
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649451,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:15:55.777Z",
+"mapName": "Trophy",
+"a": {
+"id": 91,
+"name": "SSS",
+"elo": 2026
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649424,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:15:53.835Z",
+"mapName": "Trauma",
+"a": {
+"id": 998,
+"name": "we love gru",
+"elo": 1542
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649400,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:15:39.883Z",
+"mapName": "Default",
+"a": {
+"id": 91,
+"name": "SSS",
+"elo": 2026
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649454,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:15:28.105Z",
+"mapName": "Devil",
+"a": {
+"id": 91,
+"name": "SSS",
+"elo": 2026
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649419,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:15:14.434Z",
+"mapName": "Portals",
+"a": {
+"id": 998,
+"name": "we love gru",
+"elo": 1542
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649449,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:15:07.804Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 91,
+"name": "SSS",
+"elo": 2026
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649417,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:14:48.467Z",
+"mapName": "Default",
+"a": {
+"id": 998,
+"name": "we love gru",
+"elo": 1542
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649452,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:14:43.470Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 91,
+"name": "SSS",
+"elo": 2026
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649450,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:14:34.698Z",
+"mapName": "Default",
+"a": {
+"id": 91,
+"name": "SSS",
+"elo": 2026
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649425,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:14:28.521Z",
+"mapName": "Trophy",
+"a": {
+"id": 998,
+"name": "we love gru",
+"elo": 1542
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649418,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:14:20.590Z",
+"mapName": "Devil",
+"a": {
+"id": 998,
+"name": "we love gru",
+"elo": 1542
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649401,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:14:12.581Z",
+"mapName": "Trophy",
+"a": {
+"id": 91,
+"name": "SSS",
+"elo": 2026
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649163,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:14:04.721Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 1021,
+"name": "Zynx",
+"elo": 1700
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 648992,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:14:00.857Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649421,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:13:55.247Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 998,
+"name": "we love gru",
+"elo": 1542
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649399,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:13:09.883Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 91,
+"name": "SSS",
+"elo": 2026
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649161,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:13:08.871Z",
+"mapName": "Schooltime",
+"a": {
+"id": 1021,
+"name": "Zynx",
+"elo": 1700
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649403,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:13:00.962Z",
+"mapName": "Autarky",
+"a": {
+"id": 91,
+"name": "SSS",
+"elo": 2026
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649402,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:12:50.598Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 91,
+"name": "SSS",
+"elo": 2026
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649404,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:12:44.879Z",
+"mapName": "Devil",
+"a": {
+"id": 91,
+"name": "SSS",
+"elo": 2026
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649119,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:11:43.134Z",
+"mapName": "Portals",
+"a": {
+"id": 835,
+"name": "天天开心 :(",
+"elo": 1543
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649135,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:11:35.622Z",
+"mapName": "Trauma",
+"a": {
+"id": 370,
+"name": "Quant Merch Trader",
+"elo": 1775
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649170,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:11:08.455Z",
+"mapName": "Trauma",
+"a": {
+"id": 1021,
+"name": "Zynx",
+"elo": 1700
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649165,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:10:46.406Z",
+"mapName": "Default",
+"a": {
+"id": 1021,
+"name": "Zynx",
+"elo": 1700
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649162,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:10:46.349Z",
+"mapName": "Portals",
+"a": {
+"id": 1021,
+"name": "Zynx",
+"elo": 1700
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649000,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:10:44.168Z",
+"mapName": "Portals",
+"a": {
+"id": 82,
+"name": "free trip to sydney pls",
+"elo": 1901
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649046,
+"ranked": true,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:10:43.365Z",
+"mapName": "Schooltime",
+"a": {
+"id": 952,
+"name": "Cache me outside",
+"elo": 2026
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649168,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:10:13.721Z",
+"mapName": "Autarky",
+"a": {
+"id": 1021,
+"name": "Zynx",
+"elo": 1700
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 647368,
+"ranked": true,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": false,
+"at": "2026-09-30T01:10:07.445Z",
+"mapName": "Autarky",
+"a": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+},
+"b": {
+"id": 801,
+"name": "中国必须人能飞😡",
+"elo": 2027
+}
+},
+{
+"id": 648994,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:09:58.111Z",
+"mapName": "Trauma",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649133,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:09:55.233Z",
+"mapName": "Autarky",
+"a": {
+"id": 370,
+"name": "Quant Merch Trader",
+"elo": 1775
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649015,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:09:40.419Z",
+"mapName": "Portals",
+"a": {
+"id": 82,
+"name": "free trip to sydney pls",
+"elo": 1901
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649166,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:09:37.390Z",
+"mapName": "Trophy",
+"a": {
+"id": 1021,
+"name": "Zynx",
+"elo": 1700
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649123,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:09:31.718Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 835,
+"name": "天天开心 :(",
+"elo": 1543
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 648997,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:09:26.612Z",
+"mapName": "Default",
+"a": {
+"id": 82,
+"name": "free trip to sydney pls",
+"elo": 1901
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649167,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:09:11.131Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 1021,
+"name": "Zynx",
+"elo": 1700
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649164,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:09:06.481Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 1021,
+"name": "Zynx",
+"elo": 1700
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649169,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:09:04.625Z",
+"mapName": "Devil",
+"a": {
+"id": 1021,
+"name": "Zynx",
+"elo": 1700
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 647298,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:09:02.312Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 989,
+"name": "kraken",
+"elo": 1637
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649124,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:08:58.059Z",
+"mapName": "Trauma",
+"a": {
+"id": 835,
+"name": "天天开心 :(",
+"elo": 1543
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649047,
+"ranked": true,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:08:53.137Z",
+"mapName": "Portals",
+"a": {
+"id": 952,
+"name": "Cache me outside",
+"elo": 2026
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649118,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:08:49.963Z",
+"mapName": "Devil",
+"a": {
+"id": 835,
+"name": "天天开心 :(",
+"elo": 1543
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649131,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:08:49.857Z",
+"mapName": "Trophy",
+"a": {
+"id": 370,
+"name": "Quant Merch Trader",
+"elo": 1775
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649120,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:08:46.217Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 835,
+"name": "天天开心 :(",
+"elo": 1543
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649117,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:08:45.623Z",
+"mapName": "Default",
+"a": {
+"id": 835,
+"name": "天天开心 :(",
+"elo": 1543
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649116,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:08:43.556Z",
+"mapName": "Autarky",
+"a": {
+"id": 835,
+"name": "天天开心 :(",
+"elo": 1543
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649125,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:08:43.441Z",
+"mapName": "Trophy",
+"a": {
+"id": 835,
+"name": "天天开心 :(",
+"elo": 1543
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649134,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:08:43.375Z",
+"mapName": "Devil",
+"a": {
+"id": 370,
+"name": "Quant Merch Trader",
+"elo": 1775
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 647366,
+"ranked": true,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": false,
+"at": "2026-09-30T01:08:37.814Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+},
+"b": {
+"id": 801,
+"name": "中国必须人能飞😡",
+"elo": 2027
+}
+},
+{
+"id": 649121,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:08:37.694Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 835,
+"name": "天天开心 :(",
+"elo": 1543
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649132,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:08:32.898Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 370,
+"name": "Quant Merch Trader",
+"elo": 1775
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649122,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:08:27.456Z",
+"mapName": "Schooltime",
+"a": {
+"id": 835,
+"name": "天天开心 :(",
+"elo": 1543
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 648993,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:08:04.233Z",
+"mapName": "Portals",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649012,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:07:41.146Z",
+"mapName": "Default",
+"a": {
+"id": 82,
+"name": "free trip to sydney pls",
+"elo": 1901
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 648991,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:07:40.542Z",
+"mapName": "Autarky",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649011,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:07:12.569Z",
+"mapName": "Autarky",
+"a": {
+"id": 82,
+"name": "free trip to sydney pls",
+"elo": 1901
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649048,
+"ranked": true,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:06:57.018Z",
+"mapName": "Devil",
+"a": {
+"id": 952,
+"name": "Cache me outside",
+"elo": 2026
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649049,
+"ranked": true,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:06:51.686Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 952,
+"name": "Cache me outside",
+"elo": 2026
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 648996,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:06:50.308Z",
+"mapName": "Autarky",
+"a": {
+"id": 82,
+"name": "free trip to sydney pls",
+"elo": 1901
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649050,
+"ranked": true,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:06:49.604Z",
+"mapName": "Trophy",
+"a": {
+"id": 952,
+"name": "Cache me outside",
+"elo": 2026
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649013,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:06:39.378Z",
+"mapName": "Devil",
+"a": {
+"id": 82,
+"name": "free trip to sydney pls",
+"elo": 1901
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 648998,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:06:27.481Z",
+"mapName": "Devil",
+"a": {
+"id": 82,
+"name": "free trip to sydney pls",
+"elo": 1901
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 649014,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:06:26.327Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 82,
+"name": "free trip to sydney pls",
+"elo": 1901
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 648999,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:06:08.713Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 82,
+"name": "free trip to sydney pls",
+"elo": 1901
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 648995,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:05:55.994Z",
+"mapName": "Devil",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 647185,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:03:02.605Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 647106,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:02:54.070Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 952,
+"name": "Cache me outside",
+"elo": 2026
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 647294,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:00:13.356Z",
+"mapName": "Portals",
+"a": {
+"id": 989,
+"name": "kraken",
+"elo": 1637
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 647299,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:00:03.150Z",
+"mapName": "Trauma",
+"a": {
+"id": 989,
+"name": "kraken",
+"elo": 1637
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 647297,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:59:18.187Z",
+"mapName": "Schooltime",
+"a": {
+"id": 989,
+"name": "kraken",
+"elo": 1637
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 647291,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:59:01.400Z",
+"mapName": "Autarky",
+"a": {
+"id": 989,
+"name": "kraken",
+"elo": 1637
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 647293,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:58:45.680Z",
+"mapName": "Devil",
+"a": {
+"id": 989,
+"name": "kraken",
+"elo": 1637
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 647292,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:58:34.594Z",
+"mapName": "Default",
+"a": {
+"id": 989,
+"name": "kraken",
+"elo": 1637
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 647107,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:58:33.714Z",
+"mapName": "Portals",
+"a": {
+"id": 952,
+"name": "Cache me outside",
+"elo": 2026
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 647296,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:58:29.053Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 989,
+"name": "kraken",
+"elo": 1637
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 647295,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:58:21.716Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 989,
+"name": "kraken",
+"elo": 1637
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 647300,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:58:20.214Z",
+"mapName": "Trophy",
+"a": {
+"id": 989,
+"name": "kraken",
+"elo": 1637
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 647181,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:56:52.660Z",
+"mapName": "Schooltime",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 647182,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:56:35.555Z",
+"mapName": "Trophy",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 647183,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:56:16.228Z",
+"mapName": "Default",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 647184,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:55:49.682Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646837,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:53:54.271Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 952,
+"name": "Cache me outside",
+"elo": 2026
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646794,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:51:25.670Z",
+"mapName": "Portals",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646838,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:50:56.851Z",
+"mapName": "Portals",
+"a": {
+"id": 952,
+"name": "Cache me outside",
+"elo": 2026
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646795,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:50:41.775Z",
+"mapName": "Trauma",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646792,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:49:16.918Z",
+"mapName": "Autarky",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646796,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:48:49.048Z",
+"mapName": "Devil",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646793,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:48:33.956Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646507,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:47:09.985Z",
+"mapName": "Schooltime",
+"a": {
+"id": 952,
+"name": "Cache me outside",
+"elo": 2026
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646320,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:44:49.382Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 457,
+"name": "ddabap",
+"elo": 1930
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646240,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:43:31.907Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646241,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:41:54.514Z",
+"mapName": "Trauma",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646047,
+"ranked": true,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:41:41.761Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 501,
+"name": "Quaker Qubits",
+"elo": 1840
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646321,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:41:37.880Z",
+"mapName": "Trauma",
+"a": {
+"id": 457,
+"name": "ddabap",
+"elo": 1930
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646316,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:41:08.290Z",
+"mapName": "Portals",
+"a": {
+"id": 457,
+"name": "ddabap",
+"elo": 1930
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646180,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:41:07.509Z",
+"mapName": "Autarky",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646322,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:40:48.640Z",
+"mapName": "Trophy",
+"a": {
+"id": 457,
+"name": "ddabap",
+"elo": 1930
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646236,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:40:27.781Z",
+"mapName": "Portals",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646319,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:40:25.130Z",
+"mapName": "Schooltime",
+"a": {
+"id": 457,
+"name": "ddabap",
+"elo": 1930
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646179,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:40:12.022Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 645613,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:39:50.375Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 451,
+"name": "Candiru",
+"elo": 1661
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646181,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:39:48.086Z",
+"mapName": "Portals",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646062,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:39:41.329Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 467,
+"name": "STAR",
+"elo": 1860
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646239,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:39:37.052Z",
+"mapName": "Schooltime",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646314,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:39:27.548Z",
+"mapName": "Default",
+"a": {
+"id": 457,
+"name": "ddabap",
+"elo": 1930
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646313,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:39:21.529Z",
+"mapName": "Autarky",
+"a": {
+"id": 457,
+"name": "ddabap",
+"elo": 1930
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646182,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:39:21.399Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 645918,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:39:19.504Z",
+"mapName": "Schooltime",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646233,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:39:12.327Z",
+"mapName": "Autarky",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646044,
+"ranked": true,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:39:03.148Z",
+"mapName": "Trauma",
+"a": {
+"id": 501,
+"name": "Quaker Qubits",
+"elo": 1840
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646242,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:39:02.165Z",
+"mapName": "Trophy",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646315,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:38:47.633Z",
+"mapName": "Devil",
+"a": {
+"id": 457,
+"name": "ddabap",
+"elo": 1930
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646234,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:38:46.322Z",
+"mapName": "Default",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646318,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:38:39.971Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 457,
+"name": "ddabap",
+"elo": 1930
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646317,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:38:35.276Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 457,
+"name": "ddabap",
+"elo": 1930
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646175,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:38:28.358Z",
+"mapName": "Schooltime",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 645919,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:38:26.910Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646235,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:38:14.492Z",
+"mapName": "Devil",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646177,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:37:58.779Z",
+"mapName": "Devil",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646178,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:37:52.130Z",
+"mapName": "Trauma",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646173,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:37:34.514Z",
+"mapName": "Default",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646237,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:37:32.531Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646238,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:37:24.916Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646176,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:37:22.654Z",
+"mapName": "Trophy",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646174,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:37:13.134Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646043,
+"ranked": true,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:36:54.762Z",
+"mapName": "Autarky",
+"a": {
+"id": 501,
+"name": "Quaker Qubits",
+"elo": 1840
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 646046,
+"ranked": true,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:36:41.449Z",
+"mapName": "Default",
+"a": {
+"id": 501,
+"name": "Quaker Qubits",
+"elo": 1840
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+},
+{
+"id": 645920,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:36:40.615Z",
+"mapName": "Trauma",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 70,
+"name": "cheji bt",
+"elo": 2119
+}
+}
+]

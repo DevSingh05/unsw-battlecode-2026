@@ -1,0 +1,44 @@
+608218 v29  A W Sabotage-d         units r20  6- 4 r40 12- 5 r60 22- 8 r80 26- 6 r100 42- 6 | eats<=60  61- 27 | H2H<=100 our deaths mover 11 rammed  6, their mover  6 rammed 11
+608236 v29  A W Peanut Butter      units r20  6- 4 r40 11-10 r60 12- 8 r80 14-10 r100 26- 7 | eats<=60  60- 43 | H2H<=100 our deaths mover 25 rammed  4, their mover  4 rammed 25
+612774 v29  A W forgot to mention  units r20  3- 3 r40  8- 9 r60 11- 8 r80 17- 7 r100 30-11 | eats<=60  57- 47 | H2H<=100 our deaths mover 14 rammed  9, their mover  9 rammed 14
+612744 v29  A W Stockfish          units r20  3- 1 r40 13- 4 r60 23-10 r80 33- 9 r100 36- 7 | eats<=60  52- 17 | H2H<=100 our deaths mover  9 rammed  4, their mover  4 rammed  9
+612764 v29  A L 中国必须人能飞😡           units r20  6- 6 r40 19-13 r60 24-12 r80 23- 9 r100 17-10 | eats<=60  71- 44 | H2H<=100 our deaths mover 31 rammed 10, their mover 10 rammed 31
+612996 v29  B W Team SKKU          units r20  5- 1 r40  5- 0 r60  5- 0 r80  5- 0 r100  5- 0 | eats<=60  12-  2 | H2H<=100 our deaths mover  2 rammed  0, their mover  0 rammed  2
+612989 v29  B W 3.14159265         units r20  2- 2 r40  6- 3 r60 12- 1 r80 24- 1 r100 43- 1 | eats<=60  40- 13 | H2H<=100 our deaths mover  8 rammed  0, their mover  0 rammed  8
+612739 v29  A L calc               units r20  5- 4 r40 10- 8 r60 17-14 r80 17-17 r100 19-21 | eats<=60  51- 44 | H2H<=100 our deaths mover 15 rammed  6, their mover  6 rammed 15
+612729 v29  A W cheji bt           units r20  7- 2 r40 13- 4 r60 19- 7 r80 20- 5 r100 41- 3 | eats<=60  53- 27 | H2H<=100 our deaths mover 14 rammed  1, their mover  1 rammed 14
+613377 v29  B W 3.14159265         units r20  4- 5 r40 11- 8 r60 17- 7 r80 27- 6 r100 36- 8 | eats<=60  62- 34 | H2H<=100 our deaths mover 14 rammed  3, their mover  3 rammed 14
+616110 v29  B W SSS                units r20  4- 4 r40 13- 7 r60 21- 7 r80 33- 9 r100 40-12 | eats<=60  58- 26 | H2H<=100 our deaths mover 10 rammed  3, their mover  3 rammed 10
+616120 v29  B W SSS                units r20  4- 5 r40 14- 8 r60 25- 9 r80 31-10 r100 36- 6 | eats<=60  72- 33 | H2H<=100 our deaths mover 14 rammed  6, their mover  6 rammed 14
+617112 v29  A L Team SKKU          units r20  3- 3 r40  2- 5 r60  1-16 r80  1-32 r100  0-42 | eats<=60   9- 52 | H2H<=100 our deaths mover  3 rammed  4, their mover  4 rammed  3
+617234 v29  B W 3.14159265         units r20  4- 1 r40 10- 3 r60 18- 3 r80 31- 3 r100 47- 1 | eats<=60  49- 12 | H2H<=100 our deaths mover 11 rammed  0, their mover  0 rammed 11
+617076 v29  A W calc               units r20  2- 0 r40  2- 0 r60  2- 0 r80  2- 0 r100  2- 0 | eats<=60   1-  0 | H2H<=100 our deaths mover  1 rammed  0, their mover  0 rammed  1
+618030 v29  B L PPP                units r20  4- 6 r40  4-11 r60  4-17 r80  8-24 r100  4-38 | eats<=60  22- 49 | H2H<=100 our deaths mover 12 rammed  2, their mover  2 rammed 12
+618292 v29  B L Sabotage-d         units r20  1- 3 r40  6- 9 r60  6-11 r80  7-20 r100 10-23 | eats<=60  32- 40 | H2H<=100 our deaths mover 18 rammed  7, their mover  6 rammed 17
+625521 v29  A L Sponge(Albert and  units r20  3- 5 r40 11- 4 r60 13- 5 r80 12-15 r100  9-20 | eats<=60  55- 40 | H2H<=100 our deaths mover 15 rammed 12, their mover 12 rammed 15
+628907 v29  B L WeHaveQuizzes      units r20  3- 4 r40 10-14 r60 16-17 r80 21-19 r100 16-23 | eats<=60  57- 67 | H2H<=100 our deaths mover 14 rammed 16, their mover 16 rammed 14
+629018 v29  A L cheji bt           units r20  6- 6 r40 15-12 r60 19-16 r80 15-17 r100 14-17 | eats<=60  56- 49 | H2H<=100 our deaths mover 16 rammed 12, their mover 12 rammed 16
+629448 v29  A L forgot to mention  units r20  3- 4 r40  6-13 r60  7-15 r80  8-16 r100  4-24 | eats<=60  39- 51 | H2H<=100 our deaths mover 21 rammed  5, their mover  5 rammed 21
+629431 v29  A L calc               units r20  6- 6 r40 15- 8 r60 16-16 r80 19-23 r100 18-27 | eats<=60  52- 52 | H2H<=100 our deaths mover 16 rammed  5, their mover  5 rammed 16
+629662 v29  A W Peanut Butter      units r20  5- 4 r40 15- 7 r60 24-10 r80 33-11 r100 36-10 | eats<=60  58- 32 | H2H<=100 our deaths mover 18 rammed  6, their mover  6 rammed 18
+632476 v29  A W forgot to mention  units r20  3- 1 r40  2- 0 r60  2- 0 r80  2- 0 r100  2- 0 | eats<=60  11-  6 | H2H<=100 our deaths mover  4 rammed  0, their mover  0 rammed  4
+633483 v29  B W Sabotage-d         units r20  5- 5 r40  9- 5 r60 15-10 r80 22-13 r100 28-17 | eats<=60  45- 34 | H2H<=100 our deaths mover 14 rammed  4, their mover  4 rammed 14
+636078 other B L SSS                units r20  4- 5 r40  1-13 r60  1-23 r80  2-39 r100  0-54 | eats<=60   7- 61 | H2H<=100 our deaths mover  4 rammed  2, their mover  2 rammed  4
+636102 other B L SSS                units r20  4- 3 r40 10-10 r60 15-17 r80 16-20 r100 16-28 | eats<=60  45- 48 | H2H<=100 our deaths mover 12 rammed  4, their mover  4 rammed 12
+636870 other B L DESTINY 3          units r20  3- 4 r40  4-14 r60  3-23 r80  3-31 r100  0-41 | eats<=60  26- 86 | H2H<=100 our deaths mover  9 rammed  5, their mover  5 rammed  9
+637179 v29  B W cheji bt           units r20  6- 2 r40 12- 1 r60 15- 0 r80 15- 0 r100 15- 0 | eats<=60  40-  4 | H2H<=100 our deaths mover  4 rammed  0, their mover  0 rammed  4
+637562 v29  A L bread first search units r20  4- 6 r40  2-11 r60  0- 9 r80  0- 9 r100  0- 9 | eats<=60  11- 37 | H2H<=100 our deaths mover  2 rammed  5, their mover  5 rammed  2
+637540 v29  A L forgot to mention  units r20  6- 5 r40  5-12 r60  4-20 r80  1-32 r100  0-41 | eats<=60  23- 63 | H2H<=100 our deaths mover 10 rammed  4, their mover  4 rammed 10
+638374 v29  A W calc               units r20  8- 5 r40 17-12 r60 21-12 r80 26- 9 r100 35-13 | eats<=60  76- 54 | H2H<=100 our deaths mover 18 rammed  5, their mover  5 rammed 18
+638491 v30  A W bread first search units r20  3- 1 r40  8- 2 r60 10- 0 r80 10- 0 r100 10- 0 | eats<=60  32-  6 | H2H<=100 our deaths mover  4 rammed  1, their mover  1 rammed  4
+642262 v30  A W calc               units r20  5- 3 r40 17- 4 r60 28- 6 r80 31- 7 r100 41- 5 | eats<=60  71- 21 | H2H<=100 our deaths mover  9 rammed  8, their mover  8 rammed  9
+644845 v30  B W SSS                units r20  7- 4 r40 16- 3 r60 29- 5 r80 39- 4 r100 50- 2 | eats<=60  73- 12 | H2H<=100 our deaths mover  8 rammed  3, their mover  3 rammed  8
+644875 v30  B W SSS                units r20  4- 2 r40  8- 2 r60 12- 6 r80 22- 8 r100 27- 7 | eats<=60  42- 25 | H2H<=100 our deaths mover 13 rammed  7, their mover  7 rammed 13
+642864 v30  A W calc               units r20  6- 5 r40 12-10 r60 21-16 r80 20-17 r100 23-15 | eats<=60  47- 38 | H2H<=100 our deaths mover 16 rammed  9, their mover  8 rammed 15
+645905 v30  B W zitian             units r20  4- 4 r40 17- 8 r60 22- 9 r80 25- 9 r100 20-10 | eats<=60  62- 31 | H2H<=100 our deaths mover 21 rammed  5, their mover  5 rammed 21
+649050 v30  A W cheji bt           units r20  4- 2 r40 12- 2 r60 25- 2 r80 42- 1 r100 61- 1 | eats<=60  68- 17 | H2H<=100 our deaths mover  5 rammed  1, their mover  1 rammed  5
+649829 v31  B L Sponge(Albert and  units r20  1- 5 r40  1-13 r60  4-17 r80 10-19 r100 13-28 | eats<=60  37- 66 | H2H<=100 our deaths mover 13 rammed  3, their mover  3 rammed 13
+651473 v31  A L calc               units r20  4- 2 r40 13-11 r60 17-17 r80 17-20 r100 18-22 | eats<=60  48- 48 | H2H<=100 our deaths mover 20 rammed  4, their mover  4 rammed 20
+651716 v31  A L Sabotage-d         units r20  6- 5 r40 13-14 r60 15-14 r80 14-20 r100 13-18 | eats<=60  70- 69 | H2H<=100 our deaths mover 26 rammed 11, their mover 11 rammed 26
+651753 v31  A L forgot to mention  units r20  3- 3 r40  1-11 r60  4-21 r80  6-26 r100  2-37 | eats<=60  16- 51 | H2H<=100 our deaths mover 11 rammed  3, their mover  3 rammed 11
+652120 v31  A L calc               units r20  3- 2 r40 11- 4 r60 15- 9 r80 16-20 r100 18-25 | eats<=60  43- 42 | H2H<=100 our deaths mover 10 rammed  5, their mover  5 rammed 10

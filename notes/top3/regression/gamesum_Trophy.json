@@ -1,0 +1,2012 @@
+[
+ {
+  "game": 608218,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "Sabotage-d",
+  "elo": 2011,
+  "ranked": true,
+  "win": true,
+  "end": 319,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'A', 'A': {'dragonCou",
+  "eats": [
+   662,
+   192
+  ],
+  "splits": 208,
+  "deaths": {
+   "HitHeadToHead": 65,
+   "HitSelf": 36,
+   "HitOtherBody": 46
+  },
+  "their_deaths": {
+   "HitHeadToHead": 65,
+   "HitOtherBody": 1,
+   "HitWall": 6
+  },
+  "big_deaths": [
+   "r172 L6 HitSelf",
+   "r190 L6 HitSelf",
+   "r190 L7 HitHeadTo",
+   "r202 L7 HitHeadTo",
+   "r214 L12 HitSelf",
+   "r233 L9 HitSelf",
+   "r239 L6 HitHeadTo",
+   "r259 L6 HitSelf",
+   "r276 L7 HitOtherB",
+   "r297 L6 HitSelf",
+   "r300 L6 HitOtherB",
+   "r306 L9 HitHeadTo"
+  ],
+  "snaps": {
+   "50": "17/42/4-6/17/4",
+   "100": "42/107/4-6/15/3",
+   "200": "64/207/10-4/10/3",
+   "300": "64/192/9-3/9/3",
+   "400": "63/175/9-0/0/0"
+  },
+  "final": "63/175/9-0/0/0"
+ },
+ {
+  "game": 608236,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "Peanut Butter",
+  "elo": 1987,
+  "ranked": true,
+  "win": true,
+  "end": 204,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'A', 'A': {'dragonCou",
+  "eats": [
+   336,
+   141
+  ],
+  "splits": 126,
+  "deaths": {
+   "HitHeadToHead": 53,
+   "HitSelf": 4,
+   "HitOtherBody": 7
+  },
+  "their_deaths": {
+   "HitHeadToHead": 53,
+   "HitSelf": 1,
+   "HitWall": 4
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "17/39/3-10/28/4",
+   "100": "26/58/3-7/16/3",
+   "200": "64/167/7-1/2/2",
+   "300": "64/167/7-0/0/0",
+   "400": "64/167/7-0/0/0"
+  },
+  "final": "64/167/7-0/0/0"
+ },
+ {
+  "game": 608630,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "python.io",
+  "elo": 1888,
+  "ranked": true,
+  "win": true,
+  "end": 114,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   176,
+   24
+  ],
+  "splits": 75,
+  "deaths": {
+   "HitHeadToHead": 13,
+   "HitSelf": 5,
+   "HitOtherBody": 2
+  },
+  "their_deaths": {
+   "HitHeadToHead": 13
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "14/32/4-1/3/3",
+   "100": "50/113/3-1/2/2",
+   "200": "57/129/3-0/0/0",
+   "300": "57/129/3-0/0/0",
+   "400": "57/129/3-0/0/0"
+  },
+  "final": "57/129/3-0/0/0"
+ },
+ {
+  "game": 612774,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "forgot to mention",
+  "elo": 2032,
+  "ranked": false,
+  "win": true,
+  "end": 324,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'A', 'A': {'dragonCou",
+  "eats": [
+   616,
+   201
+  ],
+  "splits": 196,
+  "deaths": {
+   "HitHeadToHead": 79,
+   "HitSelf": 23,
+   "HitOtherBody": 32
+  },
+  "their_deaths": {
+   "HitHeadToHead": 77,
+   "NoValidAction": 4
+  },
+  "big_deaths": [
+   "r225 L7 HitHeadTo",
+   "r226 L6 HitSelf",
+   "r229 L7 HitOtherB",
+   "r237 L6 HitHeadTo",
+   "r245 L7 HitHeadTo",
+   "r254 L6 HitHeadTo",
+   "r272 L6 HitHeadTo",
+   "r281 L7 HitOtherB",
+   "r312 L8 HitOtherB"
+  ],
+  "snaps": {
+   "50": "14/32/3-11/26/3",
+   "100": "30/72/3-11/29/4",
+   "200": "64/171/6-4/9/3",
+   "300": "63/202/11-1/2/2",
+   "400": "64/217/12-0/0/0"
+  },
+  "final": "64/217/12-0/0/0"
+ },
+ {
+  "game": 612744,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "Stockfish",
+  "elo": 2062,
+  "ranked": false,
+  "win": true,
+  "end": 148,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'A', 'A': {'dragonCou",
+  "eats": [
+   215,
+   67
+  ],
+  "splits": 87,
+  "deaths": {
+   "HitHeadToHead": 25,
+   "HitSelf": 4
+  },
+  "their_deaths": {
+   "HitHeadToHead": 25
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "16/37/3-6/15/3",
+   "100": "36/86/4-7/20/5",
+   "200": "60/143/4-0/0/0",
+   "300": "60/143/4-0/0/0",
+   "400": "60/143/4-0/0/0"
+  },
+  "final": "60/143/4-0/0/0"
+ },
+ {
+  "game": 612764,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "\u4e2d\u56fd\u5fc5\u987b\u4eba\u80fd\u98de\ud83d\ude21",
+  "elo": 2044,
+  "ranked": false,
+  "win": false,
+  "end": 199,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   297,
+   402
+  ],
+  "splits": 105,
+  "deaths": {
+   "HitOtherBody": 4,
+   "HitHeadToHead": 101,
+   "HitSelf": 2
+  },
+  "their_deaths": {
+   "HitHeadToHead": 101,
+   "HitSelf": 2,
+   "HitWall": 3,
+   "HitOtherBody": 3
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "19/49/4-11/30/4",
+   "100": "17/41/4-10/24/3",
+   "200": "0/0/0-44/111/3",
+   "300": "0/0/0-44/111/3",
+   "400": "0/0/0-44/111/3"
+  },
+  "final": "0/0/0-44/111/3"
+ },
+ {
+  "game": 612909,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "f2p",
+  "elo": 1738,
+  "ranked": true,
+  "win": true,
+  "end": 173,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   300,
+   102
+  ],
+  "splits": 107,
+  "deaths": {
+   "HitHeadToHead": 37,
+   "HitOtherBody": 4,
+   "HitSelf": 4
+  },
+  "their_deaths": {
+   "HitHeadToHead": 37,
+   "HitWall": 1
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "16/36/3-4/9/3",
+   "100": "40/93/3-6/17/4",
+   "200": "64/189/7-0/0/0",
+   "300": "64/189/7-0/0/0",
+   "400": "64/189/7-0/0/0"
+  },
+  "final": "64/189/7-0/0/0"
+ },
+ {
+  "game": 612996,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "Team SKKU",
+  "elo": 1972,
+  "ranked": true,
+  "win": true,
+  "end": 22,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   12,
+   2
+  ],
+  "splits": 5,
+  "deaths": {
+   "HitHeadToHead": 2
+  },
+  "their_deaths": {
+   "HitHeadToHead": 2
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "5/13/3-0/0/0",
+   "100": "5/13/3-0/0/0",
+   "200": "5/13/3-0/0/0",
+   "300": "5/13/3-0/0/0",
+   "400": "5/13/3-0/0/0"
+  },
+  "final": "5/13/3-0/0/0"
+ },
+ {
+  "game": 612989,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "3.14159265",
+  "elo": 1995,
+  "ranked": true,
+  "win": true,
+  "end": 119,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   172,
+   16
+  ],
+  "splits": 73,
+  "deaths": {
+   "HitHeadToHead": 9,
+   "HitSelf": 8,
+   "HitOtherBody": 3
+  },
+  "their_deaths": {
+   "HitHeadToHead": 9
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "8/21/3-2/5/3",
+   "100": "43/111/4-1/2/2",
+   "200": "55/130/3-0/0/0",
+   "300": "55/130/3-0/0/0",
+   "400": "55/130/3-0/0/0"
+  },
+  "final": "55/130/3-0/0/0"
+ },
+ {
+  "game": 612739,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "calc",
+  "elo": 2068,
+  "ranked": false,
+  "win": false,
+  "end": 219,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   237,
+   400
+  ],
+  "splits": 85,
+  "deaths": {
+   "HitHeadToHead": 85,
+   "HitOtherBody": 2
+  },
+  "their_deaths": {
+   "HitHeadToHead": 85,
+   "HitWall": 2,
+   "HitOtherBody": 2
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "14/34/4-9/23/3",
+   "100": "19/46/3-21/58/4",
+   "200": "1/3/3-49/123/4",
+   "300": "0/0/0-61/155/7",
+   "400": "0/0/0-61/155/7"
+  },
+  "final": "0/0/0-61/155/7"
+ },
+ {
+  "game": 612729,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "cheji bt",
+  "elo": 2087,
+  "ranked": false,
+  "win": true,
+  "end": 123,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'A', 'A': {'dragonCou",
+  "eats": [
+   177,
+   54
+  ],
+  "splits": 73,
+  "deaths": {
+   "HitOtherBody": 5,
+   "HitHeadToHead": 20,
+   "HitSelf": 2
+  },
+  "their_deaths": {
+   "HitHeadToHead": 20
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "12/34/4-6/15/3",
+   "100": "41/97/4-3/6/2",
+   "200": "48/110/3-0/0/0",
+   "300": "48/110/3-0/0/0",
+   "400": "48/110/3-0/0/0"
+  },
+  "final": "48/110/3-0/0/0"
+ },
+ {
+  "game": 613377,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "3.14159265",
+  "elo": 2002,
+  "ranked": true,
+  "win": true,
+  "end": 346,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   653,
+   204
+  ],
+  "splits": 216,
+  "deaths": {
+   "HitSelf": 41,
+   "HitHeadToHead": 80,
+   "HitOtherBody": 34
+  },
+  "their_deaths": {
+   "HitHeadToHead": 78,
+   "HitWall": 4
+  },
+  "big_deaths": [
+   "r206 L6 HitSelf",
+   "r227 L8 HitSelf",
+   "r244 L6 HitSelf",
+   "r250 L7 HitHeadTo",
+   "r276 L7 HitSelf",
+   "r302 L6 HitHeadTo",
+   "r331 L6 HitHeadTo"
+  ],
+  "snaps": {
+   "50": "15/37/3-8/21/4",
+   "100": "36/87/3-8/20/3",
+   "200": "64/174/7-6/13/3",
+   "300": "63/181/6-5/12/3",
+   "400": "63/180/7-0/0/0"
+  },
+  "final": "63/180/7-0/0/0"
+ },
+ {
+  "game": 616110,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "SSS",
+  "elo": 2006,
+  "ranked": false,
+  "win": true,
+  "end": 196,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   347,
+   125
+  ],
+  "splits": 125,
+  "deaths": {
+   "HitHeadToHead": 46,
+   "HitSelf": 9,
+   "HitOtherBody": 9
+  },
+  "their_deaths": {
+   "HitHeadToHead": 46,
+   "HitOtherBody": 1
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "19/41/4-7/16/3",
+   "100": "40/95/3-12/28/3",
+   "200": "63/172/5-0/0/0",
+   "300": "63/172/5-0/0/0",
+   "400": "63/172/5-0/0/0"
+  },
+  "final": "63/172/5-0/0/0"
+ },
+ {
+  "game": 616120,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "SSS",
+  "elo": 2006,
+  "ranked": false,
+  "win": true,
+  "end": 261,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   484,
+   159
+  ],
+  "splits": 157,
+  "deaths": {
+   "HitHeadToHead": 56,
+   "HitSelf": 19,
+   "HitOtherBody": 21
+  },
+  "their_deaths": {
+   "HitHeadToHead": 56,
+   "HitOtherBody": 2,
+   "HitSelf": 1
+  },
+  "big_deaths": [
+   "r212 L6 HitSelf",
+   "r215 L7 HitHeadTo",
+   "r221 L6 HitHeadTo",
+   "r238 L6 HitHeadTo",
+   "r239 L6 HitSelf",
+   "r246 L6 HitOtherB",
+   "r248 L6 HitSelf",
+   "r252 L9 HitSelf",
+   "r253 L9 HitHeadTo"
+  ],
+  "snaps": {
+   "50": "21/51/4-10/22/3",
+   "100": "36/86/3-6/13/3",
+   "200": "64/179/8-3/10/4",
+   "300": "63/189/9-0/0/0",
+   "400": "63/189/9-0/0/0"
+  },
+  "final": "63/189/9-0/0/0"
+ },
+ {
+  "game": 617112,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "Team SKKU",
+  "elo": 1975,
+  "ranked": true,
+  "win": false,
+  "end": 90,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   11,
+   130
+  ],
+  "splits": 5,
+  "deaths": {
+   "HitHeadToHead": 7
+  },
+  "their_deaths": {
+   "HitHeadToHead": 7,
+   "HitOtherBody": 2,
+   "HitWall": 2
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "1/3/3-10/22/3",
+   "100": "0/0/0-42/101/4",
+   "200": "0/0/0-42/101/4",
+   "300": "0/0/0-42/101/4",
+   "400": "0/0/0-42/101/4"
+  },
+  "final": "0/0/0-42/101/4"
+ },
+ {
+  "game": 617234,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "3.14159265",
+  "elo": 2010,
+  "ranked": true,
+  "win": true,
+  "end": 170,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   317,
+   26
+  ],
+  "splits": 101,
+  "deaths": {
+   "HitHeadToHead": 13,
+   "HitOtherBody": 13,
+   "HitSelf": 13
+  },
+  "their_deaths": {
+   "HitHeadToHead": 13
+  },
+  "big_deaths": [
+   "r151 L9 HitOtherB",
+   "r156 L6 HitSelf"
+  ],
+  "snaps": {
+   "50": "12/29/3-2/5/3",
+   "100": "47/116/4-1/3/3",
+   "200": "64/201/12-0/0/0",
+   "300": "64/201/12-0/0/0",
+   "400": "64/201/12-0/0/0"
+  },
+  "final": "64/201/12-0/0/0"
+ },
+ {
+  "game": 617076,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "calc",
+  "elo": 2066,
+  "ranked": true,
+  "win": true,
+  "end": 15,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'A', 'A': {'dragonCou",
+  "eats": [
+   1,
+   0
+  ],
+  "splits": 1,
+  "deaths": {
+   "HitHeadToHead": 1
+  },
+  "their_deaths": {
+   "HitHeadToHead": 1,
+   "HitOtherBody": 1
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "2/4/2-0/0/0",
+   "100": "2/4/2-0/0/0",
+   "200": "2/4/2-0/0/0",
+   "300": "2/4/2-0/0/0",
+   "400": "2/4/2-0/0/0"
+  },
+  "final": "2/4/2-0/0/0"
+ },
+ {
+  "game": 617604,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "Hypr Series",
+  "elo": 1725,
+  "ranked": false,
+  "win": true,
+  "end": 148,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   248,
+   47
+  ],
+  "splits": 93,
+  "deaths": {
+   "HitHeadToHead": 18,
+   "HitOtherBody": 6,
+   "HitSelf": 7
+  },
+  "their_deaths": {
+   "HitHeadToHead": 18,
+   "HitOtherBody": 1,
+   "HitWall": 1
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "21/47/3-5/12/3",
+   "100": "39/93/4-3/9/4",
+   "200": "64/172/6-0/0/0",
+   "300": "64/172/6-0/0/0",
+   "400": "64/172/6-0/0/0"
+  },
+  "final": "64/172/6-0/0/0"
+ },
+ {
+  "game": 618030,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "PPP",
+  "elo": 1926,
+  "ranked": false,
+  "win": false,
+  "end": 117,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'A', 'A': {'dragonCou",
+  "eats": [
+   49,
+   186
+  ],
+  "splits": 19,
+  "deaths": {
+   "HitHeadToHead": 19,
+   "HitOtherBody": 1,
+   "HitSelf": 1
+  },
+  "their_deaths": {
+   "HitHeadToHead": 19,
+   "HitSelf": 3,
+   "HitOtherBody": 3,
+   "HitWall": 3
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "2/4/2-13/30/3",
+   "100": "4/9/3-38/98/3",
+   "200": "0/0/0-47/124/4",
+   "300": "0/0/0-47/124/4",
+   "400": "0/0/0-47/124/4"
+  },
+  "final": "0/0/0-47/124/4"
+ },
+ {
+  "game": 618292,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "Sabotage-d",
+  "elo": 1924,
+  "ranked": true,
+  "win": false,
+  "end": 146,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'A', 'A': {'dragonCou",
+  "eats": [
+   121,
+   229
+  ],
+  "splits": 45,
+  "deaths": {
+   "HitHeadToHead": 47
+  },
+  "their_deaths": {
+   "HitHeadToHead": 45,
+   "HitWall": 3,
+   "HitOtherBody": 1
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "10/22/3-13/30/3",
+   "100": "10/25/4-23/53/3",
+   "200": "0/0/0-41/100/4",
+   "300": "0/0/0-41/100/4",
+   "400": "0/0/0-41/100/4"
+  },
+  "final": "0/0/0-41/100/4"
+ },
+ {
+  "game": 625446,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "BloodBath",
+  "elo": 1805,
+  "ranked": true,
+  "win": false,
+  "end": 84,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'A', 'A': {'dragonCou",
+  "eats": [
+   8,
+   103
+  ],
+  "splits": 3,
+  "deaths": {
+   "HitHeadToHead": 5
+  },
+  "their_deaths": {
+   "HitHeadToHead": 5,
+   "HitOtherBody": 1,
+   "NoValidAction": 4
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "1/3/3-11/27/4",
+   "100": "0/0/0-36/86/3",
+   "200": "0/0/0-36/86/3",
+   "300": "0/0/0-36/86/3",
+   "400": "0/0/0-36/86/3"
+  },
+  "final": "0/0/0-36/86/3"
+ },
+ {
+  "game": 625521,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "Sponge(Albert and Bob)",
+  "elo": 1989,
+  "ranked": true,
+  "win": false,
+  "end": 161,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   129,
+   261
+  ],
+  "splits": 48,
+  "deaths": {
+   "HitOtherBody": 1,
+   "HitHeadToHead": 48,
+   "HitSelf": 1
+  },
+  "their_deaths": {
+   "HitHeadToHead": 52,
+   "HitSelf": 2,
+   "HitOtherBody": 1,
+   "HitWall": 1
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "11/28/4-5/12/3",
+   "100": "9/22/4-20/52/4",
+   "200": "0/0/0-50/118/6",
+   "300": "0/0/0-50/118/6",
+   "400": "0/0/0-50/118/6"
+  },
+  "final": "0/0/0-50/118/6"
+ },
+ {
+  "game": 628907,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "WeHaveQuizzes",
+  "elo": 1910,
+  "ranked": true,
+  "win": false,
+  "end": 220,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'A', 'A': {'dragonCou",
+  "eats": [
+   290,
+   413
+  ],
+  "splits": 107,
+  "deaths": {
+   "HitHeadToHead": 106,
+   "HitOtherBody": 3
+  },
+  "their_deaths": {
+   "HitHeadToHead": 106,
+   "HitOtherBody": 1,
+   "HitWall": 1
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "12/30/4-17/42/4",
+   "100": "16/34/4-23/54/3",
+   "200": "5/10/2-29/71/4",
+   "300": "0/0/0-42/103/4",
+   "400": "0/0/0-42/103/4"
+  },
+  "final": "0/0/0-42/103/4"
+ },
+ {
+  "game": 629018,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "cheji bt",
+  "elo": 2095,
+  "ranked": true,
+  "win": false,
+  "end": 153,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   155,
+   245
+  ],
+  "splits": 61,
+  "deaths": {
+   "HitOtherBody": 1,
+   "HitHeadToHead": 60,
+   "HitSelf": 2
+  },
+  "their_deaths": {
+   "HitHeadToHead": 60
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "17/40/4-13/35/4",
+   "100": "14/31/3-17/40/4",
+   "200": "0/0/0-26/66/4",
+   "300": "0/0/0-26/66/4",
+   "400": "0/0/0-26/66/4"
+  },
+  "final": "0/0/0-26/66/4"
+ },
+ {
+  "game": 629448,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "forgot to mention",
+  "elo": 1992,
+  "ranked": true,
+  "win": false,
+  "end": 110,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   87,
+   144
+  ],
+  "splits": 30,
+  "deaths": {
+   "HitHeadToHead": 31,
+   "HitOtherBody": 1
+  },
+  "their_deaths": {
+   "HitHeadToHead": 31
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "8/20/3-15/35/4",
+   "100": "4/10/3-24/59/4",
+   "200": "0/0/0-27/71/4",
+   "300": "0/0/0-27/71/4",
+   "400": "0/0/0-27/71/4"
+  },
+  "final": "0/0/0-27/71/4"
+ },
+ {
+  "game": 629431,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "calc",
+  "elo": 2063,
+  "ranked": true,
+  "win": false,
+  "end": 151,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   139,
+   252
+  ],
+  "splits": 56,
+  "deaths": {
+   "HitHeadToHead": 55,
+   "HitOtherBody": 3
+  },
+  "their_deaths": {
+   "HitHeadToHead": 55,
+   "HitWall": 2,
+   "HitOtherBody": 2
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "16/37/3-10/28/4",
+   "100": "18/43/3-27/68/4",
+   "200": "0/0/0-43/111/6",
+   "300": "0/0/0-43/111/6",
+   "400": "0/0/0-43/111/6"
+  },
+  "final": "0/0/0-43/111/6"
+ },
+ {
+  "game": 629612,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "BloodBath",
+  "elo": 1815,
+  "ranked": true,
+  "win": false,
+  "end": 104,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'A', 'A': {'dragonCou",
+  "eats": [
+   31,
+   141
+  ],
+  "splits": 12,
+  "deaths": {
+   "HitHeadToHead": 13,
+   "HitSelf": 1
+  },
+  "their_deaths": {
+   "HitHeadToHead": 15,
+   "NoValidAction": 3
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "5/11/3-14/32/3",
+   "100": "1/3/3-38/94/4",
+   "200": "0/0/0-40/97/4",
+   "300": "0/0/0-40/97/4",
+   "400": "0/0/0-40/97/4"
+  },
+  "final": "0/0/0-40/97/4"
+ },
+ {
+  "game": 631940,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "Candiru",
+  "elo": 1609,
+  "ranked": false,
+  "win": true,
+  "end": 183,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   318,
+   143
+  ],
+  "splits": 118,
+  "deaths": {
+   "HitHeadToHead": 44,
+   "HitOtherBody": 7,
+   "HitSelf": 6
+  },
+  "their_deaths": {
+   "HitHeadToHead": 44,
+   "HitSelf": 7,
+   "HitWall": 7,
+   "HitOtherBody": 1
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "16/38/3-5/12/3",
+   "100": "35/85/3-7/16/3",
+   "200": "63/157/5-0/0/0",
+   "300": "63/157/5-0/0/0",
+   "400": "63/157/5-0/0/0"
+  },
+  "final": "63/157/5-0/0/0"
+ },
+ {
+  "game": 629662,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "Peanut Butter",
+  "elo": 1963,
+  "ranked": true,
+  "win": true,
+  "end": 196,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'A', 'A': {'dragonCou",
+  "eats": [
+   356,
+   184
+  ],
+  "splits": 133,
+  "deaths": {
+   "HitHeadToHead": 64,
+   "HitSelf": 9,
+   "HitOtherBody": 8
+  },
+  "their_deaths": {
+   "HitHeadToHead": 64,
+   "HitSelf": 2,
+   "HitWall": 1
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "17/42/3-7/18/3",
+   "100": "36/83/3-10/22/3",
+   "200": "54/136/4-0/0/0",
+   "300": "54/136/4-0/0/0",
+   "400": "54/136/4-0/0/0"
+  },
+  "final": "54/136/4-0/0/0"
+ },
+ {
+  "game": 632476,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "forgot to mention",
+  "elo": 2007,
+  "ranked": true,
+  "win": true,
+  "end": 24,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'A', 'A': {'dragonCou",
+  "eats": [
+   11,
+   6
+  ],
+  "splits": 4,
+  "deaths": {
+   "HitHeadToHead": 4
+  },
+  "their_deaths": {
+   "HitHeadToHead": 4
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "2/5/3-0/0/0",
+   "100": "2/5/3-0/0/0",
+   "200": "2/5/3-0/0/0",
+   "300": "2/5/3-0/0/0",
+   "400": "2/5/3-0/0/0"
+  },
+  "final": "2/5/3-0/0/0"
+ },
+ {
+  "game": 633483,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "Sabotage-d",
+  "elo": 1934,
+  "ranked": true,
+  "win": true,
+  "end": 291,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   505,
+   289
+  ],
+  "splits": 186,
+  "deaths": {
+   "HitHeadToHead": 107,
+   "HitOtherBody": 8,
+   "HitSelf": 9
+  },
+  "their_deaths": {
+   "HitHeadToHead": 107,
+   "HitOtherBody": 2,
+   "HitWall": 4
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "14/35/3-8/22/3",
+   "100": "28/65/3-17/39/3",
+   "200": "28/66/4-8/18/3",
+   "300": "64/168/6-0/0/0",
+   "400": "64/168/6-0/0/0"
+  },
+  "final": "64/168/6-0/0/0"
+ },
+ {
+  "game": 633826,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "horse",
+  "elo": 1708,
+  "ranked": false,
+  "win": true,
+  "end": 19,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   3,
+   1
+  ],
+  "splits": 2,
+  "deaths": {
+   "HitHeadToHead": 2
+  },
+  "their_deaths": {
+   "HitHeadToHead": 2
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "2/4/2-0/0/0",
+   "100": "2/4/2-0/0/0",
+   "200": "2/4/2-0/0/0",
+   "300": "2/4/2-0/0/0",
+   "400": "2/4/2-0/0/0"
+  },
+  "final": "2/4/2-0/0/0"
+ },
+ {
+  "game": 637179,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "cheji bt",
+  "elo": 2106,
+  "ranked": false,
+  "win": true,
+  "end": 44,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   40,
+   4
+  ],
+  "splits": 17,
+  "deaths": {
+   "HitHeadToHead": 4
+  },
+  "their_deaths": {
+   "HitHeadToHead": 4
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "15/35/3-0/0/0",
+   "100": "15/35/3-0/0/0",
+   "200": "15/35/3-0/0/0",
+   "300": "15/35/3-0/0/0",
+   "400": "15/35/3-0/0/0"
+  },
+  "final": "15/35/3-0/0/0"
+ },
+ {
+  "game": 637562,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "bread first search",
+  "elo": 1985,
+  "ranked": true,
+  "win": false,
+  "end": 42,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   11,
+   37
+  ],
+  "splits": 5,
+  "deaths": {
+   "HitHeadToHead": 7
+  },
+  "their_deaths": {
+   "HitHeadToHead": 7
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "0/0/0-9/24/3",
+   "100": "0/0/0-9/24/3",
+   "200": "0/0/0-9/24/3",
+   "300": "0/0/0-9/24/3",
+   "400": "0/0/0-9/24/3"
+  },
+  "final": "0/0/0-9/24/3"
+ },
+ {
+  "game": 637540,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "forgot to mention",
+  "elo": 2016,
+  "ranked": true,
+  "win": false,
+  "end": 93,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   31,
+   124
+  ],
+  "splits": 13,
+  "deaths": {
+   "HitHeadToHead": 14,
+   "HitSelf": 1
+  },
+  "their_deaths": {
+   "HitHeadToHead": 14,
+   "NoValidAction": 1
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "6/13/3-17/42/4",
+   "100": "0/0/0-41/95/4",
+   "200": "0/0/0-41/95/4",
+   "300": "0/0/0-41/95/4",
+   "400": "0/0/0-41/95/4"
+  },
+  "final": "0/0/0-41/95/4"
+ },
+ {
+  "game": 637719,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "\u4e2d\u56fd\u4eba\u4e0d\u51c6\u98de\ud83d\ude21\ud83d\ude21\ud83d\ude21\ud83d\ude21\ud83d\ude21\ud83d\ude21\ud83d\ude21",
+  "elo": 1854,
+  "ranked": false,
+  "win": true,
+  "end": 343,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   730,
+   213
+  ],
+  "splits": 238,
+  "deaths": {
+   "HitOtherBody": 44,
+   "HitSelf": 57,
+   "HitHeadToHead": 75
+  },
+  "their_deaths": {
+   "HitHeadToHead": 75,
+   "HitSelf": 1,
+   "HitWall": 3
+  },
+  "big_deaths": [
+   "r225 L6 HitOtherB",
+   "r226 L6 HitOtherB",
+   "r239 L9 HitSelf",
+   "r261 L7 HitSelf",
+   "r267 L8 HitSelf",
+   "r273 L7 HitSelf",
+   "r278 L9 HitOtherB",
+   "r287 L12 HitSelf",
+   "r309 L8 HitSelf",
+   "r310 L6 HitSelf",
+   "r311 L12 HitSelf",
+   "r327 L8 HitSelf",
+   "r341 L7 HitSelf"
+  ],
+  "snaps": {
+   "50": "19/44/3-13/30/4",
+   "100": "34/80/4-14/32/3",
+   "200": "64/164/5-3/8/3",
+   "300": "63/195/7-2/5/3",
+   "400": "64/179/14-0/0/0"
+  },
+  "final": "64/179/14-0/0/0"
+ },
+ {
+  "game": 638374,
+  "map": "Trophy",
+  "fam": "v29",
+  "ver": "v29",
+  "opp": "calc",
+  "elo": 2000,
+  "ranked": true,
+  "win": true,
+  "end": 185,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'A', 'A': {'dragonCou",
+  "eats": [
+   344,
+   155
+  ],
+  "splits": 131,
+  "deaths": {
+   "HitOtherBody": 6,
+   "HitHeadToHead": 54,
+   "HitSelf": 9
+  },
+  "their_deaths": {
+   "HitHeadToHead": 54,
+   "HitWall": 1
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "18/42/3-9/27/5",
+   "100": "35/81/3-13/33/4",
+   "200": "64/154/4-0/0/0",
+   "300": "64/154/4-0/0/0",
+   "400": "64/154/4-0/0/0"
+  },
+  "final": "64/154/4-0/0/0"
+ },
+ {
+  "game": 638491,
+  "map": "Trophy",
+  "fam": "v30",
+  "ver": "pf31",
+  "opp": "bread first search",
+  "elo": 1980,
+  "ranked": true,
+  "win": true,
+  "end": 45,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'A', 'A': {'dragonCou",
+  "eats": [
+   32,
+   6
+  ],
+  "splits": 14,
+  "deaths": {
+   "HitHeadToHead": 5,
+   "HitSelf": 1
+  },
+  "their_deaths": {
+   "HitHeadToHead": 5
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "10/22/3-0/0/0",
+   "100": "10/22/3-0/0/0",
+   "200": "10/22/3-0/0/0",
+   "300": "10/22/3-0/0/0",
+   "400": "10/22/3-0/0/0"
+  },
+  "final": "10/22/3-0/0/0"
+ },
+ {
+  "game": 640826,
+  "map": "Trophy",
+  "fam": "v30",
+  "ver": "pf31",
+  "opp": "\u9f99\u864e\u8c79",
+  "elo": 1840,
+  "ranked": false,
+  "win": true,
+  "end": 32,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   22,
+   2
+  ],
+  "splits": 10,
+  "deaths": {
+   "HitHeadToHead": 3
+  },
+  "their_deaths": {
+   "HitHeadToHead": 3
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "9/20/3-0/0/0",
+   "100": "9/20/3-0/0/0",
+   "200": "9/20/3-0/0/0",
+   "300": "9/20/3-0/0/0",
+   "400": "9/20/3-0/0/0"
+  },
+  "final": "9/20/3-0/0/0"
+ },
+ {
+  "game": 641185,
+  "map": "Trophy",
+  "fam": "v30",
+  "ver": "pf31",
+  "opp": "Knight Capital",
+  "elo": 1451,
+  "ranked": false,
+  "win": true,
+  "end": 134,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   231,
+   47
+  ],
+  "splits": 89,
+  "deaths": {
+   "HitOtherBody": 6,
+   "HitHeadToHead": 18,
+   "HitSelf": 3
+  },
+  "their_deaths": {
+   "HitHeadToHead": 18,
+   "HitOtherBody": 2,
+   "HitWall": 1
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "24/61/4-8/22/4",
+   "100": "48/119/4-8/19/3",
+   "200": "64/164/7-0/0/0",
+   "300": "64/164/7-0/0/0",
+   "400": "64/164/7-0/0/0"
+  },
+  "final": "64/164/7-0/0/0"
+ },
+ {
+  "game": 641657,
+  "map": "Trophy",
+  "fam": "v30",
+  "ver": "pf31",
+  "opp": "Bhole Chature",
+  "elo": 1661,
+  "ranked": false,
+  "win": true,
+  "end": 230,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   408,
+   144
+  ],
+  "splits": 144,
+  "deaths": {
+   "HitHeadToHead": 52,
+   "HitOtherBody": 18,
+   "HitSelf": 12
+  },
+  "their_deaths": {
+   "HitHeadToHead": 52,
+   "HitSelf": 2,
+   "HitWall": 2
+  },
+  "big_deaths": [
+   "r229 L6 HitOtherB"
+  ],
+  "snaps": {
+   "50": "22/50/3-11/25/3",
+   "100": "38/84/3-14/39/4",
+   "200": "63/170/5-2/6/3",
+   "300": "64/185/7-0/0/0",
+   "400": "64/185/7-0/0/0"
+  },
+  "final": "64/185/7-0/0/0"
+ },
+ {
+  "game": 641943,
+  "map": "Trophy",
+  "fam": "v30",
+  "ver": "pf31",
+  "opp": "Bhole Chature",
+  "elo": 1661,
+  "ranked": false,
+  "win": true,
+  "end": 325,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   658,
+   236
+  ],
+  "splits": 202,
+  "deaths": {
+   "HitHeadToHead": 86,
+   "HitOtherBody": 35,
+   "HitSelf": 20
+  },
+  "their_deaths": {
+   "HitHeadToHead": 82,
+   "HitSelf": 3,
+   "HitWall": 4,
+   "HitOtherBody": 1
+  },
+  "big_deaths": [
+   "r232 L6 HitHeadTo",
+   "r256 L8 HitOtherB",
+   "r264 L8 HitOtherB",
+   "r267 L8 HitHeadTo",
+   "r268 L7 HitSelf",
+   "r279 L6 HitHeadTo",
+   "r319 L8 HitSelf"
+  ],
+  "snaps": {
+   "50": "20/51/3-11/30/4",
+   "100": "33/80/3-18/40/3",
+   "200": "60/147/4-4/11/3",
+   "300": "64/215/8-1/3/3",
+   "400": "63/229/9-0/0/0"
+  },
+  "final": "63/229/9-0/0/0"
+ },
+ {
+  "game": 641993,
+  "map": "Trophy",
+  "fam": "v30",
+  "ver": "pf31",
+  "opp": "Just Keep Swimming",
+  "elo": 1748,
+  "ranked": false,
+  "win": true,
+  "end": 207,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   326,
+   91
+  ],
+  "splits": 118,
+  "deaths": {
+   "HitSelf": 11,
+   "HitHeadToHead": 36,
+   "HitOtherBody": 9
+  },
+  "their_deaths": {
+   "HitHeadToHead": 36,
+   "HitSelf": 2
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "13/33/4-6/16/4",
+   "100": "30/70/3-5/15/4",
+   "200": "64/165/5-1/3/3",
+   "300": "64/174/5-0/0/0",
+   "400": "64/174/5-0/0/0"
+  },
+  "final": "64/174/5-0/0/0"
+ },
+ {
+  "game": 642262,
+  "map": "Trophy",
+  "fam": "v30",
+  "ver": "v30",
+  "opp": "calc",
+  "elo": 1997,
+  "ranked": true,
+  "win": true,
+  "end": 441,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'A', 'A': {'dragonCou",
+  "eats": [
+   951,
+   287
+  ],
+  "splits": 337,
+  "deaths": {
+   "HitHeadToHead": 99,
+   "HitSelf": 139,
+   "HitOtherBody": 50,
+   "HitWall": 1
+  },
+  "their_deaths": {
+   "HitHeadToHead": 99,
+   "HitOtherBody": 1,
+   "HitWall": 3,
+   "NoValidAction": 2
+  },
+  "big_deaths": [
+   "r183 L6 HitHeadTo",
+   "r198 L7 HitHeadTo",
+   "r309 L11 HitOtherB",
+   "r310 L6 HitSelf"
+  ],
+  "snaps": {
+   "50": "21/52/4-4/11/3",
+   "100": "41/103/5-5/13/4",
+   "200": "64/158/4-3/6/2",
+   "300": "64/186/11-2/7/4",
+   "400": "54/143/19-6/15/3"
+  },
+  "final": "50/148/30-0/0/0"
+ },
+ {
+  "game": 644845,
+  "map": "Trophy",
+  "fam": "v30",
+  "ver": "v30",
+  "opp": "SSS",
+  "elo": 2016,
+  "ranked": false,
+  "win": true,
+  "end": 123,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   186,
+   29
+  ],
+  "splits": 77,
+  "deaths": {
+   "HitHeadToHead": 13,
+   "HitSelf": 6,
+   "HitOtherBody": 4
+  },
+  "their_deaths": {
+   "HitHeadToHead": 13
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "22/54/4-3/8/3",
+   "100": "50/108/3-2/5/3",
+   "200": "56/132/4-0/0/0",
+   "300": "56/132/4-0/0/0",
+   "400": "56/132/4-0/0/0"
+  },
+  "final": "56/132/4-0/0/0"
+ },
+ {
+  "game": 644875,
+  "map": "Trophy",
+  "fam": "v30",
+  "ver": "v30",
+  "opp": "SSS",
+  "elo": 2016,
+  "ranked": false,
+  "win": true,
+  "end": 189,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   289,
+   110
+  ],
+  "splits": 114,
+  "deaths": {
+   "HitHeadToHead": 40,
+   "HitOtherBody": 6,
+   "HitSelf": 7
+  },
+  "their_deaths": {
+   "HitHeadToHead": 40,
+   "HitOtherBody": 3
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "9/24/3-5/13/3",
+   "100": "27/67/4-7/17/3",
+   "200": "63/154/5-0/0/0",
+   "300": "63/154/5-0/0/0",
+   "400": "63/154/5-0/0/0"
+  },
+  "final": "63/154/5-0/0/0"
+ },
+ {
+  "game": 642864,
+  "map": "Trophy",
+  "fam": "v30",
+  "ver": "v30",
+  "opp": "calc",
+  "elo": 2010,
+  "ranked": true,
+  "win": true,
+  "end": 499,
+  "result": "{'terminated': 1, 'endReason': 'roundLimit', 'winner': 'A', 'A': {'dragonCount':",
+  "eats": [
+   1149,
+   402
+  ],
+  "splits": 369,
+  "deaths": {
+   "HitSelf": 165,
+   "HitHeadToHead": 127,
+   "HitOtherBody": 63
+  },
+  "their_deaths": {
+   "HitHeadToHead": 125,
+   "HitOtherBody": 3,
+   "NoValidAction": 5
+  },
+  "big_deaths": [
+   "r274 L6 HitOtherB",
+   "r285 L10 HitSelf",
+   "r286 L8 HitHeadTo",
+   "r312 L6 HitHeadTo",
+   "r323 L6 HitSelf",
+   "r336 L9 HitSelf",
+   "r471 L9 HitSelf",
+   "r477 L11 HitSelf",
+   "r492 L8 HitOtherB",
+   "r499 L6 HitSelf"
+  ],
+  "snaps": {
+   "50": "17/38/4-14/32/3",
+   "100": "23/50/3-15/37/3",
+   "200": "43/104/4-12/28/4",
+   "300": "64/199/7-5/11/3",
+   "400": "62/174/31-7/18/3"
+  },
+  "final": "16/139/68-1/16/16"
+ },
+ {
+  "game": 645905,
+  "map": "Trophy",
+  "fam": "v30",
+  "ver": "v30",
+  "opp": "zitian",
+  "elo": 1956,
+  "ranked": false,
+  "win": true,
+  "end": 412,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   900,
+   303
+  ],
+  "splits": 299,
+  "deaths": {
+   "HitHeadToHead": 121,
+   "HitSelf": 91,
+   "HitOtherBody": 35
+  },
+  "their_deaths": {
+   "HitHeadToHead": 113,
+   "HitWall": 4
+  },
+  "big_deaths": [
+   "r302 L6 HitOtherB",
+   "r311 L8 HitSelf",
+   "r321 L7 HitOtherB",
+   "r330 L9 HitSelf",
+   "r332 L13 HitSelf",
+   "r335 L7 HitSelf",
+   "r338 L9 HitSelf",
+   "r342 L7 HitOtherB",
+   "r347 L7 HitSelf",
+   "r379 L17 HitSelf",
+   "r401 L28 HitSelf"
+  ],
+  "snaps": {
+   "50": "16/38/3-7/20/3",
+   "100": "20/51/4-10/25/3",
+   "200": "37/90/4-10/25/3",
+   "300": "64/172/6-1/3/3",
+   "400": "44/141/28-4/10/3"
+  },
+  "final": "54/140/7-0/0/0"
+ },
+ {
+  "game": 649050,
+  "map": "Trophy",
+  "fam": "v31",
+  "ver": "v31",
+  "opp": "cheji bt",
+  "elo": 2112,
+  "ranked": true,
+  "win": true,
+  "end": 113,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'A', 'A': {'dragonCou",
+  "eats": [
+   196,
+   18
+  ],
+  "splits": 76,
+  "deaths": {
+   "HitHeadToHead": 7,
+   "HitOtherBody": 3,
+   "HitSelf": 4
+  },
+  "their_deaths": {
+   "HitHeadToHead": 7,
+   "HitOtherBody": 1
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "20/46/4-4/9/3",
+   "100": "61/145/4-1/2/2",
+   "200": "64/168/5-0/0/0",
+   "300": "64/168/5-0/0/0",
+   "400": "64/168/5-0/0/0"
+  },
+  "final": "64/168/5-0/0/0"
+ },
+ {
+  "game": 649829,
+  "map": "Trophy",
+  "fam": "v31",
+  "ver": "v31",
+  "opp": "Sponge(Albert and Bob)",
+  "elo": 1975,
+  "ranked": true,
+  "win": false,
+  "end": 128,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'A', 'A': {'dragonCou",
+  "eats": [
+   96,
+   204
+  ],
+  "splits": 35,
+  "deaths": {
+   "HitHeadToHead": 36,
+   "HitOtherBody": 1
+  },
+  "their_deaths": {
+   "HitHeadToHead": 36,
+   "HitOtherBody": 2,
+   "HitWall": 2,
+   "HitSelf": 1
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "2/6/3-16/39/3",
+   "100": "13/33/4-28/72/3",
+   "200": "0/0/0-38/93/4",
+   "300": "0/0/0-38/93/4",
+   "400": "0/0/0-38/93/4"
+  },
+  "final": "0/0/0-38/93/4"
+ },
+ {
+  "game": 650527,
+  "map": "Trophy",
+  "fam": "v31",
+  "ver": "v31",
+  "opp": "Hypr Series",
+  "elo": 1727,
+  "ranked": false,
+  "win": true,
+  "end": 249,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   502,
+   206
+  ],
+  "splits": 175,
+  "deaths": {
+   "HitHeadToHead": 73,
+   "HitOtherBody": 20,
+   "HitSelf": 20
+  },
+  "their_deaths": {
+   "HitHeadToHead": 73,
+   "HitWall": 5
+  },
+  "big_deaths": [
+   "r226 L10 HitSelf",
+   "r230 L6 HitSelf",
+   "r248 L6 HitSelf"
+  ],
+  "snaps": {
+   "50": "12/29/3-16/38/3",
+   "100": "28/63/4-14/35/4",
+   "200": "64/173/5-4/12/4",
+   "300": "64/176/9-0/0/0",
+   "400": "64/176/9-0/0/0"
+  },
+  "final": "64/176/9-0/0/0"
+ },
+ {
+  "game": 651473,
+  "map": "Trophy",
+  "fam": "v31",
+  "ver": "v31",
+  "opp": "calc",
+  "elo": 2019,
+  "ranked": true,
+  "win": false,
+  "end": 176,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   152,
+   325
+  ],
+  "splits": 54,
+  "deaths": {
+   "HitHeadToHead": 55,
+   "HitOtherBody": 1
+  },
+  "their_deaths": {
+   "HitHeadToHead": 55,
+   "HitWall": 6,
+   "HitOtherBody": 6
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "14/36/4-16/39/4",
+   "100": "18/44/3-22/56/3",
+   "200": "0/0/0-63/154/4",
+   "300": "0/0/0-63/154/4",
+   "400": "0/0/0-63/154/4"
+  },
+  "final": "0/0/0-63/154/4"
+ },
+ {
+  "game": 651716,
+  "map": "Trophy",
+  "fam": "v31",
+  "ver": "v31",
+  "opp": "Sabotage-d",
+  "elo": 1980,
+  "ranked": true,
+  "win": false,
+  "end": 166,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   180,
+   302
+  ],
+  "splits": 63,
+  "deaths": {
+   "HitHeadToHead": 63,
+   "HitOtherBody": 2
+  },
+  "their_deaths": {
+   "HitHeadToHead": 63,
+   "HitWall": 9
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "16/40/3-15/40/4",
+   "100": "13/28/3-18/45/3",
+   "200": "0/0/0-46/114/6",
+   "300": "0/0/0-46/114/6",
+   "400": "0/0/0-46/114/6"
+  },
+  "final": "0/0/0-46/114/6"
+ },
+ {
+  "game": 651753,
+  "map": "Trophy",
+  "fam": "v31",
+  "ver": "v31",
+  "opp": "forgot to mention",
+  "elo": 2037,
+  "ranked": true,
+  "win": false,
+  "end": 111,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   41,
+   147
+  ],
+  "splits": 15,
+  "deaths": {
+   "HitHeadToHead": 16,
+   "HitOtherBody": 1
+  },
+  "their_deaths": {
+   "HitHeadToHead": 16,
+   "NoValidAction": 3
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "2/5/3-15/35/3",
+   "100": "2/5/3-37/89/3",
+   "200": "0/0/0-44/106/4",
+   "300": "0/0/0-44/106/4",
+   "400": "0/0/0-44/106/4"
+  },
+  "final": "0/0/0-44/106/4"
+ },
+ {
+  "game": 652120,
+  "map": "Trophy",
+  "fam": "v31",
+  "ver": "v31",
+  "opp": "calc",
+  "elo": 2022,
+  "ranked": true,
+  "win": false,
+  "end": 151,
+  "result": "{'terminated': 1, 'endReason': 'teamEliminated', 'winner': 'B', 'A': {'dragonCou",
+  "eats": [
+   129,
+   233
+  ],
+  "splits": 48,
+  "deaths": {
+   "HitHeadToHead": 47,
+   "HitSelf": 2,
+   "HitOtherBody": 1
+  },
+  "their_deaths": {
+   "HitHeadToHead": 47,
+   "HitWall": 2
+  },
+  "big_deaths": [],
+  "snaps": {
+   "50": "16/39/3-8/25/6",
+   "100": "18/43/3-25/65/6",
+   "200": "0/0/0-45/109/6",
+   "300": "0/0/0-45/109/6",
+   "400": "0/0/0-45/109/6"
+  },
+  "final": "0/0/0-45/109/6"
+ }
+]

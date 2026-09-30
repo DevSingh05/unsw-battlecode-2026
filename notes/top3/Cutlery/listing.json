@@ -1,0 +1,6002 @@
+[
+{
+"id": 652291,
+"ranked": true,
+"status": "pending",
+"winner": null,
+"hasReplay": false,
+"challenge": false,
+"at": "2026-09-30T02:00:00.000Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+},
+"b": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+}
+},
+{
+"id": 652290,
+"ranked": true,
+"status": "pending",
+"winner": null,
+"hasReplay": false,
+"challenge": false,
+"at": "2026-09-30T02:00:00.000Z",
+"mapName": "Autarky",
+"a": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+},
+"b": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+}
+},
+{
+"id": 652289,
+"ranked": true,
+"status": "pending",
+"winner": null,
+"hasReplay": false,
+"challenge": false,
+"at": "2026-09-30T02:00:00.000Z",
+"mapName": "Trauma",
+"a": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+},
+"b": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+}
+},
+{
+"id": 652288,
+"ranked": true,
+"status": "pending",
+"winner": null,
+"hasReplay": false,
+"challenge": false,
+"at": "2026-09-30T02:00:00.000Z",
+"mapName": "Default",
+"a": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+},
+"b": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+}
+},
+{
+"id": 652287,
+"ranked": true,
+"status": "pending",
+"winner": null,
+"hasReplay": false,
+"challenge": false,
+"at": "2026-09-30T02:00:00.000Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+},
+"b": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+}
+},
+{
+"id": 652053,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:56:03.715Z",
+"mapName": "Schooltime",
+"a": {
+"id": 989,
+"name": "kraken",
+"elo": 1637
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 652054,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:55:59.094Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 989,
+"name": "kraken",
+"elo": 1637
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 652047,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:55:29.936Z",
+"mapName": "Autarky",
+"a": {
+"id": 989,
+"name": "kraken",
+"elo": 1637
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 652055,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:55:28.952Z",
+"mapName": "Trauma",
+"a": {
+"id": 989,
+"name": "kraken",
+"elo": 1637
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 652048,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:55:22.284Z",
+"mapName": "Default",
+"a": {
+"id": 989,
+"name": "kraken",
+"elo": 1637
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 652050,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:55:19.006Z",
+"mapName": "Portals",
+"a": {
+"id": 989,
+"name": "kraken",
+"elo": 1637
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 652051,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:55:17.286Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 989,
+"name": "kraken",
+"elo": 1637
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 652049,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:55:16.623Z",
+"mapName": "Devil",
+"a": {
+"id": 989,
+"name": "kraken",
+"elo": 1637
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 652052,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:55:13.647Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 989,
+"name": "kraken",
+"elo": 1637
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 652056,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:55:13.262Z",
+"mapName": "Trophy",
+"a": {
+"id": 989,
+"name": "kraken",
+"elo": 1637
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651862,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:54:47.871Z",
+"mapName": "Schooltime",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651863,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:54:25.336Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651836,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:54:10.695Z",
+"mapName": "Schooltime",
+"a": {
+"id": 7,
+"name": "Just Keep Swimming",
+"elo": 1737
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651838,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:54:04.811Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 7,
+"name": "Just Keep Swimming",
+"elo": 1737
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651864,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:53:31.264Z",
+"mapName": "Trauma",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651857,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:53:26.366Z",
+"mapName": "Default",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651859,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:53:23.645Z",
+"mapName": "Portals",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651856,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:53:20.734Z",
+"mapName": "Autarky",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651858,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:53:17.925Z",
+"mapName": "Devil",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651837,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:53:17.785Z",
+"mapName": "Portals",
+"a": {
+"id": 7,
+"name": "Just Keep Swimming",
+"elo": 1737
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651860,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:53:13.070Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651861,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:53:12.324Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651865,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:53:11.327Z",
+"mapName": "Trophy",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651843,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:53:01.751Z",
+"mapName": "Autarky",
+"a": {
+"id": 7,
+"name": "Just Keep Swimming",
+"elo": 1737
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651845,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:53:00.589Z",
+"mapName": "Trauma",
+"a": {
+"id": 7,
+"name": "Just Keep Swimming",
+"elo": 1737
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651844,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:52:57.698Z",
+"mapName": "Devil",
+"a": {
+"id": 7,
+"name": "Just Keep Swimming",
+"elo": 1737
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651840,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:52:50.253Z",
+"mapName": "Default",
+"a": {
+"id": 7,
+"name": "Just Keep Swimming",
+"elo": 1737
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651841,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:52:48.770Z",
+"mapName": "Trophy",
+"a": {
+"id": 7,
+"name": "Just Keep Swimming",
+"elo": 1737
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651839,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:52:48.580Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 7,
+"name": "Just Keep Swimming",
+"elo": 1737
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651842,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:52:47.413Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 7,
+"name": "Just Keep Swimming",
+"elo": 1737
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651574,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:52:12.105Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 187,
+"name": "avid coders",
+"elo": 1684
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651573,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:51:10.834Z",
+"mapName": "Schooltime",
+"a": {
+"id": 187,
+"name": "avid coders",
+"elo": 1684
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651570,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:50:36.768Z",
+"mapName": "Portals",
+"a": {
+"id": 187,
+"name": "avid coders",
+"elo": 1684
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651567,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:49:52.121Z",
+"mapName": "Autarky",
+"a": {
+"id": 187,
+"name": "avid coders",
+"elo": 1684
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651575,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:49:51.798Z",
+"mapName": "Trauma",
+"a": {
+"id": 187,
+"name": "avid coders",
+"elo": 1684
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651569,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:49:34.616Z",
+"mapName": "Devil",
+"a": {
+"id": 187,
+"name": "avid coders",
+"elo": 1684
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651568,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:49:26.697Z",
+"mapName": "Default",
+"a": {
+"id": 187,
+"name": "avid coders",
+"elo": 1684
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651571,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:48:52.869Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 187,
+"name": "avid coders",
+"elo": 1684
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651572,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:48:52.581Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 187,
+"name": "avid coders",
+"elo": 1684
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651576,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:48:50.305Z",
+"mapName": "Trophy",
+"a": {
+"id": 187,
+"name": "avid coders",
+"elo": 1684
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651414,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:47:27.776Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651413,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:46:56.187Z",
+"mapName": "Schooltime",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651415,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:46:43.287Z",
+"mapName": "Trauma",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651416,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:46:36.755Z",
+"mapName": "Trophy",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651410,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:46:36.272Z",
+"mapName": "Portals",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651409,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:46:32.074Z",
+"mapName": "Devil",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651408,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:46:32.016Z",
+"mapName": "Default",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651407,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:46:29.681Z",
+"mapName": "Autarky",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651412,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:46:25.034Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 651411,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:46:22.317Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650932,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:38:57.811Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650930,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:38:30.218Z",
+"mapName": "Autarky",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650925,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:38:29.194Z",
+"mapName": "Schooltime",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650923,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:38:14.391Z",
+"mapName": "Default",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650927,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:38:13.929Z",
+"mapName": "Devil",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650928,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:38:08.138Z",
+"mapName": "Trauma",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650931,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:38:06.446Z",
+"mapName": "Portals",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650929,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:38:03.719Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650924,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:37:58.127Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650926,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:37:57.183Z",
+"mapName": "Trophy",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650621,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:35:16.330Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 55,
+"name": "𓎼𓃭𓅱𓂋𓇌 𓏏𓅱 𓂋𓄿",
+"elo": 1950
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650620,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:35:13.296Z",
+"mapName": "Schooltime",
+"a": {
+"id": 55,
+"name": "𓎼𓃭𓅱𓂋𓇌 𓏏𓅱 𓂋𓄿",
+"elo": 1950
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 647372,
+"ranked": true,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": false,
+"at": "2026-09-30T01:34:55.842Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650622,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:33:48.657Z",
+"mapName": "Trauma",
+"a": {
+"id": 55,
+"name": "𓎼𓃭𓅱𓂋𓇌 𓏏𓅱 𓂋𓄿",
+"elo": 1950
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650615,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:33:46.089Z",
+"mapName": "Default",
+"a": {
+"id": 55,
+"name": "𓎼𓃭𓅱𓂋𓇌 𓏏𓅱 𓂋𓄿",
+"elo": 1950
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650614,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:33:45.525Z",
+"mapName": "Autarky",
+"a": {
+"id": 55,
+"name": "𓎼𓃭𓅱𓂋𓇌 𓏏𓅱 𓂋𓄿",
+"elo": 1950
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650618,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:33:35.970Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 55,
+"name": "𓎼𓃭𓅱𓂋𓇌 𓏏𓅱 𓂋𓄿",
+"elo": 1950
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650616,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:33:34.734Z",
+"mapName": "Devil",
+"a": {
+"id": 55,
+"name": "𓎼𓃭𓅱𓂋𓇌 𓏏𓅱 𓂋𓄿",
+"elo": 1950
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650617,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:33:27.550Z",
+"mapName": "Portals",
+"a": {
+"id": 55,
+"name": "𓎼𓃭𓅱𓂋𓇌 𓏏𓅱 𓂋𓄿",
+"elo": 1950
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650619,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:33:24.775Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 55,
+"name": "𓎼𓃭𓅱𓂋𓇌 𓏏𓅱 𓂋𓄿",
+"elo": 1950
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650623,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:33:19.677Z",
+"mapName": "Trophy",
+"a": {
+"id": 55,
+"name": "𓎼𓃭𓅱𓂋𓇌 𓏏𓅱 𓂋𓄿",
+"elo": 1950
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650317,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:30:34.674Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650316,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:30:13.172Z",
+"mapName": "Schooltime",
+"a": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650318,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:29:31.681Z",
+"mapName": "Trauma",
+"a": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650313,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:29:27.932Z",
+"mapName": "Portals",
+"a": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650310,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:29:25.984Z",
+"mapName": "Autarky",
+"a": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650315,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:29:22.060Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650314,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:29:16.718Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650311,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:29:12.808Z",
+"mapName": "Default",
+"a": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650319,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:29:12.072Z",
+"mapName": "Trophy",
+"a": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650312,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:29:10.170Z",
+"mapName": "Devil",
+"a": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650186,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:28:05.299Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 470,
+"name": "龙虎豹",
+"elo": 1816
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650179,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:28:03.188Z",
+"mapName": "Schooltime",
+"a": {
+"id": 470,
+"name": "龙虎豹",
+"elo": 1816
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650177,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:27:16.352Z",
+"mapName": "Default",
+"a": {
+"id": 470,
+"name": "龙虎豹",
+"elo": 1816
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650184,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:27:12.301Z",
+"mapName": "Autarky",
+"a": {
+"id": 470,
+"name": "龙虎豹",
+"elo": 1816
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650178,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:27:09.933Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 470,
+"name": "龙虎豹",
+"elo": 1816
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650185,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:27:07.261Z",
+"mapName": "Portals",
+"a": {
+"id": 470,
+"name": "龙虎豹",
+"elo": 1816
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650180,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:27:00.260Z",
+"mapName": "Trophy",
+"a": {
+"id": 470,
+"name": "龙虎豹",
+"elo": 1816
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650182,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:27:00.085Z",
+"mapName": "Trauma",
+"a": {
+"id": 470,
+"name": "龙虎豹",
+"elo": 1816
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650183,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:26:58.073Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 470,
+"name": "龙虎豹",
+"elo": 1816
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 650181,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:26:57.792Z",
+"mapName": "Devil",
+"a": {
+"id": 470,
+"name": "龙虎豹",
+"elo": 1816
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 647373,
+"ranked": true,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": false,
+"at": "2026-09-30T01:24:41.059Z",
+"mapName": "Portals",
+"a": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 647375,
+"ranked": true,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": false,
+"at": "2026-09-30T01:21:02.896Z",
+"mapName": "Trauma",
+"a": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 649678,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:19:37.506Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 1034,
+"name": "wawow830",
+"elo": 1712
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 649683,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:18:45.619Z",
+"mapName": "Autarky",
+"a": {
+"id": 1034,
+"name": "wawow830",
+"elo": 1712
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 649676,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:18:40.977Z",
+"mapName": "Schooltime",
+"a": {
+"id": 1034,
+"name": "wawow830",
+"elo": 1712
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 649685,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:18:40.853Z",
+"mapName": "Trauma",
+"a": {
+"id": 1034,
+"name": "wawow830",
+"elo": 1712
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 649677,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:18:33.646Z",
+"mapName": "Portals",
+"a": {
+"id": 1034,
+"name": "wawow830",
+"elo": 1712
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 649682,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:18:30.482Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 1034,
+"name": "wawow830",
+"elo": 1712
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 649681,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:18:23.824Z",
+"mapName": "Trophy",
+"a": {
+"id": 1034,
+"name": "wawow830",
+"elo": 1712
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 649684,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:18:21.702Z",
+"mapName": "Devil",
+"a": {
+"id": 1034,
+"name": "wawow830",
+"elo": 1712
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 649679,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:18:20.529Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 1034,
+"name": "wawow830",
+"elo": 1712
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 649680,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:18:18.632Z",
+"mapName": "Default",
+"a": {
+"id": 1034,
+"name": "wawow830",
+"elo": 1712
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 649308,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:11:59.568Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 127,
+"name": "Stochastic Parrots",
+"elo": 1693
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 649178,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:11:30.831Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 1021,
+"name": "Zynx",
+"elo": 1700
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 649302,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:11:28.509Z",
+"mapName": "Default",
+"a": {
+"id": 127,
+"name": "Stochastic Parrots",
+"elo": 1693
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 649309,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:11:25.071Z",
+"mapName": "Trauma",
+"a": {
+"id": 127,
+"name": "Stochastic Parrots",
+"elo": 1693
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 649307,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:11:24.003Z",
+"mapName": "Schooltime",
+"a": {
+"id": 127,
+"name": "Stochastic Parrots",
+"elo": 1693
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 649171,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:11:23.208Z",
+"mapName": "Schooltime",
+"a": {
+"id": 1021,
+"name": "Zynx",
+"elo": 1700
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 649301,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:11:22.471Z",
+"mapName": "Autarky",
+"a": {
+"id": 127,
+"name": "Stochastic Parrots",
+"elo": 1693
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 649310,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:11:13.516Z",
+"mapName": "Trophy",
+"a": {
+"id": 127,
+"name": "Stochastic Parrots",
+"elo": 1693
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 649304,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:11:10.110Z",
+"mapName": "Portals",
+"a": {
+"id": 127,
+"name": "Stochastic Parrots",
+"elo": 1693
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 649303,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:11:05.276Z",
+"mapName": "Devil",
+"a": {
+"id": 127,
+"name": "Stochastic Parrots",
+"elo": 1693
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 649128,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:10:59.545Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 370,
+"name": "Quant Merch Trader",
+"elo": 1775
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 649305,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:10:58.076Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 127,
+"name": "Stochastic Parrots",
+"elo": 1693
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 649306,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:10:57.845Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 127,
+"name": "Stochastic Parrots",
+"elo": 1693
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 649185,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:09:42.067Z",
+"mapName": "Trauma",
+"a": {
+"id": 1021,
+"name": "Zynx",
+"elo": 1700
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 649127,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:09:32.979Z",
+"mapName": "Portals",
+"a": {
+"id": 370,
+"name": "Quant Merch Trader",
+"elo": 1775
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 649126,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:09:31.843Z",
+"mapName": "Schooltime",
+"a": {
+"id": 370,
+"name": "Quant Merch Trader",
+"elo": 1775
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 649180,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:09:31.207Z",
+"mapName": "Default",
+"a": {
+"id": 1021,
+"name": "Zynx",
+"elo": 1700
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 649177,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:09:29.758Z",
+"mapName": "Portals",
+"a": {
+"id": 1021,
+"name": "Zynx",
+"elo": 1700
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 649179,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:09:29.056Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 1021,
+"name": "Zynx",
+"elo": 1700
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 649183,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:09:25.387Z",
+"mapName": "Autarky",
+"a": {
+"id": 1021,
+"name": "Zynx",
+"elo": 1700
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 649130,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:09:20.068Z",
+"mapName": "Default",
+"a": {
+"id": 370,
+"name": "Quant Merch Trader",
+"elo": 1775
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 649184,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:09:15.459Z",
+"mapName": "Devil",
+"a": {
+"id": 1021,
+"name": "Zynx",
+"elo": 1700
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 649182,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:09:10.477Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 1021,
+"name": "Zynx",
+"elo": 1700
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 649181,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:09:07.559Z",
+"mapName": "Trophy",
+"a": {
+"id": 1021,
+"name": "Zynx",
+"elo": 1700
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 649129,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T01:08:31.627Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 370,
+"name": "Quant Merch Trader",
+"elo": 1775
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 647374,
+"ranked": true,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": false,
+"at": "2026-09-30T01:03:12.410Z",
+"mapName": "Schooltime",
+"a": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 647371,
+"ranked": true,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": false,
+"at": "2026-09-30T01:03:08.227Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 206,
+"name": "Stockfish",
+"elo": 2057
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 647305,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:59:58.823Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 82,
+"name": "free trip to sydney pls",
+"elo": 1901
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 647310,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:59:50.877Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 82,
+"name": "free trip to sydney pls",
+"elo": 1901
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 647302,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:59:02.065Z",
+"mapName": "Schooltime",
+"a": {
+"id": 82,
+"name": "free trip to sydney pls",
+"elo": 1901
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 647307,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:59:01.654Z",
+"mapName": "Schooltime",
+"a": {
+"id": 82,
+"name": "free trip to sydney pls",
+"elo": 1901
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 647303,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:58:55.942Z",
+"mapName": "Trauma",
+"a": {
+"id": 82,
+"name": "free trip to sydney pls",
+"elo": 1901
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 647288,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:58:51.172Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 989,
+"name": "kraken",
+"elo": 1637
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 647308,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:58:47.610Z",
+"mapName": "Trauma",
+"a": {
+"id": 82,
+"name": "free trip to sydney pls",
+"elo": 1901
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 647304,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:58:43.352Z",
+"mapName": "Trophy",
+"a": {
+"id": 82,
+"name": "free trip to sydney pls",
+"elo": 1901
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 647306,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:58:37.299Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 82,
+"name": "free trip to sydney pls",
+"elo": 1901
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 647301,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:58:34.709Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 82,
+"name": "free trip to sydney pls",
+"elo": 1901
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 647309,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:58:34.099Z",
+"mapName": "Trophy",
+"a": {
+"id": 82,
+"name": "free trip to sydney pls",
+"elo": 1901
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 647287,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:58:29.804Z",
+"mapName": "Schooltime",
+"a": {
+"id": 989,
+"name": "kraken",
+"elo": 1637
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 647289,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:58:20.449Z",
+"mapName": "Trauma",
+"a": {
+"id": 989,
+"name": "kraken",
+"elo": 1637
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 647282,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:58:20.435Z",
+"mapName": "Default",
+"a": {
+"id": 989,
+"name": "kraken",
+"elo": 1637
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 647284,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:58:19.987Z",
+"mapName": "Portals",
+"a": {
+"id": 989,
+"name": "kraken",
+"elo": 1637
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 647283,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:58:17.706Z",
+"mapName": "Devil",
+"a": {
+"id": 989,
+"name": "kraken",
+"elo": 1637
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 647281,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:58:14.438Z",
+"mapName": "Autarky",
+"a": {
+"id": 989,
+"name": "kraken",
+"elo": 1637
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 647290,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:58:12.741Z",
+"mapName": "Trophy",
+"a": {
+"id": 989,
+"name": "kraken",
+"elo": 1637
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 647286,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:58:09.997Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 989,
+"name": "kraken",
+"elo": 1637
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 647285,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:58:08.797Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 989,
+"name": "kraken",
+"elo": 1637
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646730,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:51:39.951Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 791,
+"name": "中国人不准飞😡😡😡😡😡😡😡",
+"elo": 1862
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646735,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:49:47.060Z",
+"mapName": "Autarky",
+"a": {
+"id": 791,
+"name": "中国人不准飞😡😡😡😡😡😡😡",
+"elo": 1862
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646729,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:49:39.485Z",
+"mapName": "Portals",
+"a": {
+"id": 791,
+"name": "中国人不准飞😡😡😡😡😡😡😡",
+"elo": 1862
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646728,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:49:38.144Z",
+"mapName": "Schooltime",
+"a": {
+"id": 791,
+"name": "中国人不准飞😡😡😡😡😡😡😡",
+"elo": 1862
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646732,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:48:32.376Z",
+"mapName": "Default",
+"a": {
+"id": 791,
+"name": "中国人不准飞😡😡😡😡😡😡😡",
+"elo": 1862
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646737,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:48:08.191Z",
+"mapName": "Trauma",
+"a": {
+"id": 791,
+"name": "中国人不准飞😡😡😡😡😡😡😡",
+"elo": 1862
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646731,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:48:08.172Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 791,
+"name": "中国人不准飞😡😡😡😡😡😡😡",
+"elo": 1862
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646733,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:47:27.420Z",
+"mapName": "Trophy",
+"a": {
+"id": 791,
+"name": "中国人不准飞😡😡😡😡😡😡😡",
+"elo": 1862
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646734,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:47:24.709Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 791,
+"name": "中国人不准飞😡😡😡😡😡😡😡",
+"elo": 1862
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646736,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:47:24.229Z",
+"mapName": "Devil",
+"a": {
+"id": 791,
+"name": "中国人不准飞😡😡😡😡😡😡😡",
+"elo": 1862
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646249,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:38:48.414Z",
+"mapName": "Schooltime",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646250,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:38:43.218Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646172,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:37:48.869Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646243,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:37:45.705Z",
+"mapName": "Autarky",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646251,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:37:42.299Z",
+"mapName": "Trauma",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646244,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:37:41.646Z",
+"mapName": "Default",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646246,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:37:40.450Z",
+"mapName": "Portals",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646248,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:37:30.846Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646247,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:37:30.566Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646245,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:37:29.175Z",
+"mapName": "Devil",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646252,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:37:21.411Z",
+"mapName": "Trophy",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646169,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:37:14.146Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646170,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:37:12.882Z",
+"mapName": "Autarky",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646171,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:37:03.762Z",
+"mapName": "Portals",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646165,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:37:02.111Z",
+"mapName": "Schooltime",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646164,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:37:01.675Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646167,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:37:01.342Z",
+"mapName": "Devil",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646163,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:37:01.268Z",
+"mapName": "Default",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646168,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:36:59.105Z",
+"mapName": "Trauma",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646166,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:36:55.643Z",
+"mapName": "Trophy",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646040,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:36:54.707Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646039,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:35:56.068Z",
+"mapName": "Schooltime",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646041,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:35:25.783Z",
+"mapName": "Trauma",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646036,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:35:22.914Z",
+"mapName": "Portals",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646033,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:35:22.751Z",
+"mapName": "Autarky",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646034,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:35:21.007Z",
+"mapName": "Default",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646038,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:35:10.269Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646035,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:35:04.402Z",
+"mapName": "Devil",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646037,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:35:02.266Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 646042,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:35:02.120Z",
+"mapName": "Trophy",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 642856,
+"ranked": true,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": false,
+"at": "2026-09-30T00:31:18.546Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+},
+"b": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+}
+},
+{
+"id": 645626,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:30:16.015Z",
+"mapName": "Schooltime",
+"a": {
+"id": 451,
+"name": "Candiru",
+"elo": 1661
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645628,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:29:40.679Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 451,
+"name": "Candiru",
+"elo": 1661
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645570,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:28:52.078Z",
+"mapName": "Schooltime",
+"a": {
+"id": 507,
+"name": "bread first search",
+"elo": 1968
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645627,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:28:51.723Z",
+"mapName": "Portals",
+"a": {
+"id": 451,
+"name": "Candiru",
+"elo": 1661
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645571,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:28:42.512Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 507,
+"name": "bread first search",
+"elo": 1968
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645630,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:28:16.014Z",
+"mapName": "Default",
+"a": {
+"id": 451,
+"name": "Candiru",
+"elo": 1661
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645629,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:28:07.761Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 451,
+"name": "Candiru",
+"elo": 1661
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645569,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:27:33.186Z",
+"mapName": "Portals",
+"a": {
+"id": 507,
+"name": "bread first search",
+"elo": 1968
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645572,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:27:11.823Z",
+"mapName": "Default",
+"a": {
+"id": 507,
+"name": "bread first search",
+"elo": 1968
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 642854,
+"ranked": true,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": false,
+"at": "2026-09-30T00:26:03.733Z",
+"mapName": "Trophy",
+"a": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+},
+"b": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+}
+},
+{
+"id": 642857,
+"ranked": true,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": false,
+"at": "2026-09-30T00:24:25.563Z",
+"mapName": "Portals",
+"a": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+},
+"b": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+}
+},
+{
+"id": 645326,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:23:18.227Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 470,
+"name": "龙虎豹",
+"elo": 1816
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645319,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:23:17.735Z",
+"mapName": "Schooltime",
+"a": {
+"id": 470,
+"name": "龙虎豹",
+"elo": 1816
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645325,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:22:40.670Z",
+"mapName": "Portals",
+"a": {
+"id": 470,
+"name": "龙虎豹",
+"elo": 1816
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645317,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:22:35.246Z",
+"mapName": "Default",
+"a": {
+"id": 470,
+"name": "龙虎豹",
+"elo": 1816
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645323,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:22:33.612Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 470,
+"name": "龙虎豹",
+"elo": 1816
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645322,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:22:27.714Z",
+"mapName": "Trauma",
+"a": {
+"id": 470,
+"name": "龙虎豹",
+"elo": 1816
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645324,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:22:25.173Z",
+"mapName": "Autarky",
+"a": {
+"id": 470,
+"name": "龙虎豹",
+"elo": 1816
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645320,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:22:22.052Z",
+"mapName": "Trophy",
+"a": {
+"id": 470,
+"name": "龙虎豹",
+"elo": 1816
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645318,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:22:21.696Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 470,
+"name": "龙虎豹",
+"elo": 1816
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645321,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:22:20.493Z",
+"mapName": "Devil",
+"a": {
+"id": 470,
+"name": "龙虎豹",
+"elo": 1816
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645222,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:21:55.727Z",
+"mapName": "Schooltime",
+"a": {
+"id": 1034,
+"name": "wawow830",
+"elo": 1712
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645224,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:21:46.117Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 1034,
+"name": "wawow830",
+"elo": 1712
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645229,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:21:26.004Z",
+"mapName": "Autarky",
+"a": {
+"id": 1034,
+"name": "wawow830",
+"elo": 1712
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645223,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:21:15.300Z",
+"mapName": "Portals",
+"a": {
+"id": 1034,
+"name": "wawow830",
+"elo": 1712
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645231,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:21:09.630Z",
+"mapName": "Trauma",
+"a": {
+"id": 1034,
+"name": "wawow830",
+"elo": 1712
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645228,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:21:09.172Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 1034,
+"name": "wawow830",
+"elo": 1712
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645226,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:21:05.996Z",
+"mapName": "Default",
+"a": {
+"id": 1034,
+"name": "wawow830",
+"elo": 1712
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645225,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:21:05.178Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 1034,
+"name": "wawow830",
+"elo": 1712
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645230,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:21:02.276Z",
+"mapName": "Devil",
+"a": {
+"id": 1034,
+"name": "wawow830",
+"elo": 1712
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645227,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:20:57.706Z",
+"mapName": "Trophy",
+"a": {
+"id": 1034,
+"name": "wawow830",
+"elo": 1712
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645138,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:20:45.049Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 837,
+"name": "Hypr Series",
+"elo": 1727
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 642855,
+"ranked": true,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": false,
+"at": "2026-09-30T00:20:37.918Z",
+"mapName": "Trauma",
+"a": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+},
+"b": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+}
+},
+{
+"id": 645161,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:19:57.378Z",
+"mapName": "Trauma",
+"a": {
+"id": 837,
+"name": "Hypr Series",
+"elo": 1727
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645159,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:19:53.324Z",
+"mapName": "Autarky",
+"a": {
+"id": 837,
+"name": "Hypr Series",
+"elo": 1727
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645160,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:19:50.946Z",
+"mapName": "Devil",
+"a": {
+"id": 837,
+"name": "Hypr Series",
+"elo": 1727
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645152,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:19:43.060Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 837,
+"name": "Hypr Series",
+"elo": 1727
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645136,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:19:38.338Z",
+"mapName": "Schooltime",
+"a": {
+"id": 837,
+"name": "Hypr Series",
+"elo": 1727
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645137,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:19:36.673Z",
+"mapName": "Portals",
+"a": {
+"id": 837,
+"name": "Hypr Series",
+"elo": 1727
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645140,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:19:34.656Z",
+"mapName": "Default",
+"a": {
+"id": 837,
+"name": "Hypr Series",
+"elo": 1727
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645146,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:19:27.855Z",
+"mapName": "Trophy",
+"a": {
+"id": 837,
+"name": "Hypr Series",
+"elo": 1727
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 645139,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-30T00:19:25.141Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 837,
+"name": "Hypr Series",
+"elo": 1727
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 642858,
+"ranked": true,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": false,
+"at": "2026-09-30T00:16:08.255Z",
+"mapName": "Default",
+"a": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+},
+"b": {
+"id": 46,
+"name": "Sabotage-d",
+"elo": 1988
+}
+},
+{
+"id": 642767,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:58:14.448Z",
+"mapName": "Autarky",
+"a": {
+"id": 82,
+"name": "free trip to sydney pls",
+"elo": 1901
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 642773,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:58:13.862Z",
+"mapName": "Default",
+"a": {
+"id": 82,
+"name": "free trip to sydney pls",
+"elo": 1901
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 642774,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:58:13.670Z",
+"mapName": "Devil",
+"a": {
+"id": 82,
+"name": "free trip to sydney pls",
+"elo": 1901
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 642776,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:58:08.437Z",
+"mapName": "Portals",
+"a": {
+"id": 82,
+"name": "free trip to sydney pls",
+"elo": 1901
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 642772,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:58:08.304Z",
+"mapName": "Autarky",
+"a": {
+"id": 82,
+"name": "free trip to sydney pls",
+"elo": 1901
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 642771,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:58:01.514Z",
+"mapName": "Portals",
+"a": {
+"id": 82,
+"name": "free trip to sydney pls",
+"elo": 1901
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 642769,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:57:56.916Z",
+"mapName": "Devil",
+"a": {
+"id": 82,
+"name": "free trip to sydney pls",
+"elo": 1901
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 642722,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:57:52.930Z",
+"mapName": "Schooltime",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 642768,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:57:52.432Z",
+"mapName": "Default",
+"a": {
+"id": 82,
+"name": "free trip to sydney pls",
+"elo": 1901
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 642775,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:57:49.811Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 82,
+"name": "free trip to sydney pls",
+"elo": 1901
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 642723,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:57:47.088Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 642770,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:57:43.536Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 82,
+"name": "free trip to sydney pls",
+"elo": 1901
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 642719,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:56:57.363Z",
+"mapName": "Portals",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 642724,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:56:56.997Z",
+"mapName": "Trauma",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 642717,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:56:51.712Z",
+"mapName": "Default",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 642718,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:56:50.984Z",
+"mapName": "Devil",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 642716,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:56:47.262Z",
+"mapName": "Autarky",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 642721,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:56:46.888Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 642725,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:56:44.413Z",
+"mapName": "Trophy",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 642720,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:56:44.052Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 974,
+"name": "Manners Cookies",
+"elo": 1512
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 642660,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:55:35.342Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 946,
+"name": "Big Bobs Bots",
+"elo": 1747
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 642654,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:55:24.017Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 946,
+"name": "Big Bobs Bots",
+"elo": 1747
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 642132,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:45:30.152Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 946,
+"name": "Big Bobs Bots",
+"elo": 1747
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 642131,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:45:19.766Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 946,
+"name": "Big Bobs Bots",
+"elo": 1747
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 641975,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:43:36.889Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+},
+"b": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+}
+},
+{
+"id": 641974,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:43:17.369Z",
+"mapName": "Schooltime",
+"a": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+},
+"b": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+}
+},
+{
+"id": 641925,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:42:37.386Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 98,
+"name": "Bhole Chature",
+"elo": 1664
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 641976,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:42:30.042Z",
+"mapName": "Trauma",
+"a": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+},
+"b": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+}
+},
+{
+"id": 641968,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:42:24.700Z",
+"mapName": "Autarky",
+"a": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+},
+"b": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+}
+},
+{
+"id": 641969,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:42:24.426Z",
+"mapName": "Default",
+"a": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+},
+"b": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+}
+},
+{
+"id": 641971,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:42:21.633Z",
+"mapName": "Portals",
+"a": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+},
+"b": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+}
+},
+{
+"id": 641923,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:42:19.495Z",
+"mapName": "Devil",
+"a": {
+"id": 98,
+"name": "Bhole Chature",
+"elo": 1664
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 641973,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:42:18.663Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+},
+"b": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+}
+},
+{
+"id": 641977,
+"ranked": false,
+"status": "completed",
+"winner": "a",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:42:16.281Z",
+"mapName": "Trophy",
+"a": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+},
+"b": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+}
+},
+{
+"id": 641926,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:42:12.581Z",
+"mapName": "Default",
+"a": {
+"id": 98,
+"name": "Bhole Chature",
+"elo": 1664
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 641970,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:42:07.891Z",
+"mapName": "Devil",
+"a": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+},
+"b": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+}
+},
+{
+"id": 641972,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:42:06.306Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+},
+"b": {
+"id": 264,
+"name": "forgot to mention",
+"elo": 2039
+}
+},
+{
+"id": 641924,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:42:00.595Z",
+"mapName": "Autarky",
+"a": {
+"id": 98,
+"name": "Bhole Chature",
+"elo": 1664
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 641922,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:41:49.148Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 98,
+"name": "Bhole Chature",
+"elo": 1664
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 641639,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:36:09.975Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 98,
+"name": "Bhole Chature",
+"elo": 1664
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 641638,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:35:42.197Z",
+"mapName": "Autarky",
+"a": {
+"id": 98,
+"name": "Bhole Chature",
+"elo": 1664
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 641640,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:35:40.580Z",
+"mapName": "Default",
+"a": {
+"id": 98,
+"name": "Bhole Chature",
+"elo": 1664
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 641538,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:35:34.532Z",
+"mapName": "Schooltime",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 641545,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:35:33.668Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 641637,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:35:30.259Z",
+"mapName": "Devil",
+"a": {
+"id": 98,
+"name": "Bhole Chature",
+"elo": 1664
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 641636,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:35:16.396Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 98,
+"name": "Bhole Chature",
+"elo": 1664
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 641543,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:35:03.736Z",
+"mapName": "Autarky",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 641541,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:34:56.208Z",
+"mapName": "Trauma",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 641544,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:34:55.546Z",
+"mapName": "Portals",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 641536,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:34:52.896Z",
+"mapName": "Default",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 641542,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:34:51.935Z",
+"mapName": "Prisoners Dilemma",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 641540,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:34:45.229Z",
+"mapName": "Devil",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 641537,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:34:44.761Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 641539,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:34:44.440Z",
+"mapName": "Trophy",
+"a": {
+"id": 583,
+"name": "CPPEZ",
+"elo": 1545
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 641396,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:32:38.230Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 451,
+"name": "Candiru",
+"elo": 1661
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 641394,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:31:46.645Z",
+"mapName": "Schooltime",
+"a": {
+"id": 451,
+"name": "Candiru",
+"elo": 1661
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 641395,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:31:30.370Z",
+"mapName": "Portals",
+"a": {
+"id": 451,
+"name": "Candiru",
+"elo": 1661
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 641397,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:31:15.708Z",
+"mapName": "Queen Of Spades",
+"a": {
+"id": 451,
+"name": "Candiru",
+"elo": 1661
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 641398,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:31:15.337Z",
+"mapName": "Default",
+"a": {
+"id": 451,
+"name": "Candiru",
+"elo": 1661
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 641346,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:30:39.625Z",
+"mapName": "Slithery Fight",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+},
+{
+"id": 641345,
+"ranked": false,
+"status": "completed",
+"winner": "b",
+"hasReplay": true,
+"challenge": true,
+"at": "2026-09-29T23:29:41.816Z",
+"mapName": "Schooltime",
+"a": {
+"id": 45,
+"name": "WeLikCoding",
+"elo": 1751
+},
+"b": {
+"id": 306,
+"name": "Cutlery",
+"elo": 2058
+}
+}
+]

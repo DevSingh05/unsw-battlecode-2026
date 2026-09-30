@@ -1,0 +1,41 @@
+638491 Trophy  pf31  bread first search   W turns   199 real==v30 0.970 lives diverging v30/v29: 0
+638492 Devil   pf31  bread first search   W turns  9026 real==v30 0.981 lives diverging v30/v29: 0
+640826 Trophy  pf31  龙虎豹                  W turns   133 real==v30 0.962 lives diverging v30/v29: 0
+640827 Devil   pf31  龙虎豹                  W turns   677 real==v30 0.976 lives diverging v30/v29: 0
+641178 Devil   pf31  Knight Capital       W turns 25959 real==v30 0.992 lives diverging v30/v29: 0
+641185 Trophy  pf31  Knight Capital       W turns  4305 real==v30 0.981 lives diverging v30/v29: 0
+641657 Trophy  pf31  Bhole Chature        W turns  9197 real==v30 0.972 lives diverging v30/v29: 0
+641699 Devil   pf31  Sabotage-d           L turns   473 real==v30 0.985 lives diverging v30/v29: 0
+641943 Trophy  pf31  Bhole Chature        W turns 14104 real==v30 0.975 lives diverging v30/v29: 0
+641993 Trophy  pf31  Just Keep Swimming   W turns  7045 real==v30 0.981 lives diverging v30/v29: 0
+641996 Devil   pf31  Just Keep Swimming   W turns  1241 real==v30 0.962 lives diverging v30/v29: 0
+642253 Devil   v30   forgot to mention    W turns  3976 real==v30 0.986 lives diverging v30/v29: 0
+642249 Devil   v30   Stockfish            L turns   717 real==v30 0.982 lives diverging v30/v29: 0
+642260 Devil   v30   calc                 L turns   750 real==v30 0.965 lives diverging v30/v29: 0
+642262 Trophy  v30   calc                 W turns 22615 real==v30 0.979 lives diverging v30/v29: 0
+644438 Devil   v30   byte_force           L turns   493 real==v30 0.988 lives diverging v30/v29: 0
+644845 Trophy  v30   SSS                  W turns  3567 real==v30 0.974 lives diverging v30/v29: 0
+644848 Devil   v30   SSS                  W turns  7347 real==v30 0.977 lives diverging v30/v29: 0
+644875 Trophy  v30   SSS                  W turns  5253 real==v30 0.983 lives diverging v30/v29: 0
+644878 Devil   v30   SSS                  W turns  2890 real==v30 0.976 lives diverging v30/v29: 0
+642864 Trophy  v30   calc                 W turns 20271 real==v30 0.985 lives diverging v30/v29: 0
+642868 Devil   v30   calc                 L turns  1078 real==v30 0.996 lives diverging v30/v29: 0
+645905 Trophy  v30   zitian               W turns 16535 real==v30 0.982 lives diverging v30/v29: 0
+645906 Devil   v30   zitian               W turns  2495 real==v30 0.974 lives diverging v30/v29: 0
+649048 Devil   v31   cheji bt             L turns   381 real==v30 0.997 lives diverging v30/v29: 0
+649050 Trophy  v31   cheji bt             W turns  3135 real==v30 0.980 lives diverging v30/v29: 2
+      id23 r70 L3 real=MOVE W v30=MOVE W v29=MOVE S
+      id41 r110 L3 real=MOVE W v30=MOVE W v29=MOVE S
+649827 Devil   v31   Sponge(Albert and Bo L turns  1560 real==v30 0.980 lives diverging v30/v29: 0
+649829 Trophy  v31   Sponge(Albert and Bo L turns   639 real==v30 0.992 lives diverging v30/v29: 0
+649982 Devil   v31   Sabotage-d           L turns   882 real==v30 0.988 lives diverging v30/v29: 0
+650530 Devil   v31   Hypr Series          W turns   888 real==v30 0.989 lives diverging v30/v29: 0
+650527 Trophy  v31   Hypr Series          W turns  8683 real==v30 0.982 lives diverging v30/v29: 0
+651479 Devil   v31   Team SKKU            W turns   847 real==v30 0.974 lives diverging v30/v29: 0
+651473 Trophy  v31   calc                 L turns  1773 real==v30 0.977 lives diverging v30/v29: 0
+651476 Devil   v31   calc                 W turns 12148 real==v30 0.989 lives diverging v30/v29: 0
+651716 Trophy  v31   Sabotage-d           L turns  1781 real==v30 0.994 lives diverging v30/v29: 0
+651753 Trophy  v31   forgot to mention    L turns   353 real==v30 0.992 lives diverging v30/v29: 0
+652127 Devil   v31   Team SKKU            L turns   567 real==v30 0.986 lives diverging v30/v29: 0
+652117 Devil   v31   calc                 L turns   532 real==v30 0.994 lives diverging v30/v29: 0
+652120 Trophy  v31   calc                 L turns  1610 real==v30 0.994 lives diverging v30/v29: 0

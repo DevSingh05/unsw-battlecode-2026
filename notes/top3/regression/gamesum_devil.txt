@@ -1,0 +1,152 @@
+608235 Devil   v29   v29    Peanut Butter        1987 R L end r147 eats  46-270 splits  20 | r100 1/3/3-24/57/3 r200 0/0/0-36/88/4 r300 0/0/0-36/88/4 end 0/0/0-36/88/4
+      our deaths {'HitOtherBody': 3, 'HitSelf': 5, 'HitHeadToHead': 15} | theirs {'HitHeadToHead': 15, 'HitWall': 28, 'HitOtherBody': 12, 'HitSelf': 28} | big []
+608207 Devil   v29   v29    Sponge(Albert and Bo 2013 R L end r143 eats  24-163 splits  12 | r100 1/2/2-20/47/3 r200 0/0/0-37/90/4 r300 0/0/0-37/90/4 end 0/0/0-37/90/4
+      our deaths {'HitHeadToHead': 14, 'HitOtherBody': 1} | theirs {'HitHeadToHead': 14, 'HitSelf': 11, 'HitOtherBody': 7, 'HitWall': 3} | big []
+612612 Devil   v29   v29    3.14159265           2003 R L end r229 eats  56-615 splits  25 | r100 2/5/3-17/52/5 r200 1/3/3-38/127/11 r300 0/0/0-37/137/11 end 0/0/0-37/137/11
+      our deaths {'HitOtherBody': 3, 'HitHeadToHead': 23, 'HitSelf': 2} | theirs {'HitWall': 160, 'HitHeadToHead': 23, 'HitSelf': 9, 'HitOtherBody': 12} | big []
+612734 Devil   v29   v29    Team SKKU            1985 R W end r 72 eats 111- 19 splits  49 | r100 19/46/4-0/0/0 r200 19/46/4-0/0/0 r300 19/46/4-0/0/0 end 19/46/4-0/0/0
+      our deaths {'HitSelf': 14, 'HitHeadToHead': 13, 'HitOtherBody': 6} | theirs {'HitHeadToHead': 13} | big []
+612768 Devil   v29   v29    Peanut Butter        1967 R W end r125 eats 327- 44 splits 142 | r100 27/65/4-1/2/2 r200 42/98/3-0/0/0 r300 42/98/3-0/0/0 end 42/98/3-0/0/0
+      our deaths {'HitHeadToHead': 19, 'HitSelf': 65, 'HitOtherBody': 19} | theirs {'HitHeadToHead': 19, 'HitWall': 3, 'HitSelf': 1} | big []
+612864 Devil   v29   v29    3.14159265           2000 R L end r135 eats  31-314 splits  15 | r100 2/5/3-25/69/7 r200 0/0/0-33/94/4 r300 0/0/0-33/94/4 end 0/0/0-33/94/4
+      our deaths {'HitSelf': 1, 'HitHeadToHead': 17} | theirs {'HitWall': 71, 'HitHeadToHead': 17, 'HitOtherBody': 6} | big []
+612747 Devil   v29   v29    dev test 1 :P        1963 R W end r250 eats 934-238 splits 392 | r100 33/80/4-12/33/4 r200 44/107/4-7/18/4 r300 41/103/4-0/0/0 end 41/103/4-0/0/0
+      our deaths {'HitHeadToHead': 65, 'HitOtherBody': 71, 'HitSelf': 218} | theirs {'HitHeadToHead': 65, 'HitWall': 30} | big []
+612998 Devil   v29   v29    Team SKKU            1972 R W end r202 eats 666-159 splits 286 | r100 39/86/3-9/21/3 r200 48/112/4-1/2/2 r300 47/119/4-0/0/0 end 47/119/4-0/0/0
+      our deaths {'HitHeadToHead': 52, 'HitSelf': 131, 'HitOtherBody': 59} | theirs {'HitSelf': 7, 'HitHeadToHead': 52, 'HitWall': 7} | big []
+609890 Devil   v29   v29    PPP                  1960 R W end r119 eats 239- 71 splits  99 | r100 25/62/4-3/6/2 r200 34/87/4-0/0/0 r300 34/87/4-0/0/0 end 34/87/4-0/0/0
+      our deaths {'HitOtherBody': 19, 'HitSelf': 31, 'HitHeadToHead': 18} | theirs {'HitWall': 5, 'HitSelf': 9, 'HitHeadToHead': 18} | big []
+613575 Devil   v29   v29    3.14159265           1995 R L end r499 eats 436-1720 splits 157 | r100 12/31/4-25/84/8 r200 9/20/3-32/94/6 r300 8/21/4-28/94/7 end 3/25/12-17/100/17
+      our deaths {'HitHeadToHead': 105, 'HitSelf': 35, 'HitOtherBody': 17} | theirs {'HitHeadToHead': 105, 'HitWall': 483, 'HitOtherBody': 36, 'HitSelf': 41, 'NoValidAction': 4} | big ['r488 L6 HitSelf']
+613711 Devil   v29   v29    Sabotage-d           1979 R L end r245 eats 200-426 splits  83 | r100 8/19/3-19/47/4 r200 3/8/4-25/81/7 r300 0/0/0-33/116/7 end 0/0/0-33/116/7
+      our deaths {'HitSelf': 23, 'HitHeadToHead': 59, 'HitOtherBody': 4} | theirs {'HitHeadToHead': 59, 'HitOtherBody': 17, 'HitWall': 49} | big []
+613835 Devil   v29   v29    bread first search   1947 u W end r347 eats 870-296 splits 364 | r100 15/32/4-15/35/3 r200 22/55/4-8/20/4 r300 46/109/4-2/5/3 end 47/115/4-0/0/0
+      our deaths {'HitSelf': 181, 'HitHeadToHead': 77, 'HitOtherBody': 62} | theirs {'HitSelf': 23, 'HitHeadToHead': 77, 'HitWall': 15, 'HitOtherBody': 2} | big []
+615642 Devil   v29   v29    bread first search   1947 u W end r244 eats 844-156 splits 363 | r100 23/60/4-9/20/3 r200 44/107/4-2/5/3 r300 51/121/4-0/0/0 end 51/121/4-0/0/0
+      our deaths {'HitHeadToHead': 50, 'HitOtherBody': 81, 'HitSelf': 184} | theirs {'HitSelf': 10, 'HitHeadToHead': 50, 'HitWall': 8, 'HitOtherBody': 1} | big []
+616113 Devil   v29   v29    SSS                  2006 u L end r138 eats  43-282 splits  19 | r100 2/5/3-32/82/4 r200 0/0/0-43/101/3 r300 0/0/0-43/101/3 end 0/0/0-43/101/3
+      our deaths {'HitHeadToHead': 20, 'HitOtherBody': 2} | theirs {'HitHeadToHead': 20, 'HitOtherBody': 19, 'HitSelf': 32} | big []
+616123 Devil   v29   v29    SSS                  2006 u L end r100 eats  68-144 splits  29 | r100 0/0/0-25/58/3 r200 0/0/0-25/58/3 r300 0/0/0-25/58/3 end 0/0/0-25/58/3
+      our deaths {'HitHeadToHead': 21, 'HitSelf': 10, 'HitOtherBody': 1} | theirs {'HitSelf': 6, 'HitHeadToHead': 21, 'HitOtherBody': 11} | big []
+614175 Devil   v29   v29    Stockfish            2098 R W end r 59 eats  56- 12 splits  25 | r100 16/40/4-0/0/0 r200 16/40/4-0/0/0 r300 16/40/4-0/0/0 end 16/40/4-0/0/0
+      our deaths {'HitHeadToHead': 6, 'HitSelf': 4, 'HitOtherBody': 2} | theirs {'HitHeadToHead': 6, 'HitSelf': 3} | big []
+616943 Devil   v29   v29    3.14159265           2000 R L end r499 eats 462-1859 splits 171 | r100 12/26/3-27/82/6 r200 10/25/3-32/99/6 r300 7/16/3-32/110/9 end 13/43/6-17/84/12
+      our deaths {'HitHeadToHead': 105, 'HitSelf': 32, 'HitOtherBody': 24} | theirs {'HitHeadToHead': 105, 'HitWall': 539, 'HitSelf': 35, 'HitOtherBody': 43, 'NoValidAction': 2} | big ['r486 L7 HitHeadTo']
+617117 Devil   v29   v29    SSS                  1991 u W end r 52 eats  84- 12 splits  34 | r100 17/45/4-0/0/0 r200 17/45/4-0/0/0 r300 17/45/4-0/0/0 end 17/45/4-0/0/0
+      our deaths {'HitSelf': 14, 'HitOtherBody': 3, 'HitHeadToHead': 3} | theirs {'HitHeadToHead': 3} | big []
+617036 Devil   v29   v29    3.14159265           1998 R L end r159 eats  28-381 splits  14 | r100 1/2/2-22/61/5 r200 0/0/0-36/117/6 r300 0/0/0-36/117/6 end 0/0/0-36/117/6
+      our deaths {'HitHeadToHead': 15, 'HitOtherBody': 2} | theirs {'HitWall': 95, 'HitHeadToHead': 15, 'HitOtherBody': 2, 'HitSelf': 2} | big []
+617155 Devil   v29   v29    WeHaveQuizzes        1916 R W end r116 eats 325- 85 splits 135 | r100 32/83/4-4/10/4 r200 37/93/4-0/0/0 r300 37/93/4-0/0/0 end 37/93/4-0/0/0
+      our deaths {'HitHeadToHead': 29, 'HitSelf': 47, 'HitOtherBody': 25} | theirs {'HitHeadToHead': 29, 'HitSelf': 2} | big []
+617092 Devil   v29   v29    Cutlery              2070 u L end r225 eats 162-576 splits  64 | r100 13/31/4-22/49/4 r200 3/6/2-37/90/4 r300 0/0/0-39/91/4 end 0/0/0-39/91/4
+      our deaths {'HitHeadToHead': 47, 'HitOtherBody': 4, 'HitSelf': 16} | theirs {'NoValidAction': 150, 'HitHeadToHead': 47} | big []
+617102 Devil   v29   v29    中国必须人能飞😡             2051 u L end r183 eats  96-523 splits  40 | r100 6/13/3-27/59/3 r200 0/0/0-39/97/4 r300 0/0/0-39/97/4 end 0/0/0-39/97/4
+      our deaths {'HitHeadToHead': 38, 'HitOtherBody': 3, 'HitSelf': 2} | theirs {'HitHeadToHead': 38, 'HitWall': 127, 'HitSelf': 7} | big []
+617075 Devil   v29   v29    calc                 2066 R W end r 89 eats 127- 33 splits  54 | r100 20/46/4-0/0/0 r200 20/46/4-0/0/0 r300 20/46/4-0/0/0 end 20/46/4-0/0/0
+      our deaths {'HitHeadToHead': 15, 'HitOtherBody': 8, 'HitSelf': 14} | theirs {'HitHeadToHead': 15, 'HitWall': 1} | big []
+617607 Devil   v29   v29    Hypr Series          1725 u W end r279 eats 879-119 splits 376 | r100 29/69/4-6/17/4 r200 51/117/4-2/8/6 r300 50/127/4-0/0/0 end 50/127/4-0/0/0
+      our deaths {'HitSelf': 209, 'HitOtherBody': 88, 'HitHeadToHead': 32} | theirs {'HitWall': 13, 'HitHeadToHead': 32} | big []
+618023 Devil   v29   v29    PPP                  1926 u W end r121 eats 245- 55 splits 110 | r100 34/84/4-4/9/3 r200 43/99/4-0/0/0 r300 43/99/4-0/0/0 end 43/99/4-0/0/0
+      our deaths {'HitSelf': 37, 'HitOtherBody': 19, 'HitHeadToHead': 14} | theirs {'HitWall': 8, 'HitSelf': 8, 'HitHeadToHead': 14} | big []
+619857 Devil   v29   v29    bread first search   1966 u W end r307 eats 839-261 splits 355 | r100 23/50/4-9/21/3 r200 28/76/4-10/25/4 r300 38/89/3-2/4/2 end 41/96/4-0/0/0
+      our deaths {'HitOtherBody': 56, 'HitHeadToHead': 76, 'HitSelf': 185} | theirs {'HitWall': 11, 'HitSelf': 16, 'HitHeadToHead': 76, 'HitOtherBody': 1} | big []
+620786 Devil   v29   v29    Sabotage-d           1949 R W end r 92 eats 151- 21 splits  68 | r100 32/73/4-0/0/0 r200 32/73/4-0/0/0 r300 32/73/4-0/0/0 end 32/73/4-0/0/0
+      our deaths {'HitHeadToHead': 11, 'HitSelf': 21, 'HitOtherBody': 7} | theirs {'HitHeadToHead': 11} | big []
+618381 Devil   v29   v29    Cutlery              2070 R W end r215 eats 753- 38 splits 336 | r100 40/98/4-4/8/2 r200 58/142/3-1/2/2 r300 58/141/4-0/0/0 end 58/141/4-0/0/0
+      our deaths {'HitOtherBody': 81, 'HitSelf': 185, 'HitHeadToHead': 15} | theirs {'NoValidAction': 6, 'HitHeadToHead': 15} | big []
+622216 Devil   v29   v29    Stockfish            2068 R W end r114 eats 188- 35 splits  82 | r100 31/72/3-5/10/2 r200 32/74/3-0/0/0 r300 32/74/3-0/0/0 end 32/74/3-0/0/0
+      our deaths {'HitOtherBody': 13, 'HitHeadToHead': 16, 'HitSelf': 24} | theirs {'HitSelf': 2, 'HitHeadToHead': 16} | big []
+625447 Devil   v29   v29    BloodBath            1805 R W end r468 eats 765-938 splits 297 | r100 8/21/4-18/45/4 r200 10/25/3-23/60/4 r300 8/21/4-14/48/14 end 31/100/6-0/0/0
+      our deaths {'HitHeadToHead': 106, 'HitOtherBody': 47, 'HitSelf': 116} | theirs {'NoValidAction': 279, 'HitHeadToHead': 106} | big ['r452 L6 HitHeadTo', 'r468 L7 HitHeadTo']
+625525 Devil   v29   v29    Sponge(Albert and Bo 1989 R W end r103 eats 137- 32 splits  61 | r100 23/53/3-1/2/2 r200 23/54/3-0/0/0 r300 23/54/3-0/0/0 end 23/54/3-0/0/0
+      our deaths {'HitHeadToHead': 13, 'HitOtherBody': 10, 'HitSelf': 18} | theirs {'HitHeadToHead': 13, 'HitOtherBody': 1, 'HitWall': 1, 'HitSelf': 1} | big []
+627737 Devil   v29   v29    bread first search   1978 u W end r179 eats 426- 99 splits 180 | r100 26/63/4-8/20/3 r200 43/105/4-0/0/0 r300 43/105/4-0/0/0 end 43/105/4-0/0/0
+      our deaths {'HitHeadToHead': 31, 'HitOtherBody': 28, 'HitSelf': 81} | theirs {'HitWall': 2, 'HitSelf': 9, 'HitHeadToHead': 31} | big []
+628261 Devil   v29   v29    cheji bt             2095 u W end r242 eats 894- 68 splits 390 | r100 28/69/4-3/9/4 r200 58/137/4-2/4/2 r300 59/150/3-0/0/0 end 59/150/3-0/0/0
+      our deaths {'HitHeadToHead': 23, 'HitOtherBody': 103, 'HitSelf': 208} | theirs {'HitHeadToHead': 23, 'NoValidAction': 1} | big []
+629032 Devil   v29   v29    Stockfish            2059 R W end r142 eats 346- 64 splits 146 | r100 31/77/4-4/8/2 r200 45/110/4-0/0/0 r300 45/110/4-0/0/0 end 45/110/4-0/0/0
+      our deaths {'HitSelf': 61, 'HitHeadToHead': 23, 'HitOtherBody': 20} | theirs {'HitWall': 2, 'HitHeadToHead': 23, 'HitSelf': 3, 'HitOtherBody': 1} | big []
+629017 Devil   v29   v29    cheji bt             2095 R L end r102 eats  26-161 splits  14 | r100 1/2/2-30/65/3 r200 0/0/0-30/68/5 r300 0/0/0-30/68/5 end 0/0/0-30/68/5
+      our deaths {'HitHeadToHead': 12, 'HitSelf': 3, 'HitOtherBody': 2} | theirs {'NoValidAction': 15, 'HitHeadToHead': 12} | big []
+629446 Devil   v29   v29    forgot to mention    1992 R W end r253 eats 786-222 splits 335 | r100 21/52/4-7/17/3 r200 37/96/4-7/17/3 r300 46/113/3-0/0/0 end 46/113/3-0/0/0
+      our deaths {'HitHeadToHead': 71, 'HitOtherBody': 72, 'HitSelf': 149} | theirs {'HitHeadToHead': 71, 'NoValidAction': 17} | big []
+629442 Devil   v29   v29    3.14159265           2001 R L end r136 eats  23-291 splits  11 | r100 2/4/2-25/75/5 r200 0/0/0-36/110/7 r300 0/0/0-36/110/7 end 0/0/0-36/110/7
+      our deaths {'HitSelf': 1, 'HitHeadToHead': 13} | theirs {'HitWall': 64, 'HitHeadToHead': 13, 'HitSelf': 2, 'HitOtherBody': 2} | big []
+631943 Devil   v29   v29    Candiru              1609 u W end r147 eats 402- 54 splits 174 | r100 32/79/4-4/10/3 r200 51/126/3-0/0/0 r300 51/126/3-0/0/0 end 51/126/3-0/0/0
+      our deaths {'HitHeadToHead': 14, 'HitOtherBody': 43, 'HitSelf': 69} | theirs {'HitHeadToHead': 14, 'HitSelf': 7, 'HitOtherBody': 3, 'HitWall': 3} | big []
+632918 Devil   v29   v29    forgot to mention    2012 u W end r175 eats 541- 65 splits 236 | r100 33/85/4-3/7/3 r200 52/129/4-0/0/0 r300 52/129/4-0/0/0 end 52/129/4-0/0/0
+      our deaths {'HitSelf': 105, 'HitHeadToHead': 29, 'HitOtherBody': 53} | theirs {'HitHeadToHead': 29, 'NoValidAction': 3} | big []
+632914 Devil   v29   v29    中国必须人能飞😡             2043 u L end r114 eats  29-222 splits  13 | r100 1/3/3-29/75/4 r200 0/0/0-39/94/4 r300 0/0/0-39/94/4 end 0/0/0-39/94/4
+      our deaths {'HitHeadToHead': 16} | theirs {'HitHeadToHead': 16, 'HitWall': 40} | big []
+632912 Devil   v29   v29    Stockfish            2064 u W end r 39 eats  51- 15 splits  20 | r100 10/27/4-0/0/0 r200 10/27/4-0/0/0 r300 10/27/4-0/0/0 end 10/27/4-0/0/0
+      our deaths {'HitHeadToHead': 10, 'HitSelf': 1, 'HitOtherBody': 2} | theirs {'HitHeadToHead': 10} | big []
+632922 Devil   v29   v29    Sponge(Albert and Bo 1990 u W end r 88 eats 152- 48 splits  64 | r100 28/67/4-0/0/0 r200 28/67/4-0/0/0 r300 28/67/4-0/0/0 end 28/67/4-0/0/0
+      our deaths {'HitOtherBody': 7, 'HitSelf': 12, 'HitHeadToHead': 20} | theirs {'HitHeadToHead': 20, 'HitOtherBody': 1, 'HitSelf': 1} | big []
+632920 Devil   v29   v29    3.14159265           2001 u W end r142 eats 399- 64 splits 173 | r100 38/89/4-2/5/3 r200 48/113/4-0/0/0 r300 48/113/4-0/0/0 end 48/113/4-0/0/0
+      our deaths {'HitHeadToHead': 24, 'HitOtherBody': 25, 'HitSelf': 79} | theirs {'HitHeadToHead': 24, 'HitWall': 4} | big []
+632916 Devil   v29   v29    calc                 1989 u W end r499 eats 1829-468 splits 764 | r100 25/62/3-13/30/3 r200 29/76/4-20/46/3 r300 32/75/3-11/29/3 end 58/172/6-1/4/4
+      our deaths {'HitHeadToHead': 125, 'HitSelf': 400, 'HitOtherBody': 184} | theirs {'HitHeadToHead': 125, 'HitWall': 26, 'HitOtherBody': 12} | big ['r476 L6 HitSelf']
+632910 Devil   v29   v29    cheji bt             2099 u L end r103 eats  35-173 splits  14 | r100 1/3/3-39/85/4 r200 0/0/0-38/87/5 r300 0/0/0-38/87/5 end 0/0/0-38/87/5
+      our deaths {'HitHeadToHead': 11, 'HitSelf': 1, 'HitOtherBody': 5} | theirs {'HitHeadToHead': 11, 'NoValidAction': 16} | big []
+633718 Devil   v29   v29    Team SKKU            1975 u W end r139 eats 137-100 splits  57 | r100 11/23/3-5/10/2 r200 21/46/4-0/0/0 r300 21/46/4-0/0/0 end 21/46/4-0/0/0
+      our deaths {'HitHeadToHead': 32, 'HitOtherBody': 5, 'HitSelf': 2} | theirs {'HitHeadToHead': 32, 'HitWall': 7} | big []
+633716 Devil   v29   v29    bread first search   1982 u W end r351 eats 1346-314 splits 559 | r100 31/76/4-9/24/3 r200 38/94/3-4/12/4 r300 46/109/4-3/7/3 end 50/128/4-0/0/0
+      our deaths {'HitHeadToHead': 96, 'HitSelf': 293, 'HitOtherBody': 123} | theirs {'HitHeadToHead': 96, 'HitSelf': 12, 'HitOtherBody': 4, 'HitWall': 10} | big []
+633720 Devil   v29   v29    Peanut Butter        1951 u W end r 94 eats 220- 20 splits  95 | r100 29/74/4-0/0/0 r200 29/74/4-0/0/0 r300 29/74/4-0/0/0 end 29/74/4-0/0/0
+      our deaths {'HitHeadToHead': 12, 'HitOtherBody': 24, 'HitSelf': 33} | theirs {'HitHeadToHead': 12, 'HitSelf': 1} | big []
+633829 Devil   v29   v29    horse                1708 u W end r137 eats 318-103 splits 135 | r100 25/61/4-6/13/3 r200 38/94/4-0/0/0 r300 38/94/4-0/0/0 end 38/94/4-0/0/0
+      our deaths {'HitHeadToHead': 33, 'HitOtherBody': 17, 'HitSelf': 50} | theirs {'HitHeadToHead': 33, 'HitOtherBody': 3, 'HitSelf': 4} | big []
+637172 Devil   v29   v29    cheji bt             2106 u W end r 69 eats  65- 24 splits  30 | r100 11/25/3-0/0/0 r200 11/25/3-0/0/0 r300 11/25/3-0/0/0 end 11/25/3-0/0/0
+      our deaths {'HitHeadToHead': 10, 'HitSelf': 9, 'HitOtherBody': 3} | theirs {'HitHeadToHead': 10, 'NoValidAction': 2} | big []
+637563 Devil   v29   v29    bread first search   1985 R W end r 98 eats 166- 42 splits  72 | r100 29/69/4-0/0/0 r200 29/69/4-0/0/0 r300 29/69/4-0/0/0 end 29/69/4-0/0/0
+      our deaths {'HitHeadToHead': 15, 'HitOtherBody': 15, 'HitSelf': 16} | theirs {'HitWall': 3, 'HitHeadToHead': 15, 'HitSelf': 2} | big []
+637543 Devil   v29   v29    forgot to mention    2016 R L end r108 eats  37-238 splits  17 | r100 2/5/3-29/72/4 r200 0/0/0-28/71/4 r300 0/0/0-28/71/4 end 0/0/0-28/71/4
+      our deaths {'HitHeadToHead': 18, 'HitSelf': 1, 'HitOtherBody': 1} | theirs {'NoValidAction': 57, 'HitHeadToHead': 18} | big []
+637548 Devil   v29   v29    calc                 2001 R W end r184 eats 426- 94 splits 179 | r100 25/62/4-8/17/3 r200 41/104/4-0/0/0 r300 41/104/4-0/0/0 end 41/104/4-0/0/0
+      our deaths {'HitHeadToHead': 33, 'HitOtherBody': 33, 'HitSelf': 75} | theirs {'HitOtherBody': 2, 'HitHeadToHead': 33, 'HitWall': 4} | big []
+637722 Devil   v29   v29    中国人不准飞😡😡😡😡😡😡😡        1854 u L end r 69 eats   8-138 splits   5 | r100 0/0/0-39/92/4 r200 0/0/0-39/92/4 r300 0/0/0-39/92/4 end 0/0/0-39/92/4
+      our deaths {'HitSelf': 1, 'HitHeadToHead': 7} | theirs {'HitSelf': 4, 'HitHeadToHead': 7, 'HitWall': 5, 'HitOtherBody': 8} | big []
+638373 Devil   v29   v29    calc                 2000 R W end r206 eats 688-127 splits 287 | r100 30/74/4-9/22/3 r200 51/127/4-2/4/2 r300 52/137/4-0/0/0 end 52/137/4-0/0/0
+      our deaths {'HitHeadToHead': 43, 'HitSelf': 129, 'HitOtherBody': 66} | theirs {'HitHeadToHead': 43, 'HitWall': 9} | big []
+638492 Devil   v30   pf31   bread first search   1980 R W end r301 eats 874-190 splits 378 | r100 27/69/4-8/21/4 r200 44/100/3-5/12/3 r300 42/105/4-1/3/3 end 41/100/4-0/0/0
+      our deaths {'HitSelf': 197, 'HitOtherBody': 87, 'HitHeadToHead': 56} | theirs {'HitWall': 12, 'HitSelf': 10, 'HitHeadToHead': 56, 'HitOtherBody': 2} | big []
+640827 Devil   v30   pf31   龙虎豹                  1840 u W end r 65 eats  75- 15 splits  34 | r100 16/40/4-0/0/0 r200 16/40/4-0/0/0 r300 16/40/4-0/0/0 end 16/40/4-0/0/0
+      our deaths {'HitHeadToHead': 7, 'HitOtherBody': 2, 'HitSelf': 12} | theirs {'HitSelf': 2, 'HitHeadToHead': 7} | big []
+641178 Devil   v30   pf31   Knight Capital       1451 u W end r499 eats 2339- 30 splits 992 | r100 39/102/4-8/18/3 r200 64/163/4-4/9/3 r300 53/142/4-1/2/2 end 50/169/8-1/2/2
+      our deaths {'HitSelf': 630, 'HitOtherBody': 299, 'HitHeadToHead': 16} | theirs {'HitHeadToHead': 16} | big ['r489 L6 HitSelf']
+641699 Devil   v30   pf31   Sabotage-d           1964 R L end r118 eats  33-216 splits  15 | r100 2/4/2-33/80/4 r200 0/0/0-40/99/4 r300 0/0/0-40/99/4 end 0/0/0-40/99/4
+      our deaths {'HitHeadToHead': 17, 'HitSelf': 1} | theirs {'HitHeadToHead': 17, 'HitWall': 21, 'HitOtherBody': 14} | big []
+641996 Devil   v30   pf31   Just Keep Swimming   1748 u W end r 90 eats 133- 22 splits  62 | r100 30/68/3-0/0/0 r200 30/68/3-0/0/0 r300 30/68/3-0/0/0 end 30/68/3-0/0/0
+      our deaths {'HitHeadToHead': 11, 'HitOtherBody': 12, 'HitSelf': 12} | theirs {'HitHeadToHead': 11, 'HitSelf': 1} | big []
+642253 Devil   v30   v30    forgot to mention    2042 R W end r141 eats 430- 49 splits 185 | r100 35/82/4-1/4/4 r200 47/118/4-0/0/0 r300 47/118/4-0/0/0 end 47/118/4-0/0/0
+      our deaths {'HitHeadToHead': 22, 'HitSelf': 73, 'HitOtherBody': 46} | theirs {'NoValidAction': 4, 'HitHeadToHead': 22} | big []
+642249 Devil   v30   v30    Stockfish            2059 R L end r118 eats  56-191 splits  24 | r100 4/10/4-23/51/3 r200 0/0/0-28/65/4 r300 0/0/0-28/65/4 end 0/0/0-28/65/4
+      our deaths {'HitHeadToHead': 21, 'HitSelf': 6} | theirs {'HitHeadToHead': 21, 'HitSelf': 14, 'HitWall': 12, 'HitOtherBody': 4} | big []
+642260 Devil   v30   v30    calc                 1997 R L end r133 eats  61-245 splits  29 | r100 6/13/3-24/59/3 r200 0/0/0-43/103/3 r300 0/0/0-43/103/3 end 0/0/0-43/103/3
+      our deaths {'HitOtherBody': 7, 'HitHeadToHead': 20, 'HitSelf': 5} | theirs {'HitHeadToHead': 22, 'HitWall': 32, 'HitOtherBody': 9} | big []
+644438 Devil   v30   v30    byte_force           1733 R L end r105 eats  44-218 splits  18 | r100 1/3/3-33/82/4 r200 0/0/0-34/81/4 r300 0/0/0-34/81/4 end 0/0/0-34/81/4
+      our deaths {'HitSelf': 2, 'HitHeadToHead': 19} | theirs {'HitSelf': 27, 'HitHeadToHead': 19, 'HitOtherBody': 14} | big []
+644848 Devil   v30   v30    SSS                  2016 u W end r252 eats 695-126 splits 294 | r100 25/57/3-8/18/3 r200 41/94/4-3/8/3 r300 56/131/4-0/0/0 end 56/131/4-0/0/0
+      our deaths {'HitOtherBody': 62, 'HitHeadToHead': 42, 'HitSelf': 137} | theirs {'HitSelf': 10, 'HitOtherBody': 4, 'HitHeadToHead': 42} | big []
+644878 Devil   v30   v30    SSS                  2016 u W end r156 eats 322-118 splits 137 | r100 26/64/4-8/17/3 r200 37/86/4-0/0/0 r300 37/86/4-0/0/0 end 37/86/4-0/0/0
+      our deaths {'HitSelf': 44, 'HitHeadToHead': 38, 'HitOtherBody': 21} | theirs {'HitSelf': 5, 'HitOtherBody': 6, 'HitHeadToHead': 38} | big []
+642868 Devil   v30   v30    calc                 2010 R L end r161 eats  96-490 splits  41 | r100 9/23/4-37/91/4 r200 0/0/0-57/143/4 r300 0/0/0-57/143/4 end 0/0/0-57/143/4
+      our deaths {'HitHeadToHead': 36, 'HitSelf': 5, 'HitOtherBody': 3} | theirs {'HitHeadToHead': 36, 'HitWall': 77, 'HitOtherBody': 29} | big []
+645906 Devil   v30   v30    zitian               1956 u W end r130 eats 279- 55 splits 117 | r100 28/66/4-7/15/3 r200 33/81/4-0/0/0 r300 33/81/4-0/0/0 end 33/81/4-0/0/0
+      our deaths {'HitSelf': 42, 'HitOtherBody': 23, 'HitHeadToHead': 22} | theirs {'HitWall': 2, 'HitSelf': 2, 'HitHeadToHead': 22, 'HitOtherBody': 1} | big []
+649048 Devil   v31   v31    cheji bt             2112 R L end r 70 eats  32-131 splits  16 | r100 0/0/0-23/54/4 r200 0/0/0-23/54/4 r300 0/0/0-23/54/4 end 0/0/0-23/54/4
+      our deaths {'HitHeadToHead': 15, 'HitSelf': 3, 'HitOtherBody': 1} | theirs {'HitHeadToHead': 15, 'NoValidAction': 7} | big []
+649827 Devil   v31   v31    Sponge(Albert and Bo 1975 R L end r233 eats 168-267 splits  65 | r100 8/21/4-10/24/3 r200 3/7/3-20/54/4 r300 0/0/0-24/81/10 end 0/0/0-24/81/10
+      our deaths {'HitSelf': 4, 'HitHeadToHead': 54, 'HitOtherBody': 10} | theirs {'HitWall': 5, 'HitOtherBody': 8, 'HitHeadToHead': 54, 'HitSelf': 9} | big []
+649982 Devil   v31   v31    Sabotage-d           1978 R L end r159 eats 104-337 splits  41 | r100 5/13/3-29/69/4 r200 0/0/0-40/105/5 r300 0/0/0-40/105/5 end 0/0/0-40/105/5
+      our deaths {'HitHeadToHead': 41, 'HitSelf': 2, 'HitOtherBody': 1} | theirs {'HitWall': 38, 'HitHeadToHead': 41, 'HitOtherBody': 22, 'HitSelf': 1} | big []
+650530 Devil   v31   v31    Hypr Series          1727 u W end r 76 eats 114- 28 splits  51 | r100 26/61/3-0/0/0 r200 26/61/3-0/0/0 r300 26/61/3-0/0/0 end 26/61/3-0/0/0
+      our deaths {'HitHeadToHead': 13, 'HitSelf': 9, 'HitOtherBody': 6} | theirs {'HitHeadToHead': 13} | big []
+651479 Devil   v31   v31    Team SKKU            2016 R W end r 93 eats  88- 41 splits  39 | r100 19/40/3-0/0/0 r200 19/40/3-0/0/0 r300 19/40/3-0/0/0 end 19/40/3-0/0/0
+      our deaths {'HitSelf': 2, 'HitHeadToHead': 16, 'HitOtherBody': 5} | theirs {'HitHeadToHead': 16, 'HitWall': 4} | big []
+651476 Devil   v31   v31    calc                 2019 R W end r375 eats 1292-350 splits 545 | r100 32/76/4-8/19/4 r200 36/91/4-13/29/3 r300 39/97/4-15/31/3 end 48/115/4-0/0/0
+      our deaths {'HitHeadToHead': 110, 'HitOtherBody': 116, 'HitSelf': 274} | theirs {'HitHeadToHead': 110, 'HitWall': 11, 'HitOtherBody': 5} | big []
+652127 Devil   v31   v31    Team SKKU            1986 R L end r 98 eats  74-154 splits  29 | r100 0/0/0-18/42/3 r200 0/0/0-18/42/3 r300 0/0/0-18/42/3 end 0/0/0-18/42/3
+      our deaths {'HitHeadToHead': 29, 'HitOtherBody': 3} | theirs {'HitHeadToHead': 29, 'HitWall': 13, 'HitOtherBody': 1} | big []
+652117 Devil   v31   v31    calc                 2022 R L end r 98 eats  39-184 splits  16 | r100 0/0/0-28/71/4 r200 0/0/0-28/71/4 r300 0/0/0-28/71/4 end 0/0/0-28/71/4
+      our deaths {'HitHeadToHead': 14, 'HitOtherBody': 3, 'HitSelf': 2} | theirs {'HitHeadToHead': 16, 'HitWall': 24, 'HitOtherBody': 8} | big []

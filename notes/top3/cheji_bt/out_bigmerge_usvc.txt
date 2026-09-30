@@ -1,0 +1,28 @@
+usvc 20 games; per game {'n': 2.3, 'len': 29.15, 'pearls': 14.95, 'byking': 0.95, 'own': 9.35, 'cause_HitHeadToHead': 0.7, 'cause_HitSelf': 1.45, 'cause_HitOtherBody': 0.15, 'bigsplit': 13.2, 'bigsplit_king': 3.85, 'king_died': 0.25, 'near_king': 0.2}
+   (649046, 'Schoolti', 406, 22, 'HitHeadToHead', 'kingL', 25, 'dist', 27, 'enemy', 1, 'pearls', 11, 'king ate', 0, 'own ate', 11, {'N': 'kelp', 'E': 'free', 'S': ('enemy', True), 'W': ('self', False)})
+   (649046, 'Schoolti', 448, 11, 'HitSelf', 'kingL', 29, 'dist', 39, 'enemy', 13, 'pearls', 6, 'king ate', 0, 'own ate', 6, {'N': 'kelp', 'E': ('self', False), 'S': 'free', 'W': 'free'})
+   (649046, 'Schoolti', 463, 15, 'HitOtherBody', 'kingL', 34, 'dist', 42, 'enemy', 17, 'pearls', 8, 'king ate', 0, 'own ate', 8, {'N': ('self', False), 'E': 'free', 'S': 'pearl', 'W': ('ally', False)})
+   (649046, 'Schoolti', 474, 9, 'HitOtherBody', 'kingL', 37, 'dist', 45, 'enemy', 13, 'pearls', 5, 'king ate', 0, 'own ate', 0, {'N': ('self', False), 'E': 'free', 'S': 'pearl', 'W': ('ally', False)})
+   (649046, 'Schoolti', 493, 8, 'HitSelf', 'kingL', 43, 'dist', 32, 'enemy', 8, 'pearls', 4, 'king ate', 0, 'own ate', 1, {'N': 'free', 'E': ('ally', False), 'S': 'free', 'W': ('self', False)})
+   (649047, 'Portals', 404, 8, 'HitOtherBody', 'kingL', 17, 'dist', 9, 'enemy', 7, 'pearls', 4, 'king ate', 1, 'own ate', 4, {'N': ('ally', False), 'E': ('self', False), 'S': 'kelp', 'W': 'kelp'})
+   (647106, 'Slithery', 306, 8, 'HitHeadToHead', 'kingL', 25, 'dist', 35, 'enemy', 4, 'pearls', 4, 'king ate', 0, 'own ate', 3, {'N': 'free', 'E': ('enemy', True), 'S': 'free', 'W': ('self', False)})
+   (647106, 'Slithery', 331, 11, 'HitHeadToHead', 'kingL', 30, 'dist', 21, 'enemy', 2, 'pearls', 6, 'king ate', 0, 'own ate', 0, {'N': ('self', False), 'E': ('enemy', False), 'S': ('enemy', True), 'W': 'free'})
+   (647106, 'Slithery', 451, 26, 'HitSelf', 'kingL', 50, 'dist', 39, 'enemy', 8, 'pearls', 13, 'king ate', 0, 'own ate', 13, {'N': 'free', 'E': 'free', 'S': ('self', False), 'W': ('ally', True)})
+   (647106, 'Slithery', 486, 8, 'HitSelf', 'kingL', 57, 'dist', 20, 'enemy', 8, 'pearls', 4, 'king ate', 0, 'own ate', 1, {'N': 'kelp', 'E': ('self', False), 'S': ('self', False), 'W': 'kelp'})
+   (646837, 'Slithery', 330, 8, 'HitHeadToHead', 'kingL', 24, 'dist', 13, 'enemy', 3, 'pearls', 4, 'king ate', 0, 'own ate', 3, {'N': 'free', 'E': ('self', False), 'S': 'free', 'W': ('enemy', True)})
+   (646837, 'Slithery', 363, 9, 'HitHeadToHead', 'kingL', 25, 'dist', 13, 'enemy', 2, 'pearls', 5, 'king ate', 0, 'own ate', 0, {'N': 'kelp', 'E': ('self', False), 'S': ('enemy', True), 'W': 'free'})
+big splits:
+   (649046, 340, 'L', 14, 'k', 12, 'exits', 1, 'isKing', False, 'child dies', (21, 'HitSelf'), 'parent dies', (4, 'HitOtherBody'))
+   (649046, 343, 'L', 10, 'k', 8, 'exits', 1, 'isKing', False, 'child dies', (40, 'HitOtherBody'), 'parent dies', (9, 'HitHeadToHead'))
+   (649046, 346, 'L', 25, 'k', 23, 'exits', 1, 'isKing', True, 'child dies', (3, 'HitOtherBody'), 'parent dies', (8, 'HitSelf'))
+   (649046, 348, 'L', 24, 'k', 22, 'exits', 0, 'isKing', True, 'child dies', (16, 'HitOtherBody'), 'parent dies', (1, 'HitOtherBody'))
+   (649046, 359, 'L', 17, 'k', 15, 'exits', 1, 'isKing', False, 'child dies', (70, 'HitSelf'), 'parent dies', (2, 'HitSelf'))
+   (649046, 363, 'L', 27, 'k', 25, 'exits', 0, 'isKing', True, 'child dies', None, 'parent dies', (1, 'HitOtherBody'))
+   (649046, 371, 'L', 16, 'k', 14, 'exits', 0, 'isKing', False, 'child dies', (16, 'HitSelf'), 'parent dies', (58, 'HitSelf'))
+   (649046, 380, 'L', 19, 'k', 17, 'exits', 1, 'isKing', False, 'child dies', (14, 'HitSelf'), 'parent dies', (7, 'HitSelf'))
+   (649046, 382, 'L', 16, 'k', 14, 'exits', 0, 'isKing', False, 'child dies', (18, 'HitOtherBody'), 'parent dies', (1, 'HitOtherBody'))
+   (649046, 393, 'L', 21, 'k', 19, 'exits', 1, 'isKing', False, 'child dies', (36, 'HitOtherBody'), 'parent dies', (1, 'HitSelf'))
+   (649046, 396, 'L', 17, 'k', 15, 'exits', 2, 'isKing', False, 'child dies', None, 'parent dies', (5, 'HitOtherBody'))
+   (649046, 399, 'L', 28, 'k', 26, 'exits', 0, 'isKing', True, 'child dies', (72, 'HitSelf'), 'parent dies', (1, 'HitOtherBody'))
+[(('isKing', 'HitSelf', 'HitSelf'), 90), (('isKing', 'HitOtherBody', 'HitSelf'), 34), (('isKing', 'HitSelf', 'HitOtherBody'), 33), (('isKing', 'alive', 'HitSelf'), 32), (('isKing', 'alive', 'HitOtherBody'), 21), (('isKing', 'HitOtherBody', 'HitOtherBody'), 16), (('isKing', 'alive', 'alive'), 13), (('isKing', 'HitHeadToHead', 'HitSelf'), 6)]
+child death delay buckets [(0, 21), (3, 31), (6, 17), (9, 17), (12, 8), (15, 19), (18, 9), (21, 10), (24, 3), (27, 7), (30, 4), (33, 7), (36, 3), (39, 3), (42, 4), (45, 2), (48, 2), (51, 3), (54, 2), (57, 2), (60, 1), (63, 3), (66, 2), (69, 3), (72, 3), (75, 1), (78, 3), (81, 1), (84, 1), (87, 2), (90, 1), (99, 66), (114, 1), (147, 1), (162, 1)]
