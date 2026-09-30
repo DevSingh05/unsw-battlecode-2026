@@ -969,3 +969,33 @@
 #ifndef LATE_SPLIT_KING_MAPS
 #define LATE_SPLIT_KING_MAPS 0
 #endif
+// ---- notes/slithery_pockets/LOG.txt: DIVE_VALUE - one dive-value rule for every dead-end pocket entry (old pump,
+// pocket factory, plain scoring). A head that enters a dead end can never turn: its front 2 are lost (it must split
+// k=L+P-2 out at the tip) or, if it cannot split (fewer than 4 by the tip / no unit slot), the whole dragon.
+// V = P - 2 - DV_TURN_COST*turns (split possible) else -L, with P = expected pearls along the best single path
+// (timed: visible / countdown-due = 1, remembered / fast guesses discounted; stops at tiles still occupied).
+// Enter by choice only when V >= DV_MARGIN; any other entry is scored down by DV_PEN per length of shortfall.
+#ifndef DIVE_VALUE
+#define DIVE_VALUE 0
+#endif
+#ifndef DV_MARGIN            // required expected net length of a dive
+#define DV_MARGIN 0.5
+#endif
+#ifndef DV_TURN_COST         // opportunity cost per turn spent inside (open-field eats/turn of a small dragon)
+#define DV_TURN_COST 0.0
+#endif
+#ifndef DV_PEN               // score per length of shortfall for a non-approved entry (ranks forced/bad options)
+#define DV_PEN 20.0
+#endif
+#ifndef DV_UNIT_RESERVE      // free unit slots needed to count on the tip split (else the whole dragon is lost)
+#define DV_UNIT_RESERVE 1
+#endif
+#ifndef DV_CONTEST           // pearls expected per enemy head within 3 of the mouth are cut by this fraction
+#define DV_CONTEST 0.0
+#endif
+#ifndef DV_FUNNEL            // weight (x DV_PEN) for stepping onto a core tile whose single core exit another head
+#define DV_FUNNEL 0.5        // can take first while its other exits are losing pocket entries (0 = off)
+#endif
+#ifndef DV_PARTS             // DIVE_VALUE parts: 1 factory entry gate, 2 old pump gate, 4 inward-born child, 8 scoring
+#define DV_PARTS 15
+#endif

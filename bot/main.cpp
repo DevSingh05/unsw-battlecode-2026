@@ -2293,6 +2293,8 @@ struct Bot
             return why("nohot");
         if (myLen + pearls < POCKET_NEED)
             return why("fewpearls");
+        if (DIVE_VALUE && (DV_PARTS & 2) && dvValue(t) < DV_MARGIN)
+            return why("dv"); // pearls summed over branches are not one path's pearls
         if (dbg)
             std::fprintf(dbg, "POCKET YES len=%d pearls=%.1f\n", myLen, pearls);
         pocketPearlsLast = pearls;
@@ -2456,14 +2458,20 @@ struct Bot
             if (o.head && o.id != w.myId && pfDepth[o.tile] > 0 && pfComp[o.tile] == pfComp[tail])
                 return true;
         double P = 0;
+        int endS = 1;
         for (int d = 0; d < 4; d++)
         {
             int v = step(tail, d);
             if (v < 0 || v == pre || pfDepth[v] <= pfDepth[tail])
                 continue;
-            P = std::max(P, pfBranch(v, 1, 24));
+            int e = 1;
+            double b = pfBranch(v, 1, 24, &e);
+            if (b > P)
+                P = b, endS = e;
         }
         bool bad = k + P < 4.0 + PF_SAFETY || P < PF_MIN_P;
+        if (DIVE_VALUE && (DV_PARTS & 4) && P - 2.0 - DV_TURN_COST * (endS + 1) < DV_MARGIN)
+            bad = true;
         if (dbg)
             std::fprintf(dbg, "PF child-inward k=%d P=%.2f bad=%d\n", k, P, bad ? 1 : 0);
         return bad;
@@ -2513,10 +2521,77 @@ struct Bot
             return why("cannot-split");
         if (P < PF_MIN_P)
             return why("fewpearls");
+        if (DIVE_VALUE && (DV_PARTS & 1) && dvNet(P * dvContest(t), endS + 1) < DV_MARGIN)
+        {
+            if (dbg)
+                std::fprintf(dbg, "PF dv P=%.2f contest=%.2f end=%d units=%d/%d\n", P, dvContest(t), endS, units, w.unitLimit);
+            return why("dv");
+        }
         if (dbg)
             std::fprintf(dbg, "PF YES len=%d P=%.2f end=%d en=%d al=%d\n", myLen, P, endS, en, al);
         pfLastP = P;
         return true;
+    }
+
+    // ---- DIVE_VALUE (notes/slithery_pockets/LOG.txt): expected net length of entering a dead end.
+    // Split possible at the tip: we keep everything but the 2-long stub, minus the turns spent;
+    // otherwise (never reaches 4, or no unit slot) the whole dragon is lost.
+    double dvNet(double P, int turns) const
+    {
+        bool canSplit = units <= w.unitLimit - DV_UNIT_RESERVE && myLen + P >= 4.0;
+        if (!canSplit)
+            return -static_cast<double>(myLen);
+        return P - 2.0 - DV_TURN_COST * turns;
+    }
+    double dvContest(int mouth) const
+    {
+        int en = 0;
+        for (auto& o : segs)
+            if (o.head && o.team != w.myTeam && wrapDist(o.tile, mouth) <= 3)
+                en++;
+        return std::max(0.0, 1.0 - DV_CONTEST * en);
+    }
+    // best single path (no revisits) through a small dynamic dead end, timed like pfBranch
+    int dvBudget = 0;
+    double dvRegionPath(int u, int s, std::vector<char>& vis, int& endS)
+    {
+        endS = s;
+        if (--dvBudget < 0 || s > 16)
+            return 0.0;
+        double here = pfPearl(u, s), best = 0.0;
+        vis[u] = 1;
+        for (int d = 0; d < 4; d++)
+        {
+            int v = step(u, d);
+            if (v < 0 || v == u || vis[v] || v == myHead || freeT[v] > s + 1)
+                continue;
+            int e = s + 1;
+            double b = dvRegionPath(v, s + 1, vis, e);
+            if (b > best)
+                best = b, endS = e;
+        }
+        vis[u] = 0;
+        return here + best;
+    }
+    // V for stepping onto t: static pocket (pfDepth) or, when dynamic, the small region behind t.
+    double dvValue(int t)
+    {
+        int endS = 1;
+        double P;
+        if (!pfDepth.empty() && pfDepth[t] > 0 && pfDepth[t] > pfDepth[myHead])
+            P = pfBranch(t, 1, 24, &endS);
+        else
+        {
+            std::vector<char> vis(w.N, 0);
+            vis[myHead] = 1;
+            dvBudget = 4000;
+            P = dvRegionPath(t, 1, vis, endS);
+        }
+        P *= dvContest(t);
+        double V = dvNet(P, endS + 1);
+        if (dbg)
+            std::fprintf(dbg, "DV t=(%d,%d) P=%.2f end=%d V=%.2f\n", t % w.W, t / w.W, P, endS, V);
+        return V;
     }
 
     // PUMP_TIP2 (notes/autarky_calc/PLAN.md): is the head inside a static 1-wide dead end? Flood from the
@@ -3391,6 +3466,8 @@ struct Bot
             }
         }
         bool pfIn = false;
+        if (DIVE_VALUE && !POCKET_FACTORY)
+            pfCompute();
         if (POCKET_FACTORY)
         {
             pfCompute();
@@ -3602,6 +3679,47 @@ struct Bot
                 score -= 50.0; // inside: the planned branch (the others are shorter or empty)
             if (area < need && !pump)
                 score -= AREA_WEIGHT * (need - area) / need + 20;
+            if (DIVE_VALUE && (DV_PARTS & 8) && !pump && !pfIn && t != holdTile && myLen <= PF_MAXLEN && !pfDepth.empty() &&
+                pfDepth[t] > 0 && pfDepth[myHead] == 0)
+            {
+                double V = dvValue(t); // a dead-end entry nobody approved: pay for the length it loses
+                if (V < DV_MARGIN)
+                    score -= DV_PEN * (DV_MARGIN - V);
+            }
+            if (DIVE_VALUE && DV_FUNNEL > 0 && !pfIn && myLen <= PF_MAXLEN && !pfDepth.empty() && pfDepth[t] == 0)
+            {
+                // the same rule one step early: a core tile whose only core exit another head can take first
+                // leaves a pocket entry as the only move next turn
+                int coreX = -1, nCore = 0;
+                double Vf = -1e9;
+                for (int d2 = 0; d2 < 4; d2++)
+                {
+                    int v = step(t, d2);
+                    if (v < 0 || v == t || v == myHead || freeT[v] > 2)
+                        continue;
+                    if (pfDepth[v] == 0)
+                        nCore++, coreX = v;
+                    else
+                    {
+                        int e = 2;
+                        double P = pfBranch(v, 2, 26, &e) * dvContest(v);
+                        Vf = std::max(Vf, dvNet(P, e));
+                    }
+                }
+                if (nCore == 1 && Vf > -1e8 && Vf < DV_MARGIN)
+                {
+                    bool contested = false;
+                    for (auto& o : segs)
+                        if (o.head && o.id != w.myId && wrapDist(o.tile, coreX) <= 2)
+                            contested = true;
+                    if (contested)
+                    {
+                        score -= DV_FUNNEL * DV_PEN * (DV_MARGIN - Vf);
+                        if (dbg)
+                            std::fprintf(dbg, "DV funnel t=(%d,%d) Vf=%.2f\n", t % w.W, t / w.W, Vf);
+                    }
+                }
+            }
             int wantDepth = myLen >= 10 ? std::max(SURVIVE_DEPTH, std::min(myLen, KING_SURVIVE_DEPTH)) : SURVIVE_DEPTH;
             int depth = surviveDepth(t, wantDepth);
             if (depth < wantDepth && !pump)
