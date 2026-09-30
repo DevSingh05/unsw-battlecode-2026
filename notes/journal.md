@@ -132,3 +132,5 @@
 - 00:42 UTC: schb31 submit had silently failed (script masked the error; waited 50 min). v30 Schooltime baseline vs top-10: 4/10. Rerunning with robust ab2.sh (retrying submit, timeout on waitactive, trap-restore v30): schb31 on Schooltime, then v30 vs kc31 on Slithery+Portals.
 - 00:43 UTC: added ESCAPE_DEADEND_FIX (tryKingEscape no longer treats an unthreatened dead-end step as safe; forensics 618291 L38 king). Queued local test after v30 unseen/holdout check.
 - 00:58 UTC: ESCAPE_DEADEND_FIX (+v30 flags) vs v30: Slithery 6/6, other 5 maps exactly 3/6 (identical), unseen gen .525 lesson .521 -> safe fix, bundle into next version. NOTE: Agent isolation=remote silently ran locally (worktree) - cloud offload not available from this session; real cloud needs a claude.ai/code session (no separate compute charge, shares usage limits).
+- 01:01 UTC: v30 vs v29 unseen: gen .512 lesson .500 gated .475 HOLDOUT .500 (pooled .500) -> pocket factory neutral on unseen, keep v30.
+- 01:01 UTC: SERVER Schooltime vs top-10: v30 4/10, schb31 (SCH_B_KEEP) 5/10 (all 20 classified layout B) -> inconclusive, hold for longer test. KC A/B running.
