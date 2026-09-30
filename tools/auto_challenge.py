@@ -74,6 +74,10 @@ def main():
     ap.add_argument("--range", type=int, default=5)
     ap.add_argument("--top", type=int, default=10)
     ap.add_argument("--cycle", type=int, default=900)
+    # ranked targets by Elo band BELOW us (user 2026-09-30: sweeps vs lower teams earn ~3x more Elo per
+    # series than coin-flips vs peers); 0 = use --range ranks instead
+    ap.add_argument("--band-lo", type=int, default=0, help="min Elo below us, e.g. 150")
+    ap.add_argument("--band-hi", type=int, default=0, help="max Elo below us, e.g. 350")
     a = ap.parse_args()
     OUT.mkdir(parents=True, exist_ok=True)
     k = 0
@@ -90,8 +94,13 @@ def main():
             L = [t for t in api.get("/api/v1/leaderboard") if isinstance(t.get("rank"), int)]
             me = next(t for t in L if t["name"] == US)
             busy = pending_opponents()
-            near = [t for t in L if t["name"] != US and abs(t["rank"] - me["rank"]) <= a.range and t.get("hasBot", True)]
-            near.sort(key=lambda t: t["rank"])  # higher-ranked first
+            if a.band_hi > 0:
+                near = [t for t in L if t["name"] != US and t.get("hasBot", True) and
+                        a.band_lo <= me["elo"] - t["elo"] <= a.band_hi]
+                near.sort(key=lambda t: -t["elo"])  # strongest in the band first
+            else:
+                near = [t for t in L if t["name"] != US and abs(t["rank"] - me["rank"]) <= a.range and t.get("hasBot", True)]
+                near.sort(key=lambda t: t["rank"])  # higher-ranked first
             top = [t for t in L if t["name"] != US and t["rank"] <= a.top and t.get("hasBot", True)]
             # ranked series first (user: more ranked games vs +-RANGE), unranked vs top-N with what's left
             plan = [("ranked", near[(i + k) % len(near)]) for i in range(len(near))]

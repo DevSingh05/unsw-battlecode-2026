@@ -150,3 +150,4 @@
 - 05:41 UTC: vs v32 (seed 137000): SPAWN_BLOCK_PEN=2 gen .550 ladder .450; =5 gen .562 ladder .575; REVISIT_PEN=0.5 gen .444 ladder .475. Queued SPAWN_BLOCK_PEN=5 fresh seeds + holdout.
 - 05:44 UTC: SERVER dv33 (DIVE_VALUE) vs v32 vs top-10: v32 11/20 (Aut 7/10, Sli 4/10), dv33 11/20 (Aut 6/10, Sli 5/10) -> tie, off. Rank 2 / 2075.
 - 05:45 UTC: REVISIT_PEN=1.5 gen .575 ladder .450 (mixed, hold); PM_TROPHY_RG=2 local Trophy 10/24 (.417; needs server check vs real swarms). SPAWN_BLOCK_PEN=5 confirmation running.
+- 05:53 UTC: Elo per ranked series (41 today): 200-350 below us +3.3 avg (67% 5-0), 0-100 below +1.0 (3-2/2-3 coin flips). Loop now targets ranked series at teams 150-350 Elo below us (--band-lo 150 --band-hi 350); unranked stays top-15 for learning. 45/h.
