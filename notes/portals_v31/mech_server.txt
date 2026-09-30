@@ -1,0 +1,53 @@
+ab_v30kc 646840 Stockfish              L  fin 16 v 49 | share450 0.39 v 0.80 | n450 19 v  4 | mx450 30 v 49 | 2nd499 10 v 10 | peak 32 | spSmall360-450 117(open 87) v 6 | big deaths [(348, 10, 'trapped_self'), (493, 30, 'chose_self')] | drops [(348, 16, 10), (493, 30, 14)]
+ab_v30kc 646842 中国必须人能飞😡               L  fin 30 v 37 | share450 0.19 v 0.51 | n450 22 v  7 | mx450 17 v 42 | 2nd499 13 v 18 | peak 30 | spSmall360-450 101(open 91) v 37 | big deaths [(476, 15, 'portal_ally')] | drops []
+ab_v30kc 646846 forgot to mention      L  fin 17 v 20 | share450 0.10 v 0.16 | n450 26 v 16 | mx450  7 v 13 | 2nd499 10 v  7 | peak 17 | spSmall360-450 130(open 108) v 31 | big deaths [] | drops []
+ab_v30kc 646848 3.14159265             L  fin 40 v 58 | share450 0.33 v 1.00 | n450  8 v  1 | mx450 32 v 53 | 2nd499 26 v  0 | peak 42 | spSmall360-450 77(open 62) v 0 | big deaths [(442, 11, 'chose_self')] | drops []
+ab_v30kc 646850 Sponge(Albert and Bob) L  fin 14 v 49 | share450 0.05 v 1.00 | n450 37 v  1 | mx450  4 v 41 | 2nd499 12 v  0 | peak 14 | spSmall360-450 138(open 114) v 19 | big deaths [] | drops []
+ab_v30kc 646852 bread first search     L  fin 13 v 14 | share450 0.07 v 0.09 | n450 30 v 23 | mx450  6 v  7 | 2nd499 10 v  8 | peak 16 | spSmall360-450 112(open 89) v 67 | big deaths [] | drops []
+ab_v30kc 646854 Team SKKU              W  fin 53 v 32 | share450 0.37 v 0.55 | n450 20 v  6 | mx450 37 v 30 | 2nd499 13 v 10 | peak 53 | spSmall360-450 93(open 78) v 30 | big deaths [] | drops []
+ab_v30kc 646856 Peanut Butter          W  fin 37 v 28 | share450 0.36 v 0.45 | n450 14 v  4 | mx450 24 v 17 | 2nd499 18 v  3 | peak 37 | spSmall360-450 120(open 102) v 28 | big deaths [(461, 16, 'rammed')] | drops []
+ab_v30kc 646844 calc                   W  fin 54 v 34 | share450 0.54 v 0.27 | n450 12 v  7 | mx450 33 v 25 | 2nd499 12 v 28 | peak 54 | spSmall360-450 87(open 75) v 10 | big deaths [(484, 14, 'feed_self')] | drops [(277, 10, 4)]
+ab_v30kc 646838 cheji bt               L  fin 43 v 46 | share450 0.36 v 1.00 | n450 14 v  1 | mx450 34 v 39 | 2nd499 31 v  0 | peak 43 | spSmall360-450 55(open 44) v 0 | big deaths [(420, 20, 'chose_self'), (460, 8, 'chose_self'), (491, 10, 'feed_self')] | drops []
+ab_kc31 647133 Team SKKU              L  fin 17 v 50 | share450 0.49 v 0.59 | n450 18 v  8 | mx450 37 v 45 | 2nd499 12 v 14 | peak 50 | spSmall360-450 103(open 80) v 50 | big deaths [(480, 50, 'portal_ally')] | drops [(480, 50, 6)]
+ab_kc31 647109 Stockfish              L  fin 31 v 64 | share450 0.42 v 0.59 | n450 15 v  9 | mx450 31 v 54 | 2nd499 27 v  9 | peak 31 | spSmall360-450 75(open 67) v 34 | big deaths [(420, 15, 'chose_self'), (479, 8, 'chose_self'), (494, 8, 'feed_self'), (495, 11, 'feed_self')] | drops []
+ab_kc31 647111 中国必须人能飞😡               L  fin 48 v 49 | share450 0.48 v 0.56 | n450 17 v  7 | mx450 41 v 43 | 2nd499  8 v 22 | peak 48 | spSmall360-450 86(open 68) v 30 | big deaths [] | drops []
+ab_kc31 647115 forgot to mention      W  fin 43 v 18 | share450 0.29 v 0.31 | n450 22 v  8 | mx450 25 v 21 | 2nd499 13 v 11 | peak 43 | spSmall360-450 92(open 83) v 18 | big deaths [(497, 12, 'feed_self')] | drops []
+ab_kc31 647117 3.14159265             L  fin 26 v 43 | share450 0.27 v 1.00 | n450 12 v  1 | mx450 16 v 37 | 2nd499 20 v  0 | peak 26 | spSmall360-450 110(open 87) v 0 | big deaths [(477, 9, 'feed_self')] | drops []
+ab_kc31 647119 Sponge(Albert and Bob) L  fin 24 v 46 | share450 0.16 v 0.54 | n450 20 v  5 | mx450 12 v 29 | 2nd499  9 v 14 | peak 24 | spSmall360-450 77(open 66) v 27 | big deaths [(447, 21, 'chose_self'), (483, 9, 'feed_self')] | drops [(447, 23, 12)]
+ab_kc31 647131 bread first search     W  fin 21 v 13 | share450 0.17 v 0.11 | n450 27 v 16 | mx450 14 v  6 | 2nd499 11 v  8 | peak 28 | spSmall360-450 94(open 81) v 68 | big deaths [] | drops [(487, 28, 22)]
+ab_kc31 647135 Peanut Butter          W  fin 28 v 27 | share450 0.21 v 0.45 | n450 25 v  8 | mx450 16 v 22 | 2nd499 10 v 11 | peak 32 | spSmall360-450 121(open 100) v 36 | big deaths [(398, 32, 'portal_ally'), (491, 10, 'feed_self'), (499, 8, 'chose_self')] | drops [(398, 32, 4)]
+ab_kc31 647113 calc                   L  fin 14 v 36 | share450 0.26 v 0.34 | n450 17 v  6 | mx450 19 v 30 | 2nd499 11 v 24 | peak 26 | spSmall360-450 86(open 73) v 8 | big deaths [(481, 26, 'portal_ally')] | drops [(481, 26, 16)]
+ab_kc31 647107 cheji bt               L  fin 41 v 54 | share450 0.44 v 0.73 | n450 15 v  2 | mx450 29 v 43 | 2nd499 11 v  2 | peak 41 | spSmall360-450 76(open 62) v 0 | big deaths [] | drops []
+
+== LOSSES (14 games) ==
+ r300 units 32.6 v 27.9 | total 81 v 85 | longest 4.8 v 9.0 | share 0.06 v 0.11 | 2nd 4.3 v 5.6 | small(<6) mass 79 v 66 | non-king L>=6 mass 1 v 12
+ r350 units 28.9 v 19.0 | total 80 v 79 | longest 10.0 v 15.4 | share 0.13 v 0.21 | 2nd 5.3 v 8.6 | small(<6) mass 66 v 42 | non-king L>=6 mass 4 v 22
+ r400 units 24.3 v 8.9 | total 80 v 65 | longest 16.5 v 27.1 | share 0.21 v 0.44 | 2nd 7.4 v 10.7 | small(<6) mass 57 v 18 | non-king L>=6 mass 7 v 19
+ r450 units 19.3 v 6.5 | total 79 v 66 | longest 22.5 v 37.5 | share 0.29 v 0.64 | 2nd 9.6 v 8.4 | small(<6) mass 46 v 12 | non-king L>=6 mass 10 v 17
+ r499 units 12.4 v 3.8 | total 86 v 64 | longest 26.7 v 43.9 | share 0.31 v 0.72 | 2nd 15.0 v 9.1 | small(<6) mass 25 v 4 | non-king L>=6 mass 34 v 15
+ small splits r360-450: 95.9 (open 78.4) v 22.1 ; all splits r300+: 220.7 v 107.1
+ us deaths r250+/g: {'trapped': 186.3, 'portal': 51.4, 'chose': 44.5, 'feed': 31.9, 'rammed': 2.8, 'wall': 1.9} ; L>=8 deaths/g 1.14, length/g by class: {'chose_self': 8.1, 'portal_ally': 6.5, 'feed_self': 3.4, 'trapped_self': 0.7}
+ them deaths r250+/g: {'wall': 89.7, 'nva': 43.6, 'portal': 19.0, 'trapped': 18.3, 'feed': 12.7, 'chose': 10.9, 'rammed': 8.4, 'ram': 0.7} ; L>=8 deaths/g 3.64, length/g by class: {'nva': 17.0, 'chose_self': 7.7, 'portal_ally': 4.4, 'feed_self': 4.2, 'wall': 3.4, 'portal_self': 2.6, 'rammed': 2.1, 'portal_ram_ally': 0.7}
+ peak longest - final longest (us): 4.7
+
+== WINS (6 games) ==
+ r300 units 33.0 v 30.2 | total 81 v 82 | longest 4.0 v 6.5 | share 0.05 v 0.08 | 2nd 3.7 v 5.5 | small(<6) mass 81 v 74 | non-king L>=6 mass 0 v 3
+ r350 units 28.8 v 25.0 | total 76 v 79 | longest 9.0 v 9.5 | share 0.12 v 0.12 | 2nd 4.3 v 6.3 | small(<6) mass 68 v 60 | non-king L>=6 mass 1 v 11
+ r400 units 24.8 v 14.2 | total 75 v 64 | longest 14.2 v 16.5 | share 0.18 v 0.25 | 2nd 4.8 v 8.3 | small(<6) mass 60 v 32 | non-king L>=6 mass 1 v 15
+ r450 units 20.0 v 8.2 | total 78 v 60 | longest 24.8 v 20.2 | share 0.33 v 0.35 | 2nd 8.3 v 11.5 | small(<6) mass 46 v 14 | non-king L>=6 mass 8 v 25
+ r499 units 10.0 v 6.3 | total 85 v 57 | longest 39.3 v 25.3 | share 0.48 v 0.48 | 2nd 12.8 v 11.8 | small(<6) mass 16 v 9 | non-king L>=6 mass 29 v 23
+ small splits r360-450: 101.2 (open 86.5) v 31.7 ; all splits r300+: 224.8 v 128.7
+ us deaths r250+/g: {'trapped': 185.8, 'portal': 49.7, 'chose': 45.2, 'feed': 41.7, 'rammed': 3.0, 'wall': 2.3} ; L>=8 deaths/g 1.00, length/g by class: {'feed_self': 6.0, 'portal_ally': 5.3, 'rammed': 2.7, 'chose_self': 1.3}
+ them deaths r250+/g: {'wall': 75.3, 'nva': 38.0, 'trapped': 37.2, 'portal': 36.0, 'feed': 16.3, 'chose': 13.0, 'rammed': 10.0, 'ram': 0.3} ; L>=8 deaths/g 2.17, length/g by class: {'portal_self': 10.0, 'nva': 8.2, 'feed_self': 2.8, 'trapped_self': 1.5, 'portal_ally': 1.3}
+ peak longest - final longest (us): 1.8
+
+== ALL (20 games) ==
+ r300 units 32.7 v 28.6 | total 81 v 84 | longest 4.5 v 8.2 | share 0.06 v 0.10 | 2nd 4.1 v 5.5 | small(<6) mass 80 v 68 | non-king L>=6 mass 0 v 9
+ r350 units 28.9 v 20.8 | total 78 v 79 | longest 9.7 v 13.6 | share 0.12 v 0.18 | 2nd 5.0 v 8.0 | small(<6) mass 67 v 47 | non-king L>=6 mass 3 v 19
+ r400 units 24.4 v 10.5 | total 78 v 64 | longest 15.8 v 23.9 | share 0.20 v 0.38 | 2nd 6.7 v 10.0 | small(<6) mass 58 v 23 | non-king L>=6 mass 5 v 18
+ r450 units 19.5 v 7.0 | total 79 v 64 | longest 23.2 v 32.3 | share 0.30 v 0.55 | 2nd 9.2 v 9.3 | small(<6) mass 46 v 12 | non-king L>=6 mass 10 v 19
+ r499 units 11.7 v 4.5 | total 85 v 62 | longest 30.5 v 38.4 | share 0.36 v 0.65 | 2nd 14.3 v 9.9 | small(<6) mass 22 v 6 | non-king L>=6 mass 33 v 18
+ small splits r360-450: 97.5 (open 80.8) v 24.9 ; all splits r300+: 221.9 v 113.5
+ us deaths r250+/g: {'trapped': 186.2, 'portal': 50.9, 'chose': 44.7, 'feed': 34.9, 'rammed': 2.9, 'wall': 2.0} ; L>=8 deaths/g 1.10, length/g by class: {'portal_ally': 6.2, 'chose_self': 6.0, 'feed_self': 4.2, 'rammed': 0.8, 'trapped_self': 0.5}
+ them deaths r250+/g: {'wall': 85.4, 'nva': 42.0, 'portal': 24.1, 'trapped': 23.9, 'feed': 13.8, 'chose': 11.6, 'rammed': 8.9, 'ram': 0.6} ; L>=8 deaths/g 3.20, length/g by class: {'nva': 14.3, 'chose_self': 5.4, 'portal_self': 4.8, 'feed_self': 3.8, 'portal_ally': 3.5, 'wall': 2.4, 'rammed': 1.4, 'portal_ram_ally': 0.5, 'trapped_self': 0.5}
+ peak longest - final longest (us): 3.9

@@ -1,0 +1,10 @@
+== L (14) per game, us / them ==
+ r250-350: king corpse 8.5 / 9.9, king spawn 6.6 / 7.0 | mid(L>=6 non-king) corpse 2.1 / 15.6 | all corpse 211.1 / 193.7, all spawn 157.0 / 143.9 | pearls dropped by deaths 212.5 / 194.0 | king share of corpse eats 0.04 / 0.05
+ r350-400: king corpse 6.3 / 11.6, king spawn 3.9 / 2.1 | mid(L>=6 non-king) corpse 2.6 / 12.1 | all corpse 90.8 / 58.9, all spawn 69.3 / 41.4 | pearls dropped by deaths 92.4 / 63.6 | king share of corpse eats 0.07 / 0.20
+ r400-450: king corpse 8.1 / 10.1, king spawn 3.8 / 2.9 | mid(L>=6 non-king) corpse 5.0 / 8.2 | all corpse 81.1 / 34.9, all spawn 64.2 / 25.9 | pearls dropped by deaths 83.1 / 31.9 | king share of corpse eats 0.10 / 0.29
+ r450-500: king corpse 7.4 / 7.9, king spawn 4.0 / 1.9 | mid(L>=6 non-king) corpse 9.6 / 5.9 | all corpse 54.6 / 22.4, all spawn 50.1 / 14.8 | pearls dropped by deaths 53.6 / 20.6 | king share of corpse eats 0.14 / 0.35
+== W (6) per game, us / them ==
+ r250-350: king corpse 8.8 / 8.7, king spawn 5.8 / 6.3 | mid(L>=6 non-king) corpse 0.2 / 5.8 | all corpse 219.0 / 205.7, all spawn 155.0 / 145.7 | pearls dropped by deaths 220.0 / 207.7 | king share of corpse eats 0.04 / 0.04
+ r350-400: king corpse 8.7 / 9.0, king spawn 3.7 / 2.0 | mid(L>=6 non-king) corpse 1.3 / 11.7 | all corpse 96.2 / 73.0, all spawn 73.7 / 44.5 | pearls dropped by deaths 97.2 / 74.7 | king share of corpse eats 0.09 / 0.12
+ r400-450: king corpse 9.8 / 7.8, king spawn 4.3 / 0.8 | mid(L>=6 non-king) corpse 6.0 / 9.0 | all corpse 81.5 / 42.0, all spawn 64.0 / 31.7 | pearls dropped by deaths 81.7 / 41.2 | king share of corpse eats 0.12 / 0.19
+ r450-500: king corpse 11.8 / 7.5, king spawn 6.7 / 1.7 | mid(L>=6 non-king) corpse 11.7 / 6.3 | all corpse 58.0 / 24.0, all spawn 55.0 / 17.8 | pearls dropped by deaths 57.5 / 22.8 | king share of corpse eats 0.20 / 0.31

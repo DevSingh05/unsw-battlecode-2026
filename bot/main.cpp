@@ -55,6 +55,8 @@ struct RuntimeParams
     int feedReserve = FEED_RESERVE;
     double kingPortal = KING_PORTAL_PENALTY; // extra cost for a big dragon crossing a portal blind
     int kingKeepExtra = 0;                   // extra tiles a big dragon keeps from enemy heads
+    int lateSplitRound = LATE_SPLIT_ROUND;   // small dragons keep splitting until this round (0 = off)
+    int diveStopRound = 0;                   // no pocket dives from this round (0 = off)
 };
 RuntimeParams RP;
 
@@ -124,6 +126,10 @@ void applyMapParams(const char* name)
     }
     if (n == "Portals" && PM_POR_KPORTAL >= 0)
         RP.kingPortal = PM_POR_KPORTAL; // the Portals module routes the king through portals on purpose
+    if (n == "Portals" && PM_POR_LATESPLIT >= 0)
+        RP.lateSplitRound = PM_POR_LATESPLIT; // notes/portals_v31: no contact on Portals, consolidate
+    if (n == "Portals" && PM_POR_DIVESTOP > 0)
+        RP.diveStopRound = PM_POR_DIVESTOP;
     if ((RAM_GUARD_LOCAL == 1 && (n == "Devil" || n == "Prisoners Dilemma")) || RAM_GUARD_LOCAL == 2)
         RP.ramGuard = 2; // notes/19: local odds only
     if (n == "Prisoners Dilemma" && PM_DIL_KEEP >= 0)
@@ -1846,6 +1852,16 @@ struct Bot
                     kingSelf = false;
                 return;
             }
+            // CROWN_INHERIT (notes/forensics/portals, notes/portals_v31): a child born this turn with >= CROWN_INHERIT
+            // segments is the body of a big dragon that just reverse-split (usually the king). It keeps the crown
+            // unless a king longer than its parent (whose last broadcast said myLen + 2) is fresh, so it neither
+            // feeds itself to the parent's stale king message nor goes back to small splitting.
+            if (CROWN_INHERIT && birthRound == round && round >= RP.kingSeedRound && myLen >= CROWN_INHERIT &&
+                freshKings(myLen + 2) == 0)
+            {
+                kingSelf = true;
+                return;
+            }
             if (round >= RP.kingSeedRound && freshKings(-1) < 2 && myLen >= 3 &&
                 !(KING_FOCUS && freshKings(clear - 1) >= 1) && !(KING_CONSENSUS && bestK >= myLen + 2) &&
                 rng.uni() < KING_DECLARE_P)
@@ -1931,6 +1947,27 @@ struct Bot
     bool warnDirs[4] = {false, false, false, false};
     int probeTile = -1, probeRound = -1000, probeMask = 0, probeRays = 0;
     bool echoBodyDir[4] = {false, false, false, false};
+    int holdStreak = 0;
+    // ECHO_EXIT_HOLD (notes/forensics/portals, notes/portals_v31): a big dragon whose only way on is a blind
+    // portal crossing into a body its own probe echoed last turn splits 2 off its tail and stays, so the warn
+    // ray re-probes the same exit next turn (the blocker is usually a small ally passing through).
+    bool tryEchoHold(int bestD, double otherBest)
+    {
+        if (!ECHO_EXIT_HOLD || bestD < 0 || myLen < ECHO_EXIT_HOLD || units >= w.unitLimit || holdStreak >= ECHO_HOLD_MAX)
+            return false;
+        if (!echoBodyDir[bestD] || otherBest >= -100)
+            return false;
+        int t = step(myHead, bestD);
+        if (t < 0 || visible[t] || t == w.plainStep(myHead, bestD))
+            return false;
+        out += "SPLIT 2\n";
+        pending.clear();
+        pendingSplit = true;
+        holdStreak++;
+        if (dbg)
+            std::fprintf(dbg, "  -> echo hold (split 2)\n");
+        return true;
+    }
 
     // Tile a feeder should die on: a couple of steps in front of the king.
     int feedTarget() const
@@ -2180,6 +2217,8 @@ struct Bot
         auto why = [&](const char* r) { if (dbg) std::fprintf(dbg, "POCKET %s len=%d\n", r, myLen); return false; };
         if (myLen < 2 || myLen > 3 || units >= w.unitLimit || iAmKing())
             return why("len/units/king");
+        if (RP.diveStopRound > 0 && round >= RP.diveStopRound)
+            return why("late");
         pocketPearlsLast = 0;
         if (POCKET_ENEMY_LOCAL == 0)
         {
@@ -2431,6 +2470,8 @@ struct Bot
         pfLastP = 0;
         if (myLen < 2 || myLen > PF_ENTER_MAXLEN || units > w.unitLimit - PF_UNIT_RESERVE || iAmKing())
             return why("len/units/king");
+        if (RP.diveStopRound > 0 && round >= RP.diveStopRound)
+            return why("late");
         int comp = pfComp[t];
         // one diver per pocket: nobody's head inside (a diver ahead blocks the food and its child
         // comes out head-first into us; an exiting child would meet us head-on)
@@ -3417,7 +3458,7 @@ struct Bot
         }
         if (!pfIn && holdTile < 0 && !(RP.kingDeclare && kingSelf) && !bigLate && (!SPLIT_NEEDS_EXIT || tailHasExit(2)) &&
             !(UNK_SEALED_FOOD && !w.known && UNK_SEALED_ROOM_MIN > 0 && roomSize(UNK_SEALED_ROOM_MIN) < UNK_SEALED_ROOM_MIN) && myLen >= SPLIT_LEN && myLen >= 4 && units < w.unitLimit && units < SPLIT_MAX_UNITS &&
-            (round < RP.splitStopRound || (LATE_SPLIT_ROUND > 0 && round < LATE_SPLIT_ROUND && myLen <= LATE_SPLIT_MAXLEN)) &&
+            (round < RP.splitStopRound || (RP.lateSplitRound > 0 && round < RP.lateSplitRound && myLen <= LATE_SPLIT_MAXLEN)) &&
             !threatened)
         {
             int k = SPLIT_CHILD > 0 ? std::min(SPLIT_CHILD, myLen - 2) : myLen / 2;
@@ -3534,6 +3575,7 @@ struct Bot
         int bestD = -1;
         int bestDepth = 0;
         int areaCap = 3 * myLen + 30;
+        double candScore[4] = {-1e18, -1e18, -1e18, -1e18};
         for (int d = 0; d < 4; d++)
         {
             int t = step(myHead, d);
@@ -3661,6 +3703,7 @@ struct Bot
             if (dbg)
                 std::fprintf(dbg, "  cand %c t=(%d,%d) pearls=%.2f area=%d depth=%d threat=%d freeT=%d score=%.2f\n", DIRC[d],
                              t % w.W, t / w.W, pearls, area, depth, threat, freeT[t], score);
+            candScore[d] = score;
             if (score > best)
             {
                 best = score;
@@ -3700,6 +3743,16 @@ struct Bot
         }
         if (KING_ESCAPE && tryKingEscape(bestD))
             return;
+        if (ECHO_EXIT_HOLD)
+        {
+            double otherBest = -1e18;
+            for (int d = 0; d < 4; d++)
+                if (d != bestD)
+                    otherBest = std::max(otherBest, candScore[d]);
+            if (tryEchoHold(bestD, otherBest))
+                return;
+            holdStreak = 0;
+        }
 
         // ---- trapped: reverse-split so the bulk of the body escapes backwards
         bool trapped = bestD < 0 || (bestDepth < 4 && best < -100);

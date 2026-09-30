@@ -943,3 +943,24 @@
 #ifndef ESCAPE_DEADEND_FIX
 #define ESCAPE_DEADEND_FIX 0
 #endif
+// ---- notes/portals_v31: Portals consolidation (M2). Portals is a solo race; our swarm keeps L<=5 splitting
+// and pocket-diving to r450 (small mass 46 v 12 at r450, king share 0.29 v 0.64 in v30/v31 server losses).
+#ifndef PM_POR_LATESPLIT     // Portals: LATE_SPLIT_ROUND override (-1 = keep 450; 0 = small splits stop at the split stop)
+#define PM_POR_LATESPLIT -1
+#endif
+#ifndef PM_POR_DIVESTOP      // Portals: no pocket-factory / pump dives from this round (0 = off)
+#define PM_POR_DIVESTOP 0
+#endif
+// ---- notes/forensics/portals + notes/portals_v31 (M4): a big dragon whose only move is a blind portal crossing
+// into a body its own probe echoed last turn splits 2 off and stays (re-probe) instead of crossing. Value = min length.
+#ifndef ECHO_EXIT_HOLD
+#define ECHO_EXIT_HOLD 0
+#endif
+#ifndef ECHO_HOLD_MAX        // holds in a row before falling back to the normal decision
+#define ECHO_HOLD_MAX 2
+#endif
+// ---- notes/forensics/portals + notes/portals_v31: a reverse-split child of at least this length keeps the crown
+// (0 = off). Stops the newborn body feeding itself into its L2 parent (local: two L16 kings lost this way at age 0).
+#ifndef CROWN_INHERIT
+#define CROWN_INHERIT 0
+#endif
