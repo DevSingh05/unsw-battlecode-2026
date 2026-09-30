@@ -134,3 +134,4 @@
 - 00:58 UTC: ESCAPE_DEADEND_FIX (+v30 flags) vs v30: Slithery 6/6, other 5 maps exactly 3/6 (identical), unseen gen .525 lesson .521 -> safe fix, bundle into next version. NOTE: Agent isolation=remote silently ran locally (worktree) - cloud offload not available from this session; real cloud needs a claude.ai/code session (no separate compute charge, shares usage limits).
 - 01:01 UTC: v30 vs v29 unseen: gen .512 lesson .500 gated .475 HOLDOUT .500 (pooled .500) -> pocket factory neutral on unseen, keep v30.
 - 01:01 UTC: SERVER Schooltime vs top-10: v30 4/10, schb31 (SCH_B_KEEP) 5/10 (all 20 classified layout B) -> inconclusive, hold for longer test. KC A/B running.
+- 01:06 UTC: SERVER KC A/B vs top-10: v30 6/20 (Por 3/10, Sli 3/10 longest 42.2 v 50.8) vs kc31 10/20 (Por 3/10, Sli 7/10 longest 54.0 v 44.6). v31 = v30 + KING_CONSENSUS + ESCAPE_DEADEND_FIX, active.
