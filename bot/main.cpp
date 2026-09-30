@@ -1510,6 +1510,28 @@ struct Bot
     }
     static constexpr uint64_t SECRET = 0x5d1c0ffee15b00b5ULL;
 
+    // SONAR_ENCRYPT (IMP_FINDINGS.md): our rays land in enemy dragons too; the king word's low bits
+    // were plaintext (position/length/facing). A keyed bijection on the wire hides them.
+    static constexpr uint64_t SK1 = 0x9e3779b97f4a7c15ULL, SK2 = 0xd1b54a32d192ed03ULL, SMUL = 0xbf58476d1ce4e5b9ULL;
+    static constexpr uint64_t smulInv()
+    {
+        uint64_t x = SMUL; // Newton iteration for the inverse of an odd number mod 2^64
+        for (int i = 0; i < 6; i++)
+            x *= 2 - SMUL * x;
+        return x;
+    }
+    static constexpr uint64_t rotl(uint64_t v, int r) { return (v << r) | (v >> (64 - r)); }
+    static constexpr uint64_t sonarOut(uint64_t x)
+    {
+        if (!SONAR_ENCRYPT)
+            return x;
+        return rotl(x ^ SK1, 23) * SMUL + SK2;
+    }
+    static constexpr uint64_t sonarIn(uint64_t y)
+    {
+        return rotl((y - SK2) * smulInv(), 64 - 23) ^ SK1;
+    }
+
     // ---- FRAME_FIX: which side of the map file are we? ("A" = the file's team 0 starts)
     char frameTeam() const
     {
@@ -1629,6 +1651,9 @@ struct Bot
 
     void readMessages()
     {
+        if (SONAR_ENCRYPT)
+            for (auto& m : in.msgs)
+                m = sonarIn(m); // undo our keyed scramble (enemy rays turn into noise the checksums reject)
         for (uint64_t m : in.msgs)
         {
             int tile, rnd;
@@ -1924,17 +1949,17 @@ struct Bot
                              : encodeKing(myHead, myLen, w.myId, 0, myDir, round);
             for (int d = 0; d < 4; d++)
                 if (!warnDirs[d])
-                    out += std::string("SONAR ") + DIRC[d] + " " + std::to_string(m) + "\n";
+                    out += std::string("SONAR ") + DIRC[d] + " " + std::to_string(sonarOut(m)) + "\n";
         }
         else if (!probing && haveRelay)
         {
             for (int d = 0; d < 4; d++)
                 if (!warnDirs[d])
-                    out += std::string("SONAR ") + DIRC[d] + " " + std::to_string(relayMsg) + "\n";
+                    out += std::string("SONAR ") + DIRC[d] + " " + std::to_string(sonarOut(relayMsg)) + "\n";
         }
         for (int d = 0; d < 4; d++)
             if (warnDirs[d])
-                out += std::string("SONAR ") + DIRC[d] + " " + std::to_string(warn) + "\n";
+                out += std::string("SONAR ") + DIRC[d] + " " + std::to_string(sonarOut(warn)) + "\n";
         if (PORTAL_ECHO_GUARD)
         {
             // remember what our warn rays probed: next turn's echo counts tell us

@@ -1003,3 +1003,7 @@
 #ifndef KING_POS_POSTMOVE
 #define KING_POS_POSTMOVE 0
 #endif
+// ---- scramble every sonar word we send with a keyed bijection (enemies intercept our rays) (IMP_FINDINGS.md)
+#ifndef SONAR_ENCRYPT
+#define SONAR_ENCRYPT 0
+#endif
