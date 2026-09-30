@@ -156,3 +156,11 @@
 - 06:02 UTC: loop 400s explained: 'Ranked battles are turned off for one of these teams' (SSS, Cutlery, 中国 disabled ranked). Legal ranked pool now ~cheji + forgot to mention. Rank 2, 2079.
 - 06:02 UTC: added KING_V2_FEED6_ROUND (default 380 = v32) for early-king test; agent measuring our longest@r300 vs top-10 (notes/early_king/MEASURE.md).
 - 06:06 UTC: local vs v32: KING_POS_POSTMOVE .521 (Sli 6/12), SONAR_ENCRYPT .500 (behaviour-neutral). Submitted v33 = v32 + SONAR_ENCRYPT (devil sandbox max 5.5M).
+- 06:10 UTC: MEASURE (146 games vs top-13): NOT small at r300 (level/ahead even in losses); we lose on king growth r300-450 (opp +33 vs us +7.5 on Sch). Testing earlier feeding: ek1 FEED6_ROUND=300; ek2 FEED6=300+MERGE_ROUND=380.
+- 06:14 UTC: first ek local run INVALID (missing v33 flags); rerun.
+- 06:20 UTC: rerun local vs v33: ek1 FEED6=300 .550; ek2 FEED6=300+MERGE=380 .625 (Sch 7/10 Por 7/10 Sli 6/10 QoS 5/10). Server A/B v33base vs ek34 on Sch/Por/Sli vs top-10 (lock held; loop pauses).
+- 06:39 UTC: ranked initiation effectively closed (Cutlery/SSS/中国/cheji ranked off; others < elo-50) -> Elo only via autoscrims/incoming. Submit discipline: only ship server-proven versions. Running unseen eval ek34 vs v33 (seed 141000) + agent: king-death forensics (notes/early_king/KING_DEATHS.md).
+- 06:52 UTC: KING_DEATHS forensics: drops mostly reverse-splits (same rate in wins); real king deaths in losses 27 (18 = rammed by small sprinting heads, vs 3 in wins; Sch 10/24 losses). Slow growth: allies near king eat as many pearls as king; feeders stop at L4. Agent implementing KING_SAFE_PRE + KING_FOOD/KF_FEEDLEN (default off). A/B: v33base 12/30 on Sch/Por/Sli; ek34 live since 06:50. Thermal guard running (notes/thermal_guard.log).
+- 07:09 UTC: unseen eval ek34 vs v33 (seed 141000): gen .500 lesson .500 ladder .475 holdout .500 -> no harm on unseen maps (feeding gate only acts on king-declare maps).
+- 07:22 UTC: FIXES local (40g vs v33): KING_SAFE_PRE .425 (king deaths 6->2, Sch king 44.5 vs 37, Sli 2/8); KING_FOOD .450; +KF_FEEDLEN=5 .500. Testing KSP-lite (EXIT_MARGIN=1, PEARL_MAX=1).
+- 07:26 UTC: SERVER A/B vs top-10 Sch/Por/Sli: v33 12/30 (4/4/4) vs ek34 16/30 (Sch 4, Por 7, Sli 5); +local .625, unseen .500 -> SHIPPED v34 = ek34. Watch ranked; revert to v33 if it bleeds.
