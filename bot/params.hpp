@@ -939,3 +939,7 @@
 #ifndef SCH_B_KEEP_YIELD     // turns a lower-id ally head must share the zone before we give it up
 #define SCH_B_KEEP_YIELD 3
 #endif
+// ---- notes/forensics: KING_ESCAPE ignored an unthreatened step even when it led into a dead end
+#ifndef ESCAPE_DEADEND_FIX
+#define ESCAPE_DEADEND_FIX 0
+#endif

@@ -2965,7 +2965,18 @@ struct Bot
         {
             int t = step(myHead, d);
             if (t >= 0 && !(occId[t] >= 0 && freeT[t] > 1) && threatAt[t] == 0)
+            {
+                if (ESCAPE_DEADEND_FIX)
+                {
+                    // notes/forensics: an unthreatened step into a dead end is not "safe" for a big dragon
+                    double pv;
+                    int area;
+                    bfsFrom(t, pv, area, 3 * myLen + 30);
+                    if (area < myLen || surviveDepth(t, SURVIVE_DEPTH) < SURVIVE_DEPTH / 2)
+                        continue;
+                }
                 return false; // a plain step is safe after all
+            }
         }
         auto ownIdx = [&](int t) {
             for (int i = 0; i < static_cast<int>(trail.size()); i++)
