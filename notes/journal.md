@@ -167,3 +167,5 @@
 - 07:27 UTC: KSP-lite local .444 (Por 3/12). Added KSP_SCH_ONLY (king safety on Schooltime only; off on unknown maps). variants/ksp35 = v34 + KING_SAFE_PRE + KSP_SCH_ONLY. Local check vs v34.
 - 07:31 UTC: ksp35 local vs v34: .528 (Sch 7/12; Devil/Default identical 6/12). Sandbox max 14.4M. Server A/B Schooltime-only vs top-20 (20g/arm): v34sch then ksp35, auto-restore v34.
 - 07:56 UTC: SERVER Schooltime vs top-20: v34 13/20 vs ksp35 (KING_SAFE_PRE Sch-only) 9/20 -> REJECT king safety (self-play-invisible cost is real). v34 restored/active. (collect KeyError fixed: template needs rank/elo.)
+- 08:04 UTC: local vs v34: FEED6 260/MERGE 360 .575 (Sli 7/10); FEED6 300/MERGE 350 .575. Server A/B v34b vs ek35 (260/360) on Sch/Por/Sli vs top-10.
+- 08:57 UTC: SERVER vs top-10 Sch/Por/Sli: v34 15/30 (6/4/5) vs ek35 (260/360) 17/30 (4/8/5) -> within noise, NOT shipped; v34 stays (restored 08:56). Portals noisy (v34 4/10 here vs 7/10 before).
