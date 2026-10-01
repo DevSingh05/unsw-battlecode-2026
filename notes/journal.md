@@ -193,3 +193,4 @@
 - 21:48 UTC: UNK_KING_SEED=200/FEED=250 vs v35 (161000): gen .562 lesson .438 holdout .509 pooled .513 -> no. Running king350 (SEED 350/FEED 400) + SPLIT_MAX_UNITS=60 (workflow, gen+holdout, jobs1 each) + king350 lesson/gated (jobs 2).
 - 23:15 UTC: FREEZE passed at 23:00 with v35 active (Sprint bot). Local last-stretch tests paused (user moving): SEED200/FEED250 .513, SEED350/FEED400 lesson/gated .466 -> neither shipped.
 - 23:24 UTC: post-freeze results: SPLIT_MAX_UNITS=60 vs v35 gen .500 holdout .487 pooled .494 (neutral); king350 gen .500 (rest paused). Confirms v35 as the right Sprint bot.
+- 13:00 UTC: SPRINT RESULT (v35, seed 10): bye; beat Tattva 7-0, Serendipity 6-1, dslafkj 5-2, Quaker Qubits 6-1, free trip to sydney pls 5-2; lost round of 16 to PPP (seed 7) 3-4. PPP reached the final, lost 3-4 to Cutlery (champion). Semis: Cutlery 4-3 cheji, PPP 5-2 larpmaxxing. Bracket saved notes/sprint_bracket.json.
