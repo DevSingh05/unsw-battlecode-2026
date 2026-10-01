@@ -44,3 +44,7 @@
 16:00 UTC ok load=4.18 paused=0
 16:27 UTC PAUSE (warn=0 load=9.05)
 16:44 UTC PAUSE (warn=0 load=12.33)
+16:55 UTC RESUME (load=5.88)
+16:58 UTC ok load=9.31 paused=0 warn=0
+17:00 UTC PAUSE (warn=0 load=12.12)
+17:08 UTC guard3 started (temp-based: pause >=102C x1min / warning / load>16; resume <90C 3min)

@@ -1148,6 +1148,19 @@
 #ifndef QUEEN_ESCAPE
 #define QUEEN_ESCAPE 0        // a queen of L>=3 whose every step is threatened sprints 2-3 steps (KING_ESCAPE path)
 #endif
+// S4: queen lookahead. Penalise a step whose worst enemy reply (F free steps, then a ram) leaves < 2 safe exits.
+#ifndef QUEEN_LOOK
+#define QUEEN_LOOK 0
+#endif
+#ifndef QL_EXIT_PEN
+#define QL_EXIT_PEN 80.0
+#endif
+#ifndef QUEEN_ENCLOSE_PEN
+#define QUEEN_ENCLOSE_PEN 0.0  // v36q 400: open area (her body as a wall) below 3L+20, scaled by the missing fraction
+#endif
+#ifndef QUEEN_DIST_VETO
+#define QUEEN_DIST_VETO 0      // veto ending within F(L)+1 of any visible enemy head when another safe step exists
+#endif
 #ifndef QUEEN_VETO_DEPTH
 #define QUEEN_VETO_DEPTH 4    // an unthreatened alternative must survive this deep to veto a threatened step
 #endif

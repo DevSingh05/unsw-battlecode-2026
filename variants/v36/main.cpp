@@ -2347,6 +2347,103 @@ struct Bot
     std::vector<int> sprintThreatAt;       // SMALL_SPRINT_THREAT: 2-step sprint reach of enemy heads (len >= 3)
     int localAllies = 0, localEnemies = 0; // heads in our view (allies include us)
     std::vector<int> threatPaidAt; // THREAT_FREE: reachable only with 1-2 paid steps
+    // S4 QUEEN_LOOK: qlSlack[v] = min over enemy heads of (BFS dist to v) - 2F: <= 0 means a head can reply
+    // (F free steps) and then ram v on its next turn. Unreached tiles keep INF.
+    std::vector<int> qlSlack, qlDist, qlQ;
+    void computeQueenLook()
+    {
+        qlSlack.assign(w.N, INF);
+        if (static_cast<int>(qlDist.size()) != w.N)
+            qlDist.assign(w.N, INF);
+        for (auto& s : segs)
+        {
+            if (!s.head || s.team == w.myTeam)
+                continue;
+            int Lv = enemyVisibleLength(s.id);
+            if (!enemyTailSeen(s))
+                Lv = std::max(Lv, 4);
+            int R2 = 2 * freeSteps(Lv);
+            qlQ.clear();
+            qlQ.push_back(s.tile);
+            qlDist[s.tile] = 0;
+            for (size_t i = 0; i < qlQ.size(); i++)
+            {
+                int u = qlQ[i];
+                qlSlack[u] = std::min(qlSlack[u], qlDist[u] - R2);
+                if (qlDist[u] >= R2)
+                    continue;
+                for (int d = 0; d < 4; d++)
+                {
+                    int v = step(u, d);
+                    if (v < 0 || qlDist[v] != INF || (freeT[v] > 2 && v != myHead))
+                        continue; // bodies that stay put block it
+                    qlDist[v] = qlDist[u] + 1;
+                    qlQ.push_back(v);
+                }
+            }
+            for (int u : qlQ)
+                qlDist[u] = INF;
+        }
+    }
+    // the queen at t after the worst reply: exits a head can't reach by reply + ram
+    int queenSafeExits(int t)
+    {
+        int n = 0;
+        for (int d = 0; d < 4; d++)
+        {
+            int u = step(t, d);
+            if (u < 0 || u == myHead || freeT[u] > 2)
+                continue;
+            if (qlSlack[u] > 0)
+                n++;
+        }
+        return n;
+    }
+    // v36q: tiles reachable from t with our whole body as a wall, capped (small = t closes a loop on her)
+    std::vector<int> qoSeen, qoQ;
+    int qoStamp = 0;
+    int queenOpen(int t, int cap)
+    {
+        if (static_cast<int>(qoSeen.size()) != w.N)
+            qoSeen.assign(w.N, 0);
+        if (++qoStamp == (1 << 30))
+        {
+            std::fill(qoSeen.begin(), qoSeen.end(), 0);
+            qoStamp = 1;
+        }
+        for (int b : trail)
+            if (b >= 0 && b < w.N)
+                qoSeen[b] = qoStamp;
+        if (t < 0 || qoSeen[t] == qoStamp)
+            return 0;
+        qoQ.clear();
+        qoQ.push_back(t);
+        qoSeen[t] = qoStamp;
+        for (size_t i = 0; i < qoQ.size() && static_cast<int>(qoQ.size()) < cap; i++)
+            for (int d = 0; d < 4; d++)
+            {
+                int v = step(qoQ[i], d);
+                if (v < 0 || qoSeen[v] == qoStamp || freeOther[v] > 2)
+                    continue;
+                qoSeen[v] = qoStamp;
+                qoQ.push_back(v);
+            }
+        return std::min(cap, static_cast<int>(qoQ.size()));
+    }
+    // DIST veto: some visible enemy head ends within F(L)+1 (Manhattan, walls ignored) of t
+    bool queenTooClose(int t)
+    {
+        for (auto& o : segs)
+            if (o.head && o.team != w.myTeam)
+            {
+                int Lv = enemyVisibleLength(o.id);
+                if (!enemyTailSeen(o))
+                    Lv = std::max(Lv, 4);
+                if (wrapDist(o.tile, t) <= freeSteps(Lv) + 1)
+                    return true;
+            }
+        return false;
+    }
     // the enemy's tail is in view (so its visible length is its real length)
     bool enemyTailSeen(const Seg& s)
     {
@@ -4068,6 +4165,8 @@ struct Bot
                 bd = dd, hotTarget = mt;
             }
         }
+        if (queenSafe() && QUEEN_LOOK)
+            computeQueenLook();
         // ---- score each direction
         double best = -1e18;
         int bestD = -1;
@@ -4075,6 +4174,7 @@ struct Bot
         int areaCap = 3 * myLen + 30;
         double candScore[4] = {-1e18, -1e18, -1e18, -1e18};
         int candThreat[4] = {0, 0, 0, 0}, candDepth[4] = {0, 0, 0, 0};
+        bool candClose[4] = {false, false, false, false};
         for (int d = 0; d < 4; d++)
         {
             int t = step(myHead, d);
@@ -4196,6 +4296,20 @@ struct Bot
                         break;
                     }
             }
+            if (queenSafe() && QUEEN_LOOK)
+            {
+                int se = queenSafeExits(t);
+                if (se < 2)
+                    score -= QL_EXIT_PEN * (2 - se); // the worst reply leaves her < 2 safe ways out
+            }
+            if (queenSafe() && QUEEN_ENCLOSE_PEN > 0)
+            {
+                int cap = 3 * myLen + 20;
+                int open = queenOpen(t, cap);
+                if (open < cap)
+                    score -= QUEEN_ENCLOSE_PEN * (cap - open) / cap;
+            }
+            candClose[d] = queenSafe() && QUEEN_DIST_VETO && queenTooClose(t);
             candThreat[d] = threat;
             candDepth[d] = depth;
             score += mapScore(t, d);
@@ -4350,6 +4464,17 @@ struct Bot
                     std::fprintf(dbg, "  queen veto %c -> %c\n", DIRC[bestD], DIRC[alt]);
                 bestD = alt, best = candScore[alt], bestDepth = candDepth[alt];
             }
+        }
+        if (queenSafe() && QUEEN_DIST_VETO && bestD >= 0 && candClose[bestD])
+        {
+            // no enemy head within F+1 of her at the end of the turn, unless every step is that close
+            int alt = -1;
+            for (int d = 0; d < 4; d++)
+                if (candScore[d] > -1e17 && !candClose[d] && candThreat[d] == 0 && candDepth[d] >= QUEEN_VETO_DEPTH &&
+                    (alt < 0 || candScore[d] > candScore[alt]))
+                    alt = d;
+            if (alt >= 0)
+                bestD = alt, best = candScore[alt], bestDepth = candDepth[alt];
         }
         if (KING_ESCAPE && tryKingEscape(bestD))
             return;
