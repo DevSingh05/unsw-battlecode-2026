@@ -1760,6 +1760,8 @@ struct Bot
                 continue;
             if (id == (w.myId & 1023))
                 continue;
+            if (QUEEN_KING && id <= 1 && (rnd > qRound || (rnd == qRound && hop < qHop)))
+                qLen = len, qTile = tile, qDir = dir, qRound = rnd, qHop = hop, qId = id; // our queen's beacon
             {
                 bool found = false;
                 for (auto& k : kingsSeen)
@@ -1882,6 +1884,28 @@ struct Bot
             if (vis > 0 && inside && vis < kingLen)
                 kingLen = vis;
         }
+        if (QUEEN_KING && !amQueen())
+        {
+            // we can see the queen ourselves: exact data
+            int vis = 0;
+            for (auto& sg : segs)
+                if (sg.team == w.myTeam && sg.id <= 1)
+                {
+                    vis++;
+                    if (sg.head)
+                        qTile = sg.tile, qDir = sg.facing, qRound = round, qId = sg.id, qHop = 0;
+                }
+            if (vis > 0 && qRound == round)
+                qLen = std::max(qLen, vis);
+            if (queenAlive() && queenKingRound())
+            {
+                // while the queen is heard she is the only king we follow, feed and relay
+                kingId = qId, kingLen = qLen, kingTile = qTile, kingDir = qDir, kingRound = qRound;
+                haveRelay = round - qRound <= 4 && qHop < KING_RELAY_HOPS;
+                if (haveRelay)
+                    relayMsg = encodeKing(qTile, qLen, qId, qHop + 1, qDir, qRound);
+            }
+        }
         if (kingId >= 0 && round - kingRound > 12)
         {
             kingId = -1;
@@ -1917,10 +1941,32 @@ struct Bot
     // v36: dragons 0 and 1 are the queens (one per team; ids follow map DRAGON line order, and the team
     // that owns line 1 varies by map and by server start swap). Any dragon running this code is ours.
     bool amQueen() const { return w.myId == 0 || w.myId == 1; }
-    bool queenSafe() const { return QUEEN_SAFE && amQueen(); }
+    // QS phase (sticky): before it the queen plays v35 (with the queenEarly() limits), after it QUEEN_SAFE rules
+    bool qsOn = false;
+    bool queenSafe() const { return QUEEN_SAFE && amQueen() && qsOn; }
+    bool queenEarly() const { return QUEEN_SAFE && amQueen() && !qsOn; }
+    void updateQsPhase()
+    {
+        if (!qsOn && (round >= QS_FROM || (QS_UNITS > 0 && units >= QS_UNITS)))
+            qsOn = true;
+    }
+    // QUEEN_KING: on king maps our queen is the only king from the seed round while she is alive
+    int qId = -1, qLen = 0, qTile = -1, qDir = 0, qRound = -100000, qHop = 99;
+    bool queenAlive() const { return QUEEN_KING && qId >= 0 && round - qRound <= QUEEN_ALIVE_MEM; }
+    bool queenKingRound() const { return QUEEN_KING && RP.kingDeclare && round >= RP.kingSeedRound; }
     static int freeSteps(int L) { return (L + 3) / 4; } // 1.2.3: the first ceil(L/4) steps of a move are free
     void updateKingship()
     {
+        if (QUEEN_KING && amQueen() && queenKingRound())
+        {
+            kingSelf = true; // she is the king: feeders come to her, she stops splitting
+            return;
+        }
+        if (QUEEN_KING && !amQueen() && queenKingRound() && queenAlive())
+        {
+            kingSelf = false; // no rival kings while our queen lives
+            return;
+        }
         if (queenSafe())
             return; // the queen never self-crowns (a big king is a ram magnet); map modules (trauma pen) still may
         if (!RP.kingDeclare)
@@ -1965,6 +2011,8 @@ struct Bot
     }
     bool iAmKing() const
     {
+        if (QUEEN_KING && queenKingRound() && (amQueen() || queenAlive()))
+            return amQueen();
         if (queenSafe())
             return kingSelf; // only a map-module crown, never by length
         if (RP.kingDeclare)
@@ -3026,7 +3074,7 @@ struct Bot
     // Try a head-on ram at distance 1 or 2. Returns true if we emitted it.
     bool tryRam()
     {
-        if (QUEEN_SAFE && amQueen())
+        if (queenSafe())
             return false; // the queen never trades herself
         if (!ENABLE_RAM || units < 2 || (feedPhase() && iAmKing()))
             return false;
@@ -3051,6 +3099,8 @@ struct Bot
                 if ((RP.ramGuard != 2 && units < RAM_MIN_UNITS) || allyHeads < enemyHeads + 1)
                     worth = false;
             }
+            if (queenEarly() && (!QS_EARLY_RAM || theirs >= myLen))
+                continue; // early queen: rams only shorter heads (head-on still kills both: QS_EARLY_RAM=0 bans it)
             if (!worth)
                 continue;
             double val = 40.0 + 3.0 * theirs - 2.0 * myLen + (hunt ? QH_BONUS : 0.0);
@@ -3509,7 +3559,7 @@ struct Bot
             return true;
         }
         int tail = static_cast<int>(trail.size()) >= myLen ? trail[myLen - 1] : -1;
-        if (tail >= 0 && !queenSafe() && units < w.unitLimit && tailHasExit(myLen - 2) && threatAt[tail] == 0)
+        if (tail >= 0 && !queenSafe() && !queenEarly() && units < w.unitLimit && tailHasExit(myLen - 2) && threatAt[tail] == 0)
         {
             bool enemyNearTail = false;
             for (auto& o : segs)
@@ -3654,6 +3704,7 @@ struct Bot
             emitMove(myDir);
             return;
         }
+        updateQsPhase();
         PROF_BEGIN(th);
         computeThreats();
         PROF_END(th, 2);
@@ -3829,7 +3880,7 @@ struct Bot
         if (POCKET_FACTORY)
         {
             pfCompute();
-            pfIn = pfInward() && myLen <= PF_MAXLEN && !(queenSafe() && threatAt[myHead] > 0);
+            pfIn = pfInward() && myLen <= PF_MAXLEN && !(queenSafe() && threatAt[myHead] > 0) && !queenEarly();
             if (pfIn)
             {
                 // inside a pocket facing inward: eat on while food lies ahead, then split so the child
@@ -3928,6 +3979,12 @@ struct Bot
                     k = myLen - 2;
             }
             bool viable = true;
+            if (queenEarly() && myLen - k < 3)
+            {
+                k = myLen - 3; // the early queen keeps >= 3 of herself
+                if (k < 2)
+                    viable = false;
+            }
             if (POCKET_FACTORY && pfChildInwardBad(k))
                 viable = false; // the child would be born inside a pocket facing in, with too little to eat
             if (viable && SPLIT_VIABLE > 0)
@@ -4128,6 +4185,16 @@ struct Bot
                         nd = std::min(nd, wrapDist(o.tile, t));
                 if (nd <= 4)
                     score -= QUEEN_HEAD_W / std::max(nd, 1);
+            }
+            if (queenEarly())
+            {
+                // early queen: never meet an equal-or-longer head head-on
+                for (auto& o : segs)
+                    if (o.head && o.team != w.myTeam && wrapDist(o.tile, t) <= 1 && enemyVisibleLength(o.id) >= myLen)
+                    {
+                        score -= QUEEN_THREAT_PEN;
+                        break;
+                    }
             }
             candThreat[d] = threat;
             candDepth[d] = depth;

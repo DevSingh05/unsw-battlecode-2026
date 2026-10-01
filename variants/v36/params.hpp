@@ -1106,6 +1106,21 @@
 #ifndef QUEEN_SAFE
 #define QUEEN_SAFE 1
 #endif
+#ifndef QS_FROM
+#define QS_FROM 0             // QUEEN_SAFE rules start this round (sticky); before it the queen plays v35 with limits
+#endif
+#ifndef QS_UNITS
+#define QS_UNITS 0            // ...or once we have this many units (0 = from round QS_FROM only)
+#endif
+#ifndef QS_EARLY_RAM
+#define QS_EARLY_RAM 1        // the early queen may ram strictly shorter heads (head-on kills both!)
+#endif
+#ifndef QUEEN_KING
+#define QUEEN_KING 0          // king maps: from the seed round our queen is the only king (others don't crown, all feed her)
+#endif
+#ifndef QUEEN_ALIVE_MEM
+#define QUEEN_ALIVE_MEM 30    // non-queens treat the queen as alive while heard/seen within this many rounds
+#endif
 #ifndef QUEEN_THREAT_PEN
 #define QUEEN_THREAT_PEN 300.0
 #endif
