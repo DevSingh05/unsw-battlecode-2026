@@ -81,6 +81,9 @@ def main():
             res = run(with_flag(a.cand, "-DNO_KNOWN_MAPS=1"), a.base, BLINDVK, max(2, a.seeds * 2), a.jobs, a.seed_base)
             ref = run(with_flag(a.base, "-DNO_KNOWN_MAPS=1"), a.base, BLINDVK, max(2, a.seeds * 2), a.jobs, a.seed_base)
             print(f"blindvk-base {ref[2]}", flush=True)
+        elif s == "sprint":
+            # the 7 real Sprint maps (unknown to the bot; pearl gaps rebuilt from replays, notes/maps_sprint/GAPS.md)
+            res = run(a.cand, a.base, maps_in("sprint"), max(2, a.seeds * 2), a.jobs, a.seed_base)
         elif s == "ladder":
             res = run(a.cand, a.base, RANKED, max(2, a.seeds * 2), a.jobs, a.seed_base)
         else:
