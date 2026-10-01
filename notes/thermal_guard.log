@@ -61,3 +61,9 @@
 18:51 UTC RESUME cpu=51.8C load=2.46
 18:55 UTC ok cpu=87.3C load=12.50 paused=0
 19:05 UTC ok cpu=85.2C load=10.15 paused=0
+19:15 UTC ok cpu=87.0C load=10.66 paused=0
+19:19 UTC PAUSE cpu=97.1C load=16.66 warn=0
+19:22 UTC RESUME cpu=51.8C load=2.63
+19:25 UTC ok cpu=91.5C load=13.70 paused=0
+19:36 UTC ok cpu=92.3C load=12.61 paused=0
+19:43 UTC PAUSE cpu=92.3C load=16.85 warn=0
