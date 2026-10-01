@@ -14,7 +14,7 @@ import sys
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 RANKED = ["devil", "schooltime", "portals", "default", "queen_of_spades", "trophy",
           "autarky", "dilemma", "slithery_fight", "trauma"]
-WIN = re.compile(r"team ([AB]) wins after (\d+) rounds \((?:by|on) ([a-z ]+)\)")
+WIN = re.compile(r"team ([AB]) wins after (\d+) rounds \((?:by |on )?([a-z ]+)[,)]")  # 1.2.3: "(longer queen, 2 to 0)", "(longest dragon, ...)"
 DRAW = re.compile(r"(draw|tie)", re.I)
 
 
