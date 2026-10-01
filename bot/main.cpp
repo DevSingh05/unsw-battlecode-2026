@@ -1125,6 +1125,13 @@ struct Bot
                         since = arrive; // initial countdowns start somewhere in [min,max]
                     v = 0.5 * std::min(1.0, std::max(0, since) * r);
                 }
+                if (UNK_CENTER_PULL && ls < 0 && w.spawnAt[t] < 0 && round <= UCP_R && unkMap())
+                {
+                    // UNK_CENTER_PULL: (W/2,H/2) lies on every symmetry axis; fades to 0 at UCP_R
+                    int dc = wrapDist(t, w.idx(w.W / 2, w.H / 2));
+                    double prox = std::max(0.0, 1.0 - dc / (0.25 * (w.W + w.H)));
+                    v = std::max(v, UCP_W * prox * (1.0 - round / static_cast<double>(UCP_R)));
+                }
             }
         }
         if (v <= 0)
@@ -2085,6 +2092,45 @@ struct Bot
     {
         int dx = std::abs(a % w.W - b % w.W), dy = std::abs(a / w.W - b / w.W);
         return std::min(dx, w.W - dx) + std::min(dy, w.H - dy);
+    }
+    // unseen map: the same condition UNK_KING uses (no known map and no candidate left)
+    bool unkMap() const { return !w.known && w.candidates.empty(); }
+
+    // UNK_LANE_GUARD: stepping d onto t enters a 1-wide kelp lane (both sides kelp, seen) that runs
+    // through degree-2 tiles into unseen ground or a dead end, with another ally head within ULG_ALLY_R
+    bool laneTrap(int t, int d) const
+    {
+        int deg = 0;
+        for (int d2 = 0; d2 < 4; d2++)
+            if (step(t, d2) >= 0)
+                deg++;
+        // unseen edges are assumed open, so step()==-1 is always an observed kelp edge
+        if (deg > 2 || w.lastSeen[t] < 0 || step(t, (d + 1) % 4) >= 0 || step(t, (d + 3) % 4) >= 0)
+            return false;
+        int prev = myHead, cur = t;
+        for (int i = 0; i < ULG_STEPS; i++)
+        {
+            int nx = -1, fwd = 0;
+            for (int d2 = 0; d2 < 4; d2++)
+            {
+                int v = step(cur, d2);
+                if (v >= 0 && v != prev)
+                    fwd++, nx = v;
+            }
+            if (fwd != 1 || w.lastSeen[cur] < 0)
+                break; // a junction, a dead end or unseen ground
+            prev = cur, cur = nx;
+        }
+        int endDeg = 0;
+        for (int d2 = 0; d2 < 4; d2++)
+            if (step(cur, d2) >= 0)
+                endDeg++;
+        if (!(w.lastSeen[cur] < 0 || endDeg <= 1))
+            return false; // the lane opens into ground we have seen
+        for (auto& o : segs)
+            if (o.head && o.team == w.myTeam && o.id != w.myId && wrapDist(o.tile, t) <= ULG_ALLY_R)
+                return true;
+        return false;
     }
 
     // UNK_KING: every dragon computes the same shrinking reserve (14 at r300 -> 3 at r490)
@@ -3791,6 +3837,27 @@ struct Bot
                     if (t2 >= 0 && visible[t2] && w.pearlMem[t2])
                         foodWaiting = true;
                 dieNow = kingVisible && !enemyNear && (spot || (KING_V2_LOOSE && dieNow)) && (!foodWaiting || KING_V2_LOOSE);
+                if (KING_FEED_STEAL && dieNow)
+                {
+                    // KING_FEED_STEAL (notes/qualifier/DESIGN.md 1): a small ally head as close to us as the
+                    // king would eat our pearls; keep walking (the feed is delayed, not cancelled)
+                    for (auto& o : segs)
+                        if (o.head && o.team == w.myTeam && o.id != w.myId && (o.id & 1023) != (kingId & 1023) &&
+                            wrapDist(o.tile, myHead) <= dk)
+                        {
+                            int n = 0;
+                            for (auto& s2 : segs)
+                                if (s2.id == o.id)
+                                    n++;
+                            if (n <= KING_FEED_STEAL_LEN)
+                            {
+                                dieNow = false;
+                                break;
+                            }
+                        }
+                    if (KING_FEED_STEAL == 2 && dieNow && dk >= 3 && foodWaiting)
+                        dieNow = false; // KING_V2_LOOSE's food-waiting override only at dk <= 2
+                }
                 if (FEED_QUEUE && dieNow)
                 {
                     // one feeder at a time: the ally head closest to the king (ties: lower id),
@@ -3975,14 +4042,22 @@ struct Bot
                     std::fprintf(dbg, "PF in depth=%d len=%d aheadP=%.2f hold=%d units=%d/%d any=%d\n", pfDepth[myHead], myLen, bestP, holdTile, units, w.unitLimit, anyFree);
             }
         }
-        if (!pfIn && holdTile < 0 && !(RP.kingDeclare && kingSelf) && !bigLate && (!SPLIT_NEEDS_EXIT || tailHasExit(2)) &&
+        // UNK_LATE_PEEL (notes/qualifier/DESIGN.md 4): a mid-size non-king dragon keeps peeling 2-long
+        // children after splitStop; it also has to get past bigLate (L>=KING_MIN_LEN after the seed round)
+        bool latePeel = UNK_LATE_PEEL && round < ULP_ROUND && myLen >= ULP_MINLEN && !kingSelf && myLen < kingLen - 6 &&
+                        units < w.unitLimit - 4 && !threatened && unkMap();
+        bool normalSplitRound = round < RP.splitStopRound || (RP.lateSplitRound > 0 && round < RP.lateSplitRound && myLen <= LATE_SPLIT_MAXLEN);
+        bool peelOnly = latePeel && (bigLate || !normalSplitRound);
+        if (!pfIn && holdTile < 0 && !(RP.kingDeclare && kingSelf) && (!bigLate || latePeel) && (!SPLIT_NEEDS_EXIT || tailHasExit(2)) &&
             !(CONS_R && CONS_NOSPLIT && (consActive || consHostKeep())) &&
             !(UNK_SEALED_FOOD && !w.known && UNK_SEALED_ROOM_MIN > 0 && roomSize(UNK_SEALED_ROOM_MIN) < UNK_SEALED_ROOM_MIN) && myLen >= SPLIT_LEN && myLen >= 4 && units < w.unitLimit && units < SPLIT_MAX_UNITS &&
-            (round < RP.splitStopRound || (RP.lateSplitRound > 0 && round < RP.lateSplitRound && myLen <= LATE_SPLIT_MAXLEN)) &&
+            (normalSplitRound || latePeel) &&
             !threatened)
         {
             int k = SPLIT_CHILD > 0 ? std::min(SPLIT_CHILD, myLen - 2) : myLen / 2;
-            if (tipK > 0)
+            if (peelOnly)
+                k = 2; // UNK_LATE_PEEL: peel a 2-long child
+            else if (tipK > 0)
                 k = tipK;
             else if (PUMP_TIP_SPLIT)
             {
@@ -4015,7 +4090,7 @@ struct Bot
                 int A = SPLIT_VIABLE + (units * 4 >= w.unitLimit * 3 ? SPLIT_VIABLE_DENSE : 0);
                 if (splitSideArea(true, k, A) < A)
                     viable = false;
-                else if (myLen >= 5 && splitSideArea(false, k, A) < A)
+                else if (myLen >= 5 && !peelOnly && splitSideArea(false, k, A) < A)
                     k = myLen - 2; // parent sealed at a tip: the bulk leaves as the child
             }
             if (viable)
@@ -4117,6 +4192,8 @@ struct Bot
                 score -= 50.0; // inside: the planned branch (the others are shorter or empty)
             if (area < need && !pump)
                 score -= AREA_WEIGHT * (need - area) / need + 20;
+            if (UNK_LANE_GUARD && myLen <= 4 && unkMap() && laneTrap(t, d))
+                score -= ULG_PEN; // UNK_LANE_GUARD (notes/qualifier/DESIGN.md 3)
             if (DIVE_VALUE && (DV_PARTS & 8) && !pump && !pfIn && t != holdTile && myLen <= PF_MAXLEN && !pfDepth.empty() &&
                 pfDepth[t] > 0 && pfDepth[myHead] == 0)
             {

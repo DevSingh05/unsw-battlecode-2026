@@ -1193,3 +1193,45 @@
 #ifndef SR_MIN_EV
 #define SR_MIN_EV 0.0
 #endif
+// ---- Qualifier flags (notes/qualifier/DESIGN.md, IMPL.md); all default off
+// 1: KING_V2 feeder doesn't die while a small ally head (len <= KING_FEED_STEAL_LEN) is as close
+//    to it as the king is (it would steal the pearls). 2: also no dk 3-4 feed while food is waiting.
+#ifndef KING_FEED_STEAL
+#define KING_FEED_STEAL 0
+#endif
+#ifndef KING_FEED_STEAL_LEN
+#define KING_FEED_STEAL_LEN 6
+#endif
+// unknown maps: early prior on never-seen tiles near the map centre, fading to 0 at UCP_R
+#ifndef UNK_CENTER_PULL
+#define UNK_CENTER_PULL 0
+#endif
+#ifndef UCP_W
+#define UCP_W 0.25
+#endif
+#ifndef UCP_R
+#define UCP_R 60
+#endif
+// unknown maps: L<=4 dragons avoid entering a 1-wide kelp lane with a blind/dead end and an ally head near
+#ifndef UNK_LANE_GUARD
+#define UNK_LANE_GUARD 0
+#endif
+#ifndef ULG_PEN
+#define ULG_PEN 25.0
+#endif
+#ifndef ULG_STEPS
+#define ULG_STEPS 5
+#endif
+#ifndef ULG_ALLY_R
+#define ULG_ALLY_R 3
+#endif
+// unknown maps: L>=8 non-king dragons peel 2-long children until r470 (past splitStop / bigLate)
+#ifndef UNK_LATE_PEEL
+#define UNK_LATE_PEEL 0
+#endif
+#ifndef ULP_ROUND
+#define ULP_ROUND 470
+#endif
+#ifndef ULP_MINLEN
+#define ULP_MINLEN 8
+#endif
