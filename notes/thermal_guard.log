@@ -48,3 +48,16 @@
 16:58 UTC ok load=9.31 paused=0 warn=0
 17:00 UTC PAUSE (warn=0 load=12.12)
 17:08 UTC guard3 started (temp-based: pause >=102C x1min / warning / load>16; resume <90C 3min)
+17:17 UTC ok cpu=82.1C load=5.82 paused=0
+17:27 UTC ok cpu=84.7C load=9.52 paused=0
+17:37 UTC ok cpu=92.2C load=9.72 paused=0
+17:47 UTC ok cpu=86.8C load=10.36 paused=0
+18:05 UTC ok cpu=52.8C load=6.35 paused=0
+18:15 UTC ok cpu=84.5C load=10.10 paused=0
+18:25 UTC ok cpu=83.0C load=10.57 paused=0
+18:35 UTC ok cpu=88.6C load=10.03 paused=0
+18:45 UTC ok cpu=87.1C load=10.58 paused=0
+18:47 UTC PAUSE cpu=88.4C load=18.06 warn=0
+18:51 UTC RESUME cpu=51.8C load=2.46
+18:55 UTC ok cpu=87.3C load=12.50 paused=0
+19:05 UTC ok cpu=85.2C load=10.15 paused=0
