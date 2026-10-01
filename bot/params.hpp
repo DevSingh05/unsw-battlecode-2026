@@ -1235,3 +1235,51 @@
 #ifndef ULP_MINLEN
 #define ULP_MINLEN 8
 #endif
+
+// ---- notes/qualifier/SCARCE_PORTAL.md: unknown maps whose food sits behind portals (Sprint Stripes:
+// ~97% of the spawn rate is in portal-only 2x2 pockets; portals-as-kelp => our dragons starve).
+// UNK_SCARCE_FIX=1: once seen spawners reachable only via portal pairs whose BOTH ends we've seen are
+// >= USF_FRAC of the known food rate (and >= USF_MIN tiles), path through known pairs (sticky).
+#ifndef UNK_SCARCE_FIX
+#define UNK_SCARCE_FIX 0
+#endif
+#ifndef USF_MIN
+#define USF_MIN 4
+#endif
+#ifndef USF_FRAC
+#define USF_FRAC 0.5
+#endif
+// per-spawner-tile richness: portal-only rate/tile >= USF_RICH x walkable rate/tile (0 = no test)
+#ifndef USF_RICH
+#define USF_RICH 4
+#endif
+#ifndef USF_LOG
+#define USF_LOG 0
+#endif
+// UNK_PORTAL_EXPLORE=1 (calc's rule): small (L<=UPE_MAXLEN) non-queen (id>1) dragons with no walkable food
+// (no remembered pearl / spawn due on arrival within UPE_RANGE steps) for UPE_HUNGER rounds scout an unexplored portal
+// via the UNK_EXPLORE knock/cross machinery. Rationed: (id + round/UPE_SLOT) % UPE_MOD == 0, no ally head within 3.
+#ifndef UNK_PORTAL_EXPLORE
+#define UNK_PORTAL_EXPLORE 0
+#endif
+#ifndef UPE_MAXLEN
+#define UPE_MAXLEN 4
+#endif
+#ifndef UPE_HUNGER
+#define UPE_HUNGER 12
+#endif
+#ifndef UPE_RANGE
+#define UPE_RANGE 16
+#endif
+#ifndef UPE_SOON
+#define UPE_SOON 4
+#endif
+#ifndef UPE_MIN_ROUND
+#define UPE_MIN_ROUND 5
+#endif
+#ifndef UPE_SLOT
+#define UPE_SLOT 30
+#endif
+#ifndef UPE_MOD
+#define UPE_MOD 3
+#endif

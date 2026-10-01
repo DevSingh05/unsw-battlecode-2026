@@ -400,6 +400,17 @@ struct World
         link(e1 / 2, e2 / 2, (e1 & 1) == 0);
         link(e2 / 2, e1 / 2, (e1 & 1) == 0);
     }
+    // UNK_SCARCE_FIX (notes/qualifier/SCARCE_PORTAL.md): pairs are always recorded; they are linked into
+    // nxt (walkable) only once portalUse is on (LEARN_PORTALS behaviour from then on)
+    bool portalUse = false;
+    bool portalLearnOn() const { return LEARN_PORTALS || portalUse; }
+    void enablePortalUse()
+    {
+        portalUse = true;
+        for (auto& [id, edges] : portalSeen)
+            if (edges.size() == 2)
+                linkPortal(edges[0], edges[1]);
+    }
     void notePortal(int t, int d, int pid)
     {
         int e = canonEdge(t, d);
@@ -408,7 +419,7 @@ struct World
             {
                 if (std::find(edges.begin(), edges.end(), e) == edges.end())
                     edges.push_back(e);
-                if (edges.size() == 2)
+                if (edges.size() == 2 && portalLearnOn())
                     linkPortal(edges[0], edges[1]);
                 return;
             }
@@ -582,10 +593,10 @@ struct World
                 int t = td / 4, d = td % 4;
                 if (k == 0)
                     nxt[td] = plainStep(t, d);
-                else if (k == 1 || !LEARN_PORTALS || !portalKnown(t, d))
+                else if (k == 1 || !portalLearnOn() || !portalKnown(t, d))
                     nxt[td] = -1; // kelp, or a portal whose far side we don't know yet
             }
-            if (LEARN_PORTALS)
+            if (LEARN_PORTALS || UNK_SCARCE_FIX || UNK_PORTAL_EXPLORE)
                 for (auto& [td, pid] : portalObs)
                     notePortal(td / 4, td % 4, pid);
             if (portalSide.size() != nxt.size())
@@ -955,6 +966,8 @@ struct Bot
                                                 [&](const std::pair<int, int>& e) { return round - e.second > 5; }),
                                  allyHeadMemory.end());
         }
+        if (UNK_SCARCE_FIX && !w.known && !w.portalUse && myHead >= 0)
+            scarceFixCheck();
         computePortalExits();
         computeFreeTimes();
         updateTrail();
@@ -3202,6 +3215,71 @@ struct Bot
     }
 #endif
 
+    // UNK_SCARCE_FIX (notes/qualifier/SCARCE_PORTAL.md): on an unknown map, portals are kelp until we
+    // see that a big share of the food we know of can only be reached through portal pairs whose two
+    // ends we have both seen (so the destination is exact). Then we path through known pairs for good
+    // (sticky). Shortcut-only portal maps never produce this evidence, so v35 behaviour is kept there.
+    int scarceLogged = 0;
+    void scarceFixCheck()
+    {
+        if (static_cast<int>(w.gapSeen.size()) != w.N || w.portalSeen.empty())
+            return;
+        bool pair = false;
+        for (auto& [id, edges] : w.portalSeen)
+            if (edges.size() == 2)
+                pair = true;
+        if (!pair)
+            return;
+        auto bfs = [&](std::vector<char>& seen) {
+            seen.assign(w.N, 0);
+            std::vector<int> q{myHead};
+            seen[myHead] = 1;
+            for (size_t i = 0; i < q.size(); i++)
+                for (int d = 0; d < 4; d++)
+                {
+                    int v = w.nxt[q[i] * 4 + d];
+                    if (v >= 0 && !seen[v])
+                        seen[v] = 1, q.push_back(v);
+                }
+        };
+        std::vector<char> walk, linked;
+        bfs(walk);
+        std::vector<int> save = w.nxt;
+        for (auto& [id, edges] : w.portalSeen)
+            if (edges.size() == 2)
+                w.linkPortal(edges[0], edges[1]);
+        bfs(linked);
+        w.nxt.swap(save);
+        int gainN = 0, walkN = 0;
+        double walkRate = 0, gainRate = 0;
+        for (int t = 0; t < w.N; t++)
+        {
+            if (w.gapSeen[t] <= 0 || w.gmax[t] == 0)
+                continue;
+            double r = 1.0 / std::max(2, w.gapSeen[t]);
+            if (walk[t])
+                walkN++, walkRate += r;
+            else if (linked[t])
+                gainN++, gainRate += r;
+        }
+        // USF_RICH: the portal-only food must also be much richer per spawner tile than what we can walk
+        // to (Stripes ~90x, vaults 25-50x); room-grid maps where every room has food are ~1-2x and lose
+        // (over-crossing, as with LEARN_PORTALS)
+        bool rich = USF_RICH <= 0 || gainRate * std::max(1, walkN) >= USF_RICH * walkRate * gainN;
+        if (gainN >= USF_MIN && gainRate >= USF_FRAC * (gainRate + walkRate) && rich)
+        {
+            w.enablePortalUse();
+            if (USF_LOG && scarceLogged++ < 1)
+            {
+                char buf[160];
+                std::snprintf(buf, sizeof buf, "LOG scarce-fix r%d id%d gain=%d/%.3f walk=%.3f\n", round, w.myId, gainN,
+                              gainRate, walkRate);
+                logPending += buf;
+            }
+        }
+    }
+    std::string logPending; // LOG lines produced in analyse() (decide() clears out)
+
     // a tile with a portal on one of its sides (known or not): crossers land here
     bool isMouth(int t) const
     {
@@ -3302,6 +3380,28 @@ struct Bot
         return fire;
     }
 
+    // UNK_PORTAL_EXPLORE: a remembered pearl, or a spawn due by the time we arrive, within UPE_RANGE walk steps
+    bool walkableFood()
+    {
+        std::vector<int> dist(w.N, -1), q{myHead};
+        dist[myHead] = 0;
+        for (size_t i = 0; i < q.size(); i++)
+        {
+            int u = q[i];
+            if (u != myHead && (w.pearlMem[u] || (w.spawnAt[u] >= 0 && w.spawnAt[u] - round <= dist[u] + UPE_SOON)))
+                return true;
+            if (dist[u] >= UPE_RANGE)
+                continue;
+            for (int d = 0; d < 4; d++)
+            {
+                int v = step(u, d);
+                if (v >= 0 && dist[v] < 0)
+                    dist[v] = dist[u] + 1, q.push_back(v);
+            }
+        }
+        return false;
+    }
+
     // UNK_EXPLORE desire gate: our walkable region is fully scouted and we're a bit hungry,
     // or we've been hungry a long time with no pearl in sight. Also marks door lures.
     void computeExploreDesire()
@@ -3360,6 +3460,29 @@ struct Bot
                 exploreDesire = true;
             else if (round - lastExploreCross < UNK_SEALED_SETTLE)
                 exploreDesire = false;
+        }
+        // UNK_PORTAL_EXPLORE (calc's rule, notes/qualifier/SCARCE_PORTAL.md): no food we can walk to (no
+        // remembered pearl, no fast spawner) -> a small non-queen dragon scouts an unexplored portal. The
+        // existing UNK_EXPLORE machinery does the rest (door lure, knock, cross on a clean echo, learnDest).
+        // Scouts are rationed without sonar: a rotating id slot, and no ally head next to us.
+        if (UNK_PORTAL_EXPLORE && !exploreDesire && myLen <= UPE_MAXLEN && w.myId > 1 && round >= UPE_MIN_ROUND &&
+            round - std::max(lastGrowRound, lastExploreCross) >= UPE_HUNGER &&
+            (w.myId + round / UPE_SLOT) % UPE_MOD == 0)
+        {
+            bool allyNear = false;
+            for (auto& sg : segs)
+                if (sg.head && sg.team == w.myTeam && sg.id != w.myId && wrapDist(sg.tile, myHead) <= 3)
+                    allyNear = true;
+            if (!allyNear && !walkableFood())
+            {
+                exploreDesire = true;
+                if (const char* td = std::getenv("UPE_TRACE_DIR"))
+                    if (FILE* tf = std::fopen((std::string(td) + "/upe.txt").c_str(), "a"))
+                    {
+                        std::fprintf(tf, "%d %d %c L%d head(%d,%d)\n", round, w.myId, w.myTeam, myLen, myHead % w.W, myHead / w.W);
+                        std::fclose(tf);
+                    }
+            }
         }
         if (UNK_EXPLORE_LURE > 0)
         {
@@ -3765,6 +3888,8 @@ struct Bot
     void decide()
     {
         out.clear();
+        if (!logPending.empty())
+            out.swap(logPending);
         if (myHead < 0)
         {
             emitMove(myDir);

@@ -31,10 +31,11 @@ Real Sprint winners ate 43-275 per game, so sc1/sc2 are now in that range.
 | sp1 PORTAL_EXPLORE (hunger 12, mod 3) | .475 | .500 | .487 | .518 | .438 | .475 |
 | sp2 PORTAL_EXPLORE (hunger 25, mod 4) | .469 | .500 | .512 | .554 | .531 | .507 |
 | scp (sc1+sp1) | .475 | .479 | .438 | .607 | .463 | .480 |
-| scp2 (sc2+sp2) | see below | | | | | |
+| scp2 (sc2+sp2) | .469 | .490 | .525 | **.661** | .525 | **.516** |
 sc1 per map (4 seeds, sprint + gated): stripes 8/8, australia 5/8, g2027_13 8/8, islands_a 1/8, islands_b 2/8, g2026_23 2/8, g2026_28 3/8. Every other map was 4/8 (gate never fired, so the games were mirror-identical).
 Sandbox CPU for scp2: vault_c max 9.4M/turn, Stripes 5.3M.
 
 ## Recommendation
-- Ship UNK_SCARCE_FIX=1 with USF_RICH=4. It is a targeted fix: Stripes goes from a coin flip to 8/8 locally, and every other set is within noise (it fires only where portal-only food is much richer than walkable food).
-- UNK_PORTAL_EXPLORE: no clear gain (sp1 is negative, sp2 is neutral). Keep it off.
+- UNK_SCARCE_FIX=1 (USF_RICH=4, now the default in bot/params.hpp) is the core fix. On Stripes it turns a coin flip into 8/8 locally, and every other set stays within noise, because it only fires where portal-only food is much richer than walkable food.
+- The best combination is scp2: UNK_SCARCE_FIX=1 + UNK_PORTAL_EXPLORE=1 with UPE_HUNGER=25, UPE_MOD=4. It scored pooled .516 and sprint .661, with no set clearly below .5 (gen .469 is inside the CI). UNK_PORTAL_EXPLORE alone is noise-level (sp1 .475, sp2 .507), and with the eager settings (hunger 12, mod 3) it hurts. If both flags ship, use the hunger 25 / mod 4 settings. A fresh-seed confirmation of scp2 vs sc2 is the next step.
+- Flags off: sc0 (bot/ with q36 values) vs q36 replays are byte-identical apart from the 3-byte bot path (Stripes, vault_a, seed 5).
