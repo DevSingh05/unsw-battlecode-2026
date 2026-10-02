@@ -240,3 +240,15 @@ v38m main.cpp:4988 trapped split needs tailHasExit(myLen-2), false in a full box
 | Schooltime | 5 | 6/10 | 7/10 | 4x HitSelf at L4 in the box (r132-464) |
 | Trophy | 3 | 2/10 | 4/10 | 7 head-on (r57-161), 1 HitSelf |
 | Default | 4 | 4/10 | 0/10 (med r42) | 6 head-on (med r379) |
+
+## Conclusions
+- Queen safety now decides games on Schooltime (19/42 games Q1/QQ>, 16 more QQ= ties; queens are immortal unless the bot errs), Dilemma (10/44), Slithery (10/47 Q1),
+  Autarky (6/40) and Trauma (33/42, unchanged map). Trophy (41/43 elim), Devil, QoS and Default stay elimination maps.
+- Fix first (new, not parked): QBOX. If the queen's reachable region R is sealed and L >= R (no legal move), SPLIT 2 without tailHasExit; never stay at L4 in the
+  Schooltime box; be at L3 (not L2) near r495 for the QQ tiebreak. Costs us 1 server loss so far (852620), 4/10 local queen deaths. Opponents lose their box queen at r0 in 9/42 games.
+- QGUARD (v37e): re-test on Dilemma/Autarky/Slithery (open spawns now; our queen deaths there are HitSelf/HitOtherBody at L2-3 after splits). QG_MIN=5 must be off when
+  the queen's region is < 6 tiles (fatal in the Schooltime box). The floor also targets the 3 QQ> losses (Trauma 39 v 5 longest, lost on queen length).
+- QSTATE (v37a): re-test on Schooltime/Dilemma/Trauma. Must treat a boxed enemy queen as unreachable (no hunt), and turtle when ours is alive and theirs is dead.
+- QSPLIT_ROOM (v39a): re-test on Slithery (spiral queen, k=2 peel x4 at r0-3, then HitSelf at L2-3 r80-450). QALLY_KEEP (v38): Dilemma/Autarky.
+- New behaviour: Trophy cup queen: stay in the pearl-free cup (one 2-tile entrance at the stem), maybe with an ally plugging the stem. A live hidden queen denies
+  elimination, and at r500 a lone queen wins (87/87). Slithery: keep the queen big after the r0 spiral escape (L19 at r3) and stop splitting her below 5.
