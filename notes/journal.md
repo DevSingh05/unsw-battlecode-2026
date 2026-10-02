@@ -229,3 +229,5 @@
 - 22:10 UTC: v37e = v37d + QGUARD (queen min split L5 after 4 units, dead-end veto): local self-trap deaths at L2-3 after r20 9->4, splits leaving L<=2 86->17; remaining: allies box the queen (portals). Queued server test after v37d.
 - 22:20 UTC: Stripes root cause: 99% of food behind portals; v35 treats unknown portals as kelp (0 crossings). UNK_SCARCE_FIX (use known portal pairs when portal-only food >=50% & 4x richer) + UNK_PORTAL_EXPLORE (hungry L<=4 scouts). vs q36: sc2 sprint .607 pooled .505; scp2 sprint .661 pooled .516. Confirming fresh seeds.
 - 23:01 UTC: SERVER vs top-10: v37d (v36+QKILL+KREACH_KING, THREAT_FREE off) 29/50 = BEST (Dil 9, Tro 5, Sli 3, Sch 7, Por 5) vs v35 25, v36 21, v37c 21. v37e test starting; watcher will make the better of v37d/v37e live afterwards.
+- 00:00 UTC: v37e server 19/50 vs v37d 29/50 -> made v37d live.
+- 00:01 UTC: v37e (v37d+QGUARD) server 19/50 (Dil 10, Tro 2, Sli 3, Sch 3, Por 1) vs v37d 29/50 -> QGUARD REJECTED. v37d live. v38 agent told: QGUARD=0, compare vs v37d.
