@@ -250,3 +250,4 @@
 - 06:33 UTC: v38s ROUTE=1 7-map (seed 300): .571 (islands 8/8, stripes 7, aus 6, maze 5, TD 4, UNSW 2, weakhold 0/8!) -> too noisy; running ROUTE 0 vs 1, 112 games each.
 - 06:48 UTC: v38q (QBOX + QGUARD w/ QG_REGION_MIN): Schooltime 8/10 vs v38m, queen alive 10/10, box deaths 3->0; QGUARD on new maps dilemma .68, autarky .65, slithery .53 (queen alive 41 vs 19 /120); QSPLIT_ROOM harmful on new slithery; QALLY_KEEP no gain. Built v40 = v38q + v38s (Sprint maps known, SPRINT_ROUTE). Testing v40 vs v38m on 10 ranked maps.
 - 06:54 UTC: SPRINT_ROUTE 112-game test vs v38m: off .616 / on .661; per map on vs off: aus 14 v 10, islands 15 v 10, maze 8 v 7, stripes 15 v 16, TD 6 v 6, UNSW 16 v 6, weakhold 0 v 14 -> v40: route on except weakhold (SPRINT_ROUTE_NOWEAK=1).
+- 06:57 UTC: v40 vs v38m on 10 ranked (new) maps .637 (51/80); sandbox max 15.3M schooltime, 20.0M australia. SUBMITTED v40 (live). Track per-map server ratings vs v38m with tools/permap_ratings.py.
