@@ -1367,3 +1367,8 @@
 #ifndef SPRINT_ROUTE
 #define SPRINT_ROUTE 1
 #endif
+
+// SPRINT_ROUTE off on weakhold (112-game test: weakhold route off 14/16, on 0/16; other Sprint maps better with it)
+#ifndef SPRINT_ROUTE_NOWEAK
+#define SPRINT_ROUTE_NOWEAK 1
+#endif

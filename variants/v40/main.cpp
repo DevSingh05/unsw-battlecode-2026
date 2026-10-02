@@ -1,4 +1,4 @@
-// v40: v38q (QBOX, QGUARD) + v38s (Sprint maps known, SPRINT_ROUTE)
+// v40: v38q (QBOX, QGUARD) + v38s (Sprint maps known, SPRINT_ROUTE except weakhold)
 // v38q: v38m + QBOX (boxed-queen trapped split, eat veto, late floor, unit reserve) + QGUARD on (small-region rule) + QSPLIT_ROOM port (off)
 // v38m: v38 + maps_data with unswbc 1.2.6 map versions (old kept as *_old)
 // UNSW Battlecode 2026 bot. (v38: v37d + UNK_SCARCE_FIX + UNK_PORTAL_EXPLORE + QALLY_KEEP (off), QGUARD off)
@@ -1245,7 +1245,7 @@ struct Bot
         (void)areaCap;
         // PEARL_ROUTE (Codex, codex-battlecode/notes/pearl-route.md): value the best single route,
         // not the sum over every branch. 1 = all maps, 2 = unknown maps only
-        if (PEARL_ROUTE == 1 || (PEARL_ROUTE == 2 && (!w.known || (SPRINT_ROUTE && isSprintMap(w.known->name)))))
+        if (PEARL_ROUTE == 1 || (PEARL_ROUTE == 2 && (!w.known || (SPRINT_ROUTE && isSprintMap(w.known->name) && !(SPRINT_ROUTE_NOWEAK && std::string(w.known->name) == "weakhold")))))
             pearlScore = PEARL_ROUTE_REGION * pearlScore + PEARL_ROUTE_SCALE * bestPearlRoute();
     }
 
