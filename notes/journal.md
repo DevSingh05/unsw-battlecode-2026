@@ -233,3 +233,4 @@
 - 00:01 UTC: v37e (v37d+QGUARD) server 19/50 (Dil 10, Tro 2, Sli 3, Sch 3, Por 1) vs v37d 29/50 -> QGUARD REJECTED. v37d live. v38 agent told: QGUARD=0, compare vs v37d.
 - 00:46 UTC: sc2 (UNK_SCARCE_FIX) fresh-seed: sprint .625, all other sets exactly .500 -> confirmed (inert elsewhere). v37d ranked swings (calc 0-5 -64, Sponge 1-4); Devil lost in 5/6 recent series; A/B covered only 5 maps -> running v37d batch on Devil/Default/Autarky/Trauma/QoS vs top-10 (v37d already live).
 - 00:49 UTC: scp2 (SCARCE_FIX+PORTAL_EXPLORE) fresh: gen .469 lesson .500 gated .525 sprint .643 holdout .531 pooled .518 (run1 .516; sprint .661). Both runs agree: strong on Sprint maps, slight gen cost. sc2 alone: sprint .625, else .500. Keep both in v38 (decide by server).
+- 01:04 UTC: v37d on other 5 maps vs top-10: 34/50 (Devil 5, Default 7, Autarky 6, Trauma 9, QoS 7). v37d all 10 maps: 63/100. Ranked dip = new-submission volatility. Keep v37d.
