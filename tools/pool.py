@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Test a candidate against a pool of past versions, with a confidence interval.
 
-usage: pool.py CANDIDATE [--pool variants/v2,variants/v3,variants/v4] [--seeds 3] [--jobs 16]
+usage: pool.py CANDIDATE [--pool variants/v61,variants/v44,variants/v35] [--seeds 3] [--jobs 16]
        CANDIDATE is 'dir' or 'dir:-DFLAG=1 ...' (see arena.py)
 
 Plays every pool member on all 10 ranked maps, both sides, seeds 1000+. Reports the
@@ -32,7 +32,7 @@ def interval(score, n):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("cand")
-    ap.add_argument("--pool", default="variants/v2,variants/v3,variants/v4")
+    ap.add_argument("--pool", default="variants/v61,variants/v44,variants/v35")
     ap.add_argument("--maps", default=",".join(RANKED))
     ap.add_argument("--seeds", type=int, default=3)
     ap.add_argument("--seed-base", type=int, default=1000)

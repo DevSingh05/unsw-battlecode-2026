@@ -9,7 +9,7 @@ Runs a candidate against a baseline on:
   4. holdout  - maps/genhold, ONLY when --holdout is given (final pass/fail; don't tune on it)
   5. ladder   - the 10 ranked maps WITH map knowledge (must not regress)
 
-usage: unseen_eval.py "bot:-DFLAG=1" [--base variants/v15] [--seeds 1] [--jobs 6] [--holdout] [--sets gen,blind,lesson,ladder,gated,blindvk]\n  gated   - portal-gated lesson/gen maps\n  blindvk - candidate WITHOUT map knowledge vs the map-aware base (+ the base-blind reference line); not pooled
+usage: unseen_eval.py "bot:-DFLAG=1" [--base variants/v61] [--seeds 1] [--jobs 6] [--holdout] [--sets gen,blind,lesson,ladder,gated,blindvk]\n  gated   - portal-gated lesson/gen maps\n  blindvk - candidate WITHOUT map knowledge vs the map-aware base (+ the base-blind reference line); not pooled\n  real/realhold/samesize - tools/realmapgen.py sets (maps/real_gen/tune, hold, samesize); blind17 - 17 official maps, both blind\n  sprint  - the 7 Sprint maps; KNOWN to v40+ bots, so not pooled any more
 Prints one line per set plus a pooled unseen score. A change is worth keeping only if the pooled
 unseen score is clearly above 0.50 and no set is clearly below it.
 """
@@ -51,7 +51,7 @@ def run(cand, base, maps, seeds, jobs, seed_base):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("cand")
-    ap.add_argument("--base", default="variants/v15")
+    ap.add_argument("--base", default="variants/v61")
     ap.add_argument("--seeds", type=int, default=1)
     ap.add_argument("--jobs", type=int, default=6)
     ap.add_argument("--seed-base", type=int, default=60000)
@@ -82,15 +82,23 @@ def main():
             ref = run(with_flag(a.base, "-DNO_KNOWN_MAPS=1"), a.base, BLINDVK, max(2, a.seeds * 2), a.jobs, a.seed_base)
             print(f"blindvk-base {ref[2]}", flush=True)
         elif s == "sprint":
-            # the 7 real Sprint maps (unknown to the bot; pearl gaps rebuilt from replays, notes/maps_sprint/GAPS.md)
+            # the 7 Sprint maps: KNOWN to v40+ bots (SPRINT_KNOWN), so printed but not pooled as unseen
             res = run(a.cand, a.base, maps_in("sprint"), max(2, a.seeds * 2), a.jobs, a.seed_base)
+        elif s in ("real", "realhold", "samesize"):
+            # tools/realmapgen.py maps shaped like the official ones (notes/newrules/UNSEEN_GENERALISATION.md 6.4)
+            folder = {"real": "real_gen/tune", "realhold": "real_gen/hold", "samesize": "real_gen/samesize"}[s]
+            res = run(a.cand, a.base, maps_in(folder), a.seeds, a.jobs, a.seed_base)
+        elif s == "blind17":
+            # the 17 official maps with map knowledge off on both sides
+            res = run(with_flag(a.cand, "-DNO_KNOWN_MAPS=1"), with_flag(a.base, "-DNO_KNOWN_MAPS=1"),
+                      RANKED + maps_in("sprint"), max(2, a.seeds * 2), a.jobs, a.seed_base)
         elif s == "ladder":
             res = run(a.cand, a.base, RANKED, max(2, a.seeds * 2), a.jobs, a.seed_base)
         else:
             continue
         score, n, text = res
         print(f"{s:8s} {text}", flush=True)
-        if score is not None and s not in ("ladder", "blindvk"):
+        if score is not None and s not in ("ladder", "blindvk", "sprint"):
             total_s += score
             total_n += n
     if total_n:
