@@ -1,6 +1,6 @@
 # STATUS (single source of truth)
 
-Last updated: 2026-10-04 00:30 EDT. All updates to the user come from this page. Times are US Eastern.
+Last updated: 2026-10-04 13:30 EDT. All updates to the user come from this page. Times are US Eastern.
 
 ## Live and mainline
 - **Mainline = `bot/`** = v61: v51 + `QS_FROM=100` + `QSPLIT_ROOM=1`. Every new idea goes into `bot/` as a flag, default 0. No more vNN copies.
@@ -41,6 +41,7 @@ Last updated: 2026-10-04 00:30 EDT. All updates to the user come from this page.
 | v64 | LUNGE34 (3-4 step lunges) + INFER_SYM | **LOSS** | -6.8 pp; 2136 vs 2174; lunges cost length |
 | v65 | QK_BIG (queen becomes the king on big maps) | **LOSS** | -6.4 pp; 2143; 5/17 maps |
 | v69 | QEARLY_PEN (queen portal/blind penalties before r100) | loss (leaning) | -4.8 pp (CI -12.9..+3.3); 2121 vs 2187; 6/17 maps; vs top-10 -1.8 vs +12.2 |
+| c1 | SPLIT_NEEDS_EXIT + LATE_HUNT + QKILL_KING (staged from bot/, no folder) | **testing**, live since Sun 1:20 PM | local: stillborn split children 107 → 51 per game, r300 total length +8; king may take a certain queen kill |
 
 ## What we know about why we lose (notes/newrules/LOSS_AUDIT2.md, v55/v61, 250 losses)
 - **We lose r500 tiebreaks, not fights.**
@@ -59,7 +60,7 @@ Last updated: 2026-10-04 00:30 EDT. All updates to the user come from this page.
 - **Stillborn splits:** 14% of our split children die within a round (top 5: 4.8%).
 - **A/B method:** every test so far was underpowered. Use v61's stored rating as our standing; score with the adjusted model (opponent + map effects); test in two stages (mechanism gate at ~150 games, then win rate at 250/500/850 games); fixed opponent panel; unranked challenges while a candidate is live.
 
-**Fixes that survived both skeptics (being built into bot/ as flags, default 0):**
+**Fixes that survived both skeptics (now in bot/ as flags, default 0; staged test copies live in the scratchpad, not in variants/):**
 1. P1: kill the lone enemy queen (LATE_HUNT on, king may take the kill, finisher).
 2. P3: allies must not seal the queen (hard keep-out including bodies, corridor-plug look-ahead).
 3. P5: stop stillborn split children (SPLIT_SAFE).
