@@ -1847,10 +1847,10 @@
 
 // ---- ROUND3 P7 PM_QPARK (map-specific, default off; keyed through applyMapParams)
 #ifndef PM_QPARK_PORTALS
-#define PM_QPARK_PORTALS 0    // Portals: queen never crosses a portal, parks far from every portal exit, crowned at the seed round
+#define PM_QPARK_PORTALS 1    // Portals: queen never crosses a portal, parks far from every portal exit, crowned at the seed round
 #endif
 #ifndef PM_QPARK_MAZE
-#define PM_QPARK_MAZE 0       // Maze: queen stays in the home field (frame x < PM_MAZE_QX), crowned at the seed round
+#define PM_QPARK_MAZE 1       // Maze: queen stays in the home field (frame x < PM_MAZE_QX), crowned at the seed round
 #endif
 #ifndef PM_MAZE_CR
 #define PM_MAZE_CR -1.0       // Maze: crowd penalty for every unit while round < king seed round (applied at the use site).

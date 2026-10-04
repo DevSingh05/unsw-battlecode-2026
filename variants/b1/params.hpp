@@ -909,6 +909,17 @@
 #endif
 
 // ---- Schooltime layout B keepers (bot/maps/schooltime.hpp, notes/sch_b/LOG.txt). Default OFF.
+#ifndef PM_SCHB              // R3 map-keyed switch: 0 off; else Schooltime layout-B keepers on with cluster mask = PM_SCHB (3 = our half, 15 = all)
+#define PM_SCHB 0
+#endif
+#if PM_SCHB
+#ifndef SCH_B_KEEP
+#define SCH_B_KEEP 1
+#endif
+#ifndef SCH_B_KEEP_CL
+#define SCH_B_KEEP_CL PM_SCHB
+#endif
+#endif
 #ifndef SCH_B_KEEP           // on layout B, small dragons born near a top-strip cluster keep farming it
 #define SCH_B_KEEP 0
 #endif
@@ -1341,7 +1352,7 @@
 #endif
 // v39 QSPLIT_ROOM (ported from v39a): the queen splits only with >= QSR_A tiles on her side and no ally head within QSR_ALLY
 #ifndef QSPLIT_ROOM
-#define QSPLIT_ROOM 0
+#define QSPLIT_ROOM 1
 #endif
 #ifndef QSR_A
 #define QSR_A 16
@@ -1499,4 +1510,396 @@
 #endif
 #ifndef MS_GOSSIP_R
 #define MS_GOSSIP_R 500 // unseen-map word also on idle turns before this round (0 = split turns only); only fires on look-alike unseen maps
+#endif
+
+// ---- v47 (notes/newrules/V47.md): EQ_HUNT, hunt the enemy queen (NEW_RULES_TOP5 idea 1). All 0 = v43.
+// EQ_HUNT=1: run the QSTATE enemy-queen tracker (sightings relayed on the idle sonar rays; our own queen's
+// QSTATE play-safe modes are NOT turned on), and small non-queen, non-king units within EQH_R of her last
+// sighting (<= EQH_MEM rounds old) pay EQH_W per Manhattan step to it. Active from round EQH_FROM, or once
+// we have >= EQH_UNITS units. From EQH_LATE the radius is EQH_R_LATE and the length cap EQH_MAXLEN_LATE.
+// EQ_HUNT=2 (= "EQ_HUNT_LATE"): same but only from EQH_LATE.
+#ifndef EQ_HUNT
+#define EQ_HUNT 0 // v68: off (= v61); LATE_HUNT reuses its tracker and pull code
+#endif
+#ifndef EQH_W
+#define EQH_W 6.0
+#endif
+#ifndef EQH_R
+#define EQH_R 12
+#endif
+#ifndef EQH_R_LATE
+#define EQH_R_LATE 20
+#endif
+#ifndef EQH_MAXLEN
+#define EQH_MAXLEN 4
+#endif
+#ifndef EQH_MAXLEN_LATE
+#define EQH_MAXLEN_LATE 8
+#endif
+#ifndef EQH_FROM
+#define EQH_FROM 200
+#endif
+#ifndef EQH_UNITS
+#define EQH_UNITS 24
+#endif
+#ifndef EQH_LATE
+#define EQH_LATE 300
+#endif
+#ifndef EQH_MEM
+#define EQH_MEM 20
+#endif
+// EQH_NOTHREAT=1: a hunter ignores the enemy queen's own threat zone (her head-on with ours kills both: a win
+// for us at r500 while our queen lives); her body still blocks.
+#ifndef EQH_NOTHREAT
+#define EQH_NOTHREAT 1
+#endif
+// EQH_MIN_UNITS: no pull while we have fewer units than this (don't strip a thin army)
+#ifndef EQH_MIN_UNITS
+#define EQH_MIN_UNITS 6
+#endif
+// EQH_BFS=1: pull by this move's time-aware BFS distance to a tile beside her head (kelp/portals respected),
+// capped at EQH_CAP (unreachable = cap: no pull); 0 = Manhattan distance (first version)
+#ifndef EQH_BFS
+#define EQH_BFS 1
+#endif
+#ifndef EQH_CAP
+#define EQH_CAP 30
+#endif
+#ifndef EQH_DEBUG
+#define EQH_DEBUG 0
+#endif
+// ---- v47 round 2: who to hunt and how to approach
+// EQH_TARGET=1: hunt only queens that don't run: max seen length >= EQH_BIGLEN, or sightings that stayed within
+// EQH_STILL_R of one tile for >= EQH_STILL_ROUNDS rounds. A big target lets units up to EQH_MAXLEN_BIG hunt (K reach).
+#ifndef EQH_TARGET
+#define EQH_TARGET 1 // v59: on
+#endif
+#ifndef EQH_BIGLEN
+#define EQH_BIGLEN 8
+#endif
+#ifndef EQH_STILL_R
+#define EQH_STILL_R 3
+#endif
+#ifndef EQH_STILL_ROUNDS
+#define EQH_STILL_ROUNDS 8
+#endif
+#ifndef EQH_MAXLEN_BIG
+#define EQH_MAXLEN_BIG 8 // v59: 8 (v47 default EQH_MAXLEN)
+#endif
+// intercept: aim EQH_LEAD steps ahead of her facing and EQH_FLANK to the side (odd ids one side, even the other),
+// while farther than EQH_LEAD_NEAR from her; 0/0 = aim at her head
+#ifndef EQH_LEAD
+#define EQH_LEAD 0
+#endif
+#ifndef EQH_FLANK
+#define EQH_FLANK 0
+#endif
+#ifndef EQH_LEAD_NEAR
+#define EQH_LEAD_NEAR 3
+#endif
+// a big target (EQH_TARGET, max length >= EQH_BIGLEN) is hunted from farther and on older sightings
+#ifndef EQH_MEM_BIG
+#define EQH_MEM_BIG EQH_MEM
+#endif
+#ifndef EQH_R_BIG
+#define EQH_R_BIG 0
+#endif
+
+// ---- v68 (notes/newrules/V68.md): LATE_HUNT. Once our queen is known dead (an ally saw her die, or heard the
+// relayed notice) and the enemy queen is not known dead, r500 is lost unless she dies: pull non-king units map-wide
+// toward her last sighting (or sweep her spawn side), ignoring her threat zone. Nothing changes while our queen lives.
+#ifndef LATE_HUNT
+#define LATE_HUNT 0 // bot/: off = v61; v68 runs 1
+#endif
+#ifndef LH_MAXLEN
+#define LH_MAXLEN 8           // hunters: non-king units up to this length...
+#endif
+#ifndef LH_SMALLQ
+#define LH_SMALLQ 4           // ...or any length when her max seen length is <= this
+#endif
+#ifndef LH_W
+#define LH_W 6.0              // pull per BFS step
+#endif
+#ifndef LH_CAP
+#define LH_CAP 60
+#endif
+#ifndef LH_MEM
+#define LH_MEM 60             // a sighting younger than this is chased (unless I checked her tile and she's gone)
+#endif
+#ifndef LH_MIN_UNITS
+#define LH_MIN_UNITS 1
+#endif
+#ifndef LH_SWEEP
+#define LH_SWEEP 1            // no usable sighting: walk to the enemy spawns (known maps), queen spawn first
+#endif
+#ifndef LH_KING_KILL
+#define LH_KING_KILL 1        // the king may also take a visible queen-kill (tryQueenKill) while hunting
+#endif
+#ifndef LH_NOTICE_FULL
+#define LH_NOTICE_FULL 20     // "our queen is dead" notice on idle rays every turn for this many rounds after learning...
+#endif
+#ifndef LH_NOTICE_EVERY
+#define LH_NOTICE_EVERY 5     // ...then every this many rounds
+#endif
+#ifndef LH_DEBUG
+#define LH_DEBUG 0
+#endif
+// LH_BEACON=1: also infer "dead" from silence: our queen beacons on fully idle turns, allies relay it sparsely and
+// king words carry an "alive recently" key salt. Off by default: the queen's rays mostly hit kelp, so silence gave
+// many false alarms (r65+ on Trauma/AUNSW/Slithery), which break the "no change while she lives" rule.
+#ifndef LH_BEACON
+#define LH_BEACON 0
+#endif
+#ifndef LH_SILENT
+#define LH_SILENT 40          // LH_BEACON: no sign of our queen for this many rounds (after hearing her once) = dead
+#endif
+#ifndef LH_BEACON_EVERY
+#define LH_BEACON_EVERY 1     // our queen's alive beacon on fully idle turns, every this many rounds
+#endif
+#ifndef LH_RELAY_FRESH
+#define LH_RELAY_FRESH 12     // relay an alive round at most this old...
+#endif
+#ifndef LH_RELAY_GAP
+#define LH_RELAY_GAP 3        // ...and at most once per this many rounds per dragon
+#endif
+#ifndef LH_EVID
+#define LH_EVID 1             // hunt only after a sighting of her at/after our queen's death
+#endif
+#ifndef LH_SWEEP_MEM
+#define LH_SWEEP_MEM 120      // sweep the enemy spawns only while her last sighting is younger than this
+#endif
+
+// ================= ROUND 2 (notes/newrules/ROUND2.md "Built flags"). All default 0 = v61. =================
+// ---- P1: kill the lone enemy queen (use together with LATE_HUNT=1)
+// QKILL_KING=1: a king in the feed phase also takes a certain visible queen-kill (tryQueenKill). v61 returned from
+// tryRam() on `feedPhase() && iAmKing()` before the QKILL call, so L>=8 self-crowned campers and the real king refused
+// free kills (985968 r419: L8 unit, lone queen 5 steps away, K=8; 1007417: L26 king). A king of L >= QKK_KEEP_LEN
+// skips it only when our queen was seen alive within QKK_ALIVE_MEM rounds and is longer than the target looks.
+#ifndef QKILL_KING
+#define QKILL_KING 0
+#endif
+#ifndef QKK_KEEP_LEN
+#define QKK_KEEP_LEN 20
+#endif
+#ifndef QKK_ALIVE_MEM
+#define QKK_ALIVE_MEM 30
+#endif
+// LH_FINISH=1 (needs LATE_HUNT=1 for the tracker): local finisher, independent of our queen's state. A non-queen,
+// non-king unit that itself saw her within LHF_MEM rounds at max length <= LHF_QLEN, with no other enemy head in
+// view, from round LHF_FROM, gets the LATE_HUNT pull to her (her threat zone ignored). Not lhOn(): no relay changes.
+#ifndef LH_FINISH
+#define LH_FINISH 0
+#endif
+#ifndef LHF_FROM
+#define LHF_FROM 300
+#endif
+#ifndef LHF_QLEN
+#define LHF_QLEN 4
+#endif
+#ifndef LHF_MEM
+#define LHF_MEM 8
+#endif
+// LH_LONG=1: while this unit's hunt pull is on, no growth split leaves the parent below LHL_KEEP (an L2 hunter has
+// kamikaze reach 1: Devil 985964 had 582 sighting turns and 0 killable), and hunters shorter than LHL_SMALL pull at
+// LHL_SMALL_MULT x LH_W so they still eat on the way.
+#ifndef LH_LONG
+#define LH_LONG 0
+#endif
+#ifndef LHL_KEEP
+#define LHL_KEEP 6
+#endif
+#ifndef LHL_SMALL
+#define LHL_SMALL 5
+#endif
+#ifndef LHL_SMALL_MULT
+#define LHL_SMALL_MULT 0.5
+#endif
+// R2_DEBUG=1: "LOG r2 <event> r.. id.. L.. v.." lines for local mechanism counts (never on the server)
+#ifndef R2_DEBUG
+#define R2_DEBUG 0
+#endif
+// ---- P3: allies must not seal our queen
+// QAK_HARD=1: an ally of length >= QAKH_LEN that sees our queen's head marks a step as "queen-blocking" when it ends
+// within QAKH_DIST of her head without moving away from her, or cuts her free neighbours to <= QAKH_MIN (QEXIT_KEEP's
+// count: bodies included). A marked best step is replaced by the best unmarked step that is unthreatened, not a dead
+// end and survives QUEEN_VETO_DEPTH (same shape as the QGUARD veto); free-step paths through marked tiles are dropped.
+// A long body follows its head, so keeping the head out keeps the body off her exits (Maze 985232, PD 984268).
+#ifndef QAK_HARD
+#define QAK_HARD 0
+#endif
+#ifndef QAKH_LEN
+#define QAKH_LEN 8
+#endif
+#ifndef QAKH_DIST
+#define QAKH_DIST 3
+#endif
+#ifndef QAKH_MIN
+#define QAKH_MIN 1
+#endif
+// QPLUG_LOOK=1: the queen follows a 1-wide corridor behind her step for up to QPL_DEPTH tiles (10: a long queen dies deep in a corridor, Maze 985232); if it is plugged by
+// another dragon's body that will still be there when she arrives, the step counts as a dead end (vetoed when an open
+// surviving step exists). Body plugs only: QEXIT_LOOK (all low-exit tiles) lost on the server.
+#ifndef QPLUG_LOOK
+#define QPLUG_LOOK 0
+#endif
+#ifndef QPL_DEPTH
+#define QPL_DEPTH 10
+#endif
+#ifndef QPL_FROM
+#define QPL_FROM 20
+#endif
+// ---- P5: stillborn children. No new flag for the split half: use SPLIT_NEEDS_EXIT=1 (line ~141). Local split-site
+// counts (R2_DEBUG, 24 games): the growth split makes 88% of all children that die within a round of birth, and 91% of
+// growth splits made with no tail exit are stillborn (7% with one).
+// ---- P6: defensive reach and endgame
+// KREACH_MINLEN / KREACH_QUEEN: who gets the KREACH kamikaze reach when KREACH=1 (defaults = the old behaviour:
+// L>=5 paid tier, queen full). Staged test: KREACH=1 KREACH_MINLEN=8 KREACH_QUEEN=0 KR_CAP=6.
+#ifndef KREACH_MINLEN
+#define KREACH_MINLEN 5
+#endif
+#ifndef KREACH_QUEEN
+#define KREACH_QUEEN 1
+#endif
+// ENDGAME_GUARD=<round> (0 = off; test 470): from that round our queen and our king (iAmKing, L >= KING_MIN_LEN)
+// protect the lead: no voluntary splits; every visible enemy head is given kamikaze reach K(Lv) (unseen tail: Lv >=
+// EG_UNSEEN_LEN); tiles within K+1 cost EG_W per step of overlap, and a best step inside K is replaced by the best
+// step outside it that is unthreatened, not a dead end and survives QUEEN_VETO_DEPTH. Free-step paths obey the same.
+// EG_NOSWAP=<round> (0 = off): from that round a king does not take the king-escape reverse split (loses 2 length).
+#ifndef ENDGAME_GUARD
+#define ENDGAME_GUARD 0
+#endif
+#ifndef EG_UNSEEN_LEN
+#define EG_UNSEEN_LEN 6
+#endif
+#ifndef EG_W
+#define EG_W 40.0
+#endif
+#ifndef EG_NOSWAP
+#define EG_NOSWAP 0
+#endif
+
+// ---- R3 SPRINT_KING_PM (folded from variants/v70): per-map king seed/feed/merge on Around UNSW / Islands / Australia
+// (LOSS_AUDIT2 fix 2). Other Sprint maps keep UNK_KING_SEED/FEED. A map set to 250/300 = v61. Default OFF.
+#ifndef SPRINT_KING_PM
+#define SPRINT_KING_PM 0
+#endif
+#ifndef PM_AUNSW_SEED
+#define PM_AUNSW_SEED 190
+#endif
+#ifndef PM_AUNSW_FEED
+#define PM_AUNSW_FEED 230
+#endif
+#ifndef PM_ISL_SEED
+#define PM_ISL_SEED 250
+#endif
+#ifndef PM_ISL_FEED
+#define PM_ISL_FEED 300
+#endif
+#ifndef PM_AUS_SEED
+#define PM_AUS_SEED 250
+#endif
+#ifndef PM_AUS_FEED
+#define PM_AUS_FEED 300
+#endif
+#ifndef PM_AUNSW_MERGE
+#define PM_AUNSW_MERGE KING_V2_MERGE_ROUND
+#endif
+#ifndef PM_ISL_MERGE
+#define PM_ISL_MERGE KING_V2_MERGE_ROUND
+#endif
+#ifndef PM_AUS_MERGE
+#define PM_AUS_MERGE KING_V2_MERGE_ROUND
+#endif
+
+// ---- R3 STRIPES_LOOP (bot/maps/stripes.hpp): Stripes centre-loop opening. 0 off; 1 = queen laps the loop, second
+// starter dives the far W vault; 2 = queen laps, second starter unchanged, the queen's first loop child dives W.
+#ifndef STRIPES_LOOP
+#define STRIPES_LOOP 0
+#endif
+#ifndef STRIPES_LOOP_W       // score per step along the route / the loop
+#define STRIPES_LOOP_W 40.0
+#endif
+#ifndef STRIPES_LOOP_R       // the queen stops lapping at this round
+#define STRIPES_LOOP_R 500
+#endif
+#ifndef STRIPES_DIVE_T       // the W diver gives up this many rounds after birth
+#define STRIPES_DIVE_T 40
+#endif
+#ifndef STRIPES_KID_R        // mode 2: a queen child born on the loop up to this round is the W diver
+#define STRIPES_KID_R 20
+#endif
+#ifndef STRIPES_SPLIT_L      // the lapping queen splits 2 off at this length (two eats per lap on an 8-ring: she must enter the box at <= 5)
+#define STRIPES_SPLIT_L 6
+#endif
+
+// ---- R3 TROPHY_QSPLIT (ROUND2 backlog "Trophy queen split floor"): on Trophy only, while we have at most
+// TROPHY_QSPLIT_UNITS units (and before TROPHY_QSPLIT_R) the queen's split floors (early keep >= 3, QG_MIN) are off,
+// so she splits at L4 like a normal unit. Server: our first queen split r27 v r10, 3 units at r30 v 6.5.
+#ifndef TROPHY_QSPLIT
+#define TROPHY_QSPLIT 0
+#endif
+#ifndef TROPHY_QSPLIT_UNITS
+#define TROPHY_QSPLIT_UNITS 8
+#endif
+#ifndef TROPHY_QSPLIT_R
+#define TROPHY_QSPLIT_R 100
+#endif
+
+// ---- ROUND3 P7 PM_QPARK (map-specific, default off; keyed through applyMapParams)
+#ifndef PM_QPARK_PORTALS
+#define PM_QPARK_PORTALS 1    // Portals: queen never crosses a portal, parks far from every portal exit, crowned at the seed round
+#endif
+#ifndef PM_QPARK_MAZE
+#define PM_QPARK_MAZE 1       // Maze: queen stays in the home field (frame x < PM_MAZE_QX), crowned at the seed round
+#endif
+#ifndef PM_MAZE_CR
+#define PM_MAZE_CR -1.0       // Maze: crowd penalty for every unit while round < king seed round (applied at the use site).
+#endif                        // -1 = PM_MAZE_CR_AUTO when PM_QPARK_MAZE is on, else off; 0 = off; > 0 = that value (crowd-only test)
+#ifndef PM_MAZE_CR_AUTO
+#define PM_MAZE_CR_AUTO 5.0
+#endif
+#ifndef PM_MAZE_QX
+#define PM_MAZE_QX 9          // Maze: first forbidden frame column for the queen (home field is x <= 10, doorways at 10/11)
+#endif
+#ifndef PM_MAZE_QSTAY
+#define PM_MAZE_QSTAY 1       // Maze: 1 = the crowned queen stays in the home field for the whole game, 0 = only until the seed round
+#endif
+#ifndef PM_QP_PEN
+#define PM_QP_PEN 600.0       // parked queen: penalty for a forbidden step (portal crossing / leaving the field)
+#endif
+#ifndef PM_QP_PULL
+#define PM_QP_PULL 25.0       // Portals, before she is fed: per tile beyond L/4 from her 2x2 anchor block (an exit is worth 8: 8 let her drift off)
+#endif
+#ifndef PM_QP_PULL_FED
+#define PM_QP_PULL_FED 8.0    // Portals, while she is fed: per tile beyond 3 + L/4 from her anchor
+#endif
+#ifndef PM_QP_FLEE
+#define PM_QP_FLEE 5          // a visible enemy head this close lifts the Portals park rules for the turn
+#endif
+#ifndef PM_QK_DMIN
+#define PM_QK_DMIN 1          // per-map queen-king: feeders die this many walking steps from her head at the nearest...
+#endif
+#ifndef PM_QK_DMAX
+#define PM_QK_DMAX 5          // ...and this many at the furthest (a live ally body never waits beside her)
+#endif
+#ifndef PM_QK_KEEP
+#define PM_QK_KEEP 3          // per-map queen-king: QALLY_KEEP radius round the crowned queen (QAK_DIST before the seed round)
+#endif
+#ifndef PM_QP_FLEEPEN
+#define PM_QP_FLEEPEN 250.0   // Portals: portal crossing cost for the parked queen while an enemy head is within PM_QP_FLEE
+#endif
+#ifndef PM_QP_ALLY
+#define PM_QP_ALLY 40.0       // Portals: parked/crowned queen, per ally head next to the tile she would step on
+#endif
+#ifndef PM_POR_QKFROM
+#define PM_POR_QKFROM 0       // Portals: the parked queen is crowned at max(king seed round, this); before it non-queens play their normal king game
+#endif
+#ifndef PM_MAZE_QKFROM
+#define PM_MAZE_QKFROM 0      // Maze: same
+#endif
+#ifndef PM_POR_QKCAP
+#define PM_POR_QKCAP 0        // Portals: feeders stop feeding the crowned queen at this length (0 = no cap)
+#endif
+#ifndef PM_MAZE_QKCAP
+#define PM_MAZE_QKCAP 50      // Maze: same (she still passes it on pearls already down and the r400 field respawn)
 #endif

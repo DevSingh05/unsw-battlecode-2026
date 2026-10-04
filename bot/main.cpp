@@ -1,4 +1,4 @@
-// MAINLINE (bot/) = v61 (2026-10-04): v51 + QS_FROM=100 + QSPLIT_ROOM=1. All new ideas go in here as flags (default 0). Status: notes/STATUS.md
+// MAINLINE (bot/) = b1 (2026-10-04): v61 + Portals/Maze queen park+crown (server-accepted). New ideas = flags, default 0. Status: notes/STATUS.md
 // v51: v44 + MATCH_STRICT-lite (unseen-map guard only: a starting dragon whose start fits no known map marks the map
 // v51: v44 + MATCH_STRICT-lite (unseen-map guard only: a starting dragon whose start fits no known map marks the map
 //      unseen for its team; official maps play exactly as v44; notes/newrules/UNSEEN_GENERALISATION.md section 10)
