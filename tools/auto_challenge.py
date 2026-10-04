@@ -127,11 +127,19 @@ def main():
     ap.add_argument("--unranked-only", action="store_true", help="launch no ranked series")
     ap.add_argument("--panel", default="", help="comma-separated team names: fixed opponent panel, rotated evenly")
     ap.add_argument("--ignore-lock", action="store_true", help="do not pause while SERVER_LOCK exists")
+    ap.add_argument("--maps", default="", help="with --panel --unranked-only: only these map names (comma-separated)")
     a = ap.parse_args()
     OUT.mkdir(parents=True, exist_ok=True)
     k = 0
     panel = [x.strip() for x in a.panel.split(",") if x.strip()]
     panel_maps = all_map_ids() if panel and a.unranked_only else []
+    if panel_maps and a.maps:
+        want = {x.strip().lower() for x in a.maps.split(",") if x.strip()}
+        named = {m["name"].lower(): m["id"] for m in api.get("/api/v1/maps")}
+        missing = want - set(named)
+        if missing:
+            raise SystemExit(f"unknown map names: {sorted(missing)}")
+        panel_maps = sorted(named[n] for n in want)
     warned = set()
     while not (OUT / "STOP").exists():
         try:
