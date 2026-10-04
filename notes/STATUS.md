@@ -1,6 +1,6 @@
 # STATUS (single source of truth)
 
-Last updated: 2026-10-03 22:15 EDT. All updates to the user come from this page. Times are US Eastern.
+Last updated: 2026-10-04 00:30 EDT. All updates to the user come from this page. Times are US Eastern.
 
 ## Live and mainline
 - **Mainline = `bot/`** = v61: v51 + `QS_FROM=100` + `QSPLIT_ROOM=1`. Every new idea goes into `bot/` as a flag, default 0. No more vNN copies.
@@ -40,7 +40,7 @@ Last updated: 2026-10-03 22:15 EDT. All updates to the user come from this page.
 | v61 | QSPLIT_ROOM=1 (early queen avoids pocket splits) | **WIN** (leaning) | +3.2 pp; 2126 → 2174; 11/17 maps |
 | v64 | LUNGE34 (3-4 step lunges) + INFER_SYM | **LOSS** | -6.8 pp; 2136 vs 2174; lunges cost length |
 | v65 | QK_BIG (queen becomes the king on big maps) | **LOSS** | -6.4 pp; 2143; 5/17 maps |
-| v69 | QEARLY_PEN (queen portal/blind penalties before r100) | **testing**, live since Sat 10:40 PM | local: queen deaths before r100 36 → 17, alive at r100 .25 → .65 |
+| v69 | QEARLY_PEN (queen portal/blind penalties before r100) | loss (leaning) | -4.8 pp (CI -12.9..+3.3); 2121 vs 2187; 6/17 maps; vs top-10 -1.8 vs +12.2 |
 
 ## What we know about why we lose (notes/newrules/LOSS_AUDIT2.md, v55/v61, 250 losses)
 - **We lose r500 tiebreaks, not fights.**
@@ -63,7 +63,7 @@ Last updated: 2026-10-03 22:15 EDT. All updates to the user come from this page.
 
 ## Plan (one fix at a time, focused on the r500 queen problem)
 1. **LATE_HUNT** (in bot/ as flag `LATE_HUNT`, default 0; variants/v68 = on): once our queen is dead, hunt theirs map-wide. Plays identically to v61 until an ally sees our queen die (detects ~60% of deaths, 0 false alarms). Local neutral, as expected. Next server test after v69. Judge it on r500 'our queen dead' losses vs non-top-10.
-2. **QEARLY_PEN** (v69): queen portal/blind penalties also before r100. Built; server test running (score ~12:40 AM Sun).
+2. **QEARLY_PEN** (v69): queen portal/blind penalties also before r100. Server test lost (leaning); flag not folded into bot/.
 3. **King timing** (v70, SPRINT_KING_PM): Around UNSW seed 190/feed 230. Mixed locally: helps when we out-mass the opponent, hurts against equal mass. Low priority; affects 1/17 of games.
 4. **Qualifier build** (before Fri 2 AM): mainline + INFER_SYM=1 (unseen-only, +.548 blind) + MATCH_STRICT-lite (already in). Check that blind17/real don't regress.
 
