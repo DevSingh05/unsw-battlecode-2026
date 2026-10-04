@@ -909,6 +909,17 @@
 #endif
 
 // ---- Schooltime layout B keepers (bot/maps/schooltime.hpp, notes/sch_b/LOG.txt). Default OFF.
+#ifndef PM_SCHB              // R3 map-keyed switch: 0 off; else Schooltime layout-B keepers on with cluster mask = PM_SCHB (3 = our half, 15 = all)
+#define PM_SCHB 0
+#endif
+#if PM_SCHB
+#ifndef SCH_B_KEEP
+#define SCH_B_KEEP 1
+#endif
+#ifndef SCH_B_KEEP_CL
+#define SCH_B_KEEP_CL PM_SCHB
+#endif
+#endif
 #ifndef SCH_B_KEEP           // on layout B, small dragons born near a top-strip cluster keep farming it
 #define SCH_B_KEEP 0
 #endif
@@ -1765,4 +1776,130 @@
 #endif
 #ifndef EG_NOSWAP
 #define EG_NOSWAP 0
+#endif
+
+// ---- R3 SPRINT_KING_PM (folded from variants/v70): per-map king seed/feed/merge on Around UNSW / Islands / Australia
+// (LOSS_AUDIT2 fix 2). Other Sprint maps keep UNK_KING_SEED/FEED. A map set to 250/300 = v61. Default OFF.
+#ifndef SPRINT_KING_PM
+#define SPRINT_KING_PM 0
+#endif
+#ifndef PM_AUNSW_SEED
+#define PM_AUNSW_SEED 190
+#endif
+#ifndef PM_AUNSW_FEED
+#define PM_AUNSW_FEED 230
+#endif
+#ifndef PM_ISL_SEED
+#define PM_ISL_SEED 250
+#endif
+#ifndef PM_ISL_FEED
+#define PM_ISL_FEED 300
+#endif
+#ifndef PM_AUS_SEED
+#define PM_AUS_SEED 250
+#endif
+#ifndef PM_AUS_FEED
+#define PM_AUS_FEED 300
+#endif
+#ifndef PM_AUNSW_MERGE
+#define PM_AUNSW_MERGE KING_V2_MERGE_ROUND
+#endif
+#ifndef PM_ISL_MERGE
+#define PM_ISL_MERGE KING_V2_MERGE_ROUND
+#endif
+#ifndef PM_AUS_MERGE
+#define PM_AUS_MERGE KING_V2_MERGE_ROUND
+#endif
+
+// ---- R3 STRIPES_LOOP (bot/maps/stripes.hpp): Stripes centre-loop opening. 0 off; 1 = queen laps the loop, second
+// starter dives the far W vault; 2 = queen laps, second starter unchanged, the queen's first loop child dives W.
+#ifndef STRIPES_LOOP
+#define STRIPES_LOOP 0
+#endif
+#ifndef STRIPES_LOOP_W       // score per step along the route / the loop
+#define STRIPES_LOOP_W 40.0
+#endif
+#ifndef STRIPES_LOOP_R       // the queen stops lapping at this round
+#define STRIPES_LOOP_R 500
+#endif
+#ifndef STRIPES_DIVE_T       // the W diver gives up this many rounds after birth
+#define STRIPES_DIVE_T 40
+#endif
+#ifndef STRIPES_KID_R        // mode 2: a queen child born on the loop up to this round is the W diver
+#define STRIPES_KID_R 20
+#endif
+#ifndef STRIPES_SPLIT_L      // the lapping queen splits 2 off at this length (two eats per lap on an 8-ring: she must enter the box at <= 5)
+#define STRIPES_SPLIT_L 6
+#endif
+
+// ---- R3 TROPHY_QSPLIT (ROUND2 backlog "Trophy queen split floor"): on Trophy only, while we have at most
+// TROPHY_QSPLIT_UNITS units (and before TROPHY_QSPLIT_R) the queen's split floors (early keep >= 3, QG_MIN) are off,
+// so she splits at L4 like a normal unit. Server: our first queen split r27 v r10, 3 units at r30 v 6.5.
+#ifndef TROPHY_QSPLIT
+#define TROPHY_QSPLIT 0
+#endif
+#ifndef TROPHY_QSPLIT_UNITS
+#define TROPHY_QSPLIT_UNITS 8
+#endif
+#ifndef TROPHY_QSPLIT_R
+#define TROPHY_QSPLIT_R 100
+#endif
+
+// ---- ROUND3 P7 PM_QPARK (map-specific, default off; keyed through applyMapParams)
+#ifndef PM_QPARK_PORTALS
+#define PM_QPARK_PORTALS 0    // Portals: queen never crosses a portal, parks far from every portal exit, crowned at the seed round
+#endif
+#ifndef PM_QPARK_MAZE
+#define PM_QPARK_MAZE 0       // Maze: queen stays in the home field (frame x < PM_MAZE_QX), crowned at the seed round
+#endif
+#ifndef PM_MAZE_CR
+#define PM_MAZE_CR -1.0       // Maze: crowd penalty for every unit while round < king seed round (applied at the use site).
+#endif                        // -1 = PM_MAZE_CR_AUTO when PM_QPARK_MAZE is on, else off; 0 = off; > 0 = that value (crowd-only test)
+#ifndef PM_MAZE_CR_AUTO
+#define PM_MAZE_CR_AUTO 5.0
+#endif
+#ifndef PM_MAZE_QX
+#define PM_MAZE_QX 9          // Maze: first forbidden frame column for the queen (home field is x <= 10, doorways at 10/11)
+#endif
+#ifndef PM_MAZE_QSTAY
+#define PM_MAZE_QSTAY 1       // Maze: 1 = the crowned queen stays in the home field for the whole game, 0 = only until the seed round
+#endif
+#ifndef PM_QP_PEN
+#define PM_QP_PEN 600.0       // parked queen: penalty for a forbidden step (portal crossing / leaving the field)
+#endif
+#ifndef PM_QP_PULL
+#define PM_QP_PULL 25.0       // Portals, before she is fed: per tile beyond L/4 from her 2x2 anchor block (an exit is worth 8: 8 let her drift off)
+#endif
+#ifndef PM_QP_PULL_FED
+#define PM_QP_PULL_FED 8.0    // Portals, while she is fed: per tile beyond 3 + L/4 from her anchor
+#endif
+#ifndef PM_QP_FLEE
+#define PM_QP_FLEE 5          // a visible enemy head this close lifts the Portals park rules for the turn
+#endif
+#ifndef PM_QK_DMIN
+#define PM_QK_DMIN 1          // per-map queen-king: feeders die this many walking steps from her head at the nearest...
+#endif
+#ifndef PM_QK_DMAX
+#define PM_QK_DMAX 5          // ...and this many at the furthest (a live ally body never waits beside her)
+#endif
+#ifndef PM_QK_KEEP
+#define PM_QK_KEEP 3          // per-map queen-king: QALLY_KEEP radius round the crowned queen (QAK_DIST before the seed round)
+#endif
+#ifndef PM_QP_FLEEPEN
+#define PM_QP_FLEEPEN 250.0   // Portals: portal crossing cost for the parked queen while an enemy head is within PM_QP_FLEE
+#endif
+#ifndef PM_QP_ALLY
+#define PM_QP_ALLY 40.0       // Portals: parked/crowned queen, per ally head next to the tile she would step on
+#endif
+#ifndef PM_POR_QKFROM
+#define PM_POR_QKFROM 0       // Portals: the parked queen is crowned at max(king seed round, this); before it non-queens play their normal king game
+#endif
+#ifndef PM_MAZE_QKFROM
+#define PM_MAZE_QKFROM 0      // Maze: same
+#endif
+#ifndef PM_POR_QKCAP
+#define PM_POR_QKCAP 0        // Portals: feeders stop feeding the crowned queen at this length (0 = no cap)
+#endif
+#ifndef PM_MAZE_QKCAP
+#define PM_MAZE_QKCAP 50      // Maze: same (she still passes it on pearls already down and the r400 field respawn)
 #endif

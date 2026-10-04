@@ -291,7 +291,7 @@ double portalsScore(int t, int d)
     if (porKind[t] == 2 && POR_POCKET_PEN > 0 && !shouldFeed())
         s -= POR_POCKET_PEN;
 #if POR_PULL
-    if (shouldFeed())
+    if (shouldFeed() || qparkQueen()) // ROUND3 P7: the parked queen takes no tube pull
         return s;
     if (!POR_KING_PULL && (kingSelf || myLen >= 10))
         return s;

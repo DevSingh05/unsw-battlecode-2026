@@ -208,3 +208,27 @@ Findings that change the proposals:
 Suggested server order: `P5_sne`, then `P1_qkill`, then `P6_reach`. `P3_qally` and `P6_eg` showed nothing locally and are low priority.
 
 `R2_DEBUG=1` adds `LOG r2 <event>` lines (split sites, kills, vetoes) for local counting; never set it on the server.
+
+## Round 3 map pack (integrator, 4 Oct)
+
+Two builder patches are merged into `bot/` (`main.cpp`, `params.hpp`, `maps/portals.hpp`, new `maps/stripes.hpp`). Every new flag defaults to 0 and all map code is keyed through `applyMapParams` / the known-map name. With flags off, `bot/` matches `variants/v61` fingerprints (sandbox, seed 1000, both sides) on Maze, Portals, Australia, Devil, Dilemma, Stripes, Trophy and Schooltime layout B. One mismatch is older than this round: Around UNSW side B differs from v61 (51-40 v 47-44) in the pre-round-3 `bot/` too (copy kept in `archive/r3_integrate/bot_pre_r3/`); side A matches. Nothing was submitted.
+
+Staged candidate: scratch `r3/stage/mappack1/` = `bot/` with the five defines below at the top of `params.hpp`. It compiles, ran one sandbox game per target map against v61 with no errors, CPU max 34.0M (Australia; target maps 6-27M), and Australia, Devil and Schooltime layout A still match v61. Each flag is judged only on its own map's server games.
+
+| flag | map | what it does | server mechanism stat (that map's games only) |
+|---|---|---|---|
+| `PM_QPARK_PORTALS=1` | Portals | Queen never crosses a portal, circles a 2x2 block far from portal exits, is the only king from the seed round (r250); feeders feed her at any length. | Queen alive at r250 (target >= 90%, v61 about 2%); alive at r500 and her r500 length (target >= 30); queen HitSelf deaths in a vault (target 0); r100 total length not below v61. Guard: r500 losses where she died after r300. |
+| `PM_QPARK_MAZE=1` (crowd penalty auto 5.0) | Maze | Queen stays in the home field (frame x < 9), crowned at the seed round, feeders stop at L50; crowd penalty for all units before the seed round. | Queen alive at seed round and r500, her r500 length (target >= 30); queen deaths at frame x >= 9 (target 0); home-field deaths by r200 (v61 about 62, target <= 40); r100 and r200 total length (v61 r200 about 91). Guard: queen rammed head-on after r400 at L >= 40. |
+| `STRIPES_LOOP=1` | Stripes | Queen laps the 8-tile centre loop of her stripe, splits at L6 on the open side; second starter takes the far W vault. | Centre-loop eats by r50 (target >= 10); W-vault eats by r50 (must stay >= 15); total length at r100 must not fall; queen alive at r50. |
+| `TROPHY_QSPLIT=1` | Trophy | Queen split floors off while we have <= 8 units and round < 100, so she splits at L4. | Round of queen's first split (target <= 12); units at r30 (target >= 5); queen dead by r40 must not rise. |
+| `PM_SCHB=3` | Schooltime layout B | Turns on the `SCH_B_KEEP` top-strip keepers for the two clusters in our half. | Our eats on y <= 7 by r200 (server 0-3, target >= 15); r200 total length must not fall more than about 10%. |
+
+Built but left out of the candidate:
+
+- `SPRINT_KING_PM=1` (Around UNSW king seed 190 / feed 230): wrong way locally (longest at r499 50 -> 44, total length -24%, queen dead 10 of 10).
+- `STRIPES_LOOP=2`: W-vault eats by r50 fall to 4.8, which fails the >= 15 guard.
+- `PM_MAZE_CR=5.0` alone (`PM_QPARK_MAZE=0`): crowd penalty without the queen change; home-field deaths 60 -> 36, r200 total 101 -> 153, but queen survival unchanged. Use it as the fallback if the Maze crowned queen is rammed on the server.
+
+Known risk on Portals and Maze: once the queen is crowned all length goes into her, so a late queen death loses both tiebreaks.
+
+Build-cache trap: `unswbc` does not rebuild when only `params.hpp` changes in an existing directory. Stage each flag set into a fresh directory name.

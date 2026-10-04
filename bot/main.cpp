@@ -69,8 +69,16 @@ struct RuntimeParams
     int kingRace = 0;                        // set for the KING_V2 king-race maps (v2() table)
     int lateSplitRound = LATE_SPLIT_ROUND;   // small dragons keep splitting until this round (0 = off)
     int diveStopRound = 0;                   // no pocket dives from this round (0 = off)
+    int queenKeep = 0;                       // R3 TROPHY_QSPLIT: >0 = while units <= this the queen has no split floor (splits at L4 like any unit)
+    int mergeRound = KING_V2_MERGE_ROUND;    // R3 SPRINT_KING_PM: any-length feeding from this round (per-map on Sprint)
+    int queenKing = 0;                       // ROUND3 P7: per-map QUEEN_KING (our queen is the only king from the seed round)
+    int qPark = 0;                           // ROUND3 P7 PM_QPARK: 1 = Portals park (no portal crossing, home anchor), 2 = Maze home field
+    int qkCap = 0;                           // ROUND3 P7: feeders stop feeding the queen-king at this length (0 = no cap)
+    int qkFrom = 0;                          // ROUND3 P7: the per-map queen-king starts at max(kingSeedRound, qkFrom)
+    double crowdEarly = 0;                   // ROUND3 P7: crowd penalty used only while round < kingSeedRound (0 = off)
 };
 RuntimeParams RP;
+static inline bool qkOn() { return QUEEN_KING || RP.queenKing; }
 
 // Per-map overrides, keyed by the recognised map's name. Each value is a macro
 // so local tests can flip one map at a time (e.g. -DPM_DEVIL_RG=0).
@@ -97,9 +105,24 @@ void applyMapParams(const char* name, int tiles = 0)
             RP.kingDeclare = 1;
             RP.kingSeedRound = UNK_KING_SEED;
             RP.feedStart = UNK_KING_FEED;
+            // R3 SPRINT_KING_PM (from variants/v70): earlier king seed / feed on the big Sprint maps where we lose the longest race
+            if (SPRINT_KING_PM)
+            {
+                if (n == "Around UNSW") RP.kingSeedRound = PM_AUNSW_SEED, RP.feedStart = PM_AUNSW_FEED, RP.mergeRound = PM_AUNSW_MERGE;
+                if (n == "Islands") RP.kingSeedRound = PM_ISL_SEED, RP.feedStart = PM_ISL_FEED, RP.mergeRound = PM_ISL_MERGE;
+                if (n == "Australia") RP.kingSeedRound = PM_AUS_SEED, RP.feedStart = PM_AUS_FEED, RP.mergeRound = PM_AUS_MERGE;
+            }
         }
         if (UNK_SMALL_RAMGUARD && tiles > 0 && tiles <= 750)
             RP.ramGuard = 2;
+        if (n == "Maze")
+        {
+            // ROUND3 P7: Maze queen stays in the home field and is crowned; crowd penalty until the seed round
+            if (PM_QPARK_MAZE)
+                RP.queenKing = 1, RP.qPark = 2, RP.qkFrom = PM_MAZE_QKFROM, RP.qkCap = PM_MAZE_QKCAP;
+            if (PM_MAZE_CR > 0 || (PM_MAZE_CR < 0 && PM_QPARK_MAZE))
+                RP.crowdEarly = PM_MAZE_CR > 0 ? PM_MAZE_CR : PM_MAZE_CR_AUTO;
+        }
         return;
     }
     auto set = [&](const char* map, int rg, int kd, int ks, int ss, int fs) {
@@ -161,12 +184,16 @@ void applyMapParams(const char* name, int tiles = 0)
                 RP.kingKeepExtra = PM_SCH_KKEEP;
         }
     }
+    if (TROPHY_QSPLIT && n == "Trophy")
+        RP.queenKeep = TROPHY_QSPLIT_UNITS; // R3: Trophy queen split floor off while we are few (ROUND2 backlog)
     if (n == "Portals" && PM_POR_KPORTAL >= 0)
         RP.kingPortal = PM_POR_KPORTAL; // the Portals module routes the king through portals on purpose
     if (n == "Portals" && PM_POR_LATESPLIT >= 0)
         RP.lateSplitRound = PM_POR_LATESPLIT; // notes/portals_v31: no contact on Portals, consolidate
     if (n == "Portals" && PM_POR_DIVESTOP > 0)
         RP.diveStopRound = PM_POR_DIVESTOP;
+    if (n == "Portals" && PM_QPARK_PORTALS)
+        RP.queenKing = 1, RP.qPark = 1, RP.qkFrom = PM_POR_QKFROM, RP.qkCap = PM_POR_QKCAP; // ROUND3 P7: parked queen, crowned at the seed round
     if ((RAM_GUARD_LOCAL == 1 && (n == "Devil" || n == "Prisoners Dilemma")) || RAM_GUARD_LOCAL == 2)
         RP.ramGuard = 2; // notes/19: local odds only
     if (n == "Prisoners Dilemma" && PM_DIL_KEEP >= 0)
@@ -1913,7 +1940,7 @@ struct Bot
                 lhNoteAlive(rnd); // v68: our queen is broadcasting as a king
             if (QSTATE && id <= 1 && !amQueen() && (rnd > qsOurRound || (rnd == qsOurRound && hop < qsOurHop)))
                 qsOurRound = rnd, qsOurHop = hop, qsOurTile = tile, qsOurLen = len, qsOurId = id, qsOurDir = dir; // queen as king
-            if (QUEEN_KING && id <= 1 && (rnd > qRound || (rnd == qRound && hop < qHop)))
+            if (qkOn() && id <= 1 && (rnd > qRound || (rnd == qRound && hop < qHop)))
                 qLen = len, qTile = tile, qDir = dir, qRound = rnd, qHop = hop, qId = id; // our queen's beacon
             {
                 bool found = false;
@@ -2037,7 +2064,7 @@ struct Bot
             if (vis > 0 && inside && vis < kingLen)
                 kingLen = vis;
         }
-        if (QUEEN_KING && !amQueen())
+        if (qkOn() && !amQueen())
         {
             // we can see the queen ourselves: exact data
             int vis = 0;
@@ -2529,14 +2556,175 @@ struct Bot
         return false;
     }
     bool queenEarly() const { return QUEEN_SAFE && amQueen() && !qsOn; }
+    // ROUND3 P7 PM_QPARK: the queen is parked at home until the king seed round, then crowned (RP.queenKing).
+    // Portals (qPark 1): she never crosses a portal and holds a spot far from every portal mouth/exit.
+    // Maze (qPark 2): she stays inside the home field (frame x < PM_MAZE_QX).
+    bool qparkQueen() const { return RP.qPark > 0 && amQueen(); }
+    bool qparkNoDive() const { return qparkQueen() && (RP.qPark == 1 || PM_MAZE_QSTAY || round < RP.kingSeedRound); }
+    int qpAnchor = -1, qpHomeLeft = -1;
+    bool qpFlee = false;
+    std::vector<int> qpDist;
+    void qparkPrep()
+    {
+        qpFlee = false;
+        if (!qparkQueen() || myHead < 0)
+            return;
+        for (auto& o : segs)
+            if (o.head && o.team != w.myTeam && wrapDist(o.tile, myHead) <= PM_QP_FLEE)
+                qpFlee = true; // an enemy head in reach: normal queen evasion decides
+        if (qpHomeLeft < 0)
+            qpHomeLeft = (myHead % w.W) * 2 < w.W ? 1 : 0;
+        if (RP.qPark != 1 || qpAnchor >= 0)
+            return;
+        // portal-free component of her head; anchor = the tile furthest from every portal mouth / exit
+        auto plain = [&](int u, int d) { int v = step(u, d); return (v >= 0 && v == w.plainStep(u, d)) ? v : -1; };
+        std::vector<int> comp{myHead}, home(w.N, -1), dng(w.N, -1), q;
+        home[myHead] = 0;
+        for (size_t i = 0; i < comp.size(); i++)
+            for (int d = 0; d < 4; d++)
+            {
+                int v = plain(comp[i], d);
+                if (v >= 0 && home[v] < 0)
+                    home[v] = home[comp[i]] + 1, comp.push_back(v);
+            }
+        for (int u : comp)
+            if (isMouth(u) || (!portalExit.empty() && portalExit[u]) || w.gmax[u] > 0)
+                dng[u] = 0, q.push_back(u);
+        for (size_t i = 0; i < q.size(); i++)
+            for (int d = 0; d < 4; d++)
+            {
+                int v = plain(q[i], d);
+                if (v >= 0 && dng[v] < 0)
+                    dng[v] = dng[q[i]] + 1, q.push_back(v);
+            }
+        // open ground first (all 12 tiles within 2 plain steps exist: feeders and walls cannot box her), then distance
+        auto open2 = [&](int u) {
+            int n = 0;
+            for (int d = 0; d < 4; d++)
+            {
+                int v = plain(u, d);
+                if (v < 0)
+                    continue;
+                n++;
+                for (int e = 0; e < 4; e++)
+                    if (e != (d + 2) % 4 && plain(v, e) >= 0)
+                        n++;
+            }
+            return n; // 4 + 12 (diagonals counted twice) on open ground
+        };
+        // a fully open 2x2 block (an L3 queen circles it for ever); its top-left tile is the anchor
+        auto blockOf = [&](int u, int* b) {
+            int e = plain(u, 1), so = plain(u, 2);
+            if (e < 0 || so < 0)
+                return false;
+            int se = plain(e, 2);
+            if (se < 0 || plain(so, 1) != se)
+                return false;
+            b[0] = u, b[1] = e, b[2] = se, b[3] = so;
+            return true;
+        };
+        int bestA = myHead, bestO = -1, bestG = -1;
+        bool bestBlk = false;
+        for (int u : comp)
+        {
+            int b[4] = {u, u, u, u};
+            bool blk = blockOf(u, b);
+            int o = 0, g = 99;
+            for (int x : b)
+                o += open2(x) >= 16 ? 1 : 0, g = std::min(g, dng[x] < 0 ? 99 : dng[x]);
+            if ((blk && !bestBlk) || (blk == bestBlk && (g > bestG || (g == bestG && (o > bestO || (o == bestO && home[u] < home[bestA]))))))
+                bestA = u, bestO = o, bestG = g, bestBlk = blk;
+        }
+        qpAnchor = bestA;
+        if (dbg)
+            std::fprintf(dbg, "QPARK anchor (%d,%d) blk=%d open=%d far=%d comp=%zu\n", bestA % w.W, bestA / w.W, bestBlk ? 1 : 0, bestO, bestG, comp.size());
+        qpDist.assign(w.N, 99);
+        q.assign(1, bestA);
+        qpDist[bestA] = 0;
+        {
+            int b[4];
+            if (blockOf(bestA, b))
+                for (int k = 1; k < 4; k++)
+                    qpDist[b[k]] = 0, q.push_back(b[k]);
+        }
+        for (size_t i = 0; i < q.size(); i++)
+            for (int d = 0; d < 4; d++)
+            {
+                int v = plain(q[i], d);
+                if (v >= 0 && qpDist[v] == 99)
+                    qpDist[v] = qpDist[q[i]] + 1, q.push_back(v);
+            }
+    }
+    // steps a free-step sprint of the parked queen may never contain (the path search only vetoes its endpoint)
+    bool qparkBan(int from, int d) const
+    {
+        if (!qparkQueen())
+            return false;
+        int t = step(from, d);
+        if (t < 0)
+            return false;
+        if (RP.qPark == 1)
+            return t != w.plainStep(from, d) || w.gmax[t] > 0 || (!pfDepth.empty() && pfDepth[t] > 0);
+        if (!(PM_MAZE_QSTAY || round < RP.kingSeedRound))
+            return false;
+        int x = t % w.W;
+        return (qpHomeLeft ? x : w.W - 1 - x) >= PM_MAZE_QX;
+    }
+    // score term for the parked queen stepping onto t in direction d; sets dead for steps the park forbids
+    double qparkScore(int t, int d, bool& dead) const
+    {
+        if (!qparkQueen() || myHead < 0)
+            return 0.0;
+        double s = 0;
+        if (RP.qPark == 1)
+        {
+            if (t != w.plainStep(myHead, d))
+            {
+                // never through a portal (vault HitSelf deaths, blind exits); with an enemy head in reach it is
+                // only a cost below the threat penalty, so she may still escape through one
+                // (a vault is fatal at any length and so is any pocket once she has been fed)
+                if (!qpFlee || myLen >= 6 || w.gmax[t] > 0)
+                    dead = true, s -= PM_QP_PEN;
+                else
+                    s -= PM_QP_FLEEPEN;
+            }
+            else if (w.gmax[t] > 0 || (!pfDepth.empty() && pfDepth[t] > 0))
+                dead = true, s -= PM_QP_PEN; // every pearl spawn on Portals is a vault or the 1-wide centre sock; no pockets at all
+            for (auto& o : segs)
+                if (o.head && o.team == w.myTeam && o.id != w.myId && wrapDist(o.tile, t) <= 1)
+                    s -= PM_QP_ALLY; // an ally head next to her next tile can seal it
+            if (qpAnchor >= 0 && round < qkFeedRound())
+            {
+                // hold the block; half weight on the best next tile so she turns back instead of drifting off
+                int nb = 99;
+                for (int e = 0; e < 4; e++)
+                {
+                    int v = step(t, e);
+                    if (v >= 0 && v != myHead && v == w.plainStep(t, e))
+                        nb = std::min(nb, qpDist[v]);
+                }
+                s -= PM_QP_PULL * (std::max(0, qpDist[t] - myLen / 4) + 0.5 * std::min(nb, qpDist[t] + 1));
+            }
+            else if (qpAnchor >= 0)
+                s -= PM_QP_PULL_FED * std::max(0, qpDist[t] - 3 - myLen / 4);
+        }
+        else if (PM_MAZE_QSTAY || round < RP.kingSeedRound)
+        {
+            int x = t % w.W, fx = qpHomeLeft ? x : w.W - 1 - x;
+            if (fx >= PM_MAZE_QX)
+                s -= PM_QP_PEN + 20.0 * (fx - PM_MAZE_QX); // the doorway column and the maze beyond it
+        }
+        return s;
+    }
     // v37e (QGUARD ported from v37b) helpers: K(L) = ceil(L/4) + (L-2) = kamikaze reach
     static int kReach(int L) { return (L + 3) / 4 + std::max(0, L - 2); }
     bool qGuard() const { return QGUARD && amQueen() && (round >= QG_FROM || units >= QG_UNITS); }
     // QGUARD: largest split the queen may make (child k) so she keeps >= QG_MIN; < 2 = no split
     // v38q: QG_MIN floor off when the queen's kelp-sealed region is < QG_REGION_MIN tiles (Schooltime box)
+    bool qFloorOff() const { return TROPHY_QSPLIT && RP.queenKeep > 0 && amQueen() && units <= RP.queenKeep && round < TROPHY_QSPLIT_R; }
     int qgCap(int k) const
     {
-        int c = (qGuard() && !(QG_REGION_MIN > 0 && qRegion < QG_REGION_MIN)) ? std::min(k, myLen - QG_MIN) : k;
+        int c = (qGuard() && !qFloorOff() && !(QG_REGION_MIN > 0 && qRegion < QG_REGION_MIN)) ? std::min(k, myLen - QG_MIN) : k;
         if (qboxLate())
             c = std::min(c, myLen - 3); // QBOX: late, no voluntary split leaves the queen below L3
         return c;
@@ -2569,22 +2757,24 @@ struct Bot
     bool noVolSplit() const { return egOn(); }
     void updateQsPhase()
     {
-        if (!qsOn && (round >= QS_FROM || (QS_UNITS > 0 && units >= QS_UNITS)))
+        if (!qsOn && (round >= QS_FROM || (QS_UNITS > 0 && units >= QS_UNITS) || (RP.qPark == 1 && amQueen())))
             qsOn = true;
     }
     // QUEEN_KING: on king maps our queen is the only king from the seed round while she is alive
     int qId = -1, qLen = 0, qTile = -1, qDir = 0, qRound = -100000, qHop = 99;
-    bool queenAlive() const { return QUEEN_KING && qId >= 0 && round - qRound <= QUEEN_ALIVE_MEM; }
-    bool queenKingRound() const { return QUEEN_KING && RP.kingDeclare && round >= RP.kingSeedRound; }
+    bool queenAlive() const { return qkOn() && qId >= 0 && round - qRound <= QUEEN_ALIVE_MEM; }
+    bool queenKingRound() const { return qkOn() && RP.kingDeclare && round >= RP.kingSeedRound && round >= RP.qkFrom; }
+    // ROUND3 P7: first round the parked queen is fed (before it she holds her spot and wants no food)
+    int qkFeedRound() const { return std::max(RP.feedStart, std::max(RP.kingSeedRound, RP.qkFrom)); }
     static int freeSteps(int L) { return (L + 3) / 4; } // 1.2.3: the first ceil(L/4) steps of a move are free
     void updateKingship()
     {
-        if (QUEEN_KING && amQueen() && queenKingRound())
+        if (qkOn() && amQueen() && queenKingRound())
         {
             kingSelf = true; // she is the king: feeders come to her, she stops splitting
             return;
         }
-        if (QUEEN_KING && !amQueen() && queenKingRound() && queenAlive())
+        if (qkOn() && !amQueen() && queenKingRound() && queenAlive())
         {
             kingSelf = false; // no rival kings while our queen lives
             return;
@@ -2633,7 +2823,7 @@ struct Bot
     }
     bool iAmKing() const
     {
-        if (QUEEN_KING && queenKingRound() && (amQueen() || queenAlive()))
+        if (qkOn() && queenKingRound() && (amQueen() || queenAlive()))
             return amQueen();
         if (queenSafe())
             return kingSelf; // only a map-module crown, never by length
@@ -2777,6 +2967,34 @@ struct Bot
     }
 
     // Tile a feeder should die on: a couple of steps in front of the king.
+    // ROUND3 P7: on a per-map queen-king map the crowned queen is fed whatever her length (a parked queen is L3)
+    bool feedsQueen() const
+    {
+        return RP.queenKing && !amQueen() && queenKingRound() && queenAlive() && kingId >= 0 && (kingId & 1023) <= 1;
+    }
+    // walking distance a -> b over static tiles (bodies ignored), capped: maxd + 1 = further / walled off
+    int walkDist(int a, int b, int maxd) const
+    {
+        if (a == b)
+            return 0;
+        std::vector<int> q{a}, dd{0};
+        for (size_t i = 0; i < q.size(); i++)
+        {
+            if (dd[i] >= maxd)
+                continue;
+            for (int d = 0; d < 4; d++)
+            {
+                int v = step(q[i], d);
+                if (v < 0 || std::find(q.begin(), q.end(), v) != q.end())
+                    continue;
+                if (v == b)
+                    return dd[i] + 1;
+                q.push_back(v);
+                dd.push_back(dd[i] + 1);
+            }
+        }
+        return maxd + 1;
+    }
     int feedTarget() const
     {
         if (kingId < 0 || kingTile < 0)
@@ -2814,12 +3032,14 @@ struct Bot
         if (FEED_FRESH > 0 && (kingId < 0 || round - kingRound > FEED_FRESH || kingLen < myLen + 2))
             return false;
         // RC2: never feed a lesser king (< KC_FEED_FRAC of the longest heard in KC_FEED_MEM rounds)
-        if (KING_CONSENSUS && KING_V2 && RP.kingDeclare && kingLen < KC_FEED_FRAC * bestKingLen(KC_FEED_MEM))
+        if (KING_CONSENSUS && KING_V2 && RP.kingDeclare && kingLen < KC_FEED_FRAC * bestKingLen(KC_FEED_MEM) && !feedsQueen())
             return false;
+        if (RP.qkCap > 0 && feedsQueen() && kingLen >= RP.qkCap)
+            return false; // ROUND3 P7: she is long enough; a longer queen only coils herself in and is a bigger ram prize
         if (KING_V2 && RP.kingDeclare)
-            return FEED_ENABLE && feedPhase() && kingId >= 0 && kingLen >= myLen + 2 && !iAmKing() &&
+            return FEED_ENABLE && feedPhase() && kingId >= 0 && (kingLen >= myLen + 2 || feedsQueen()) && !iAmKing() &&
                    units > feedReserveNow() &&
-                   myLen <= (round >= KING_V2_MERGE_ROUND ? 1000 : round >= KING_V2_FEED6_ROUND ? 6 : KING_V2_FEED_LEN);
+                   myLen <= (round >= RP.mergeRound ? 1000 : round >= KING_V2_FEED6_ROUND ? 6 : KING_V2_FEED_LEN);
         return FEED_ENABLE && feedPhase() && kingId >= 0 && kingLen >= myLen + 2 && !iAmKing() &&
                (units > RP.feedReserve || (RP.lateFeedRound > 0 && round >= RP.lateFeedRound && units > 1)) && myLen <= FEED_MAX_LEN;
     }
@@ -3657,6 +3877,8 @@ struct Bot
         pfLastP = 0;
         if (myLen < 2 || myLen > PF_ENTER_MAXLEN || units > w.unitLimit - PF_UNIT_RESERVE || iAmKing())
             return why("len/units/king");
+        if (qparkNoDive())
+            return why("qpark");
         if (RP.diveStopRound > 0 && round >= RP.diveStopRound)
             return why("late");
         int comp = pfComp[t];
@@ -4580,7 +4802,7 @@ struct Bot
                 for (int k = 0; k < n && ok; k++)
                 {
                     int t = step(cur, dirs[k]);
-                    if (t < 0 || t == myHead)
+                    if (t < 0 || t == myHead || qparkBan(cur, dirs[k])) // ROUND3 P7: the parked queen never escapes into a vault
                     {
                         ok = false;
                         break;
@@ -4732,6 +4954,7 @@ struct Bot
 #include "maps/default.hpp"
 #include "maps/autarky.hpp"
 #include "maps/devil.hpp"
+#include "maps/stripes.hpp"
     int mapKey() const
     {
         if (!w.known)
@@ -4762,6 +4985,8 @@ struct Bot
     }
     double mapScore(int t, int d)
     {
+        if (STRIPES_LOOP && stripesOn())
+            return stripesScore(t, d);
         switch (mapKey())
         {
         case 0: return schooltimeScore(t, d);
@@ -4874,7 +5099,7 @@ struct Bot
         for (int d = 0; d < 4; d++)
         {
             int t = step(myHead, d);
-            if (t < 0 || candScore[d] < -1e17 || !visible[t])
+            if (t < 0 || candScore[d] < -1e17 || !visible[t] || qparkBan(myHead, d))
                 continue;
             Node n;
             n.tiles = {t};
@@ -4899,8 +5124,8 @@ struct Bot
                 for (int d = 0; d < 4; d++)
                 {
                     int t = step(myHead, d);
-                    if (t < 0 || !visible[t])
-                        continue; // no blind steps inside a sprint
+                    if (t < 0 || !visible[t] || qparkBan(myHead, d))
+                        continue; // no blind steps inside a sprint (ROUND3 P7: nor steps the queen park forbids)
                     EvalOut eo;
                     if (!evalDir(d, eo) || eo.rskip)
                         continue;
@@ -5000,6 +5225,7 @@ struct Bot
             return;
         }
         updateQsPhase();
+        qparkPrep();
         if (QBOX || QGUARD)
             computeQRegion();
         eqHuntPrep();
@@ -5076,6 +5302,14 @@ struct Bot
                         }
                     dieNow = closest && dk <= 3 && !foodWaiting;
                 }
+            }
+            if (feedsQueen())
+            {
+                // ROUND3 P7: feeders of the queen-king never crowd her head (a boxed queen sheds 2 a turn):
+                // die PM_QK_DMIN..PM_QK_DMAX walking steps away and let her come to the pearls
+                // (an enemy head nearby does not stop it: feeders waiting round her are what boxes her)
+                int wd = (kingVisible && dk <= PM_QK_DMAX) ? walkDist(myHead, kingTile, PM_QK_DMAX) : 99;
+                dieNow = kingVisible && wd >= PM_QK_DMIN && wd <= PM_QK_DMAX;
             }
             if (dieNow)
             {
@@ -5175,13 +5409,21 @@ struct Bot
                     std::fprintf(dbg, "TIP2 reg=%zu hold=%d tipK=%d\n", reg.size(), holdTile, tipK);
             }
         }
+        bool stLap = STRIPES_LOOP && stripesOn() && stripesLapper();
+        if (stLap && threatAt[myHead] <= 0 && stripesLapSplit())
+        {
+            out += "SPLIT 2\n"; // R3 STRIPES_LOOP: the lapping queen peels a 2-child off on the open side of the loop
+            pending.clear();
+            pendingSplit = true;
+            return;
+        }
         bool pfIn = false;
         if (DIVE_VALUE && !POCKET_FACTORY)
             pfCompute();
         if (POCKET_FACTORY)
         {
             pfCompute();
-            pfIn = pfInward() && myLen <= PF_MAXLEN && !(queenSafe() && threatAt[myHead] > 0) && !queenEarly() && !qGuard() && !whNoPump();
+            pfIn = pfInward() && myLen <= PF_MAXLEN && !(queenSafe() && threatAt[myHead] > 0) && !queenEarly() && !qGuard() && !qparkNoDive() && !whNoPump();
             if (pfIn)
             {
                 // inside a pocket facing inward: eat on while food lies ahead, then split so the child
@@ -5255,7 +5497,7 @@ struct Bot
                     std::fprintf(dbg, "PF in depth=%d len=%d aheadP=%.2f hold=%d units=%d/%d any=%d\n", pfDepth[myHead], myLen, bestP, holdTile, units, w.unitLimit, anyFree);
             }
         }
-        if (!pfIn && holdTile < 0 && !(RP.kingDeclare && kingSelf) && !bigLate && !noVolSplit() && (!SPLIT_NEEDS_EXIT || tailHasExit(2)) &&
+        if (!pfIn && !stLap && holdTile < 0 && !(RP.kingDeclare && kingSelf) && !bigLate && !noVolSplit() && (!SPLIT_NEEDS_EXIT || tailHasExit(2)) &&
             !(CONS_R && CONS_NOSPLIT && (consActive || consHostKeep())) &&
             !(UNK_SEALED_FOOD && !w.known && UNK_SEALED_ROOM_MIN > 0 && roomSize(UNK_SEALED_ROOM_MIN) < UNK_SEALED_ROOM_MIN) && myLen >= SPLIT_LEN && myLen >= 4 && units < w.unitLimit && units < SPLIT_MAX_UNITS &&
             (round < RP.splitStopRound || (RP.lateSplitRound > 0 && round < RP.lateSplitRound && myLen <= LATE_SPLIT_MAXLEN)) &&
@@ -5287,7 +5529,7 @@ struct Bot
                     k = myLen - 2;
             }
             bool viable = true;
-            if (queenEarly() && myLen - k < 3)
+            if (queenEarly() && !qFloorOff() && myLen - k < 3)
             {
                 k = myLen - 3; // the early queen keeps >= 3 of herself
                 if (k < 2)
@@ -5330,7 +5572,7 @@ struct Bot
         int hotTarget = -1;
         // PF_PULL: a short free dragon that is the nearest of us to a free, stocked pocket mouth walks to it
         int pfTarget = -1;
-        if (POCKET_FACTORY && PF_PULL > 0 && !pfIn && myLen >= 2 && myLen <= PF_ENTER_MAXLEN && !feeding && !consActive && !iAmKing() &&
+        if (POCKET_FACTORY && PF_PULL > 0 && !pfIn && myLen >= 2 && myLen <= PF_ENTER_MAXLEN && !feeding && !consActive && !iAmKing() && !qparkNoDive() &&
             units <= w.unitLimit - PF_UNIT_RESERVE && !pfDepth.empty() && pfDepth[myHead] == 0)
         {
             int bd = PF_PULL_RANGE + 1;
@@ -5369,7 +5611,7 @@ struct Bot
             if (dbg && pfTarget >= 0)
                 std::fprintf(dbg, "PF pull (%d,%d) d=%d\n", pfTarget % w.W, pfTarget / w.W, bd);
         }
-        if (HOT_PULL > 0 && myLen <= 3 && !feeding && !consActive && !iAmKing())
+        if (HOT_PULL > 0 && myLen <= 3 && !feeding && !consActive && !iAmKing() && !qparkNoDive())
         {
             if (hotMouthRound < 0 || (!w.known && round - hotMouthRound >= 25))
                 computeHotMouths();
@@ -5435,7 +5677,7 @@ struct Bot
         int qakHead = -1;
         std::vector<int> qakEsc;
         if (QALLY_KEEP && !amQueen() && round >= QAK_FROM &&
-            !(feedPhase() && kingId >= 0 && (kingId & 1023) <= 1 && shouldFeed()))
+            (RP.queenKing || !(feedPhase() && kingId >= 0 && (kingId & 1023) <= 1 && shouldFeed())))
         {
             for (auto& o : segs)
                 if (o.head && o.team == w.myTeam && o.id <= 1)
@@ -5444,7 +5686,7 @@ struct Bot
                 for (auto& k : kingsSeen)
                     if (k.id <= 1 && k.round >= round - 1 && k.tile >= 0)
                         qakHead = k.tile;
-            if (qakHead >= 0 && wrapDist(myHead, qakHead) <= QAK_DIST + 3)
+            if (qakHead >= 0 && wrapDist(myHead, qakHead) <= ((RP.queenKing && queenKingRound()) ? PM_QK_KEEP : QAK_DIST) + 3)
             {
                 int bestA = 0;
                 std::vector<int> nodes;
@@ -5543,13 +5785,17 @@ struct Bot
             double pearls;
             int area;
             bfsFrom(t, pearls, area, areaCap);
+            if (RP.qPark == 1 && amQueen() && round < qkFeedRound())
+                pearls = 0; // ROUND3 P7: the parked Portals queen wants no food (it is all behind portals)
             score += 10.0 * pearls;
             int need = myLen + 3;
             bool pfEntry = POCKET_FACTORY && !pfIn && !pfDepth.empty() && pfDepth[t] > pfDepth[myHead];
-            bool pump = POCKET_PUMP && area < need && !qGuard() && !whNoPump() && (t == holdTile || (pfEntry ? pfDiveOK(t) : pocketWorthPumping(t)));
+            bool pump = POCKET_PUMP && area < need && !qGuard() && !qparkNoDive() && !whNoPump() && (t == holdTile || (pfEntry ? pfDiveOK(t) : pocketWorthPumping(t)));
             eo.dead = qGuard() && area < need; // v37e QGUARD (from v37b): a dead end she can't turn around in
             if (QNOPOCKET && amQueen() && round >= 1 && !pfDepth.empty() && pfDepth[t] > 0 && pfDepth[t] > pfDepth[myHead])
                 eo.dead = true; // v43 QNOPOCKET: a leaf-pruned pocket is a tree; heading in, she can never turn back
+            if (STRIPES_LOOP && eo.dead && stripesOn() && stripesLapNext(t))
+                eo.dead = false; // R3 STRIPES_LOOP: the next tile of the loop is never a dead end (the loop closes behind her)
             if (pfEntry && pump && PF_BONUS > 0)
                 score += PF_BONUS * (pfLastP - 2.0); // expected net length of the cycle, certain food
             if (POCKET_FACTORY && pfIn && t != holdTile && holdTile >= 0)
@@ -5752,7 +5998,7 @@ struct Bot
             }
             if (qakHead >= 0)
             {
-                bool hit = wrapDist(t, qakHead) <= QAK_DIST;
+                bool hit = wrapDist(t, qakHead) <= ((RP.queenKing && queenKingRound()) ? PM_QK_KEEP : QAK_DIST); // ROUND3 P7: wider ring round a crowned queen
                 for (int x : qakEsc)
                     hit = hit || x == t;
                 if (hit)
@@ -5762,6 +6008,8 @@ struct Bot
             eo.depth = depth;
             eo.map = mapScore(t, d);
             score += eo.map;
+            if (RP.qPark)
+                score += qparkScore(t, d, eo.dead); // ROUND3 P7 PM_QPARK
             if (KING_CORRIDOR_PENALTY > 0 && myLen >= 10)
             {
                 // big dragons stay out of 1-wide corridors: no room to dodge or turn
@@ -5821,14 +6069,15 @@ struct Bot
             score += boxEffect(t);
             if (PORTAL_LOITER_PEN > 0 && t == w.plainStep(myHead, d) && isMouth(t) && isMouth(myHead))
                 score -= PORTAL_LOITER_PEN; // pacing beside portals is what crossers crash into
-            if (RP.crowd > 0)
+            const double crowdW = (RP.crowdEarly > 0 && round < RP.kingSeedRound) ? RP.crowdEarly : RP.crowd; // ROUND3 P7 (Maze)
+            if (crowdW > 0)
             {
                 // spread out: teammate heads close to where we'd go
                 int near = 0;
                 for (auto& o : segs)
                     if (o.head && o.team == w.myTeam && o.id != w.myId && wrapDist(o.tile, t) <= 2)
                         near++;
-                score -= RP.crowd * near;
+                score -= crowdW * near;
             }
             if (feeding && target >= 0)
             {
@@ -6011,7 +6260,7 @@ struct Bot
                 r2log("qakh0", legal * 1000 + nonqb * 100 + ok);
             }
         }
-        if ((qGuard() || QNOPOCKET || QPLUG_LOOK) && bestD >= 0 && candDead[bestD])
+        if ((qGuard() || QNOPOCKET || QPLUG_LOOK || qparkQueen()) && bestD >= 0 && candDead[bestD])
         {
             // v37e QGUARD (from v37b): no dead end for the queen when an open step that survives exists
             int alt = -1;
