@@ -1,6 +1,6 @@
 # STATUS (single source of truth)
 
-Last updated: 2026-10-04 14:45 EDT. All updates to the user come from this page. Times are US Eastern.
+Last updated: 2026-10-04 16:20 EDT. All updates to the user come from this page. Times are US Eastern.
 
 ## Live and mainline
 - **Mainline = `bot/`** = v61: v51 + `QS_FROM=100` + `QSPLIT_ROOM=1`. Every new idea goes into `bot/` as a flag, default 0. No more vNN copies.
@@ -42,7 +42,8 @@ Last updated: 2026-10-04 14:45 EDT. All updates to the user come from this page.
 | v65 | QK_BIG (queen becomes the king on big maps) | **LOSS** | -6.4 pp; 2143; 5/17 maps |
 | v69 | QEARLY_PEN (queen portal/blind penalties before r100) | loss (leaning) | -4.8 pp (CI -12.9..+3.3); 2121 vs 2187; 6/17 maps; vs top-10 -1.8 vs +12.2 |
 | c1 | SPLIT_NEEDS_EXIT + LATE_HUNT + QKILL_KING | **LOSS** | 81 games: adjusted -9.9 pp, P(better) 0.03. Stillborn splits did fall (11.3 → 4.3 per game) and queen alive at r100 rose (40% → 55%), but total length vs opponent at r300 fell (x0.66). Bundle, so the culprit isn't isolated; SPLIT_NEEDS_EXIT is the suspect. |
-| m1 | Map pack: Portals/Maze queen park+crown, Stripes loop, Trophy early split, Schooltime B | **testing**, live since Sun 2:35 PM; challenge loop restricted to these 5 maps (unranked panel) | judged per map |
+| m1 | Map pack: Portals/Maze queen park+crown, Stripes loop, Trophy early split, Schooltime B | partial (95 games): overall adjusted +9.6 pp, P(better) 0.99 | Portals: queen alive at r500 0% → 90%, wins 42% → 70% (n=10). Stripes 92% (n=13). Maze and Trophy flat (n=10-15). **Schooltime worse**: wins 77% → 45% (n=11), r300 length x0.54 → PM_SCHB dropped. |
+| m2 | m1 without the Schooltime change | **testing**, live since Sun 4:15 PM; loop on Portals/Maze/Stripes/Trophy at 60 games/h | per-map check ~6:45 PM |
 
 ## What we know about why we lose (notes/newrules/LOSS_AUDIT2.md, v55/v61, 250 losses)
 - **We lose r500 tiebreaks, not fights.**
