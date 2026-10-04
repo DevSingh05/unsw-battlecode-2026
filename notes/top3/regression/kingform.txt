@@ -1,8 +1,0 @@
-Portals          v30 n=28 W=15  first>=10 us   336 them   368 | noKing@400(<=6) 3 | max@350 10.5 v 10.3 | max@400 17.8 v 16.1 | our L>=10 deaths/g 1.1
-Portals          v31 n=23 W= 8  first>=10 us   342 them   302 | noKing@400(<=6) 4 | max@350 10.0 v 14.6 | max@400 16.2 v 21.9 | our L>=10 deaths/g 0.9
-Queen Of Spades  v30 n= 4 W= 4  first>=10 us   418 them   999 | noKing@400(<=6) 3 | max@350  3.2 v  3.8 | max@400  7.2 v  5.0 | our L>=10 deaths/g 0.2
-Queen Of Spades  v31 n= 3 W= 3  first>=10 us   464 them   999 | noKing@400(<=6) 3 | max@350  3.7 v  3.3 | max@400  5.0 v  6.0 | our L>=10 deaths/g 0.3
-Schooltime       v30 n=28 W=16  first>=10 us   278 them   355 | noKing@400(<=6) 1 | max@350 18.9 v 10.8 | max@400 23.4 v 18.0 | our L>=10 deaths/g 5.6
-Schooltime       v31 n= 6 W= 3  first>=10 us   270 them   345 | noKing@400(<=6) 0 | max@350 23.0 v 13.7 | max@400 25.5 v 22.3 | our L>=10 deaths/g 4.5
-Slithery Fight   v30 n=42 W=18  first>=10 us     1 them     1 | noKing@400(<=6) 0 | max@350 26.8 v 17.3 | max@400 31.8 v 27.8 | our L>=10 deaths/g 4.3
-Slithery Fight   v31 n=19 W=12  first>=10 us     1 them     1 | noKing@400(<=6) 0 | max@350 29.8 v 20.3 | max@400 38.2 v 33.3 | our L>=10 deaths/g 2.8

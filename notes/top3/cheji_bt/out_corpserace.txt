@@ -1,2 +1,0 @@
-cvsus vs usvc 34 games; per game {'pearls': 178.2, 'cvsus': 106.1, 'usvc': 70.7, 'cvsus_sprint': 31.4, 'usvc_sprint': 0.9}  median delay {'cvsus': 3.0, 'usvc': 3.0}
-cheji vs cpeer 40 games; per game {'pearls': 115.9, 'cheji': 73.0, 'cheji_sprint': 18.4, 'cpeer': 40.5, 'cpeer_sprint': 2.0}  median delay {'cheji': 4, 'cpeer': 4}

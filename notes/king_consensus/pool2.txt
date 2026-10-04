@@ -1,6 +1,0 @@
-vs opponent
-  variants/v29            15.0/24   0.62  [0.43, 0.79]
-per map
-  schooltime               9.0/12   0.75  [0.47, 0.91]
-  portals                  6.0/12   0.50  [0.25, 0.75]
-OVERALL bot:-DKING_CONSENSUS=1: 15.0/24 = 0.625  95% [0.427, 0.788]

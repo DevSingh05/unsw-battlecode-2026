@@ -1,8 +1,0 @@
-cand portals_1000_bot_POCKET_FACTORY1_PF_EARL side A: fin 41 share450 0.24 n450 15 mx400 18 mx450 21 small450 35 2nd499 13 | spSmall360-450 55 | L>=8 deaths [(430, 9, 'feed_self'), (453, 10, 'feed_self'), (462, 11, 'feed_self')] | drops []
-v31  portals_1000_bot_POCKET_FACTORY1_PF_EARL side B: fin 32 share450 0.24 n450 23 mx400  6 mx450 20 small450 50 2nd499  9 | spSmall360-450 125 | L>=8 deaths [(460, 14, 'feed_self'), (489, 12, 'feed_self')] | drops []
-   final A 41 B 32
-v31  portals_1000_variants_v31_vs_bot_POCKET_ side A: fin 14 share450 0.09 n450 32 mx400  4 mx450  8 small450 78 2nd499 11 | spSmall360-450 132 | L>=8 deaths [(486, 8, 'chose_self')] | drops []
-cand portals_1000_variants_v31_vs_bot_POCKET_ side B: fin 22 share450 0.16 n450 20 mx400 10 mx450 16 small450 41 2nd499 15 | spSmall360-450 49 | L>=8 deaths [(440, 12, 'portal_ram_ally'), (470, 16, 'portal_ally')] | drops [(346, 12, 6), (470, 24, 17)]
-   final A 14 B 22
-cand (2 sides): r400 longest 14.0 share 0.16 | r450 units 17.5 longest 18.5 share 0.20 small 38 | r499 longest 31.5 share 0.37 total 88 | small splits 360-450 52.0 | L>=8 portal deaths 2
-v31 (2 sides): r400 longest 5.0 share 0.06 | r450 units 27.5 longest 14.0 share 0.17 small 64 | r499 longest 23.0 share 0.26 total 87 | small splits 360-450 128.5 | L>=8 portal deaths 0
