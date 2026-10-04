@@ -4327,7 +4327,15 @@ struct Bot
         if (eq < 0 || myHead < 0)
             return false;
         const int F = freeSteps(myLen);
-        const int K = F + std::max(0, myLen - 2);
+        const int baseK = F + std::max(0, myLen - 2);
+        int K = baseK;
+        if (QKILL_FUEL && myLen <= QK_FUEL_MAXLEN)
+        {
+            int pearls = 0;
+            for (int t = 0; t < w.N; ++t)
+                pearls += visible[t] && w.pearlMem[t] && occId[t] < 0;
+            K += std::min(pearls, QK_FUEL_EXTRA); // QKILL_FUEL (Codex): pearl-paid steps extend the certain-kill search
+        }
         const bool trailOk = static_cast<int>(trail.size()) == myLen;
         auto pass = [&](int t) { // may a path step through t at all (ignoring our own body timing)
             if (t < 0 || !visible[t] || freeOther[t] > 1)
@@ -4365,6 +4373,8 @@ struct Bot
                 body.push_back(-1);
         }
         std::vector<int> dirs;
+        std::vector<char> fuelEaten;
+        if (QKILL_FUEL) fuelEaten.assign(w.N, 0); // a pearl can only be eaten once along one path
         int nodes = 0;
         std::function<bool(int, int, int)> go = [&](int at, int curLen, int limit) -> bool {
             int k = static_cast<int>(dirs.size()); // steps taken so far
@@ -4387,7 +4397,8 @@ struct Bot
                     continue;
                 if (std::find(body.begin(), body.end(), v) != body.end())
                     continue; // still our body when this step is checked (tail included)
-                bool eat = visible[v] && w.pearlMem[v];
+                bool eat = visible[v] && w.pearlMem[v] && (!QKILL_FUEL || !fuelEaten[v]);
+                if (QKILL_FUEL && eat) fuelEaten[v] = 1;
                 std::deque<int> saved = body;
                 body.push_front(v);
                 int pops = (eat ? 0 : 1) + (paid ? 1 : 0);
@@ -4398,6 +4409,7 @@ struct Bot
                     return true;
                 dirs.pop_back();
                 body = saved;
+                if (QKILL_FUEL && eat) fuelEaten[v] = 0;
             }
             return false;
         };

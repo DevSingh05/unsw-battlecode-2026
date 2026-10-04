@@ -2011,3 +2011,16 @@
 #ifndef QPG_STAY
 #define QPG_STAY 1            // 1 = bans and pull also after she is crowned
 #endif
+
+// QKILL_FUEL (Codex, 2026-10-04): the certain visible-queen kill search (tryQueenKill) also counts steps paid by
+// visible pearls on the path (eating keeps length). Top teams fund ~25% of their queen kills this way.
+// Ordinary rams, queen safety and the king gate are unchanged. Unit test: codex-battlecode/tests/queen_fuel_test.cpp
+#ifndef QKILL_FUEL
+#define QKILL_FUEL 0
+#endif
+#ifndef QK_FUEL_MAXLEN
+#define QK_FUEL_MAXLEN 7      // only units up to this length extend the search
+#endif
+#ifndef QK_FUEL_EXTRA
+#define QK_FUEL_EXTRA 4       // at most this many pearl-paid extra steps
+#endif
