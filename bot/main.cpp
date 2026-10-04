@@ -73,6 +73,7 @@ struct RuntimeParams
     int mergeRound = KING_V2_MERGE_ROUND;    // R3 SPRINT_KING_PM: any-length feeding from this round (per-map on Sprint)
     int queenKing = 0;                       // ROUND3 P7: per-map QUEEN_KING (our queen is the only king from the seed round)
     int qPark = 0;                           // ROUND3 P7 PM_QPARK: 1 = Portals park (no portal crossing, home anchor), 2 = Maze home field
+    int qpLate = 0;                          // ROUND4 QPARK_GEN: 1 = the generic park starts once we have QPG_UNITS units or at round QPG_FROM (b1 play before it)
     int qkCap = 0;                           // ROUND3 P7: feeders stop feeding the queen-king at this length (0 = no cap)
     int qkFrom = 0;                          // ROUND3 P7: the per-map queen-king starts at max(kingSeedRound, qkFrom)
     double crowdEarly = 0;                   // ROUND3 P7: crowd penalty used only while round < kingSeedRound (0 = off)
@@ -97,6 +98,33 @@ void applyMapParams(const char* name, int tiles = 0)
 {
     RP = RuntimeParams{};
     std::string n(name ? name : "");
+    // ROUND4 QPARK_GEN: generic queen park + crown on one known map each (maps without a king get the unseen-map king timing)
+    auto qgen = [&]() {
+        static const struct { const char* map; int on; } G[] = {
+            {"Australia", PM_QPARK_AUSTRALIA},
+            {"Around UNSW", PM_QPARK_AUNSW},
+            {"Islands", PM_QPARK_ISLANDS},
+            {"Slithery Fight", PM_QPARK_SLITHERY},
+            {"Tower Defense", PM_QPARK_TOWER},
+            {"Devil", PM_QPARK_DEVIL},
+            {"Trophy", PM_QPARK_TROPHY},
+            {"Autarky", PM_QPARK_AUTARKY},
+            {"Prisoners Dilemma", PM_QPARK_DILEMMA},
+            {"Queen Of Spades", PM_QPARK_QOS},
+            {"Default", PM_QPARK_DEFAULT},
+            {"Stripes", PM_QPARK_STRIPES},
+            {"weakhold", PM_QPARK_WEAKHOLD},
+            {"Trauma", PM_QPARK_TRAUMA},
+            {"Schooltime", PM_QPARK_SCHOOLTIME},
+        };
+        for (auto& g : G)
+            if (g.on && n == g.map)
+            {
+                RP.queenKing = QPG_CROWN, RP.qPark = 3, RP.qkCap = QPG_QKCAP, RP.qpLate = g.on >= 2;
+                if (!RP.kingDeclare)
+                    RP.kingDeclare = 1, RP.kingSeedRound = UNK_KING_SEED, RP.feedStart = UNK_KING_FEED;
+            }
+    };
     if (SPRINT_KNOWN && isSprintMap(name))
     {
         // same high-level params the unknown-map path (UNK_KING / UNK_SMALL_RAMGUARD) gave them in v38m
@@ -123,6 +151,7 @@ void applyMapParams(const char* name, int tiles = 0)
             if (PM_MAZE_CR > 0 || (PM_MAZE_CR < 0 && PM_QPARK_MAZE))
                 RP.crowdEarly = PM_MAZE_CR > 0 ? PM_MAZE_CR : PM_MAZE_CR_AUTO;
         }
+        qgen();
         return;
     }
     auto set = [&](const char* map, int rg, int kd, int ks, int ss, int fs) {
@@ -203,6 +232,7 @@ void applyMapParams(const char* name, int tiles = 0)
     // notes/top3/PLAN.txt A: on king maps the top teams stop splitting ~r330 and consolidate
     if (LATE_SPLIT_KING_MAPS > 0 && RP.kingRace && RP.lateSplitRound > LATE_SPLIT_KING_MAPS)
         RP.lateSplitRound = LATE_SPLIT_KING_MAPS;
+    qgen();
 }
 
 constexpr int INF = 1 << 29;
@@ -959,6 +989,8 @@ struct Bot
                 }
                 if (UNK_SMALL_RAMGUARD && w.N <= 750)
                     RP.ramGuard = 2;
+                if (QPARK_UNK && UNK_KING)
+                    RP.queenKing = QPG_CROWN, RP.qPark = 3, RP.qkCap = QPG_QKCAP, RP.qpLate = QPARK_UNK >= 2; // ROUND4: generic queen park on unseen maps
             }
             // a full team has nothing left to gain from more foragers: crown early
             if (UNK_KING && units >= w.unitLimit - 2)
@@ -2560,7 +2592,155 @@ struct Bot
     // Portals (qPark 1): she never crosses a portal and holds a spot far from every portal mouth/exit.
     // Maze (qPark 2): she stays inside the home field (frame x < PM_MAZE_QX).
     bool qparkQueen() const { return RP.qPark > 0 && amQueen(); }
-    bool qparkNoDive() const { return qparkQueen() && (RP.qPark == 1 || PM_MAZE_QSTAY || round < RP.kingSeedRound); }
+    bool qparkNoDive() const { return qparkQueen() && (RP.qPark == 1 || (RP.qPark == 3 ? qpgOn() : (PM_MAZE_QSTAY || round < RP.kingSeedRound))); }
+    // ROUND4 QPARK_GEN (qPark 3)
+    bool qpStarted = false; // sticky; set in qparkPrep
+    int qpUnits0 = 0;       // our unit count when the park started
+    // economy rescue: the team is (nearly) gone before the feed round -> she forages (bans stay, no pull)
+    bool qpRescue() const { return qpStarted && units <= QPG_RESCUE_UNITS && units < qpUnits0 && round < qkFeedRound(); }
+    bool qpgOn() const { return RP.qPark == 3 && qpStarted && (QPG_STAY || round < qkFeedRound()); }
+    int qpSpawn = -1, qpPlanRound = -1000;
+    bool qpWeak = false;
+    std::vector<char> qpNarrow; // 1-wide corridor / enemy-half tiles (soft)
+    void qparkGenPlan()
+    {
+        if (qpSpawn < 0)
+            qpSpawn = myHead;
+        const bool unk = !w.known;
+        if (qpAnchor >= 0 && (!unk || round >= QPG_REPLAN_TO || round - qpPlanRound < QPG_REPLAN_EVERY))
+            return;
+        qpPlanRound = round;
+        if (POCKET_FACTORY)
+            pfCompute();
+        auto plain = [&](int u, int d) { int v = step(u, d); return (v >= 0 && v != u && v == w.plainStep(u, d)) ? v : -1; };
+        auto seen = [&](int u) { return !unk || w.lastSeen[u] >= 0; };
+        std::vector<int> comp{qpSpawn}, in(w.N, 0), dng(w.N, -1), q;
+        in[qpSpawn] = 1;
+        for (size_t i = 0; i < comp.size(); i++)
+            for (int d = 0; d < 4; d++)
+            {
+                int v = plain(comp[i], d);
+                if (v >= 0 && !in[v] && seen(v) && wrapDist(v, qpSpawn) <= QPG_HOME)
+                    in[v] = 1, comp.push_back(v);
+            }
+        const int es = w.sym > 0 ? w.mirror(qpSpawn) : -1;
+        qpNarrow.assign(w.N, 0);
+        for (int u : comp)
+        {
+            int deg = 0, mask = 0;
+            for (int d = 0; d < 4; d++)
+                if (plain(u, d) >= 0)
+                    deg++, mask |= 1 << d;
+            bool corr = deg <= 1 || (deg == 2 && (mask == 5 || mask == 10));
+            bool enemy = es >= 0 && es != qpSpawn && wrapDist(u, es) < wrapDist(u, qpSpawn);
+            if (corr || enemy)
+                qpNarrow[u] = 1;
+            if (corr || enemy || isMouth(u) || (!portalExit.empty() && portalExit[u]) || (!pfDepth.empty() && pfDepth[u] > 0))
+                dng[u] = 0, q.push_back(u);
+        }
+        for (size_t i = 0; i < q.size(); i++)
+            for (int d = 0; d < 4; d++)
+            {
+                int v = plain(q[i], d);
+                if (v >= 0 && in[v] && dng[v] < 0)
+                    dng[v] = dng[q[i]] + 1, q.push_back(v);
+            }
+        auto open2 = [&](int u) {
+            int n = 0;
+            for (int d = 0; d < 4; d++)
+            {
+                int v = plain(u, d);
+                if (v < 0 || !seen(v))
+                    continue;
+                n++;
+                for (int e = 0; e < 4; e++)
+                {
+                    int x = e != (d + 2) % 4 ? plain(v, e) : -1;
+                    if (x >= 0 && seen(x))
+                        n++;
+                }
+            }
+            return n;
+        };
+        auto blockOf = [&](int u, int* b) {
+            int e = plain(u, 1), so = plain(u, 2);
+            if (e < 0 || so < 0)
+                return false;
+            int se = plain(e, 2);
+            if (se < 0 || plain(so, 1) != se)
+                return false;
+            b[0] = u, b[1] = e, b[2] = se, b[3] = so;
+            return true;
+        };
+        int bestA = -1;
+        double bestS = -1e18;
+        for (int u : comp)
+        {
+            int b[4];
+            if (!blockOf(u, b))
+                continue;
+            int o = 0, g = QPG_GCAP, hd = 0, routes = 0;
+            bool ok = true;
+            for (int k = 0; k < 4; k++)
+            {
+                int x = b[k];
+                if (!in[x] || dng[x] == 0)
+                    ok = false;
+                o += open2(x) >= 16 ? 1 : 0;
+                g = std::min(g, dng[x] < 0 ? QPG_GCAP : dng[x]);
+                hd = std::max(hd, wrapDist(x, qpSpawn));
+                // the two ring tiles this corner touches: roomy exits
+                for (int d = 0; d < 4; d++)
+                {
+                    int r = plain(x, d);
+                    if (r >= 0 && r != b[0] && r != b[1] && r != b[2] && r != b[3] && in[r] && dng[r] != 0 && open2(r) >= 10)
+                        routes++;
+                }
+            }
+            if (!ok || routes < 2)
+                continue;
+            double food = 0;
+            for (int v : comp)
+                if (wrapDist(v, u) <= QPG_RAD + 1 && dng[v] != 0)
+                    food += w.rate(v);
+            double s = QPG_WG * g + QPG_WO * o - QPG_WH * hd + QPG_WF * std::min(1.0, food) + 0.3 * routes;
+            if (s > bestS)
+                bestS = s, bestA = u;
+        }
+        qpWeak = bestA < 0;
+        if (qpWeak)
+        {
+            // no open block in view: hold the known tile furthest from danger, nearest her spawn
+            int bg = -2;
+            for (int u : comp)
+            {
+                int g = dng[u] < 0 ? 99 : dng[u];
+                if (g > bg || (g == bg && wrapDist(u, qpSpawn) < wrapDist(bestA, qpSpawn)))
+                    bg = g, bestA = u;
+            }
+        }
+        if (dbg)
+            std::fprintf(dbg, "QPG r%d anchor (%d,%d) weak=%d score=%.1f comp=%zu\n", round, bestA % w.W, bestA / w.W, qpWeak ? 1 : 0, bestS, comp.size());
+        if (bestA == qpAnchor)
+            return;
+        qpAnchor = bestA;
+        qpDist.assign(w.N, 99);
+        q.assign(1, bestA);
+        qpDist[bestA] = 0;
+        {
+            int b[4];
+            if (!qpWeak && blockOf(bestA, b))
+                for (int k = 1; k < 4; k++)
+                    qpDist[b[k]] = 0, q.push_back(b[k]);
+        }
+        for (size_t i = 0; i < q.size(); i++)
+            for (int d = 0; d < 4; d++)
+            {
+                int v = plain(q[i], d);
+                if (v >= 0 && qpDist[v] == 99)
+                    qpDist[v] = qpDist[q[i]] + 1, q.push_back(v);
+            }
+    }
     int qpAnchor = -1, qpHomeLeft = -1;
     bool qpFlee = false;
     std::vector<int> qpDist;
@@ -2574,6 +2754,16 @@ struct Bot
                 qpFlee = true; // an enemy head in reach: normal queen evasion decides
         if (qpHomeLeft < 0)
             qpHomeLeft = (myHead % w.W) * 2 < w.W ? 1 : 0;
+        if (RP.qPark == 3)
+        {
+            if (qpSpawn < 0)
+                qpSpawn = myHead;
+            if (!qpStarted && (!RP.qpLate || units >= QPG_UNITS || round >= QPG_FROM))
+                qpStarted = true, qpUnits0 = units;
+            if (qpStarted)
+                qparkGenPlan();
+            return;
+        }
         if (RP.qPark != 1 || qpAnchor >= 0)
             return;
         // portal-free component of her head; anchor = the tile furthest from every portal mouth / exit
@@ -2665,6 +2855,8 @@ struct Bot
             return false;
         if (RP.qPark == 1)
             return t != w.plainStep(from, d) || w.gmax[t] > 0 || (!pfDepth.empty() && pfDepth[t] > 0);
+        if (RP.qPark == 3)
+            return qpgOn() && (t != w.plainStep(from, d) || (!pfDepth.empty() && pfDepth[t] > pfDepth[from]));
         if (!(PM_MAZE_QSTAY || round < RP.kingSeedRound))
             return false;
         int x = t % w.W;
@@ -2707,6 +2899,32 @@ struct Bot
             }
             else if (qpAnchor >= 0)
                 s -= PM_QP_PULL_FED * std::max(0, qpDist[t] - 3 - myLen / 4);
+        }
+        else if (RP.qPark == 3)
+        {
+            if (!qpgOn())
+                return 0.0;
+            if (t != w.plainStep(myHead, d))
+            {
+                if (!qpFlee || myLen >= 6)
+                    dead = true, s -= PM_QP_PEN; // never through a portal (blind exit, vaults)
+                else
+                    s -= PM_QP_FLEEPEN;
+            }
+            else if (!pfDepth.empty() && pfDepth[t] > pfDepth[myHead])
+                dead = true, s -= PM_QP_PEN; // never into / deeper into a pocket
+            for (auto& o : segs)
+                if (o.head && o.team == w.myTeam && o.id != w.myId && wrapDist(o.tile, t) <= 1)
+                    s -= PM_QP_ALLY;
+            if (qpRescue())
+                return s;
+            if (!qpNarrow.empty() && qpNarrow[t] && !qpFlee)
+                s -= QPG_NARROW;
+            if (qpAnchor >= 0 && !qpFlee && qpDist[t] < 99)
+            {
+                bool pre = round < qkFeedRound();
+                s -= (pre ? QPG_PULL : PM_QP_PULL_FED) * std::max(0, qpDist[t] - QPG_RAD - (pre ? 0 : 1) - myLen / 4);
+            }
         }
         else if (PM_MAZE_QSTAY || round < RP.kingSeedRound)
         {
@@ -2757,7 +2975,7 @@ struct Bot
     bool noVolSplit() const { return egOn(); }
     void updateQsPhase()
     {
-        if (!qsOn && (round >= QS_FROM || (QS_UNITS > 0 && units >= QS_UNITS) || (RP.qPark == 1 && amQueen())))
+        if (!qsOn && (round >= QS_FROM || (QS_UNITS > 0 && units >= QS_UNITS) || (RP.qPark == 1 && amQueen()) || (QPG_SAFE0 && RP.qPark == 3 && qpStarted && amQueen())))
             qsOn = true;
     }
     // QUEEN_KING: on king maps our queen is the only king from the seed round while she is alive

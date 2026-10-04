@@ -232,3 +232,41 @@ Built but left out of the candidate:
 Known risk on Portals and Maze: once the queen is crowned all length goes into her, so a late queen death loses both tiebreaks.
 
 Build-cache trap: `unswbc` does not rebuild when only `params.hpp` changes in an existing directory. Stage each flag set into a fresh directory name.
+
+## Round 4 queen park (builder, 4 Oct evening)
+
+The Portals/Maze park is generalised in `bot/` as `RP.qPark == 3` (QPARK_GEN, main.cpp `qparkGenPlan` / `qparkScore` / `qparkBan`, params.hpp "ROUND4 QPARK_GEN"). From what the queen knows (full map when known, seen tiles on an unseen map, re-picked every 6 rounds until r60) she picks a fully open 2x2 block within 9 tiles of her spawn, scored by distance from danger (portal mouths/exits, pockets, 1-wide corridors, the enemy half), openness, >= 2 roomy exits, nearness to spawn and food within reach. She roams within 4 (+L/4) walking steps of it and eats what spawns there, never crosses a portal or enters a pocket (hard, also inside sprints; a visible enemy head within 5 lifts the portal rule at L<=5), keeps the normal early economy (QS_FROM / early splits unchanged; `QPG_SAFE0=1` gives Portals-style QUEEN_SAFE from r0), and is crowned at the king seed round (`RP.queenKing`, `QPG_CROWN=0` = park only). Maps without a king (Devil, Trophy) get the unseen-map king timing (seed 250 / feed 300). If the team collapses (<= 2 units, fewer than at park start) before the feed round she forages again. Flag value 1 = parked from r0, 2 = "late park" (b1 play until 8 units or r60).
+
+Flags, all default 0: `PM_QPARK_AUSTRALIA/AUNSW/ISLANDS/SLITHERY/TOWER/DEVIL/TROPHY/AUTARKY/DILEMMA/QOS/DEFAULT/STRIPES/WEAKHOLD/TRAUMA/SCHOOLTIME`, `QPARK_UNK` (unseen maps). Flags off: `bot/` matches `variants/b1` fingerprints (sandbox seed 1000, both sides, Australia/Devil/Portals/Maze). CPU max 34.1M (Australia, flags on).
+
+Local paired sandbox games vs `variants/b1` (both sides, seeds 2000-2005, 12 games per map; the b1 column is the opponent in the same games). Mirror self-play, so only the mechanism columns count; "mode" is the flag value tested.
+
+| map | mode | n | queen alive seed (us/b1) | alive r500 | queen len r500 | total r100 | total r300 | longest r500 | eliminated | verdict |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Australia | 1 | 12 | 11 / 0 | 2 / 0 | 10.8 / 0 | 105.8 / 78.8 | 196.5 / 103.8 | 48.4 / 38.8 | 0 / 0 | **q1** (she still dies late: rammed at L20-25 after r350 in 7 of 12) |
+| Around UNSW | 1 | 12 | 10 / 1 | 7 / 1 | 37.9 / 1 | 116.6 / 132.6 | 163.1 / 176.4 | 54.3 / 50.7 | 0 / 0 | **q1** (r100 total -12%: watch) |
+| Islands | 1 | 12 | 8 / 7 | 2 / 0 | 13.5 / 0 | 90.4 / 101.7 | 125.4 / 116.9 | 39 / 40.9 | 0 / 0 | off: no seed-round gain, r100 -11%, crowned queen rammed at L60+ |
+| Slithery Fight | 1 | 12 | 12 / 7 | 6 / 1 | 29.8 / 0.5 | 140.2 / 134.9 | 127.6 / 157.9 | 43.4 / 74 | 0 / 0 | **q1** (longest dragon falls: all length goes into her) |
+| Tower Defense | 1 | 12 | 11 / 4 | 9 / 1 | 6 / 0.2 | 23.8 / 19 | 5.7 / 36.3 | 7.4 / 17.2 | 1 / 7 | **q1** (eliminations 1 v 7; fed little, L6) |
+| Autarky | 1 | 12 | 10 / 5 | 5 / 5 | 13.7 / 4.9 | 63.1 / 62.3 | 90.4 / 76.4 | 20.3 / 33.5 | 2 / 1 | off: alive at r500 unchanged (seed round is r380) |
+| Queen Of Spades | 1 | 12 | 5 / 0 | 3 / 0 | 3.9 / 0 | 26.1 / 25.4 | 22 / 35.5 | 8.5 / 14.2 | 4 / 2 | off: eliminations up, r300 -38% |
+| weakhold | 1 | 12 | 12 / 11 | 12 / 10 | 7.7 / 3.3 | 20.8 / 20.8 | 29.5 / 29.7 | 16.2 / 17.6 | 0 / 1 | **q1** (small, no cost) |
+| Trauma | 1 | 12 | 12 / 12 | 12 / 12 | 42.4 / 51 | 62.4 / 67.1 | 109.5 / 107.9 | 42.4 / 51 | 0 / 0 | off: the trauma module already keeps and crowns her; the pull costs her 9 length |
+| Schooltime | 1 | 12 | 12 / 12 | 12 / 12 | 3 / 3 | 90.9 / 90.9 | 188.4 / 180.2 | 46.2 / 55.4 | 0 / 0 | off: inert for the queen, longest -9 |
+| Devil | 2 | 12 | 4 / 3 | 3 / 3 | 1.2 / 1.4 | 34.6 / 46.7 | 4.3 / 30.6 | 1.6 / 3.7 | 8 / 4 | off (mode 1 pilot: r100 total 17 v 74, 4/4 eliminated) |
+| Trophy | 2 | 12 | 2 / 1 | 2 / 1 | 0.9 / 0.5 | 20.1 / 19.2 | 0 / 0 | 2.2 / 2.1 | 6 / 6 | off (mode 1 pilot: r100 total 1 v 34; mode 2 = b1) |
+| Prisoners Dilemma | 2 | 12 | 9 / 0 | 0 / 0 | 0 / 0 | 5 / 10 | 3 / 47.2 | 0 / 18.9 | 12 / 0 | off: the queen must forage here; parked = eliminated |
+| Default | 2 | 12 | 2 / 2 | 2 / 2 | 0.8 / 1.2 | 35.4 / 36.2 | 46.3 / 30.3 | 7.5 / 8.1 | 4 / 6 | off (mode 1 pilot: queen dead 3/4 by r100) |
+| Stripes | 2 | 12 | 0 / 0 | 0 / 0 | 0 / 0 | 26.9 / 26.9 | 13.8 / 13.8 | 11.6 / 11.6 | 4 / 4 | off (mode 1 pilot: r100 total 11 v 51, 4/4 eliminated; the r13 vault dive is the Stripes economy) |
+
+Unseen maps (`QPARK_UNK`, 16 maps from maps/real_gen/tune, 1 seed, both sides, 32 games):
+
+| build | queen alive r250 (us/b1) | alive r500 | queen len r500 | total r100 | total r300 | longest r500 | eliminated |
+|---|---|---|---|---|---|---|---|
+| QPARK_UNK=1 (crowned) | 15 / 8 | 11 / 6 | 4.2 / 0.8 | 97.6 / 96.9 | 121.8 / 127.6 | 33.9 / 43.1 | 1 / 4 |
+| QPARK_UNK=2 (late park, crowned) | 16 / 7 | 11 / 6 | 4.6 / 0.8 | 98.7 / 99.2 | 122.7 / 126.8 | 31.7 / 40.8 | 2 / 2 |
+| QPARK_UNK=1 QPG_CROWN=0 (park only) | 15 / 9 | 11 / 6 | 1.5 / 0.8 | 97.8 / 97.4 | 117.4 / 128.2 | 37.2 / 40.4 | 1 / 4 |
+
+Reading: on unseen maps the park nearly doubles queen survival at no r100 cost, but the crown does not work there: feeders rarely reach a queen parked at L4 on a map they do not know (her r500 length stays about 4), while she blocks every other king, so our longest dragon falls 43 -> 34. 10 of 32 games lose > 10% r100 total, mostly small melee maps where the whole team dies and the b1 queen rebuilds it from scratch while ours sits at L4 (rt2028_17: 4 v 80). Not staged; for the Qualifier it needs (a) crown only when a feeder has actually reached her, or a feed path check, and (b) a real unseen-map A/B (unseen_eval real/realhold/blind17), not mirror play.
+
+Staged server candidate: scratch `r4/stage/q1/` = `bot/` with `PM_QPARK_AUSTRALIA=1 PM_QPARK_AUNSW=1 PM_QPARK_SLITHERY=1 PM_QPARK_TOWER=1 PM_QPARK_WEAKHOLD=1`. Judge each flag on its own map's server games: queen alive at the seed round and r500, r100 total length not below b1, and (Slithery, Around UNSW) wins, since the longest-dragon tiebreak moves the other way. Scripts and replays: scratch `r4/qpark/` (`qp.py`, `merge.py`, `mkstage.sh`, `ident.sh`, `mech/`).

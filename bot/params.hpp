@@ -1903,3 +1903,111 @@
 #ifndef PM_MAZE_QKCAP
 #define PM_MAZE_QKCAP 50      // Maze: same (she still passes it on pearls already down and the r400 field respawn)
 #endif
+
+// ---- ROUND4 QPARK_GEN: generic queen park (RP.qPark 3). The queen picks a home block near her spawn from what she
+// knows (open 2x2 with >= 2 roomy exits, far from portal mouths/exits, pockets, 1-wide corridors and the enemy half),
+// stays within QPG_RAD of it (eats what spawns there, early splits unchanged), never crosses a portal or enters a
+// pocket, and is crowned at the king seed round (RP.queenKing). One flag per known map + QPARK_UNK for unseen maps.
+// Flag value 1 = parked from r0; 2 = late park (b1 play until QPG_UNITS units or round QPG_FROM, then park).
+#ifndef PM_QPARK_AUSTRALIA
+#define PM_QPARK_AUSTRALIA 0    // Australia
+#endif
+#ifndef PM_QPARK_AUNSW
+#define PM_QPARK_AUNSW 0    // Around UNSW
+#endif
+#ifndef PM_QPARK_ISLANDS
+#define PM_QPARK_ISLANDS 0    // Islands
+#endif
+#ifndef PM_QPARK_SLITHERY
+#define PM_QPARK_SLITHERY 0    // Slithery Fight
+#endif
+#ifndef PM_QPARK_TOWER
+#define PM_QPARK_TOWER 0    // Tower Defense
+#endif
+#ifndef PM_QPARK_DEVIL
+#define PM_QPARK_DEVIL 0    // Devil
+#endif
+#ifndef PM_QPARK_TROPHY
+#define PM_QPARK_TROPHY 0    // Trophy
+#endif
+#ifndef PM_QPARK_AUTARKY
+#define PM_QPARK_AUTARKY 0    // Autarky
+#endif
+#ifndef PM_QPARK_DILEMMA
+#define PM_QPARK_DILEMMA 0    // Prisoners Dilemma
+#endif
+#ifndef PM_QPARK_QOS
+#define PM_QPARK_QOS 0    // Queen Of Spades
+#endif
+#ifndef PM_QPARK_DEFAULT
+#define PM_QPARK_DEFAULT 0    // Default
+#endif
+#ifndef PM_QPARK_STRIPES
+#define PM_QPARK_STRIPES 0    // Stripes
+#endif
+#ifndef PM_QPARK_WEAKHOLD
+#define PM_QPARK_WEAKHOLD 0    // weakhold
+#endif
+#ifndef PM_QPARK_TRAUMA
+#define PM_QPARK_TRAUMA 0    // Trauma
+#endif
+#ifndef PM_QPARK_SCHOOLTIME
+#define PM_QPARK_SCHOOLTIME 0    // Schooltime
+#endif
+#ifndef QPARK_UNK
+#define QPARK_UNK 0           // unseen maps: generic park from the first turn the map is known to be unseen
+#endif
+#ifndef QPG_UNITS
+#define QPG_UNITS 8           // flag value 2 (late park): she plays b1 until we have this many units...
+#endif
+#ifndef QPG_FROM
+#define QPG_FROM 60           // ...or this round, then parks
+#endif
+#ifndef QPG_HOME
+#define QPG_HOME 9            // the home block is searched within this many tiles (torus manhattan) of her spawn
+#endif
+#ifndef QPG_RAD
+#define QPG_RAD 4             // she may roam this many walking steps (+ L/4) from the block before the pull starts
+#endif
+#ifndef QPG_PULL
+#define QPG_PULL 25.0         // per step beyond the radius (before she is fed); PM_QP_PULL_FED once fed
+#endif
+#ifndef QPG_NARROW
+#define QPG_NARROW 40.0       // step onto a 1-wide corridor tile or an enemy-half tile
+#endif
+#ifndef QPG_GCAP
+#define QPG_GCAP 4            // distance to danger counts up to this
+#endif
+#ifndef QPG_WG
+#define QPG_WG 3.0            // block score: per step of distance to danger
+#endif
+#ifndef QPG_WO
+#define QPG_WO 1.5            // per block tile on fully open ground
+#endif
+#ifndef QPG_WH
+#define QPG_WH 0.6            // per tile from her spawn
+#endif
+#ifndef QPG_WF
+#define QPG_WF 8.0            // per pearl/round spawning within the roam radius (capped at 1.0)
+#endif
+#ifndef QPG_SAFE0
+#define QPG_SAFE0 0           // 1 = QUEEN_SAFE rules from r0 (as on Portals); 0 = she keeps the early economy until QS_FROM (as on Maze)
+#endif
+#ifndef QPG_REPLAN_TO
+#define QPG_REPLAN_TO 60      // unseen maps: the block is re-picked every QPG_REPLAN_EVERY rounds until this round
+#endif
+#ifndef QPG_REPLAN_EVERY
+#define QPG_REPLAN_EVERY 6
+#endif
+#ifndef QPG_QKCAP
+#define QPG_QKCAP 0           // feeders stop feeding the crowned queen at this length (0 = no cap)
+#endif
+#ifndef QPG_RESCUE_UNITS
+#define QPG_RESCUE_UNITS 2    // with this few units (and fewer than when the park started) before the feed round she forages again (bans stay)
+#endif
+#ifndef QPG_CROWN
+#define QPG_CROWN 1           // 1 = the parked queen is crowned at the seed round (RP.queenKing); 0 = park only, normal kings
+#endif
+#ifndef QPG_STAY
+#define QPG_STAY 1            // 1 = bans and pull also after she is crowned
+#endif
