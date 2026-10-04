@@ -1657,3 +1657,112 @@
 #ifndef LH_SWEEP_MEM
 #define LH_SWEEP_MEM 120      // sweep the enemy spawns only while her last sighting is younger than this
 #endif
+
+// ================= ROUND 2 (notes/newrules/ROUND2.md "Built flags"). All default 0 = v61. =================
+// ---- P1: kill the lone enemy queen (use together with LATE_HUNT=1)
+// QKILL_KING=1: a king in the feed phase also takes a certain visible queen-kill (tryQueenKill). v61 returned from
+// tryRam() on `feedPhase() && iAmKing()` before the QKILL call, so L>=8 self-crowned campers and the real king refused
+// free kills (985968 r419: L8 unit, lone queen 5 steps away, K=8; 1007417: L26 king). A king of L >= QKK_KEEP_LEN
+// skips it only when our queen was seen alive within QKK_ALIVE_MEM rounds and is longer than the target looks.
+#ifndef QKILL_KING
+#define QKILL_KING 0
+#endif
+#ifndef QKK_KEEP_LEN
+#define QKK_KEEP_LEN 20
+#endif
+#ifndef QKK_ALIVE_MEM
+#define QKK_ALIVE_MEM 30
+#endif
+// LH_FINISH=1 (needs LATE_HUNT=1 for the tracker): local finisher, independent of our queen's state. A non-queen,
+// non-king unit that itself saw her within LHF_MEM rounds at max length <= LHF_QLEN, with no other enemy head in
+// view, from round LHF_FROM, gets the LATE_HUNT pull to her (her threat zone ignored). Not lhOn(): no relay changes.
+#ifndef LH_FINISH
+#define LH_FINISH 0
+#endif
+#ifndef LHF_FROM
+#define LHF_FROM 300
+#endif
+#ifndef LHF_QLEN
+#define LHF_QLEN 4
+#endif
+#ifndef LHF_MEM
+#define LHF_MEM 8
+#endif
+// LH_LONG=1: while this unit's hunt pull is on, no growth split leaves the parent below LHL_KEEP (an L2 hunter has
+// kamikaze reach 1: Devil 985964 had 582 sighting turns and 0 killable), and hunters shorter than LHL_SMALL pull at
+// LHL_SMALL_MULT x LH_W so they still eat on the way.
+#ifndef LH_LONG
+#define LH_LONG 0
+#endif
+#ifndef LHL_KEEP
+#define LHL_KEEP 6
+#endif
+#ifndef LHL_SMALL
+#define LHL_SMALL 5
+#endif
+#ifndef LHL_SMALL_MULT
+#define LHL_SMALL_MULT 0.5
+#endif
+// R2_DEBUG=1: "LOG r2 <event> r.. id.. L.. v.." lines for local mechanism counts (never on the server)
+#ifndef R2_DEBUG
+#define R2_DEBUG 0
+#endif
+// ---- P3: allies must not seal our queen
+// QAK_HARD=1: an ally of length >= QAKH_LEN that sees our queen's head marks a step as "queen-blocking" when it ends
+// within QAKH_DIST of her head without moving away from her, or cuts her free neighbours to <= QAKH_MIN (QEXIT_KEEP's
+// count: bodies included). A marked best step is replaced by the best unmarked step that is unthreatened, not a dead
+// end and survives QUEEN_VETO_DEPTH (same shape as the QGUARD veto); free-step paths through marked tiles are dropped.
+// A long body follows its head, so keeping the head out keeps the body off her exits (Maze 985232, PD 984268).
+#ifndef QAK_HARD
+#define QAK_HARD 0
+#endif
+#ifndef QAKH_LEN
+#define QAKH_LEN 8
+#endif
+#ifndef QAKH_DIST
+#define QAKH_DIST 3
+#endif
+#ifndef QAKH_MIN
+#define QAKH_MIN 1
+#endif
+// QPLUG_LOOK=1: the queen follows a 1-wide corridor behind her step for up to QPL_DEPTH tiles (10: a long queen dies deep in a corridor, Maze 985232); if it is plugged by
+// another dragon's body that will still be there when she arrives, the step counts as a dead end (vetoed when an open
+// surviving step exists). Body plugs only: QEXIT_LOOK (all low-exit tiles) lost on the server.
+#ifndef QPLUG_LOOK
+#define QPLUG_LOOK 0
+#endif
+#ifndef QPL_DEPTH
+#define QPL_DEPTH 10
+#endif
+#ifndef QPL_FROM
+#define QPL_FROM 20
+#endif
+// ---- P5: stillborn children. No new flag for the split half: use SPLIT_NEEDS_EXIT=1 (line ~141). Local split-site
+// counts (R2_DEBUG, 24 games): the growth split makes 88% of all children that die within a round of birth, and 91% of
+// growth splits made with no tail exit are stillborn (7% with one).
+// ---- P6: defensive reach and endgame
+// KREACH_MINLEN / KREACH_QUEEN: who gets the KREACH kamikaze reach when KREACH=1 (defaults = the old behaviour:
+// L>=5 paid tier, queen full). Staged test: KREACH=1 KREACH_MINLEN=8 KREACH_QUEEN=0 KR_CAP=6.
+#ifndef KREACH_MINLEN
+#define KREACH_MINLEN 5
+#endif
+#ifndef KREACH_QUEEN
+#define KREACH_QUEEN 1
+#endif
+// ENDGAME_GUARD=<round> (0 = off; test 470): from that round our queen and our king (iAmKing, L >= KING_MIN_LEN)
+// protect the lead: no voluntary splits; every visible enemy head is given kamikaze reach K(Lv) (unseen tail: Lv >=
+// EG_UNSEEN_LEN); tiles within K+1 cost EG_W per step of overlap, and a best step inside K is replaced by the best
+// step outside it that is unthreatened, not a dead end and survives QUEEN_VETO_DEPTH. Free-step paths obey the same.
+// EG_NOSWAP=<round> (0 = off): from that round a king does not take the king-escape reverse split (loses 2 length).
+#ifndef ENDGAME_GUARD
+#define ENDGAME_GUARD 0
+#endif
+#ifndef EG_UNSEEN_LEN
+#define EG_UNSEEN_LEN 6
+#endif
+#ifndef EG_W
+#define EG_W 40.0
+#endif
+#ifndef EG_NOSWAP
+#define EG_NOSWAP 0
+#endif

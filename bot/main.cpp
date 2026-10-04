@@ -2070,6 +2070,8 @@ struct Bot
     // game by a dragon that hasn't heard of any king (a small chance per turn so
     // a whole swarm doesn't declare at once); steps down if it hears a bigger one.
     bool kingSelf = false;
+    bool candQb[4] = {false, false, false, false}; // ROUND2 P3 QAK_HARD (per first step, read by tryFreePath)
+    bool candEg[4] = {false, false, false, false}; // ROUND2 P6 ENDGAME_GUARD
     struct KingInfo
     {
         int id, len, tile, dir, round;
@@ -2357,9 +2359,28 @@ struct Bot
                     lhSpawns.push_back(t);
             }
     }
+    // ROUND2 P1 LH_FINISH: local finisher on a small lone enemy queen I saw myself (our queen's state is irrelevant)
+    bool lhFinishPrep()
+    {
+        if (!LATE_HUNT || amQueen() || myHead < 0 || iAmKing() || round < LHF_FROM || qsTheirDead || qsSawTile < 0 ||
+            round - qsSawRound > LHF_MEM || eqMaxLen <= 0 || eqMaxLen > LHF_QLEN || qsTheirTile < 0 ||
+            qsTheirRound <= eqStaleRound)
+            return false;
+        for (auto& s : segs)
+            if (s.head && s.team != w.myTeam && s.id > 1)
+                return false; // another enemy head in view: not a mop-up
+        lhActive = eqHuntOn = true;
+        eqHuntTile = qsTheirTile;
+        return true;
+    }
     void lhPrep()
     {
         lhActive = false;
+        if (LH_FINISH && !lhOn() && lhFinishPrep())
+        {
+            r2log("lhf", eqHuntTile);
+            return;
+        }
         if (!lhOn() || myHead < 0 || iAmKing() || units < LH_MIN_UNITS)
             return;
         bool smallQ = eqMaxLen > 0 && eqMaxLen <= LH_SMALLQ;
@@ -2540,7 +2561,12 @@ struct Bot
             qRegion = static_cast<int>(q.size());
     }
     // ONEKING is not ported to v37e: no voluntary-split ban beyond QGUARD
-    bool noVolSplit() const { return false; }
+    // ROUND2 P6 ENDGAME_GUARD: our queen and our king protect the lead from that round
+    bool egOn() const
+    {
+        return ENDGAME_GUARD > 0 && round >= ENDGAME_GUARD && (amQueen() || (myLen >= KING_MIN_LEN && iAmKing()));
+    }
+    bool noVolSplit() const { return egOn(); }
     void updateQsPhase()
     {
         if (!qsOn && (round >= QS_FROM || (QS_UNITS > 0 && units >= QS_UNITS)))
@@ -2740,6 +2766,7 @@ struct Bot
         int t = step(myHead, bestD);
         if (t < 0 || visible[t] || t == w.plainStep(myHead, bestD))
             return false;
+        r2log("spH", 2);
         out += "SPLIT 2\n";
         pending.clear();
         pendingSplit = true;
@@ -3194,7 +3221,7 @@ struct Bot
                     paidReach = std::min(F + 2, F + std::max(0, Lv - 2));
                 }
             }
-            if (KREACH && (myLen >= 5 || amQueen()))
+            if (KREACH && (myLen >= KREACH_MINLEN || (KREACH_QUEEN && amQueen())))
             {
                 // v37a step 3: kamikaze reach K(Lv) = F + (Lv-2) (a head-on kills both, so paid steps are free for it)
                 int Lv = enemyVisibleLength(s.id);
@@ -3956,17 +3983,48 @@ struct Bot
         return false;
     }
 
+    // ROUND2 debug: one LOG line per event (R2_DEBUG=1 builds only; parsed from local replays)
+    void r2log(const char* what, int v = 0)
+    {
+        if (R2_DEBUG)
+            out += std::string("LOG r2 ") + what + " r" + std::to_string(round) + " id" + std::to_string(w.myId) + " L" +
+                   std::to_string(myLen) + " v" + std::to_string(v) + "\n";
+    }
+    // ROUND2 P1 QKILL_KING: a long king keeps itself only when our queen is known alive and longer than the target looks
+    bool qkkAllowed() const
+    {
+        if (myLen < QKK_KEEP_LEN)
+            return true;
+        int ours = 0, theirs = 0;
+        for (auto& s : segs)
+            if (s.id <= 1)
+                (s.team == w.myTeam ? ours : theirs)++;
+        if (ours == 0 && round - qsOurRound <= QKK_ALIVE_MEM)
+            ours = std::max(qsOurLen, 1);
+        return !(ours > 0 && ours > theirs);
+    }
     // Try a head-on ram at distance 1 or 2. Returns true if we emitted it.
     bool tryRam()
     {
         if (queenSafe())
             return false; // the queen never trades herself
         if (LATE_HUNT && LH_KING_KILL && lhOn() && ENABLE_RAM && iAmKing() && tryQueenKill())
-            return true; // v68: our queen is dead, r500 is lost unless hers dies too
+        {
+            r2log("lhk");
+            return true;
+        }
+        if (QKILL_KING && ENABLE_RAM && units >= 2 && !amQueen() && feedPhase() && iAmKing() && qkkAllowed() && tryQueenKill())
+        {
+            r2log("qkk"); // ROUND2 P1: a king (often a self-crowned L8+ camper) takes a certain queen kill too
+            return true;
+        }
         if (!ENABLE_RAM || units < 2 || (feedPhase() && iAmKing()))
             return false;
         if (!amQueen() && (QKILL || (QSTATE && qstHunt())) && tryQueenKill())
+        {
+            r2log("qk");
             return true;
+        }
         double bestVal = 0;
         std::string bestCmd;
         for (auto& s : segs)
@@ -4571,7 +4629,7 @@ struct Bot
             return true;
         }
         int tail = static_cast<int>(trail.size()) >= myLen ? trail[myLen - 1] : -1;
-        if (tail >= 0 && !queenSafe() && !queenEarly() && !qGuard() && !noVolSplit() && units < w.unitLimit && tailHasExit(myLen - 2) && threatAt[tail] == 0)
+        if (tail >= 0 && !queenSafe() && !queenEarly() && !qGuard() && !(EG_NOSWAP > 0 && ENDGAME_GUARD > 0 && round >= EG_NOSWAP) && units < w.unitLimit && tailHasExit(myLen - 2) && threatAt[tail] == 0)
         {
             bool enemyNearTail = false;
             for (auto& o : segs)
@@ -4579,6 +4637,7 @@ struct Bot
                     enemyNearTail = true;
             if (!enemyNearTail)
             {
+                r2log("spK", myLen - 2);
                 out += "SPLIT " + std::to_string(myLen - 2) + "\n";
                 pending.clear();
                 pendingSplit = true;
@@ -4725,6 +4784,8 @@ struct Bot
         double score = 0, map = 0;
         int threat = 0, depth = 0;
         bool close = false, dead = false, rskip = false;
+        bool qb = false; // ROUND2 P3 QAK_HARD: this step blocks our queen
+        bool eg = false; // ROUND2 P6 ENDGAME_GUARD: this step ends inside an enemy head's kamikaze reach
     };
     struct FsSave
     {
@@ -4807,6 +4868,7 @@ struct Bot
             std::vector<int> tiles, dirs;
             double score, mapAcc, eatAcc;
             EvalOut eo;
+            bool qb = false;
         };
         std::vector<Node> beam, all;
         for (int d = 0; d < 4; d++)
@@ -4818,6 +4880,7 @@ struct Bot
             n.tiles = {t};
             n.dirs = {d};
             n.score = candScore[d], n.mapAcc = candMap[d], n.eatAcc = 0;
+            n.qb = candQb[d];
             beam.push_back(n);
         }
         auto byScore = [](const Node& a, const Node& b) { return a.score > b.score; };
@@ -4850,6 +4913,7 @@ struct Bot
                     c.mapAcc = nd.mapAcc + eo.map;
                     c.score = eo.score + nd.mapAcc + eatAcc;
                     c.eo = eo;
+                    c.qb = nd.qb || eo.qb;
                     next.push_back(c);
                 }
                 fsRestore();
@@ -4870,6 +4934,10 @@ struct Bot
                 continue;
             if (c.eo.dead && !candDead[bestD])
                 continue;
+            if (c.qb && !candQb[bestD])
+                continue; // ROUND2 P3: no sprint through tiles next to our queen
+            if (c.eo.eg && !candEg[bestD])
+                continue; // ROUND2 P6: no sprint ending inside an enemy head's reach
             const int e = c.tiles.back(), b1 = step(myHead, bestD);
             if (FS_PAID_VETO && threatPaidAt[e] > 0 && threatPaidAt[b1] == 0 && candThreat[bestD] == 0)
                 continue; // no new exposure to a paid-step ram that the plain move avoids
@@ -5034,6 +5102,7 @@ struct Bot
             if (myLen >= RP.keepLen + 4 && units < w.unitLimit && round < RP.splitStopRound && !threatened && !noVolSplit() &&
                 qgCap(2) >= 2 && !qsrBlock(2))
             {
+                r2log("spA", 2);
                 out += "SPLIT 2\n";
                 pending.clear();
                 pendingSplit = true;
@@ -5151,6 +5220,7 @@ struct Bot
                         {
                             if (dbg)
                                 std::fprintf(dbg, "PF early split k=%d Pc=%.1f\n", k, Pc);
+                            r2log("spB", k);
                             out += "SPLIT " + std::to_string(k) + "\n";
                             pending.clear();
                             pendingSplit = true;
@@ -5171,6 +5241,7 @@ struct Bot
                     {
                         if (dbg)
                             std::fprintf(dbg, "PF split k=%d aheadP=%.2f childOK=%d\n", k, bestP, ok ? 1 : 0);
+                        r2log(ok ? "spC" : "spCb", k);
                         out += "SPLIT " + std::to_string(k) + "\n";
                         pending.clear();
                         pendingSplit = true;
@@ -5241,8 +5312,12 @@ struct Bot
             }
             if (viable && qsrBlock(k))
                 viable = false; // v39 QSPLIT_ROOM (covers the tip k=L-2 branches too)
+            if (LH_LONG && lhActive && myLen - k < LHL_KEEP)
+                viable = false, r2log("lhl", k); // ROUND2 P1: a hunter stays long enough to reach her (K(L) = F + L - 2)
             if (viable)
             {
+                if (R2_DEBUG)
+                    r2log(tipK > 0 ? "spDt" : (k == myLen - 2 && k != myLen / 2 ? "spDx" : "spD"), k * 100 + (tailHasExit(2) ? 1 : 0));
                 out += "SPLIT " + std::to_string(k) + "\n";
                 pending.clear();
                 pendingSplit = true;
@@ -5411,6 +5486,33 @@ struct Bot
             else
                 qakHead = -1;
         }
+        // ROUND2 P3 QAK_HARD: our queen's visible head, for long allies (not while feeding her as the king)
+        int qhHead = -1, qhN0 = 0, qhD0 = 0;
+        auto qhCount = [&](int extra) -> int {
+            int n = 0;
+            for (int e = 0; e < 4; e++)
+            {
+                int u = step(qhHead, e);
+                if (u < 0 || u == extra)
+                    continue;
+                if (occId[u] >= 0 && !(occId[u] == w.myId && freeT[u] <= 1))
+                    continue;
+                n++;
+            }
+            return n;
+        };
+        if (QAK_HARD && !amQueen() && myLen >= QAKH_LEN && round >= QAK_FROM &&
+            !(feedPhase() && kingId >= 0 && (kingId & 1023) <= 1 && shouldFeed()))
+        {
+            for (auto& o : segs)
+                if (o.head && o.team == w.myTeam && o.id <= 1)
+                    qhHead = o.tile;
+            if (qhHead >= 0)
+                qhN0 = qhCount(-1), qhD0 = wrapDist(myHead, qhHead);
+        }
+        for (int d = 0; d < 4; d++)
+            candQb[d] = candEg[d] = false;
+        const bool egGuard = egOn();
         const bool whcOn = whcActive(); // v44 WH_CENTRE
         // v41: the per-move evaluation as a lambda so FREE_STEPS can run it on a virtual (advanced) body
         auto evalDir = [&](int d, EvalOut& eo) -> bool {
@@ -5595,6 +5697,59 @@ struct Bot
                 if (n < qekN0 && n <= QEK_MIN)
                     score -= QEK_PEN; // v43 QEXIT_KEEP
             }
+            if (qhHead >= 0)
+            {
+                int dq = wrapDist(t, qhHead);
+                if (dq <= QAKH_DIST && dq <= qhD0)
+                    eo.qb = true; // ends near her without moving away
+                else if (dq <= 2)
+                {
+                    int n = qhCount(t);
+                    if (n < qhN0 && n <= QAKH_MIN)
+                        eo.qb = true; // takes one of her last exits
+                }
+            }
+            if (egGuard)
+            {
+                for (auto& o : segs)
+                    if (o.head && o.team != w.myTeam)
+                    {
+                        int Lv = enemyVisibleLength(o.id);
+                        if (!enemyTailSeen(o))
+                            Lv = std::max(Lv, static_cast<int>(EG_UNSEEN_LEN));
+                        int K = kReach(Lv), dd = wrapDist(o.tile, t);
+                        if (dd <= K)
+                            eo.eg = true;
+                        if (dd <= K + 1)
+                            score -= EG_W * (K + 2 - dd);
+                    }
+            }
+            if (QPLUG_LOOK && amQueen() && round >= QPL_FROM)
+            {
+                // follow the 1-wide corridor behind t; a foreign body still there on arrival is a plug
+                int prev = myHead, cur = t;
+                for (int i = 0; i < QPL_DEPTH; i++)
+                {
+                    int nx = -1, cnt = 0;
+                    for (int e = 0; e < 4; e++)
+                    {
+                        int v = step(cur, e);
+                        if (v < 0 || v == prev || v == cur)
+                            continue;
+                        cnt++, nx = v;
+                    }
+                    if (cnt != 1)
+                        break;
+                    if (occId[nx] >= 0 && occId[nx] != w.myId && freeT[nx] > i + 2)
+                    {
+                        eo.dead = true;
+                        if (R2_DEBUG)
+                            r2log("qpl", t);
+                        break;
+                    }
+                    prev = cur, cur = nx;
+                }
+            }
             if (qakHead >= 0)
             {
                 bool hit = wrapDist(t, qakHead) <= QAK_DIST;
@@ -5715,7 +5870,7 @@ struct Bot
                     // v68 LATE_HUNT: map-wide; past the BFS horizon (or blocked) fall back to the straight distance
                     if (bd >= INF)
                         bd = wrapDist(t, eqHuntTile) + 4;
-                    score -= LH_W * std::min(bd, static_cast<int>(LH_CAP));
+                    score -= LH_W * ((LH_LONG && myLen < LHL_SMALL) ? LHL_SMALL_MULT : 1.0) * std::min(bd, static_cast<int>(LH_CAP));
                 }
                 else
                 score -= EQH_W * std::min(bd, static_cast<int>(EQH_CAP));
@@ -5744,6 +5899,8 @@ struct Bot
             if (!evalDir(d, eo))
                 continue;
             candDead[d] = eo.dead;
+            candQb[d] = eo.qb;
+            candEg[d] = eo.eg;
             candClose[d] = eo.close;
             candThreat[d] = eo.threat;
             candDepth[d] = eo.depth;
@@ -5812,7 +5969,49 @@ struct Bot
             if (alt >= 0)
                 bestD = alt, best = candScore[alt], bestDepth = candDepth[alt];
         }
-        if ((qGuard() || QNOPOCKET) && bestD >= 0 && candDead[bestD])
+        if (egGuard && bestD >= 0 && candEg[bestD])
+        {
+            // ROUND2 P6: late, the queen / king leaves every visible enemy head's kamikaze reach when it can
+            int alt = -1;
+            for (int d = 0; d < 4; d++)
+                if (candScore[d] > -1e17 && !candEg[d] && !candDead[d] && candThreat[d] == 0 && candDepth[d] >= QUEEN_VETO_DEPTH &&
+                    (alt < 0 || candScore[d] > candScore[alt]))
+                    alt = d;
+            r2log(alt >= 0 ? "egveto" : "eg0", alt);
+            if (alt >= 0)
+                bestD = alt, best = candScore[alt], bestDepth = candDepth[alt];
+        }
+        else if (R2_DEBUG && egGuard)
+            r2log("egfree");
+        if (R2_DEBUG && qhHead >= 0)
+            r2log("qakhsee", qhD0);
+        if (QAK_HARD && bestD >= 0 && candQb[bestD])
+        {
+            // ROUND2 P3: a long ally stays off our queen when an unthreatened, open, surviving step exists
+            int alt = -1;
+            for (int d = 0; d < 4; d++)
+                if (candScore[d] > -1e17 && !candQb[d] && !candDead[d] && candThreat[d] == 0 && candDepth[d] >= QUEEN_VETO_DEPTH &&
+                    (alt < 0 || candScore[d] > candScore[alt]))
+                    alt = d;
+            if (alt >= 0)
+            {
+                r2log("qakh", alt);
+                bestD = alt, best = candScore[alt], bestDepth = candDepth[alt];
+            }
+            else if (R2_DEBUG)
+            {
+                int legal = 0, nonqb = 0, ok = 0;
+                for (int d = 0; d < 4; d++)
+                    if (candScore[d] > -1e17)
+                    {
+                        legal++;
+                        if (!candQb[d])
+                            nonqb++, ok += (candThreat[d] == 0) + 10 * (candDepth[d] >= QUEEN_VETO_DEPTH);
+                    }
+                r2log("qakh0", legal * 1000 + nonqb * 100 + ok);
+            }
+        }
+        if ((qGuard() || QNOPOCKET || QPLUG_LOOK) && bestD >= 0 && candDead[bestD])
         {
             // v37e QGUARD (from v37b): no dead end for the queen when an open step that survives exists
             int alt = -1;
@@ -5821,8 +6020,12 @@ struct Bot
                     !(queenSafe() && candThreat[d] > 0) && // never undo the QUEEN_SAFE threat veto
                     (alt < 0 || candScore[d] > candScore[alt]))
                     alt = d;
+            if (R2_DEBUG && alt < 0)
+                r2log("qdead0");
             if (alt >= 0)
             {
+                if (QPLUG_LOOK)
+                    r2log("qplveto", alt);
                 if (dbg)
                     std::fprintf(dbg, "  qguard dead-end veto %c -> %c\n", DIRC[bestD], DIRC[alt]);
                 bestD = alt, best = candScore[alt], bestDepth = candDepth[alt];
@@ -5854,6 +6057,7 @@ struct Bot
             int trapK = myLen - 2;
             if (QBOX_K2 && amQueen() && bestD < 0 && myLen >= 5)
                 trapK = 2; // v43 QBOX_K2: a boxed queen sheds 2 and waits (she can wait again while L >= 4)
+            r2log(bestD < 0 ? (amQueen() ? "spEq" : "spE0") : "spE1", trapK);
             out += "SPLIT " + std::to_string(trapK) + "\n";
             pending.clear();
             pendingSplit = true;
