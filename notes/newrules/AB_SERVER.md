@@ -50,3 +50,57 @@ VERDICT: v44 inconclusive vs v41: +0.4 pp/game (95% CI -4.4..+5.0); B>A on 10/17
 ```
 
 Scale: the CI half-width is about 4 pp/game with roughly 700 games per side. To detect a 3 pp difference you need well over 1000 games per side.
+
+## Adjusted model: `--adjusted` (protocol scoring, added 2026-10-04)
+
+Run from /Users/devsingh/Developer/UNSW_Battlecode:
+```
+python3 tools/ab_server.py v61 c1 --adjusted                 # baseline first; prints contrast + stage-2 decision
+python3 tools/ab_server.py v61 c1 --adjusted --pae           # also the old PAE tables
+python3 tools/ab_server.py v61 c1 --adjusted --since v61=2026-10-04T04:31     # baseline = latest v61 block only
+python3 tools/ab_server.py v61 c1 --adjusted --window v61=2026-10-05T01:00..2026-10-05T02:00 --window c1=...
+```
+- Model: logit(win) = build + opponent effect (ridge 0.3, opponents with 12 or more games; the rest share one Elo slope) + map effect (ridge 1.0) + ranked + autoscrim. Draws count 0.5.
+- It is fitted on the compared builds plus every other upload in the games cache ("context", each upload its own factor, uploads under 20 games dropped), so the opponent and map effects are well estimated.
+- Output: the build contrast in pp (each game of the two arms predicted once as each build), 95% CI, logit and se, P(better), and the stage-2 line: under 250 candidate games no decision; 250: drop if below -1 pp; 500: drop if below +1 pp; 850: adopt if +2.5 pp or more.
+- `--window NAME=ISO..ISO` (repeatable) replaces a name's upload-derived windows. Needed once builds are interleaved by re-activating stored submissions, because the submissions list only gives upload times.
+
+Sanity (4 Oct, 17:25 UTC):
+```
+v69 vs v61 (all 3 v61 blocks, 1157 games): -1.7 pp (95% CI -8.7..+5.0); P(v69 better) = 0.32; n = 1157 / 195
+v69 vs v61 (--until v61=2026-10-04T04:00, the two blocks around it): -6.4 pp (CI -15.0..+2.0); P = 0.07; n = 274 / 195
+v55 vs v44: +3.6 pp (95% CI -1.7..+8.7); P(v55 better) = 0.91; n = 724 / 485
+A/A: v61#16063 (3 Oct evening) vs v61#16388 (4 Oct 04:31-17:13): +8.1 pp (CI +1.2..+14.3), P = 0.99
+```
+**The pooled v61 baseline drifts.** The same build scored about 8 pp lower in the overnight block than on 3 Oct evening, after opponent and map adjustment (opponents upload stronger bots, so a fixed opponent effect is wrong over 2 days). Compare a candidate with baseline blocks close in time (`--since v61=...` or interleaved `--window` blocks), not with the whole pool.
+
+## tools/ab_mech.py: mechanism stats from server replays (stage 1)
+
+```
+python3 tools/ab_mech.py v61 c1 --limit 60        # compare table, baseline first (run from the project root)
+  --limit 60 (0 = all)   fixed pseudo-random sample per name, stable between runs
+  --maps "Devil,Maze"    --non-top10    --no-download    --json FILE
+  --since / --until / --window / --grace   as in ab_server.py
+```
+- Replays: `replays/ab_mech/<name>/<gameId>.replay` (copied from another `replays/*/` folder if present, else downloaded from the public endpoint, 1.5 s apart, backing off on 429). Per-game stats cache: `replays/ab_mech/<name>/rows.json`. 60 new games take about 3.5 minutes.
+- Stats: win rate, our queen alive at r100 and at r500 (r500 games), total length ratio at r100/r300 (geometric mean), eliminated, stillborn children by r100 (count, length, share of splits), r500 loss with our queen dead and theirs alive, lone queen (of those, enemy had 3 or fewer units), enemy queen killed by our king (longest non-queen unit, L >= 8) and by any unit.
+- CIs: Wilson for shares, mean +- 1.96 se for means, B - A by normal approximation.
+
+v61 sample (60 games, 4 Oct): queen alive r100 45%, r500 40% (of 30); length ratio r100 1.92, r300 2.31; eliminated 8%; stillborn by r100 9.1 per game (length 18.6, 9% of splits); r500 queen-dead loss 10% (6), lone queen 3 of those; enemy queen kills: 31 by any unit, 0 by the king.
+
+## tools/auto_challenge.py: panel and unranked-only (added 2026-10-04)
+
+- `--unranked-only`: no ranked series.
+- `--panel "TeamA,TeamB,..."`: fixed opponents by leaderboard name (case-insensitive exact match), rotated evenly; the pointer is kept in `replays/auto/panel_state.json`. Ranked series unless `--unranked-only`; unranked panel series rotate evenly through all 17 active maps, 5 per series.
+- `--ignore-lock`: keep running while `SERVER_LOCK` exists.
+- Without these options the loop behaves as before.
+
+Protocol panel at 45/h (run from /Users/devsingh/Developer/UNSW_Battlecode; stop the old loop first, PID from `pgrep -f auto_challenge.py`):
+```
+nohup python3 tools/auto_challenge.py --per-hour 45 --cycle 300 --unranked-only --panel "Vibing++,forgot to mention,Sponge(Albert and Bob),horse,WeHaveQuizzes,Computers,free trip to sydney pls,bread first search,Settlers of Battlecode,Team SKKU,Sabotage-d" >> replays/auto/loop.log 2>&1 &
+```
+Drop `--unranked-only` while the build we intend to keep is live (ranked series against the same panel).
+
+## tools/ab_conductor.py: unattended queue runner (written 2026-10-04, NOT tested, NOT started)
+
+It uploads builds by itself, so read its docstring before starting it. Queue and state: `notes/ab_queue.json`; log: `notes/ab_queue_log.md`; stage dirs: `replays/ab_stage/<name>/`; stop file: `replays/ab_stage/STOP`. The dry run has not been executed yet.

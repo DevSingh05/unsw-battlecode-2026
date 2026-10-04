@@ -13,6 +13,11 @@ usage (run from the project root):
                             (1 API call per new game, cached; ~0.55 s apart)
            --maps           print the per-map table (default on; --no-maps to hide)
            --refresh        refetch the games list even if the cache already covers the window
+           --adjusted       protocol scoring: adjusted logistic model (win ~ build + opponent effect with ridge
+                            for opponents with 12+ games + map effect + ranked + autoscrim), build contrast in pp
+                            with P(better) and the stage-2 decision (250 games: drop if < -1 pp; 500: drop if
+                            < +1 pp; 850: adopt if >= +2.5 pp). --pae also prints the old PAE tables.
+           --window NAME=ISO..ISO   explicit time blocks for NAME (repeatable), for interleaved re-activations
 
 Data:
   * submissions + per-map server ratings: GET /api/v1/submissions (byMap)
@@ -259,6 +264,216 @@ def paired(A, B, min_map, reps=2000, seed=1):
             "p_sign": binom_two_sided(k, len(maps)), "diffs": diffs}
 
 
+# ---------------------------------------------------------------- game attribution
+def collect(tokens, grace=300, since=(), until=(), window=(), refresh=False, context=False):
+    """Attribute cached server games to submissions. Returns labels, windows, byid, rows {label: [row]} and,
+    with context=True, ctx {name#id: [row]}: games of every other upload (used by --adjusted to pin down the
+    opponent and map effects)."""
+    subs = api.get("/api/v1/submissions")
+    subs.sort(key=lambda s: s["uploadedAt"])
+    nowt = dt.datetime.now(dt.timezone.utc)
+    for i, s in enumerate(subs):
+        s["_from"] = parse_t(s["uploadedAt"]) + dt.timedelta(seconds=grace)
+        s["_to"] = parse_t(subs[i + 1]["uploadedAt"]) if i + 1 < len(subs) else nowt
+    since_o = dict(x.split("=", 1) for x in since)
+    until_o = dict(x.split("=", 1) for x in until)
+    win_o = collections.defaultdict(list)
+    for x in window:
+        nm, _, rng = x.partition("=")
+        f, _, t = rng.partition("..")
+        win_o[nm].append((parse_t(f), parse_t(t) if t else nowt))
+
+    labels, windows, byid = [], {}, {}
+    for tok in tokens:
+        name, _, sid = tok.partition("@")
+        ss = [s for s in subs if s["name"] == name and (not sid or str(s["id"]) == sid)]
+        if not ss:
+            sys.exit(f"no submission named {tok}")
+        wins = []
+        if tok in win_o or name in win_o:
+            # explicit blocks (interleaved re-activations): replace the upload-derived windows
+            wins = [(f, t, ss[-1]) for f, t in (win_o.get(tok) or win_o[name]) if t > f]
+        else:
+            for s in ss:
+                f, t = s["_from"], s["_to"]
+                if tok in since_o or name in since_o:
+                    f = max(f, parse_t(since_o.get(tok, since_o.get(name))))
+                if tok in until_o or name in until_o:
+                    t = min(t, parse_t(until_o.get(tok, until_o.get(name))))
+                if t > f:
+                    wins.append((f, t, s))
+        if not wins:
+            sys.exit(f"{tok}: empty window")
+        labels.append(tok)
+        windows[tok] = wins
+        byid[tok] = ss
+    earliest = min(f for w in windows.values() for f, _, _ in w)
+    games = load_games(earliest, refresh)
+
+    top10 = set()
+    try:
+        L = api.get("/api/v1/leaderboard")
+        top10 = {t["id"] for t in sorted((t for t in L if isinstance(t.get("rank"), int) and t["id"] != US_ID),
+                                          key=lambda t: t["rank"])[:10]}
+    except Exception as e:  # noqa: BLE001
+        print("leaderboard failed:", e, file=sys.stderr)
+
+    rows = {lab: [] for lab in labels}
+    ctx = collections.defaultdict(list)
+    for g in games.values():
+        if g["status"] != "completed":
+            continue
+        t = parse_t(g["at"])
+        us, them = (g["a"], g["b"]) if g["a"]["id"] == US_ID else (g["b"], g["a"])
+        if us["id"] != US_ID or them["id"] == US_ID:
+            continue
+        side = "a" if g["a"]["id"] == US_ID else "b"
+        s = 0.5 if g["winner"] not in ("a", "b") else (1.0 if g["winner"] == side else 0.0)
+        row = {"id": g["id"], "map": g["mapName"], "s": s, "rus": us["elo"], "ropp": them["elo"],
+               "opp": them["name"], "oppId": them["id"], "ranked": g["ranked"], "side": side.upper(),
+               "challenge": g.get("challenge"), "top10": them["id"] in top10, "at": g["at"]}
+        hit = False
+        for lab in labels:
+            if any(f <= t < u for f, u, _ in windows[lab]):
+                rows[lab].append(dict(row))
+                hit = True
+        if context and not hit:
+            for x in subs:
+                if x["_from"] <= t < x["_to"]:
+                    ctx[f"{x['name']}#{x['id']}"].append(row)
+                    break
+    return {"labels": labels, "windows": windows, "byid": byid, "rows": rows, "ctx": dict(ctx), "subs": subs}
+
+
+# ---------------------------------------------------------------- adjusted logistic model (--adjusted)
+def fit_logit(ys, X, k, lam):
+    """Ridge-penalised logistic regression by Newton steps. X: sparse rows [(col, val)], lam: per-column ridge.
+    Returns (coefficients, covariance = inverse penalised Hessian)."""
+    b = [0.0] * k
+    inv = None
+    for _ in range(40):
+        g = [-lam[i] * b[i] for i in range(k)]
+        H = [[0.0] * k for _ in range(k)]
+        for i in range(k):
+            H[i][i] = lam[i]
+        for y, f in zip(ys, X):
+            z = sum(b[i] * v for i, v in f)
+            p = 1 / (1 + math.exp(-max(-30.0, min(30.0, z))))
+            w = p * (1 - p)
+            e = y - p
+            for i, v in f:
+                g[i] += e * v
+                Hi = H[i]
+                for j, u in f:
+                    Hi[j] += w * v * u
+        A = [H[i] + [1.0 if i == j else 0.0 for j in range(k)] for i in range(k)]
+        for c in range(k):
+            pv = max(range(c, k), key=lambda q: abs(A[q][c]))
+            A[c], A[pv] = A[pv], A[c]
+            d = A[c][c]
+            Ac = A[c] = [x / d for x in A[c]]
+            for q in range(k):
+                if q != c and A[q][c] != 0.0:
+                    m = A[q][c]
+                    A[q] = [x - m * y for x, y in zip(A[q], Ac)]
+        inv = [r[k:] for r in A]
+        step = [sum(inv[i][j] * g[j] for j in range(k)) for i in range(k)]
+        b = [b[i] + step[i] for i in range(k)]
+        if max(abs(x) for x in step) < 1e-7:
+            break
+    return b, inv
+
+
+def norm_cdf(x):
+    return 0.5 * (1 + math.erf(x / math.sqrt(2)))
+
+
+def stage2(pp, n):
+    """Protocol (ROUND2.md): 250 candidate games: drop if < -1 pp; 500: drop if < +1 pp; 850: adopt if >= +2.5 pp."""
+    if n < 250:
+        return f"STAGE 2 not reached ({n}/250 candidate games): keep collecting; no decision yet"
+    if n < 500:
+        return (f"STAGE 2 @250 ({n} games): DROP (below -1 pp)" if pp < -1.0 else
+                f"STAGE 2 @250 ({n} games): CONTINUE to 500 (not below -1 pp)")
+    if n < 850:
+        return (f"STAGE 2 @500 ({n} games): DROP (below +1 pp)" if pp < 1.0 else
+                f"STAGE 2 @500 ({n} games): CONTINUE to 850 (at least +1 pp)")
+    return (f"STAGE 2 @850 ({n} games): ADOPT (at least +2.5 pp)" if pp >= 2.5 else
+            f"STAGE 2 @850 ({n} games): DO NOT ADOPT (below +2.5 pp)")
+
+
+def adjusted(labels, rows, ctx, min_opp=12, min_ctx=20):
+    """win ~ build + opponent effect (ridge 0.3; opponents with >= min_opp games, others share an Elo slope)
+    + map effect (ridge 1.0) + ranked + autoscrim. Fitted on the compared builds plus every other upload in the
+    games cache (context builds, each its own factor). Build contrast = candidate coefficient minus baseline,
+    turned into pp by predicting every game of the two arms once as each build (average marginal effect)."""
+    base = labels[0]
+    data, seen = [], set()
+    for lab in labels:
+        for r in rows[lab]:
+            if r["id"] not in seen:  # a game in two compared windows counts for the first label only
+                seen.add(r["id"])
+                data.append((lab, r))
+    n_cmp = len(data)
+    for lab, rs in ctx.items():
+        if len(rs) >= min_ctx:
+            data += [(lab, r) for r in rs if r["id"] not in seen]
+    oc = collections.Counter(r["oppId"] for _, r in data)
+    names, X, ys = {}, [], []
+
+    def col(n):
+        if n not in names:
+            names[n] = len(names)
+        return names[n]
+    for lab, r in data:
+        f = [(col("c"), 1.0)]
+        if lab != base:
+            f.append((col("B:" + lab), 1.0))
+        if oc[r["oppId"]] >= min_opp:
+            f.append((col(f"O:{r['oppId']}"), 1.0))
+        else:
+            f.append((col("elo"), (r["ropp"] - 2000) / 400.0))
+        f.append((col("M:" + str(r["map"])), 1.0))
+        if r["ranked"]:
+            f.append((col("rk"), 1.0))
+        if not r["challenge"]:
+            f.append((col("scrim"), 1.0))
+        X.append(f)
+        ys.append(r["s"])
+    for n in ("rk", "scrim", "elo"):
+        col(n)
+    k = len(names)
+    lam = [0.3 if n.startswith("O:") else 1.0 if n.startswith("M:") else 1e-6 for n in names]
+    b, cov = fit_logit(ys, X, k, lam)
+    print(f"ADJUSTED MODEL: win ~ build + opponent (ridge, >= {min_opp} games) + map + ranked + autoscrim; "
+          f"{len(data)} games ({n_cmp} compared + {len(data) - n_cmp} context), {k} params; "
+          f"ranked {b[names['rk']]:+.2f}, autoscrim {b[names['scrim']]:+.2f} (logit)")
+    out = []
+    for lab in labels[1:]:
+        i = names.get("B:" + lab)
+        if i is None:
+            print(f"  {lab}: no games")
+            continue
+        est, se = b[i], math.sqrt(cov[i][i])
+        # linear predictor of each game of the two arms with the build term removed
+        z0 = []
+        for (l2, _), f in zip(data, X):
+            if l2 in (base, lab):
+                z0.append(sum(b[j] * v for j, v in f) - (est if l2 == lab else 0.0))
+
+        def ame(e):
+            return 100 * sum(1 / (1 + math.exp(-(z + e))) - 1 / (1 + math.exp(-z)) for z in z0) / len(z0)
+        pp, lo, hi = ame(est), ame(est - 1.96 * se), ame(est + 1.96 * se)
+        pb = norm_cdf(est / se) if se > 0 else float("nan")
+        na, nb = len(rows[base]), sum(1 for l2, _ in data[:n_cmp] if l2 == lab)
+        print(f"  {lab} vs {base}: {pp:+.1f} pp (95% CI {lo:+.1f}..{hi:+.1f}); logit {est:+.3f} se {se:.3f}; "
+              f"P({lab} better) = {pb:.2f}; n = {na} base / {nb} cand")
+        print(f"  {stage2(pp, nb)}")
+        out.append({"cand": lab, "base": base, "pp": pp, "lo": lo, "hi": hi, "logit": est, "se": se,
+                    "p_better": pb, "n_base": na, "n_cand": nb})
+    return out
+
+
 # ---------------------------------------------------------------- main
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -272,65 +487,32 @@ def main():
     ap.add_argument("--no-maps", action="store_true")
     ap.add_argument("--refresh", action="store_true")
     ap.add_argument("--json", default="", help="also write per-game rows to this file")
+    ap.add_argument("--window", action="append", default=[],
+                    help="NAME=ISO..ISO (repeatable): explicit blocks for NAME, replacing its upload-derived windows "
+                         "(use for interleaved re-activations)")
+    ap.add_argument("--adjusted", action="store_true",
+                    help="adjusted logistic model + stage-2 decision (protocol scoring); hides the PAE tables")
+    ap.add_argument("--pae", action="store_true", help="with --adjusted: also print the PAE tables")
     a = ap.parse_args()
     if len(a.subs) < 2:
         ap.error("need at least two submissions")
 
-    subs = api.get("/api/v1/submissions")
-    subs.sort(key=lambda s: s["uploadedAt"])
-    for i, s in enumerate(subs):
-        s["_from"] = parse_t(s["uploadedAt"]) + dt.timedelta(seconds=a.grace)
-        s["_to"] = parse_t(subs[i + 1]["uploadedAt"]) if i + 1 < len(subs) else dt.datetime.now(dt.timezone.utc)
-    since_o = dict(x.split("=", 1) for x in a.since)
-    until_o = dict(x.split("=", 1) for x in a.until)
-
-    labels, windows, byid = [], {}, {}
-    for tok in a.subs:
-        name, _, sid = tok.partition("@")
-        ss = [s for s in subs if s["name"] == name and (not sid or str(s["id"]) == sid)]
-        if not ss:
-            sys.exit(f"no submission named {tok}")
-        wins = []
-        for s in ss:
-            f, t = s["_from"], s["_to"]
-            if tok in since_o or name in since_o:
-                f = max(f, parse_t(since_o.get(tok, since_o.get(name))))
-            if tok in until_o or name in until_o:
-                t = min(t, parse_t(until_o.get(tok, until_o.get(name))))
-            if t > f:
-                wins.append((f, t, s))
-        labels.append(tok)
-        windows[tok] = wins
-        byid[tok] = ss
-    earliest = min(f for w in windows.values() for f, _, _ in w)
-    games = load_games(earliest, a.refresh)
-
-    top10 = set()
-    try:
-        L = api.get("/api/v1/leaderboard")
-        top10 = {t["id"] for t in sorted((t for t in L if isinstance(t.get("rank"), int) and t["id"] != US_ID),
-                                          key=lambda t: t["rank"])[:10]}
-    except Exception as e:  # noqa: BLE001
-        print("leaderboard failed:", e, file=sys.stderr)
-
-    rows = {lab: [] for lab in labels}
-    for g in games.values():
-        if g["status"] != "completed":
-            continue
-        t = parse_t(g["at"])
-        us, them = (g["a"], g["b"]) if g["a"]["id"] == US_ID else (g["b"], g["a"])
-        if us["id"] != US_ID or them["id"] == US_ID:
-            continue
-        side = "a" if g["a"]["id"] == US_ID else "b"
-        s = 0.5 if g["winner"] not in ("a", "b") else (1.0 if g["winner"] == side else 0.0)
-        for lab in labels:
-            if any(f <= t < u for f, u, _ in windows[lab]):
-                rows[lab].append({"id": g["id"], "map": g["mapName"], "s": s, "rus": us["elo"], "ropp": them["elo"],
-                                  "opp": them["name"], "oppId": them["id"], "ranked": g["ranked"],
-                                  "challenge": g.get("challenge"), "top10": them["id"] in top10, "at": g["at"]})
+    C = collect(a.subs, a.grace, a.since, a.until, a.window, a.refresh, context=a.adjusted)
+    labels, windows, byid, rows = C["labels"], C["windows"], C["byid"], C["rows"]
     allr = [r for lab in labels for r in rows[lab]]
     if not allr:
         sys.exit("no games found in the windows")
+    if a.adjusted:
+        for lab in labels:
+            ws = "; ".join(f"#{s['id']} {iso(f)}..{iso(t)}" for f, t, s in windows[lab])
+            sm = [r["s"] for r in rows[lab]]
+            print(f"  {lab:10s} {len(sm)} games, raw win {100 * sum(sm) / max(1, len(sm)):.1f}%  {ws}")
+        adjusted(labels, rows, C["ctx"])
+        if not a.pae:
+            if a.json:
+                pathlib.Path(a.json).write_text(json.dumps(rows, indent=0))
+            return
+        print()
     if a.ref == "pooled":
         ref = sum(r["rus"] for r in allr) / len(allr)
     elif a.ref == "self":
