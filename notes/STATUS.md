@@ -52,6 +52,21 @@ Last updated: 2026-10-04 00:30 EDT. All updates to the user come from this page.
   - Vibing++ = Cutlery renamed, with a strong new build. It grows mid-game on big maps, uses long lunges, and keeps its queen whole until she becomes the king.
   - Copying those features directly (v64, v65) lost on the server.
 
+## Round 2 study (2026-10-04, notes/newrules/ROUND2.md): six lenses, two skeptics
+- **We lose on the queen, not on fights.** Against the top 5, combat is even; in r500 games our queen was alive in 4 of 54 and theirs in 26.
+- **Most queen deaths are self-inflicted** (shed chains in 103 of 250 losses): an ally body boxes her (47), she splits with one open step (45), the pocket is too small after eating (35), and a false "exit blocked" on portal exits (25, a real bug).
+- **We don't finish a lone enemy queen:** 14 of 53 losses to non-top-10 teams, with us holding 45-255 length. The king gate in tryRam returns before the queen-kill call.
+- **Stillborn splits:** 14% of our split children die within a round (top 5: 4.8%).
+- **A/B method:** every test so far was underpowered. Use v61's stored rating as our standing; score with the adjusted model (opponent + map effects); test in two stages (mechanism gate at ~150 games, then win rate at 250/500/850 games); fixed opponent panel; unranked challenges while a candidate is live.
+
+**Fixes that survived both skeptics (being built into bot/ as flags, default 0):**
+1. P1: kill the lone enemy queen (LATE_HUNT on, king may take the kill, finisher).
+2. P3: allies must not seal the queen (hard keep-out including bodies, corridor-plug look-ahead).
+3. P5: stop stillborn split children (SPLIT_SAFE).
+4. P6: wider threat reach for long dragons, protect the lead from r470.
+5. P7: park and crown the queen on Portals and Maze (ladder only).
+Refuted: P2 portal-exit bug fix (bug is real, fix doesn't change outcomes), P4 pocket test, P8 Devil queen split.
+
 ## Rejected (don't retry as-is)
 - **On the server:** QEXIT_LOOK, LUNGE34, QK_BIG, full MATCH_STRICT gossip.
 - **Locally, never server-tested** (low priority):

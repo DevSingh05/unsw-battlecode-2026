@@ -306,3 +306,4 @@
 - 02:38 UTC: v68 LATE_HUNT built and folded into bot/ (default 0, identity verified). Queued after v69 verdict.
 - 02:41 UTC: Rank ~10 (2117) with v69 test live (early 5-10). Launched ROUND2 workflow: 6 replay/code/stats lenses -> synth (notes/newrules/ROUND2.md) -> 2 skeptics -> builder adds verified fixes to bot/ as default-off flags (staged copies in scratchpad r2/stage).
 - 04:26 UTC: v69 (QEARLY_PEN) vs v61: -4.8pp (CI -12.9..+3.3), 2121 vs 2187, 6/17 maps -> rejected; re-uploaded identical v61. Waiting for ROUND2 study + stats protocol before next test (v61 baseline games accumulate meanwhile).
+- 04:50 UTC: ROUND2 study done (notes/newrules/ROUND2.md). Survivors P1 P3 P5 P6 P7; builder adding P1,P3,P5,P6 to bot/ as default-off flags. v61 live (baseline accumulating).

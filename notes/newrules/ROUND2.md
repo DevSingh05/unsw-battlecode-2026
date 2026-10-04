@@ -182,3 +182,29 @@ Every flag goes into `bot/` with default 0. Line numbers are approximate. Gains 
 7. **Budget.** About 250 games (2.6 hours) per early reject and 850 (9 hours) per full confirmation, so 9-12 decisions before the freeze. Queue no more than 12 candidates.
 8. **Bundling.** With that budget, proposals 2, 3 and 4 can run as one "queen survival" candidate if each flag's own target stat is checked in stage 1; the queen-trace lens found the fixes only showed an effect in combination. Proposal 1 is independent and can run first because LATE_HUNT is already built.
 9. **Final build.** Activate it at least 12-15 hours before the freeze (Fri 9 Oct 06:00 UTC / 2:00 AM EDT) so it has 600 or more ranked games. No new code in the last 12 hours. The Qualifier build still needs the `tools/unseen_eval.py --sets real,realhold,blind17` check, and only the all-maps proposals (1-6) carry over to unseen maps.
+
+## Built flags (builder, 4 Oct)
+
+All code is in `bot/main.cpp` and `bot/params.hpp`, every new flag defaults to 0 and `LATE_HUNT` stays 0. With all flags off, `bot/` plays the same as `variants/v61` (14 sandbox games, seed 1000, 7 maps, both sides, same death log and result). Nothing was submitted. Staged copies for server tests are in the scratch dir `r2/stage/<name>/` (flags forced at the top of `params.hpp`); scripts and local replays are in `r2/builder/`.
+
+Local games are against our own old builds (v55, v44, v35), so win counts mean nothing; only the mechanism counts below are evidence.
+
+| stage dir | flags | what it does | local mechanism result | CPU max |
+|---|---|---|---|---|
+| `P1_qkill` | `LATE_HUNT=1 QKILL_KING=1` | A king in the feed phase also takes a certain visible queen kill. A king of L>=20 keeps itself only when our queen is known alive and longer. | Fired once in 48 games (L21 king killed the queen at r429); `LATE_HUNT` king kill once. Rare locally. | 34.0M |
+| `P1_full` | above + `LH_FINISH=1 LH_LONG=1` | Finisher: from r300 a non-king unit that itself saw her at L<=4 with no other enemy head in view gets the hunt pull, whatever our queen's state. Hunters do not growth-split below L6; hunters under L5 pull at half weight. | Finisher active on 33 turns in 2 of 48 games; split block 327 turns in 7 games. | 34.0M |
+| `P3_qally` | `QAK_HARD=1 QPLUG_LOOK=1` | Allies of L>=8 are vetoed off steps that end within 3 of our queen without moving away, or that cut her exits to 1. Queen treats a 1-wide corridor plugged by another body (up to 10 tiles ahead) as a dead end. | **Inert locally.** 0 ally vetoes in 64 games: all 15 flagged steps had no legal alternative. Plug seen 53-120 times but never on the chosen step with an open alternative. | 34.0M |
+| `P5_sne` | `SPLIT_NEEDS_EXIT=1` (existing param) | No growth split when the tail has no free neighbour. | Stillborn children per game 107 -> 51, by r100 25.3 -> 6.8 (length 51 -> 14); r100 total 93 -> 94, r300 total 113 -> 121, units at r50 27 -> 27 (24 games, 6 maps). | 33.9M |
+| `P6_reach` | `THREAT_TAIL_UNKNOWN=4 KING_THREAT_REACH=6` | Wider threat reach for our L>=8 units. | Head-on rams on our L>=8: 24 -> 17 in 20 games; longest at r499 38 -> 45. | 34.1M |
+| `P6_kreach` | `KREACH=1 KREACH_MINLEN=8 KREACH_QUEEN=0 KR_CAP=6` | Kamikaze reach as a paid-tier threat for L>=8 only (queen excluded). | Rams on L>=8: 24 -> 19, at r>=440: 8 -> 3. | 34.1M |
+| `P6_eg` | `ENDGAME_GUARD=470` | From r470 the queen and king make no voluntary splits and are pushed out of K+1 of every visible enemy head (unseen tail = L6). | **No effect shown.** The veto found an alternative on 1 of 189 turns (K=6 covers the whole view); late rams 8 -> 7. | 34.1M |
+
+Findings that change the proposals:
+
+- **P1, 985968:** the refusing unit (id 142) was L8 at r419 with the lone queen 5 steps away and in view. L8 is `KING_MIN_LEN`, so it was a self-crowned camper stopped by the king gate. `QKILL_KING` covers it. At L4-7 it was simply out of reach.
+- **P5, split sites (debug counter, 24 games):** the growth split makes 88% of stillborn children. 91% of growth splits made with no tail exit are stillborn, against 7% with one. Pocket, pump and trap splits together make about 12 per game. So `SPLIT_NEEDS_EXIT=1` is the fix and no new flag was added.
+- **Not built:** the all-unit eat veto (`BOX_EAT_ALL`; trap splits make only 3-5 stillborn per game and it risked the pocket economy), `QBOX_K2` static-blocker rule (shedding 2 per turn gives the queen the most turns, and sprinting kings clear faster than the model says), `LH_FINISH` as a team-wide enemy count (no such count exists; built from local sight instead), king-swap ban (`EG_NOSWAP` exists as a param, default 0, untested).
+
+Suggested server order: `P5_sne`, then `P1_qkill`, then `P6_reach`. `P3_qally` and `P6_eg` showed nothing locally and are low priority.
+
+`R2_DEBUG=1` adds `LOG r2 <event>` lines (split sites, kills, vetoes) for local counting; never set it on the server.
