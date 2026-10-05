@@ -320,3 +320,4 @@
 - 00:24 UTC: PAUSED (user moving): challenge loop + unseen eval SIGSTOPped. q1 stays live on the server.
 - 01:11 UTC: RESUMED.
 - 01:21 UTC: Unseen park-only (QPARK_UNK=1 QPG_CROWN=0) on top of INFER_SYM: .526 and .465 on fresh seeds; blind17 .456/.485 every run -> REJECTED for the Qualifier build (first run's .579 was noise). Qualifier build = mainline with INFER_SYM on.
+- 01:53 UTC: OWN_RANKED_OCT4 (114 ranked b1/q1 games): Portals park great (9-1, queen alive r500 9/10 at L34-59). New failure modes: crowned queen rammed after r300 (6/19 crowned games; Maze/Around UNSW), crowned queen coils + sheds 2/turn (5/20). Building QK_EG (kamikaze guard for crowned queen) + QK_SURV (deeper lookahead, respects qparkBan) -> stage k1. Lone-queen kill (LATE_HUNT+QKILL_KING) to be tested alone.
