@@ -342,3 +342,5 @@
 - 20:40 UTC: ms1 DROPPED (adjusted -5.8pp, P .05). b3 re-uploaded. No further server tests until the deep-understanding workflow reports.
 - 21:30 UTC: PAUSED (user moving): loops + local games SIGSTOPped; workflow build agent paused via its processes.
 - 22:51 UTC: Deep-understanding round done (notes/newrules/UNDERSTANDING.md): 6 decision-verified fixes built as flags, 10 plausible causes rejected at decision level. u1 = map pack of 5 map-specific fixes uploaded; dev loop on its 6 maps; QKK_FREE (all maps) next.
+- 23:09 UTC: u1 lost 0-5 in its first RANKED series (vs Sponge) -> 2212 -> 2131 (new uploads start with high uncertainty, so early ranked losses swing hard). Rule from now: ranked challenges ONLY while an accepted build is live; test builds get unranked challenges only. Main loop switched to unranked on u1's 6 maps.
+- 23:14 UTC: u1 PULLED (user). b3 re-uploaded; ranked loop back on (b3 is accepted); dev loop stopped.
