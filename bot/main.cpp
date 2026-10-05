@@ -129,6 +129,16 @@ void applyMapParams(const char* name, int tiles = 0)
                     RP.kingDeclare = 1, RP.kingSeedRound = UNK_KING_SEED, RP.feedStart = UNK_KING_FEED;
             }
     };
+    // R8 CROWD_MAPS (DEVTEST1 fix 1A): crowd penalty on the maps where allies box each other in
+    auto crowdMaps = [&]() {
+        if (!CROWD_MAPS)
+            return;
+        if (((CROWD_MAPS & 1) && n == "Around UNSW") || ((CROWD_MAPS & 2) && n == "Australia") ||
+            ((CROWD_MAPS & 4) && n == "Devil") || ((CROWD_MAPS & 8) && n == "Tower Defense"))
+            RP.crowd = CROWD_MAPS_V;
+        if ((CROWD_MAPS & 16) && n == "Schooltime")
+            RP.crowd = CROWD_MAPS_SCH;
+    };
     if (SPRINT_KNOWN && isSprintMap(name))
     {
         // same high-level params the unknown-map path (UNK_KING / UNK_SMALL_RAMGUARD) gave them in v38m
@@ -156,6 +166,7 @@ void applyMapParams(const char* name, int tiles = 0)
                 RP.crowdEarly = PM_MAZE_CR > 0 ? PM_MAZE_CR : PM_MAZE_CR_AUTO;
         }
         qgen();
+        crowdMaps();
         return;
     }
     auto set = [&](const char* map, int rg, int kd, int ks, int ss, int fs) {
@@ -190,6 +201,7 @@ void applyMapParams(const char* name, int tiles = 0)
     crowd("Schooltime", PM_SCH_CR);
     crowd("Default", PM_DEF_CR);
     crowd("Slithery Fight", PM_SLI_CR);
+    crowdMaps();
     if (KING_V2)
     {
         // notes/11: top-10 king timing on the big maps
@@ -1490,9 +1502,23 @@ struct Bot
             h = (h + 1) % cap;
         };
         // small dragons that grow to 4 can split and send the tail half back out
+        // R8 TIP_REV bit 2: a long non-queen that has eaten TR_NET here can tip-split; the child (the tail end) walks out
+        auto tipEscape = [&]() {
+            if (!(TIP_REV & 2) || L0 < TR_MINLEN || L - L0 < TR_NET || units >= w.unitLimit || amQueen())
+                return false;
+            int tl = simBody[(h + L - 1) % cap], st = static_cast<int>(stack.size()) + 1;
+            for (int e = 0; e < 4; e++)
+            {
+                int v = step(tl, e);
+                if (v >= 0 && bodyCnt[v] == 0 && freeOther[v] <= st)
+                    return true;
+            }
+            return false;
+        };
         auto escapes = [&]() {
-            return ESCAPE_SPLIT && L0 <= 3 && L >= 4 && units < w.unitLimit && (!RP.escapeHotOnly || hotEaten > 0) &&
-                   (ESC_NET == 0 || L - L0 >= ESC_NET); // v44 ESC_NET
+            return (ESCAPE_SPLIT && L0 <= 3 && L >= 4 && units < w.unitLimit && (!RP.escapeHotOnly || hotEaten > 0) &&
+                    (ESC_NET == 0 || L - L0 >= ESC_NET)) || // v44 ESC_NET
+                   tipEscape();
         };
         auto cleanup = [&]() {
             while (!stack.empty())
@@ -1588,6 +1614,40 @@ struct Bot
                 e -= 3.0;
         }
         return e;
+    }
+
+    // R8 ALLY_BOX: our head on t next turn: exits left when ally bodies that may still be there count as walls.
+    // Penalise only when an ally body takes an exit (kelp corridors and our own body are left to surviveDepth).
+    double allyBoxPen(int t) const
+    {
+        int ex = 0, exTile = -1;
+        bool allyWall = false;
+        for (int d = 0; d < 4; d++)
+        {
+            int v = step(t, d);
+            if (v < 0 || v == myHead || v == t)
+                continue;
+            if (occId[v] >= 0 && occId[v] != w.myId && occTeam[v] == w.myTeam && freeT[v] > 2 - ABX_SLACK)
+            {
+                allyWall = true;
+                continue;
+            }
+            if (occId[v] >= 0 && freeT[v] > 2)
+                continue;
+            ex++, exTile = v;
+        }
+        if (!allyWall || ex > 1)
+            return 0;
+        if (ex == 0)
+            return ABX_PEN0;
+        double p = ABX_PEN1;
+        for (auto& o : segs)
+            if (o.head && o.id != w.myId && wrapDist(o.tile, exTile) <= 2)
+            {
+                p += ABX_CONT;
+                break;
+            }
+        return p;
     }
 
     void emitMove(int d)
@@ -5191,6 +5251,25 @@ struct Bot
         return area;
     }
 
+    // R8 SPLIT_DEFER (DEVTEST1 fix 2): the growth split waits up to SPLIT_DEFER consecutive turns for a free
+    // tile at our tail, then goes anyway. Called last in the growth-split gate.
+    int sdWait = 0, sdRound = -10;
+    bool sdOk()
+    {
+        if (!SPLIT_DEFER)
+            return true;
+        if (sdRound != round - 1)
+            sdWait = 0;
+        if (tailHasExit(2) || sdWait >= SPLIT_DEFER)
+        {
+            sdWait = 0, sdRound = -10;
+            return true;
+        }
+        sdWait++, sdRound = round;
+        r2log("sdw", sdWait);
+        return false;
+    }
+
     // Can a split-off child whose head is our current tail get away?
     bool tailHasExit(int k) const
     {
@@ -5778,7 +5857,7 @@ struct Bot
             !(CONS_R && CONS_NOSPLIT && (consActive || consHostKeep())) &&
             !(UNK_SEALED_FOOD && !w.known && UNK_SEALED_ROOM_MIN > 0 && roomSize(UNK_SEALED_ROOM_MIN) < UNK_SEALED_ROOM_MIN) && myLen >= SPLIT_LEN && myLen >= 4 && units < w.unitLimit && units < SPLIT_MAX_UNITS &&
             (round < RP.splitStopRound || (RP.lateSplitRound > 0 && round < RP.lateSplitRound && myLen <= LATE_SPLIT_MAXLEN)) &&
-            !threatened)
+            !threatened && sdOk())
         {
             int k = SPLIT_CHILD > 0 ? std::min(SPLIT_CHILD, myLen - 2) : myLen / 2;
             if (tipK > 0)
@@ -6351,6 +6430,8 @@ struct Bot
             if (queenSafe() && !visible[t] && t != w.plainStep(myHead, d))
                 score -= QUEEN_BLIND_PEN; // an unseen head may wait on the far side
             score += boxEffect(t);
+            if (ALLY_BOX && !amQueen())
+                score -= allyBoxPen(t); // R8 ALLY_BOX (DEVTEST1 fix 1B)
             if (PORTAL_LOITER_PEN > 0 && t == w.plainStep(myHead, d) && isMouth(t) && isMouth(myHead))
                 score -= PORTAL_LOITER_PEN; // pacing beside portals is what crossers crash into
             const double crowdW = (RP.crowdEarly > 0 && round < RP.kingSeedRound) ? RP.crowdEarly : RP.crowd; // ROUND3 P7 (Maze)
@@ -6579,6 +6660,8 @@ struct Bot
 
         // ---- trapped: reverse-split so the bulk of the body escapes backwards
         bool trapped = bestD < 0 || (bestDepth < 4 && best < -100);
+        if ((TIP_REV & 1) && !trapped && !amQueen() && myLen >= TR_MINLEN && bestDepth < TR_DEPTH && best < -100)
+            trapped = true, r2log("trv", bestDepth); // R8 TIP_REV bit 1: the bulk leaves by the tail before the pocket closes
         // TRAP_SPLIT_BLIND: when every move is lethal, split even if the tail is out of view
         // (a young child's tail often is): losing both halves is no worse than dying whole.
         // QBOX (v38q): a queen with no legal move splits even when the tail has no exit (sealed Schooltime box)

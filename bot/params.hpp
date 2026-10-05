@@ -2099,3 +2099,55 @@
 #ifndef PM_QOS_QSPLIT_R
 #define PM_QOS_QSPLIT_R 100
 #endif
+
+// ---- R8 (notes/top5/DEVTEST1_OCT5.md fixes 1-3): self-inflicted waste vs DEV. All default 0 = off.
+// A) CROWD_MAPS: bitmask of maps that get a crowd penalty (ally heads within 2 of the destination).
+//    1 Around UNSW, 2 Australia, 4 Devil, 8 Tower Defense (value CROWD_MAPS_V);
+//    16 Schooltime (already PM_SCH_CR=3; the bit raises it to CROWD_MAPS_SCH).
+#ifndef CROWD_MAPS
+#define CROWD_MAPS 0
+#endif
+#ifndef CROWD_MAPS_V
+#define CROWD_MAPS_V 3.0
+#endif
+#ifndef CROWD_MAPS_SCH
+#define CROWD_MAPS_SCH 5.0
+#endif
+// B) ALLY_BOX: a non-queen step whose destination keeps <= 1 exit next turn because of ally bodies
+//    (an ally tile counts as a wall if its freeT > 2 - ABX_SLACK: the ally's tail stays when it eats).
+#ifndef ALLY_BOX
+#define ALLY_BOX 0
+#endif
+#ifndef ABX_SLACK
+#define ABX_SLACK 1
+#endif
+#ifndef ABX_PEN0
+#define ABX_PEN0 60.0 // no exit left
+#endif
+#ifndef ABX_PEN1
+#define ABX_PEN1 12.0 // one exit left
+#endif
+#ifndef ABX_CONT
+#define ABX_CONT 25.0 // ... and another head (ally or enemy) is within 2 of that exit
+#endif
+// C) SPLIT_DEFER: the growth split waits up to SPLIT_DEFER consecutive turns for a free tile at our tail
+//    (the child's head), then splits anyway. SPLIT_NEEDS_EXIT bans it instead (c1, lost as a bundle).
+#ifndef SPLIT_DEFER
+#define SPLIT_DEFER 0
+#endif
+// D) TIP_REV: tip-reversal bulk split for non-queen L >= TR_MINLEN.
+//    bit 1: split L-2 (bulk leaves as the child from the tail end) when the best step survives < TR_DEPTH
+//           (the existing trapped split needs depth < 4); bit 2: surviveDepth counts "ate >= TR_NET then the
+//           tail end has a free tile" as escape, so a unit may enter a food pocket it will leave by tip split.
+#ifndef TIP_REV
+#define TIP_REV 0
+#endif
+#ifndef TR_MINLEN
+#define TR_MINLEN 5
+#endif
+#ifndef TR_DEPTH
+#define TR_DEPTH 6
+#endif
+#ifndef TR_NET
+#define TR_NET 2
+#endif

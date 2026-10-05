@@ -44,6 +44,8 @@ Last updated: 2026-10-05 04:20 EDT. All updates to the user come from this page.
 | f1 | b1 + QKILL_FUEL (Codex: pearl-paid steps in the certain queen-kill search) | **accepted** (neutral) | 240 games: adjusted -0.1 pp (CI -12..+11), P 0.50; mechanism: enemy queen killed 39% → 43%, eliminated 27% → 12% (raw, opponent mix differs). Narrow, sound change → kept. Rating-restore copy: variants/f1. |
 | h1 | b2 + LATE_HUNT + QKILL_KING (lone enemy queen kill, alone) | **LOSS** | 586 games: adjusted -2.1 pp (CI -9.6..+5.3), P 0.29 → drop at 500. King queen kills 0% → 4% but no gain. f1 restored (2221). |
 | k2 | b2 + QK_EG=2 (crowned-queen kamikaze guard) | **testing**, live since Mon 4:20 AM; dev loop on Portals/Maze/Trauma | judge on crowned-queen rams after r300 and queen tiebreaks on Portals/Maze/Trauma |
+| cm_pack | b2 + CROWD_MAPS=3 (crowd penalty 3 on Around UNSW + Australia) | queued after k2 | local: self-inflicted loss r100-399 AUN 1060 → 776, AUS 677 → 624; r300 total up |
+| sdf | b2 + SPLIT_DEFER=3 (growth split waits up to 3 turns for a tail exit) | queued | local: stillborn length -20..60%, totals flat |
 | k1 | b1 + QK_EG=2 (crowned-queen kamikaze guard, lunge reach 5 + approach trend) | staged (scratch r6/stage/k1), queued | Portals/Maze only in effect; judge on crowned-queen rams after r300 |
 
 ## What we know about why we lose (notes/newrules/LOSS_AUDIT2.md, v55/v61, 250 losses)
