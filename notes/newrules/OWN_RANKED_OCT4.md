@@ -190,3 +190,45 @@ How the crowned queens die, all head-on by small units:
 | 1087078 | b1 | Schooltime | SSS (top10, 2266) | r500 queen shorter | alive L3 | Q 3 v 3, longest 47 v 93, total 164 v 368 | Schooltime box q3 v q3, longest lost (economy) |
 | 1092847 | q1 | Schooltime | Proof by Intimidation (rest, 1894) | r500 queen shorter | alive L3 | Q 3 v 3, longest 25 v 41, total 95 v 173 | Schooltime box q3 v q3, longest lost (economy) |
 | 1087097 | b1 | weakhold | 𓎼𓃭𓅱𓂋𓇌 𓏏𓅱 𓂋𓄿 (top10, 2247) | r500 queen shorter | alive L4 | Q 4 v 21, longest 24 v 21, total 85 v 27 | both queens alive: ours L4 parked/starved, theirs L21; we had 85 v 27 total ; fix: weakhold queen crown (q1 flag) or tiebreak-aware feed |
+
+## Round 6 build: QK_EG / QK_SURV (5 Oct, local sandbox only; nothing submitted)
+Built in `bot/`, all default 0. Flags off = b1 play: 8/8 identical fingerprints vs `variants/b1` (Australia, Devil, Portals, Maze, both sides, seed 1000).
+- **QK_EG=1:** `egOn()` is also true for the crowned queen (`amQueen() && queenKingRound() && myLen >= QK_EG_MINLEN` 12). That turns on the endgame-guard K(Lv) penalty and veto at any round; an unseen tail counts as `QK_EG_UNSEEN_LEN` 4. The split ban moved to `egOrigOn()` (ENDGAME_GUARD only), so kings and small queens are untouched.
+- **QK_EG=2:** QK_EG=1 plus, in `computeThreats()`, full threat reach `min(K(Lv), QK_EG_KRCAP 5)` for her (threat penalty and the queen threat veto). An enemy head that closed in two rounds in a row gets +1 (`QK_EG_TREND` 1). `QK_EG_KING=1` gives the same reach to our king (L >= 10); it is built but untested.
+- **QK_SURV=1:** the crowned queen's look-ahead depth is `max(old, min(L, QK_SURV_CAP 30))`, and `qparkBan` steps are blocked inside `surviveDepth`. CPU bounds: `QK_SURV_NODES` 8000 per candidate, `QK_SURV_FSNODES` 2000 per free-path node, and the old depth past `QK_SURV_BUDGET_M` 22M points. The first version at 60000 nodes hit 94M on TD.
+
+Paired sandbox games, candidate vs bot/ (both with PM_QPARK_AUNSW=1 PM_QPARK_TOWER=1), seeds 2000-2009, both sides. Columns show cand / base. "rams" = queen at L15+ killed head-on after r300. "shed" = runs of 3+ consecutive queen SPLIT 2 at L12+ (segments shed in brackets).
+| flag | map (n) | rams | shed runs (segs) | queen alive r500 | queen len r500 | longest r500 |
+|---|---|---|---|---|---|---|
+| QK_EG=1 | Portals (10) | 0 / 0 | 8 (196) / 7 (180) | 8 / 7 | 27 / 31 | 34 / 35 |
+| | Maze (20) | 4 / 3 | 6 (84) / 10 (192) | 15 / 15 | 51 / 47 | 61 / 56 |
+| | AUNSW (20) | 7 / 7 | 3 (66) / 4 (102) | 7 / 7 | 22 / 20 | 52 / 49 |
+| | TD (10) | 1 / 1 | 3 (72) / 2 (76) | 7 / 7 | 20 / 20 | 24 / 24 |
+| QK_EG=2 | Portals (10) | 0 / 0 | 8 (196) / 7 (180) | 8 / 7 | 27 / 31 | 34 / 35 |
+| | Maze (20) | 3 / 3 | 9 (192) / 10 (192) | 16 / 15 | 51 / 47 | 59 / 55 |
+| | AUNSW (20) | 6 / 7 | 8 (230) / 4 (74) | 8 / 7 | 21 / 23 | 49 / 49 |
+| | TD (10) | 1 / 1 | 3 (72) / 2 (76) | 7 / 7 | 20 / 20 | 24 / 24 |
+| QK_SURV | Portals (10) | 0 / 0 | 4 (80) / 3 (66) | 8 / 10 | 35 / 40 | 38 / 40 |
+| | Maze (10) | 3 / 2 | 3 (78) / 4 (112) | 6 / 7 | 34 / 47 | 57 / 59 |
+| | AUNSW (10) | 3 / 3 | 3 (34) / 2 (44) | 3 / 4 | 18 / 29 | 47 / 55 |
+| | TD (10) | 1 / 1 | 2 (70) / 2 (76) | 7 / 7 | 21 / 20 | 24 / 23 |
+Total length at r300 is the same in every pair (play diverges only after the crown).
+
+- **QK_EG: the sandbox cannot test the server failure.**
+  - Self-play rams are swarms. The crowned queen is coiled against kelp with 6-10 enemy L2-4 heads around her, so every step is inside someone's reach.
+  - With R2_DEBUG on, in 24 games the veto never fired. Each queen logged "egfree" on 30-260 turns and "eg0" (no safe alternative) on 0-9.
+  - Over 60 games QK_EG=2 moved slightly the right way: rams 10 v 11, queen alive at r500 39 v 36. This is within noise. QK_EG=1 was flat (rams 12 v 11, alive 37 v 36).
+  - The isolated 3-5 step lunge from a lone L3-6 (server, Vibing++) needs a server test.
+- **QK_SURV moved the shed mechanism a little but the guard stats the wrong way.**
+  - Over four settings (60000 nodes, 8000, the final 8000/2000+budget, and cap 64), segments shed fell 12-42% against the same-run base.
+  - But queen alive at r500 fell by 1-4 in every run, and queen length at r500 fell on Portals, Maze and AUNSW.
+  - The sandbox shed chains are not the server shape (a lane closed 13-20 steps ahead). They are an L40-62 queen coiled inside a park region smaller than her body (Portals 2000_A, AUNSW 2003_B), where no 30-step path exists. QK_SURV also produced a new L48 HitSelf on AUNSW 2003_B in all four settings.
+  - A real fix probably needs the single big shed backstop (fix 2's option) or a park radius that grows with L, not a deeper DFS.
+- **CPU (sandbox max):**
+  - k1sv (QK_EG=2 + QK_SURV): Australia 33.1M, Portals 16.3M, TD 14.8M (TD unparked). With the TD park, sv2 reached 28.1M on TD and 25.8M on Portals.
+  - QK_EG alone matches base: Portals 9.9M, Maze 27.4M, AUNSW 34.1M, TD 16.8M.
+- **Staged:**
+  - `r6/stage/k1` = bot/ + QK_EG=2 (the only flag that did not move the wrong way; QK_SURV left out).
+  - `r6/stage/k1sv` = bot/ + QK_EG=2 + QK_SURV=1, for reference.
+  - Neither stage has park flags beyond the bot/ defaults (Portals, Maze).
+- Scripts are in the scratchpad `r6/`: mkstage.sh, qp6.py (qp.py plus rams and shed runs, QP_LOGS for R2_DEBUG counts), sumj.py, rams.py, board6.py, ident.sh.

@@ -1777,6 +1777,49 @@
 #ifndef EG_NOSWAP
 #define EG_NOSWAP 0
 #endif
+// ROUND6 QK_EG (OWN_RANKED_OCT4 fix 1): the crowned queen (queenKingRound, L >= QK_EG_MINLEN) applies the endgame-guard
+// kamikaze reach K(Lv) / EG_W penalty / veto at any round; an unseen tail counts as QK_EG_UNSEEN_LEN. No split ban.
+#ifndef QK_EG
+#define QK_EG 0
+#endif
+#ifndef QK_EG_MINLEN
+#define QK_EG_MINLEN 12
+#endif
+#ifndef QK_EG_UNSEEN_LEN
+#define QK_EG_UNSEEN_LEN 4
+#endif
+// QK_EG=2: also give her the kamikaze reach min(K(Lv), QK_EG_KRCAP) as full threat in computeThreats (threat penalty and
+// the queen threat veto), +1 for a head that closed in two rounds in a row (QK_EG_TREND). QK_EG_KING=1: the same threat
+// reach for our king (iAmKing, L >= QK_EG_KINGLEN), no guard veto, no split ban.
+#ifndef QK_EG_KRCAP
+#define QK_EG_KRCAP 5
+#endif
+#ifndef QK_EG_TREND
+#define QK_EG_TREND 1
+#endif
+#ifndef QK_EG_KING
+#define QK_EG_KING 0
+#endif
+#ifndef QK_EG_KINGLEN
+#define QK_EG_KINGLEN 10
+#endif
+// ROUND6 QK_SURV (fix 2): the crowned queen's survival look-ahead is min(L, QK_SURV_CAP) deep (never below the old
+// depth), park-banned steps (qparkBan, e.g. portals on Portals) are blocked inside it, node cap QK_SURV_NODES per call.
+#ifndef QK_SURV
+#define QK_SURV 0
+#endif
+#ifndef QK_SURV_CAP
+#define QK_SURV_CAP 30
+#endif
+#ifndef QK_SURV_NODES
+#define QK_SURV_NODES 8000    // per 1-step candidate
+#endif
+#ifndef QK_SURV_FSNODES
+#define QK_SURV_FSNODES 2000  // per free-path node
+#endif
+#ifndef QK_SURV_BUDGET_M
+#define QK_SURV_BUDGET_M 22   // past this many M points this turn the old depth is used
+#endif
 
 // ---- R3 SPRINT_KING_PM (folded from variants/v70): per-map king seed/feed/merge on Around UNSW / Islands / Australia
 // (LOSS_AUDIT2 fix 2). Other Sprint maps keep UNK_KING_SEED/FEED. A map set to 250/300 = v61. Default OFF.

@@ -19,6 +19,8 @@
 #include "params.hpp"
 
 #include <algorithm>
+#include <array>
+#include <map>
 #include <cmath>
 #include <cstdint>
 #include <cstdio>
@@ -827,6 +829,9 @@ struct Bot
     std::vector<int> simBody;   // ring buffer
     std::vector<char> eatenMark; // survival search: pearls eaten on this path
     long long nodes = 0;
+    std::map<int, std::array<int, 3>> qkTrend; // ROUND6 QK_EG_TREND: enemy id -> {round seen, distance, closing streak}
+    bool survQBan = false;       // ROUND6 QK_SURV: surviveDepth skips qparkBan steps
+    bool inFreePath = false;     // ROUND6 QK_SURV: evalDir is scoring a free-path node (smaller node cap)
     long long nodeCap = 60000;   // surviveDepth node limit (REPLY_SEARCH lowers it for its re-runs)
     std::vector<char> replyBan;  // REPLY_SEARCH: tiles our 2nd step may not enter (replied heads reach them)
     bool replyBanOn = false;
@@ -1520,6 +1525,8 @@ struct Bot
             int v = step(f.tile, d);
             if (!canEnter(v, depth + 1))
                 continue;
+            if (survQBan && qparkBan(f.tile, d))
+                continue; // ROUND6 QK_SURV: the park forbids this step, so the look-ahead may not use it
             nodes++;
             int tail = push(v);
             stack.push_back({v, 0, tail});
@@ -2968,11 +2975,14 @@ struct Bot
     }
     // ONEKING is not ported to v37e: no voluntary-split ban beyond QGUARD
     // ROUND2 P6 ENDGAME_GUARD: our queen and our king protect the lead from that round
-    bool egOn() const
+    bool egOrigOn() const
     {
         return ENDGAME_GUARD > 0 && round >= ENDGAME_GUARD && (amQueen() || (myLen >= KING_MIN_LEN && iAmKing()));
     }
-    bool noVolSplit() const { return egOn(); }
+    // ROUND6 QK_EG: the crowned queen (L >= QK_EG_MINLEN) uses the endgame-guard reach/veto (not its split ban)
+    bool qkEgOn() const { return QK_EG && amQueen() && queenKingRound() && myLen >= QK_EG_MINLEN; }
+    bool egOn() const { return egOrigOn() || qkEgOn(); }
+    bool noVolSplit() const { return egOrigOn(); }
     void updateQsPhase()
     {
         if (!qsOn && (round >= QS_FROM || (QS_UNITS > 0 && units >= QS_UNITS) || (RP.qPark == 1 && amQueen()) || (QPG_SAFE0 && RP.qPark == 3 && qpStarted && amQueen())))
@@ -3670,6 +3680,29 @@ struct Bot
                     reach = std::max(reach, kr); // full strength for the queen
                 else
                     paidReach = std::max(paidReach, kr);
+            }
+            if ((QK_EG >= 2 && qkEgOn()) || (QK_EG_KING && !amQueen() && myLen >= QK_EG_KINGLEN && iAmKing()))
+            {
+                // ROUND6 QK_EG=2 / QK_EG_KING: the crowned queen (king) sees the kamikaze reach K(Lv) up to QK_EG_KRCAP
+                // (unseen tail: Lv >= QK_EG_UNSEEN_LEN) as full threat; a head that closed in on us two rounds in a row
+                // gets one more step (lunge set-up: hunters close from 6-7 to 2-3 over 3-4 rounds, then strike)
+                int Lv = enemyVisibleLength(s.id);
+                if (!enemyTailSeen(s))
+                    Lv = std::max(Lv, static_cast<int>(QK_EG_UNSEEN_LEN));
+                int kr = std::min(kReach(Lv), static_cast<int>(QK_EG_KRCAP));
+                if (QK_EG_TREND && myHead >= 0)
+                {
+                    auto& tr = qkTrend[s.id];
+                    const int dd = wrapDist(myHead, s.tile);
+                    if (tr[0] != round)
+                    {
+                        tr[2] = (tr[0] == round - 1 && dd < tr[1]) ? tr[2] + 1 : 0;
+                        tr[0] = round, tr[1] = dd;
+                    }
+                    if (tr[2] >= 2)
+                        kr++;
+                }
+                reach = std::max(reach, kr);
             }
             if (KREACH_KING && myLen >= KING_MIN_LEN)
             {
@@ -5357,7 +5390,10 @@ struct Bot
                     if (t < 0 || !visible[t] || qparkBan(myHead, d))
                         continue; // no blind steps inside a sprint (ROUND3 P7: nor steps the queen park forbids)
                     EvalOut eo;
-                    if (!evalDir(d, eo) || eo.rskip)
+                    inFreePath = true;
+                    const bool evOk = evalDir(d, eo);
+                    inFreePath = false;
+                    if (!evOk || eo.rskip)
                         continue;
                     Node c;
                     c.tiles = nd.tiles;
@@ -6074,7 +6110,14 @@ struct Bot
                 }
             }
             int wantDepth = myLen >= 10 ? std::max(SURVIVE_DEPTH, std::min(myLen, KING_SURVIVE_DEPTH)) : SURVIVE_DEPTH;
+            // ROUND6 QK_SURV: crowned queen looks further, park bans block; bounded by nodes per call and a turn budget
+            const bool qkSurv = QK_SURV && amQueen() && queenKingRound() && pointsM() - turnT0 < QK_SURV_BUDGET_M;
+            if (qkSurv)
+                wantDepth = std::max(wantDepth, std::min(myLen, static_cast<int>(QK_SURV_CAP))), survQBan = true,
+                nodeCap = inFreePath ? QK_SURV_FSNODES : QK_SURV_NODES;
             int depth = surviveDepth(t, wantDepth);
+            if (qkSurv)
+                survQBan = false, nodeCap = 60000;
             if (depth < wantDepth && !pump)
                 score -= 150.0 + 40.0 * (wantDepth - depth);
             if (pump)
@@ -6192,7 +6235,7 @@ struct Bot
                     {
                         int Lv = enemyVisibleLength(o.id);
                         if (!enemyTailSeen(o))
-                            Lv = std::max(Lv, static_cast<int>(EG_UNSEEN_LEN));
+                            Lv = std::max(Lv, static_cast<int>(egOrigOn() ? EG_UNSEEN_LEN : QK_EG_UNSEEN_LEN));
                         int K = kReach(Lv), dd = wrapDist(o.tile, t);
                         if (dd <= K)
                             eo.eg = true;
