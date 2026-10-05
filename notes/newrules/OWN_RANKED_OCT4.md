@@ -232,3 +232,31 @@ Total length at r300 is the same in every pair (play diverges only after the cro
   - `r6/stage/k1sv` = bot/ + QK_EG=2 + QK_SURV=1, for reference.
   - Neither stage has park flags beyond the bot/ defaults (Portals, Maze).
 - Scripts are in the scratchpad `r6/`: mkstage.sh, qp6.py (qp.py plus rams and shed runs, QP_LOGS for R2_DEBUG counts), sumj.py, rams.py, board6.py, ident.sh.
+
+## Round 7 map pack 3: PM_POR_EARLY and PM_QOS_QSPLIT (builder, 4-5 Oct)
+
+Both flags are in `bot/` with default 0 (main.cpp `applyMapParams`, `qFloorOff`, the feed-length line; params.hpp "R7 map pack 3"). With flags off, `bot/` matches `variants/b1` on 8/8 fingerprints (sandbox seed 1000, both sides: Australia, Devil, Portals, Queen Of Spades). Two new RuntimeParams fields replace the constants `KING_V2_FEED6_ROUND` and `TROPHY_QSPLIT_R` with the same defaults.
+
+- **PM_POR_EARLY** (Portals). The queen's crown and feed rounds come from the KING_V2 table, `v2("Portals", 250, 360, 300, 3)`. `PM_POR_KS 330` is overwritten by that table. The flag sets seed / feed / split stop to `PM_POR_EARLY_KS/FS/SS` (210/235/310), plus optional `_F6` (L<=6 feeders) and `_MERGE`. The park itself is unchanged.
+- **PM_QOS_QSPLIT** (Queen Of Spades). Same mechanism as TROPHY_QSPLIT. `RP.queenKeep = 8` and `RP.queenKeepR = 100`, so while we have <= 8 units and it is before r100, the queen's split floors (early keep 3 and QG_MIN 5) are off and she splits at L4.
+
+Local paired sandbox games vs `variants/b1`, both sides, seeds 2000-2005 (QoS also 2006-2011). "base" = bot/ with flags off in the same seeds.
+
+| Portals (n=12) | KS/FS/SS | queen L r300 | L r400 | L r500 | queen alive r500 | total r300 | queen shed runs (segs) | wins vs b1 |
+|---|---|---|---|---|---|---|---|---|
+| base | 250/300/360 | 3 | 30.2 | 36.2 | 11 | 78.9 | 6 (116) | 6 |
+| porA | 210/235/310 | 21.2 | 28.1 | 21.8 | 7 | 63.3 | 9 (262) | 4 |
+| porB | 220/250/330 | 20.2 | 27.8 | 30.4 | 9 | 56.2 | 16 (338) | 5 |
+| porC | 230/260/340 | 13.8 | 23.6 | 18.5 | 7 | 58.3 | 12 (252) | 2 |
+| porE | 250/260/340, F6 280 | 14.5 | 26.2 | 21.8 | 9 | 57.0 | 12 (276) | 5 |
+
+The early crown does what it is meant to: queen length at r300 goes from 3 to 14-21. But every timing loses length and survival by r500, and total length at r300 falls by 20-29%. With R2_DEBUG (porA, seed 2000, side B), the queen at L25 has no legal step from r301 (qdead0), then fires `spEq` (QBOX_K2, shed 2 and wait) on 12 rounds in a row, from L26 down to L4, and dies at r316. A fed-early queen is long while the enemy (b1 mirror) is still in its split phase with 15+ small heads around, and our own L6+ feeders coil next to her in the park. porE (crown unchanged, feeding from r260) fails the same way, so the cause is feeding her early, not crowning her early. **Not staged.** A fix would have to stop the box/shed (feeder heads kept off her, or a park that grows with L) before the earlier feed can work. The b1 mirror may also be harsher here than Vibing++, which funnels its own mass into its queen.
+
+| Queen Of Spades (n=24) | queen 1st split median | split by r30 / r50 | units r30 | units r50 | total r50 | total r100 | total r300 | eliminated | queen dead <r100 | wins vs b1 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| base | r110 (L6.6-6.9) | 2 / 9 | 4.58 | 6.71 | 17.7 | 26.1 | 45.4 | 8 | 15 | 12 |
+| PM_QOS_QSPLIT=1 | r33 (L4.6-4.9) | 12 / 15 | 5.13 | 7.29 | 18.3 | 27.5 | 51.9 | 10 | 16 | 12 |
+
+The queen splits about 80 rounds earlier, at L4. Units at r30 and r50 are up about 0.6, and total length is up 4-14% from r50 to r300. Eliminations are 10 vs 8, which is within noise at n=24 but is the guard to watch. Side B games where the queen never grows past L3 are unchanged. Her first split still comes at r16-26, not r10, because she reaches L4 only then. CPU max 15.6M on QoS.
+
+**Staged:** scratch `r7/stage/m3/` = `bot/` + `#define PM_QOS_QSPLIT 1` (PM_POR_EARLY left off). It matches b1 on Australia (both sides, CPU max 34.0M), Portals (both sides) and QoS side A; QoS side B differs as intended. Judge it on Queen Of Spades server games only: queen first split round, units at r30/r50, and eliminations vs Vibing++/dev. Scripts are in scratch `r7/`: qp7.py (qp6 plus queen length at r300/400/500, first queen split, units/total at r30/50), mkstage.sh, batch*.sh.

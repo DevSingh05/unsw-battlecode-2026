@@ -73,6 +73,8 @@ struct RuntimeParams
     int diveStopRound = 0;                   // no pocket dives from this round (0 = off)
     int queenKeep = 0;                       // R3 TROPHY_QSPLIT: >0 = while units <= this the queen has no split floor (splits at L4 like any unit)
     int mergeRound = KING_V2_MERGE_ROUND;    // R3 SPRINT_KING_PM: any-length feeding from this round (per-map on Sprint)
+    int feed6Round = KING_V2_FEED6_ROUND;    // R7 PM_POR_EARLY: feeders up to L6 feed the king from this round
+    int queenKeepR = TROPHY_QSPLIT_R;        // R7 PM_QOS_QSPLIT: queenKeep applies before this round
     int queenKing = 0;                       // ROUND3 P7: per-map QUEEN_KING (our queen is the only king from the seed round)
     int qPark = 0;                           // ROUND3 P7 PM_QPARK: 1 = Portals park (no portal crossing, home anchor), 2 = Maze home field
     int qpLate = 0;                          // ROUND4 QPARK_GEN: 1 = the generic park starts once we have QPG_UNITS units or at round QPG_FROM (b1 play before it)
@@ -217,6 +219,15 @@ void applyMapParams(const char* name, int tiles = 0)
     }
     if (TROPHY_QSPLIT && n == "Trophy")
         RP.queenKeep = TROPHY_QSPLIT_UNITS; // R3: Trophy queen split floor off while we are few (ROUND2 backlog)
+    if (PM_QOS_QSPLIT && n == "Queen Of Spades")
+        RP.queenKeep = PM_QOS_QSPLIT_UNITS, RP.queenKeepR = PM_QOS_QSPLIT_R; // R7: QoS queen splits at L4 early (Vibing++ splits ~r10)
+    if (PM_POR_EARLY && n == "Portals")
+    {
+        // R7: crown and feed the parked Portals queen earlier (Vibing++ queen L32 at r300; ours L3)
+        RP.kingSeedRound = PM_POR_EARLY_KS, RP.feedStart = PM_POR_EARLY_FS, RP.splitStopRound = PM_POR_EARLY_SS;
+        if (PM_POR_EARLY_F6 > 0) RP.feed6Round = PM_POR_EARLY_F6;
+        if (PM_POR_EARLY_MERGE > 0) RP.mergeRound = PM_POR_EARLY_MERGE;
+    }
     if (n == "Portals" && PM_POR_KPORTAL >= 0)
         RP.kingPortal = PM_POR_KPORTAL; // the Portals module routes the king through portals on purpose
     if (n == "Portals" && PM_POR_LATESPLIT >= 0)
@@ -2946,7 +2957,7 @@ struct Bot
     bool qGuard() const { return QGUARD && amQueen() && (round >= QG_FROM || units >= QG_UNITS); }
     // QGUARD: largest split the queen may make (child k) so she keeps >= QG_MIN; < 2 = no split
     // v38q: QG_MIN floor off when the queen's kelp-sealed region is < QG_REGION_MIN tiles (Schooltime box)
-    bool qFloorOff() const { return TROPHY_QSPLIT && RP.queenKeep > 0 && amQueen() && units <= RP.queenKeep && round < TROPHY_QSPLIT_R; }
+    bool qFloorOff() const { return (TROPHY_QSPLIT || PM_QOS_QSPLIT) && RP.queenKeep > 0 && amQueen() && units <= RP.queenKeep && round < RP.queenKeepR; }
     int qgCap(int k) const
     {
         int c = (qGuard() && !qFloorOff() && !(QG_REGION_MIN > 0 && qRegion < QG_REGION_MIN)) ? std::min(k, myLen - QG_MIN) : k;
@@ -3267,7 +3278,7 @@ struct Bot
         if (KING_V2 && RP.kingDeclare)
             return FEED_ENABLE && feedPhase() && kingId >= 0 && (kingLen >= myLen + 2 || feedsQueen()) && !iAmKing() &&
                    units > feedReserveNow() &&
-                   myLen <= (round >= RP.mergeRound ? 1000 : round >= KING_V2_FEED6_ROUND ? 6 : KING_V2_FEED_LEN);
+                   myLen <= (round >= RP.mergeRound ? 1000 : round >= RP.feed6Round ? 6 : KING_V2_FEED_LEN);
         return FEED_ENABLE && feedPhase() && kingId >= 0 && kingLen >= myLen + 2 && !iAmKing() &&
                (units > RP.feedReserve || (RP.lateFeedRound > 0 && round >= RP.lateFeedRound && units > 1)) && myLen <= FEED_MAX_LEN;
     }

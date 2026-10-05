@@ -2067,3 +2067,35 @@
 #ifndef QK_FUEL_EXTRA
 #define QK_FUEL_EXTRA 4       // at most this many pearl-paid extra steps
 #endif
+
+// ---- R7 map pack 3 (both default 0) ----
+// PM_POR_EARLY: Portals only, the parked queen is crowned / fed earlier (KING_V2 v2("Portals",250,360,300) sets her rounds).
+#ifndef PM_POR_EARLY
+#define PM_POR_EARLY 0
+#endif
+#ifndef PM_POR_EARLY_KS
+#define PM_POR_EARLY_KS 210   // seed (crown) round
+#endif
+#ifndef PM_POR_EARLY_FS
+#define PM_POR_EARLY_FS 235   // feed start
+#endif
+#ifndef PM_POR_EARLY_SS
+#define PM_POR_EARLY_SS 310   // split stop
+#endif
+#ifndef PM_POR_EARLY_F6
+#define PM_POR_EARLY_F6 0     // >0: feeders up to L6 from this round (default KING_V2_FEED6_ROUND 300)
+#endif
+#ifndef PM_POR_EARLY_MERGE
+#define PM_POR_EARLY_MERGE 0  // >0: any-length feeding from this round (default KING_V2_MERGE_ROUND 380)
+#endif
+// PM_QOS_QSPLIT: Queen Of Spades only, the queen's split floors are off while we have <= PM_QOS_QSPLIT_UNITS units
+// and round < PM_QOS_QSPLIT_R (as TROPHY_QSPLIT), so she splits at L4 instead of L6-8.
+#ifndef PM_QOS_QSPLIT
+#define PM_QOS_QSPLIT 0
+#endif
+#ifndef PM_QOS_QSPLIT_UNITS
+#define PM_QOS_QSPLIT_UNITS 8
+#endif
+#ifndef PM_QOS_QSPLIT_R
+#define PM_QOS_QSPLIT_R 100
+#endif
