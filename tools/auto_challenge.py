@@ -155,11 +155,11 @@ def main():
             me = next(t for t in L if t["name"] == US)
             busy = pending_opponents()
             if a.band_hi > 0:
-                near = [t for t in L if t["name"] != US and t.get("hasBot", True) and
+                near = [t for t in L if t["name"] != US and t.get("hasBot", True) and not t.get("dev") and
                         a.band_lo <= me["elo"] - t["elo"] <= a.band_hi]
                 near.sort(key=lambda t: -t["elo"])  # strongest in the band first
             else:
-                near = [t for t in L if t["name"] != US and abs(t["rank"] - me["rank"]) <= a.range and t.get("hasBot", True)]
+                near = [t for t in L if t["name"] != US and abs(t["rank"] - me["rank"]) <= a.range and t.get("hasBot", True) and not t.get("dev")]
                 near.sort(key=lambda t: t["rank"])  # higher-ranked first
             top = [t for t in L if t["name"] != US and t["rank"] <= a.top and t.get("hasBot", True)]
             # ranked series first (user: more ranked games vs +-RANGE), unranked vs top-N with what's left
