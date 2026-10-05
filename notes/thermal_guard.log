@@ -514,3 +514,18 @@
 23:44 UTC PAUSE cpu=99.5C load=16.31 warn=0
 23:47 UTC RESUME cpu=55.6C load=2.97
 23:50 UTC PAUSE cpu=102.3C load=17.40 warn=0
+23:53 UTC ok cpu=59.1C load=3.91 paused=1
+23:53 UTC RESUME cpu=60.9C load=3.89
+23:57 UTC PAUSE cpu=100.3C load=16.24 warn=0
+00:00 UTC RESUME cpu=51.8C load=2.55
+00:02 UTC PAUSE cpu=97.6C load=17.93 warn=0
+00:03 UTC ok cpu=51.8C load=10.24 paused=1
+00:06 UTC RESUME cpu=51.8C load=3.00
+00:13 UTC ok cpu=78.7C load=14.84 paused=0
+00:23 UTC ok cpu=85.5C load=13.95 paused=0
+00:40 UTC ok cpu=51.8C load=1.40 paused=0
+00:50 UTC ok cpu=51.8C load=1.72 paused=0
+00:55 UTC PAUSE cpu=51.8C load=18.45 warn=0
+00:58 UTC RESUME cpu=51.8C load=3.19
+01:00 UTC ok cpu=51.8C load=2.48 paused=0
+01:14 UTC ok cpu=88.5C load=11.74 paused=0

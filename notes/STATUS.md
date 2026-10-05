@@ -81,7 +81,7 @@ Refuted: P2 portal-exit bug fix (bug is real, fix doesn't change outcomes), P4 p
 1. **LATE_HUNT** (in bot/ as flag `LATE_HUNT`, default 0; variants/v68 = on): once our queen is dead, hunt theirs map-wide. Plays identically to v61 until an ally sees our queen die (detects ~60% of deaths, 0 false alarms). Local neutral, as expected. Next server test after v69. Judge it on r500 'our queen dead' losses vs non-top-10.
 2. **QEARLY_PEN** (v69): queen portal/blind penalties also before r100. Server test lost (leaning); flag not folded into bot/.
 3. **King timing** (v70, SPRINT_KING_PM): Around UNSW seed 190/feed 230. Mixed locally: helps when we out-mass the opponent, hurts against equal mass. Low priority; affects 1/17 of games.
-4. **Qualifier build** (before Fri 2 AM): mainline + INFER_SYM=1 (unseen-only, +.548 blind) + MATCH_STRICT-lite (already in). Check that blind17/real don't regress.
+4. **Qualifier build** (before Fri 2 AM): mainline, which now has INFER_SYM on (unseen-only, ~.55 blind in two runs) + MATCH_STRICT-lite. Unseen queen park (QPARK_UNK) rejected: .579, .526, .465 on three seed sets, official-blind always below .50.
 
 ## Where things are
 - Journal (timestamped log, UTC): notes/journal.md

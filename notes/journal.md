@@ -317,3 +317,6 @@
 - 23:34 UTC: b1 at 2231 (highest yet). Round 4: generic queen park in bot/ (flags default 0). q1 = b1 + park on Australia/Around UNSW/Slithery/Tower Defense/weakhold uploaded; loop unranked panel on those 5 maps. QPARK_UNK not ready (crown fails on unseen maps; park-only variant promising).
 - 23:50 UTC: Picked up Codex's QKILL_FUEL (Codex out of usage): ported into bot/ (default 0; flags-off identical to b1 on devil/portals/maze seed 1000). Staged f1 = bot/ + QKILL_FUEL=1 (scratch r5/stage/f1): 5 smoke games clean, CPU max 32.8M. Queued after q1 verdict; all-maps change, tested alone.
 - 00:15 UTC: Qualifier options vs b1 on unseen sets (seed 701000): INFER_SYM .548 (2nd independent run at ~.55) -> ON by default in bot/ (known-map play unchanged, verified 4 maps). Park-only QPARK_UNK=1 QPG_CROWN=0: .579 (real .64, realhold .63, blind17 .46); park+sym .539. Rechecking park-only on top of INFER_SYM on 2 fresh seed sets.
+- 00:24 UTC: PAUSED (user moving): challenge loop + unseen eval SIGSTOPped. q1 stays live on the server.
+- 01:11 UTC: RESUMED.
+- 01:21 UTC: Unseen park-only (QPARK_UNK=1 QPG_CROWN=0) on top of INFER_SYM: .526 and .465 on fresh seeds; blind17 .456/.485 every run -> REJECTED for the Qualifier build (first run's .579 was noise). Qualifier build = mainline with INFER_SYM on.
