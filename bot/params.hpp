@@ -2151,3 +2151,36 @@
 #ifndef TR_NET
 #define TR_NET 2
 #endif
+
+// R10 LANE_QSMALL (notes/top5/DEVTEST1_OCT5.md idea 4): lane-map queen stays small and near home, never fed.
+// Bitmask, one bit per map: 1 Trophy, 2 Tower Defense, 4 Devil, 8 Prisoners Dilemma, 16 Autarky, 32 Queen Of Spades.
+// On a map with its bit set: the queen's split floor is min(QSM_KEEP, L-2) (L4 -> 2+2, L5+ -> keeps 3), the
+// early >=3 rule and QG_MIN do not apply to her; soft pull toward her spawn beyond QSM_RAD walking steps; no
+// pocket dives (as the park); she never becomes the king (so nobody feeds her). Other units unchanged.
+#ifndef LANE_QSMALL
+#define LANE_QSMALL 0
+#endif
+#ifndef QSM_KEEP
+#define QSM_KEEP 3            // largest length she keeps after a split
+#endif
+#ifndef QSM_RAD
+#define QSM_RAD 6             // walking steps from spawn before the pull starts
+#endif
+#ifndef QSM_PULL
+#define QSM_PULL 25.0         // per step beyond QSM_RAD (lifted while an enemy head is within PM_QP_FLEE)
+#endif
+#ifndef QSM_POCKET
+#define QSM_POCKET 300.0      // stepping into / deeper into a pocket (soft; 0 = only the dive gates)
+#endif
+#ifndef QSM_NODIVE
+#define QSM_NODIVE 1          // 1 = the small queen uses the park's no-dive gates (pocket factory / pump off for her)
+#endif
+// LANE_QSM_LATE: same bit layout; a map with both bits uses the late style: the mode starts once we have
+// QSM_UNITS units (sticky; she plays b3 before it), no dive gates and no pocket penalty (Devil: from round 1 the
+// economy collapsed, t100 -55%, eliminations 10/12).
+#ifndef LANE_QSM_LATE
+#define LANE_QSM_LATE 0
+#endif
+#ifndef QSM_UNITS
+#define QSM_UNITS 6
+#endif

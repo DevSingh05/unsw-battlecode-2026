@@ -334,3 +334,4 @@
 - 10:25 UTC: k2 DROPPED (queen survival r500 down on Portals/Maze; adjusted -0.9pp). f1 restored (2221). cm1 = cm_pack uploaded; dev loop on Around UNSW + Australia.
 - 12:13 UTC: cm1: Australia bit accepted (len ratio r100 1.65->2.51), AUN bit off. bot/ CROWD_MAPS=2 -> mainline b3 (variants/b3). s1 = b3 + SPLIT_DEFER=3 uploaded; dev loop back to all maps.
 - 14:26 UTC: s1 DROPPED (adjusted -4.8pp, P .14; fewer stillborn but length ratio r100 1.82->1.20, elims 11->24%). Lesson: don't block/defer splits. Restored cm1 (2232), then uploaded mainline b3 (inherits 2232).
+- 14:40 UTC: l1 (lane-map small queen: TD, Devil late, Autarky, QoS) uploaded; dev loop on those 4 maps; ranked loop continues.

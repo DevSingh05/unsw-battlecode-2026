@@ -417,3 +417,36 @@ CPU max on maps/sprint/australia.map with each flag on: 34.0-34.2M (trv2 37.0M).
 Suggested server order:
 1. cm_pack: unranked loop on Around UNSW + Australia vs DEV/VIB; judge boxed-by-ally waste and r300 length.
 2. sdf: all maps; this is the isolated version of c1's SPLIT_NEEDS_EXIT; judge stillborn and `len_ratio_r300`.
+
+## 7. R10 local build of idea 4: lane-map small queen (2026-10-05)
+Flags in bot/, default 0. With flags off, bot/ plays identically to variants/b3 (sandbox seed 1000, both sides, Australia/Devil/Portals/QoS: 8/8 SAME).
+- `LANE_QSMALL` bitmask: 1 Trophy, 2 Tower Defense, 4 Devil, 8 Prisoners Dilemma, 16 Autarky, 32 Queen Of Spades.
+- On a map with its bit set, the queen:
+  - splits everything above min(QSM_KEEP=3, L-2) off: L4 becomes 2+2, L5+ keeps 3. QG_MIN and the early ≥3 rule don't apply to her;
+  - gets a soft pull toward her spawn (25 per walking step beyond QSM_RAD=6, lifted while an enemy head is within 5);
+  - takes no pocket dives (the park's no-dive gates, plus a 300 penalty for stepping deeper into a pocket);
+  - never becomes the king, so she is never fed. No crown.
+- `LANE_QSM_LATE` (same bits) selects the late style for a map: the mode starts once we have QSM_UNITS=6 units, with no dive gates and no pocket penalty.
+
+Method: 6 seeds x both sides vs b3 per map (12 side-games). Baseline is b3 vs b3 on the same seeds, with both teams pooled (n=12). Script: scratch r10/qp10.py and sum10.py.
+
+| map | build | q alive r100/r200/r500 | q deaths (cause) | elim | n30 / n50 | t50 / t100 / t300 | wins | verdict |
+|---|---|---|---|---|---|---|---|---|
+| Trophy | base | 2/2/2 | 10 head-on, r24 | 6 | 2.5 / 5.6 | 15 / 35 / 35 | 6 | |
+| Trophy | small | 3/2/2 | 10 head-on | **10** | 2.4 / 1.8 | 4 / **2** / 2 | 2 | economy collapse; late style = base (queen dies r23, before 6 units) → **off** |
+| Tower Defense | base | 8/4/3 | 6 head-on, 2 body, 1 self | 4 | 2.2 / 2.6 | 7 / 27 / 41 | 6 | |
+| Tower Defense | small | **11/10/9** | 1 head-on, 2 self | **0** | 2.2 / 2.8 | 7 / 34 / 54 | 11 | **on** |
+| Devil | base (24) | 0/0/0 | 23 head-on, r30 | 11/24 | 6.2 / 9.5 | 24 / 40 / 55 | | |
+| Devil | small (from r1) | 5/2/0 | 11 head-on | **10/12** | 7 / 8 | 18 / **17** / 11 | 1 | collapse (the early queen is the economy engine) |
+| Devil | late style (24) | 5/4/3 | 19 head-on | 10/24 | 7.2 / 11.1 | 27 / 46 / 54 | 14/24 | **on, as LATE** (mild; queen still dies ~r45) |
+| Prisoners Dilemma | base | 0/0/0 | 12 head-on, r11 | 6 | 3.5 / 2 | 5 / 5.5 / 11 | 6 | |
+| Prisoners Dilemma | small | identical to base (the queen dies at r11, before the pull or split ever matters) | | | | | | **off** (inert) |
+| Autarky | base | 8/6/2 | 10 head-on, r169 | 2 | 14.4 / 17.3 | 44 / 59 / 75 | 6 | |
+| Autarky | small | **10/10/10** | 2 head-on | **0** | 15.5 / 18.3 | 44 / 63 / 99 | **9** | **on** |
+| Queen Of Spades | base | 3/0/0 | 8 head-on, 2 body, 2 self | 4 | 4.4 / 6.4 | 17 / 26 / 47 | 6 | |
+| Queen Of Spades | small | **9/6/5** | 7 head-on | 3 | 4.5 / 7.2 | 19 / 27 / 54 | **8** | **on** (QoS bit replaces PM_QOS_QSPLIT; don't combine them) |
+
+- Lesson: on Trophy and Devil the small queen kills the opening, because b3's early queen is the unit that pumps out the first children (base Devil: 4 queen splits by r25; small: 1 by r70). The home pull and no-dive gates also cut her income.
+- Where the map gives a home pocket economy (TD, Autarky, QoS), the small home queen survives and the army is unchanged or larger.
+- **Staged l1** (scratch r10/stage/l1) = bot/ + `LANE_QSMALL=54` (TD, Devil, Autarky, QoS) + `LANE_QSM_LATE=4` (Devil). PM_QOS_QSPLIT stays 0.
+- CPU max 33.4M on Australia, 19.1M on Autarky, 14.0M on QoS. Local self-play only: judge on the server by queen alive at r100/r200 and eliminations on these 4 maps vs DEV/VIB.

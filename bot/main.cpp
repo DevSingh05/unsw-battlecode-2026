@@ -81,6 +81,7 @@ struct RuntimeParams
     int qkCap = 0;                           // ROUND3 P7: feeders stop feeding the queen-king at this length (0 = no cap)
     int qkFrom = 0;                          // ROUND3 P7: the per-map queen-king starts at max(kingSeedRound, qkFrom)
     double crowdEarly = 0;                   // ROUND3 P7: crowd penalty used only while round < kingSeedRound (0 = off)
+    int qSmall = 0;                          // R10 LANE_QSMALL: small home queen, never fed
 };
 RuntimeParams RP;
 static inline bool qkOn() { return QUEEN_KING || RP.queenKing; }
@@ -102,6 +103,13 @@ void applyMapParams(const char* name, int tiles = 0)
 {
     RP = RuntimeParams{};
     std::string n(name ? name : "");
+    if (LANE_QSMALL)
+    {
+        static const char* const LQ[] = {"Trophy", "Tower Defense", "Devil", "Prisoners Dilemma", "Autarky", "Queen Of Spades"};
+        for (int i = 0; i < 6; i++)
+            if ((LANE_QSMALL >> i & 1) && n == LQ[i])
+                RP.qSmall = (LANE_QSM_LATE >> i & 1) ? 2 : 1; // R10: lane-map queen small and home (DEVTEST1 idea 4); 2 = late style
+    }
     // ROUND4 QPARK_GEN: generic queen park + crown on one known map each (maps without a king get the unseen-map king timing)
     auto qgen = [&]() {
         static const struct { const char* map; int on; } G[] = {
@@ -2670,7 +2678,51 @@ struct Bot
     // Portals (qPark 1): she never crosses a portal and holds a spot far from every portal mouth/exit.
     // Maze (qPark 2): she stays inside the home field (frame x < PM_MAZE_QX).
     bool qparkQueen() const { return RP.qPark > 0 && amQueen(); }
-    bool qparkNoDive() const { return qparkQueen() && (RP.qPark == 1 || (RP.qPark == 3 ? qpgOn() : (PM_MAZE_QSTAY || round < RP.kingSeedRound))); }
+    // R10 LANE_QSMALL helpers
+    bool qsmOn = false; // sticky: set in qsmPrep once we have QSM_UNITS units
+    bool qsmQueen() const { return LANE_QSMALL && RP.qSmall && amQueen() && qsmOn; }
+    int qsmFloor() const { return std::max(2, std::min(QSM_KEEP, myLen - 2)); }
+    int qsmSpawn = -1;
+    bool qsmFlee = false;
+    std::vector<int> qsmDist;
+    void qsmPrep()
+    {
+        qsmFlee = false;
+        if (LANE_QSMALL && RP.qSmall && amQueen() && myHead >= 0 && qsmSpawn < 0)
+            qsmSpawn = myHead; // home = where she starts
+        if (LANE_QSMALL && RP.qSmall && amQueen() && (RP.qSmall == 1 || units >= QSM_UNITS))
+            qsmOn = true;
+        if (!qsmQueen() || myHead < 0)
+            return;
+        if (qsmDist.empty())
+        {
+            qsmDist.assign(w.N, 99);
+            qsmDist[qsmSpawn] = 0;
+            std::vector<int> q{qsmSpawn};
+            for (size_t i = 0; i < q.size(); i++)
+                for (int d = 0; d < 4; d++)
+                {
+                    int v = step(q[i], d);
+                    if (v >= 0 && v != q[i] && v == w.plainStep(q[i], d) && qsmDist[v] == 99 && qsmDist[q[i]] < 98)
+                        qsmDist[v] = qsmDist[q[i]] + 1, q.push_back(v);
+                }
+        }
+        for (auto& o : segs)
+            if (o.head && o.team != w.myTeam && wrapDist(o.tile, myHead) <= PM_QP_FLEE)
+                qsmFlee = true;
+    }
+    double qsmScore(int t) const
+    {
+        if (!qsmQueen() || myHead < 0 || qsmDist.empty())
+            return 0.0;
+        double s = 0;
+        if (QSM_POCKET > 0 && RP.qSmall == 1 && !pfDepth.empty() && pfDepth[t] > pfDepth[myHead])
+            s -= QSM_POCKET;
+        if (!qsmFlee)
+            s -= QSM_PULL * std::max(0, qsmDist[t] - QSM_RAD);
+        return s;
+    }
+    bool qparkNoDive() const { return (QSM_NODIVE && RP.qSmall == 1 && qsmQueen()) || (qparkQueen() && (RP.qPark == 1 || (RP.qPark == 3 ? qpgOn() : (PM_MAZE_QSTAY || round < RP.kingSeedRound)))); }
     // ROUND4 QPARK_GEN (qPark 3)
     bool qpStarted = false; // sticky; set in qparkPrep
     int qpUnits0 = 0;       // our unit count when the park started
@@ -3021,6 +3073,8 @@ struct Bot
     int qgCap(int k) const
     {
         int c = (qGuard() && !qFloorOff() && !(QG_REGION_MIN > 0 && qRegion < QG_REGION_MIN)) ? std::min(k, myLen - QG_MIN) : k;
+        if (qsmQueen())
+            c = std::min(k, myLen - qsmFloor()); // R10 LANE_QSMALL: small floor replaces QG_MIN
         if (qboxLate())
             c = std::min(c, myLen - 3); // QBOX: late, no voluntary split leaves the queen below L3
         return c;
@@ -3068,6 +3122,11 @@ struct Bot
     static int freeSteps(int L) { return (L + 3) / 4; } // 1.2.3: the first ceil(L/4) steps of a move are free
     void updateKingship()
     {
+        if (qsmQueen())
+        {
+            kingSelf = false; // R10 LANE_QSMALL
+            return;
+        }
         if (qkOn() && amQueen() && queenKingRound())
         {
             kingSelf = true; // she is the king: feeders come to her, she stops splitting
@@ -3122,6 +3181,8 @@ struct Bot
     }
     bool iAmKing() const
     {
+        if (qsmQueen())
+            return false; // R10 LANE_QSMALL: never the king, never fed
         if (qkOn() && queenKingRound() && (amQueen() || queenAlive()))
             return amQueen();
         if (queenSafe())
@@ -5582,6 +5643,7 @@ struct Bot
         }
         updateQsPhase();
         qparkPrep();
+        qsmPrep();
         if (QBOX || QGUARD)
             computeQRegion();
         eqHuntPrep();
@@ -5885,7 +5947,9 @@ struct Bot
                     k = myLen - 2;
             }
             bool viable = true;
-            if (queenEarly() && !qFloorOff() && myLen - k < 3)
+            if (qsmQueen())
+                k = myLen - qsmFloor(); // R10 LANE_QSMALL: split everything above the small floor off
+            else if (queenEarly() && !qFloorOff() && myLen - k < 3)
             {
                 k = myLen - 3; // the early queen keeps >= 3 of herself
                 if (k < 2)
@@ -5902,7 +5966,7 @@ struct Bot
                 else if (myLen >= 5 && splitSideArea(false, k, A) < A)
                     k = myLen - 2; // parent sealed at a tip: the bulk leaves as the child
             }
-            if (qGuard() || qboxLate())
+            if (qGuard() || qboxLate() || qsmQueen())
             {
                 k = qgCap(k); // v37e QGUARD (from v37b): the queen keeps >= QG_MIN (covers every k=L-2 branch above)
                 if (k < 2)
@@ -6373,6 +6437,8 @@ struct Bot
             score += eo.map;
             if (RP.qPark)
                 score += qparkScore(t, d, eo.dead); // ROUND3 P7 PM_QPARK
+            if (RP.qSmall)
+                score += qsmScore(t); // R10 LANE_QSMALL
             if (KING_CORRIDOR_PENALTY > 0 && myLen >= 10)
             {
                 // big dragons stay out of 1-wide corridors: no room to dodge or turn
