@@ -1,6 +1,6 @@
 # STATUS (single source of truth)
 
-Last updated: 2026-10-05 08:20 EDT. All updates to the user come from this page. Times are US Eastern.
+Last updated: 2026-10-05 10:35 EDT. All updates to the user come from this page. Times are US Eastern.
 
 ## Live and mainline
 - **Mainline = `bot/`** = b3 (b2 + Australia crowd penalty): v61 (QS_FROM=100, QSPLIT_ROOM=1) + Portals/Maze queen park and crown + QKILL_FUEL + INFER_SYM (unknown maps only). Every new idea goes into `bot/` as a flag, default 0. No vNN copies; test builds are staged in the scratchpad.
@@ -45,7 +45,8 @@ Last updated: 2026-10-05 08:20 EDT. All updates to the user come from this page.
 | h1 | b2 + LATE_HUNT + QKILL_KING (lone enemy queen kill, alone) | **LOSS** | 586 games: adjusted -2.1 pp (CI -9.6..+5.3), P 0.29 → drop at 500. King queen kills 0% → 4% but no gain. f1 restored (2221). |
 | k2 | b2 + QK_EG=2 (crowned-queen kamikaze guard) | **LOSS** (mechanism) | 313 games: adjusted -0.9 pp, P 0.41; target stat wrong way: queen alive at r500 Portals 92% → 81%, Maze 56% → 39% (mostly vs dev team). Dropped; f1 restored (2221). |
 | cm1 | b2 + CROWD_MAPS=3 (crowd penalty on Around UNSW + Australia) | **accepted for Australia only** | per map (n 12-28, cm1 mostly vs dev team): Australia length ratio r100 1.65 → 2.51, r300 1.21 → 2.07, wins 50% → 57%; Around UNSW stillborn down but ratio flat, wins 67% → 46% → bit off. Mainline b3 = CROWD_MAPS=2. |
-| s1 | b3 + SPLIT_DEFER=3 | **testing**, live since Mon 8:20 AM; dev loop all maps + ranked loop | all-maps; target stillborn_by_r100 down, length ratio r300 not down |
+| s1 | b3 + SPLIT_DEFER=3 | **LOSS** | 318 games: adjusted -4.8 pp (CI -13.2..+3.8), P 0.14. Stillborn by r100 12.6 → 4.5 per game, but length ratio r100 1.82 → 1.20, eliminated 11% → 24%. Second time that blocking/deferring splits backfired (c1 too): stillborn children are cheap and the extra splits pay off. Don't retry. |
+| b3 | mainline: b2 + Australia crowd penalty | live since Mon 10:35 AM (inherited 2232 from cm1) | |
 | k1 | b1 + QK_EG=2 (crowned-queen kamikaze guard, lunge reach 5 + approach trend) | staged (scratch r6/stage/k1), queued | Portals/Maze only in effect; judge on crowned-queen rams after r300 |
 
 ## What we know about why we lose (notes/newrules/LOSS_AUDIT2.md, v55/v61, 250 losses)
