@@ -32,6 +32,9 @@ import api  # noqa: E402
 
 US = "Cache me outside"
 OUT = ROOT / "replays" / "auto"
+import os as _os
+if _os.environ.get("AC_OUT"):
+    OUT = ROOT / "replays" / _os.environ["AC_OUT"]  # separate budget/state dir (e.g. the dev-team quota)
 LOCK = ROOT / "codex-battlecode" / "coord" / "SERVER_LOCK"
 MAP_IDS = {"Schooltime": 9, "Portals": 20, "Slithery Fight": 21, "Queen Of Spades": 7, "Default": 4,
            "Trophy": 11, "Prisoners Dilemma": 17, "Autarky": 19, "Devil": 13, "Trauma": 15}
