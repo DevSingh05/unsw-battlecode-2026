@@ -1684,6 +1684,85 @@
 #ifndef QKK_ALIVE_MEM
 #define QKK_ALIVE_MEM 30
 #endif
+// DGU F1 QKK_FREE=1 (with QKILL_KING=1): the king's queen-kill path is capped at freeSteps(myLen) steps, so the
+// kill never costs length (notes/newrules/UNDERSTANDING.md fix 1). 0 = the plain QKILL_KING search (K = F + L-2).
+#ifndef QKK_FREE
+#define QKK_FREE 0
+#endif
+// DGU F2 QVAULT (bitmask, 0 = off; UNDERSTANDING.md fix 2). Never on maps with a queen park (RP.qPark).
+//  1: a portal-only room = a component of the plain-step graph of <= QVAULT_MAX tiles whose every exit is a portal
+//     (Slithery Fight 2x2 vaults). The queen takes -QVAULT_PEN for stepping into one, or onto its mouth when the
+//     mouth's other exits are all occupied; no voluntary queen split while her head is inside one.
+//  2: Australia only: before queenSafe(), the queen takes -QVAULT_AUS_PEN for a portal step into an unseen tile
+//     whose area is < QVAULT_AUS_AREA (the 12-tile portal vault).
+#ifndef QVAULT
+#define QVAULT 0
+#endif
+#ifndef QVAULT_MAX
+#define QVAULT_MAX 6
+#endif
+#ifndef QVAULT_PEN
+#define QVAULT_PEN 500.0
+#endif
+#ifndef QVAULT_AUS_AREA
+#define QVAULT_AUS_AREA 30
+#endif
+#ifndef QVAULT_AUS_PEN
+#define QVAULT_AUS_PEN 60.0
+#endif
+// DGU F4 PM_TD_PULL (UNDERSTANDING.md fix 4): Tower Defense non-queen units, rounds [PM_TD_PULL_FROM, PM_TD_PULL_TO),
+// score += PM_TD_PULL per walking step closer to the centre field (x 13-18, tiles with a pearl rate > 0), until the
+// head is within PM_TD_PULL_MIN steps of it. 0 = off.
+#ifndef PM_TD_PULL
+#define PM_TD_PULL 0.0
+#endif
+#ifndef PM_TD_PULL_FROM
+#define PM_TD_PULL_FROM 0
+#endif
+#ifndef PM_TD_PULL_TO
+#define PM_TD_PULL_TO 100
+#endif
+#ifndef PM_TD_PULL_MIN
+#define PM_TD_PULL_MIN 2
+#endif
+// DGU F5 QG_RAM (UNDERSTANDING.md fix 5): while our queen is crowned (queenKingRound), an enemy head within QG_RAM of
+// her last known tile, or (Maze park, RP.qPark == 2) inside our home field (frame x <= QG_FIELD_X), is always worth
+// the head-on trade for our units of L <= QG_RAM_MAXLEN, and the ram guard is skipped. 0 = off.
+#ifndef QG_RAM
+#define QG_RAM 0
+#endif
+#ifndef QG_RAM_MAXLEN
+#define QG_RAM_MAXLEN 6
+#endif
+#ifndef QG_FIELD_X
+#define QG_FIELD_X 11
+#endif
+// DGU F6 SCH_DOORS (UNDERSTANDING.md fix 6): Schooltime layout B opens 4 kelp edges of layout A (the side-room
+// chamber doors at y30, x4|5, 15|16, 43|44, 54|55). An open door counts as consistent with Schooltime (the known map
+// is no longer dropped), and on layout B (schLayout == 2, or a door seen open) the 4 door edges are opened. 0 = off.
+#ifndef SCH_DOORS
+#define SCH_DOORS 0
+#endif
+// SCH_CHAMBER (needs SCH_DOORS): on layout B, units of L <= SCH_CH_MAXLEN in rounds [SCH_CH_FROM, SCH_CH_TO) within
+// SCH_CH_RANGE steps of a chamber get +SCH_CH_W per step closer; off once 2 allies are inside. 0 = off.
+#ifndef SCH_CHAMBER
+#define SCH_CHAMBER 0
+#endif
+#ifndef SCH_CH_W
+#define SCH_CH_W 3.0
+#endif
+#ifndef SCH_CH_MAXLEN
+#define SCH_CH_MAXLEN 4
+#endif
+#ifndef SCH_CH_FROM
+#define SCH_CH_FROM 30
+#endif
+#ifndef SCH_CH_TO
+#define SCH_CH_TO 300
+#endif
+#ifndef SCH_CH_RANGE
+#define SCH_CH_RANGE 20
+#endif
 // LH_FINISH=1 (needs LATE_HUNT=1 for the tracker): local finisher, independent of our queen's state. A non-queen,
 // non-king unit that itself saw her within LHF_MEM rounds at max length <= LHF_QLEN, with no other enemy head in
 // view, from round LHF_FROM, gets the LATE_HUNT pull to her (her threat zone ignored). Not lhOn(): no relay changes.

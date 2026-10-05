@@ -340,3 +340,4 @@
 - 18:18 UTC: MIDSIZE built (bot/ flag default 0); best setting L staged ms1 (weak locally). Uploaded ms1 as server test (local self-play has misjudged before).
 - 18:25 UTC: User: stop churning, understand the games. Launched deep-game-understanding workflow: decision-replay harness (re-run our bot on exact server inputs for a dragon/round with score breakdown) + 6 map-group analysts watching wins AND losses turn by turn -> harness-verified root causes per decision -> notes/newrules/UNDERSTANDING.md -> only fixes that flip failure decisions without changing winning ones get built. ms1 server test continues meanwhile.
 - 20:40 UTC: ms1 DROPPED (adjusted -5.8pp, P .05). b3 re-uploaded. No further server tests until the deep-understanding workflow reports.
+- 21:30 UTC: PAUSED (user moving): loops + local games SIGSTOPped; workflow build agent paused via its processes.

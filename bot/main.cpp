@@ -656,9 +656,34 @@ struct World
         return false;
     }
 
+    // DGU F6 SCH_DOORS: Schooltime layout B opens 4 kelp edges of layout A (the side-room chamber doors at y30)
+    static bool schDoor(const KnownMap& m, int W, int t, int d)
+    {
+        if (!SCH_DOORS || (d != 1 && d != 3) || W != 60 || t / W != 30 || m.h != 40)
+            return false;
+        int xe = d == 1 ? t % W : t % W - 1; // the tile west of the edge
+        if (xe != 4 && xe != 15 && xe != 43 && xe != 54)
+            return false;
+        return std::strcmp(m.name, "Schooltime") == 0;
+    }
+    bool schDoorKelp = false; // DGU F6: a door edge was seen as kelp: never open the doors again
+    void schOpenDoors()
+    {
+        if (schDoorKelp)
+            return;
+        for (int x : {4, 15, 43, 54})
+        {
+            int a = idx(x, 30), b = idx(x + 1, 30);
+            nxt[a * 4 + 1] = b;
+            nxt[b * 4 + 3] = a;
+        }
+    }
+
     // Tile t, side d has edge kind k. Check it against a known map.
     static bool consistent(const KnownMap& m, int W, int t, int d, int k)
     {
+        if (k == 0 && schDoor(m, W, t, d))
+            return true; // DGU F6 SCH_DOORS: an open door fits Schooltime (layout B)
         int v = m.nxt[t * 4 + d];
         int x = t % W, y = t / W;
         int H = m.h;
@@ -734,6 +759,29 @@ struct World
             }
             if (!known && !candidates.empty())
                 adopt(&KNOWN_MAPS[candidates.front()]);
+            if (SCH_DOORS && known)
+            {
+                bool open = false;
+                for (auto& [td, k] : obs)
+                    if (schDoor(*known, W, td / 4, td % 4))
+                    {
+                        if (k == 0)
+                            open = true;
+                        else if (k == 1 && !schDoorKelp)
+                        {
+                            // a door seen closed (layout A, or a B map without the doors): close all 4 for good
+                            for (int x : {4, 15, 43, 54})
+                            {
+                                int a = idx(x, 30), b = idx(x + 1, 30);
+                                nxt[a * 4 + 1] = -1;
+                                nxt[b * 4 + 3] = -1;
+                            }
+                            schDoorKelp = true;
+                        }
+                    }
+                if (open)
+                    schOpenDoors(); // DGU F6 SCH_DOORS: a door seen open = layout B
+            }
         }
         if (!known)
         {
@@ -2711,6 +2759,36 @@ struct Bot
             if (o.head && o.team != w.myTeam && wrapDist(o.tile, myHead) <= PM_QP_FLEE)
                 qsmFlee = true;
     }
+    // DGU F4 PM_TD_PULL (root-lanes-b RLB C1): Tower Defense non-queen units walk to the centre field early.
+    std::vector<int> tdDist;
+    bool tdPullOn() const
+    {
+        return PM_TD_PULL > 0 && w.known && !amQueen() && round >= PM_TD_PULL_FROM && round < PM_TD_PULL_TO && myHead >= 0 &&
+               std::string(w.known->name) == "Tower Defense";
+    }
+    void tdPrep()
+    {
+        if (!tdPullOn() || !tdDist.empty())
+            return;
+        tdDist.assign(w.N, 999);
+        std::vector<int> q;
+        for (int t = 0; t < w.N; t++)
+            if (t % w.W >= 13 && t % w.W <= 18 && w.rate(t) > 0)
+                tdDist[t] = 0, q.push_back(t);
+        for (size_t i = 0; i < q.size(); i++)
+            for (int d = 0; d < 4; d++)
+            {
+                int v = step(q[i], d);
+                if (v >= 0 && v != q[i] && tdDist[v] == 999)
+                    tdDist[v] = tdDist[q[i]] + 1, q.push_back(v);
+            }
+    }
+    double tdPullScore(int t) const
+    {
+        if (!tdPullOn() || tdDist.empty() || tdDist[myHead] <= PM_TD_PULL_MIN || tdDist[t] >= 999)
+            return 0.0;
+        return PM_TD_PULL * (tdDist[myHead] - tdDist[t]);
+    }
     double qsmScore(int t) const
     {
         if (!qsmQueen() || myHead < 0 || qsmDist.empty())
@@ -4491,7 +4569,7 @@ struct Bot
     // path of <= K(myLen) = F + (L-2) steps over empty tiles (or tiles our own tail freed this turn) that ends
     // on her head is a certain head-on kill. Own body simulated step by step: a free step frees 1 tail tile,
     // a paid step 2, eating holds 1; a paid step needs length >= 3. Shortest path wins.
-    bool tryQueenKill()
+    bool tryQueenKill(int capK = 1 << 30) // DGU F1: capK caps the path length (QKK_FREE)
     {
         int eq = -1;
         for (auto& s : segs)
@@ -4509,6 +4587,7 @@ struct Bot
                 pearls += visible[t] && w.pearlMem[t] && occId[t] < 0;
             K += std::min(pearls, QK_FUEL_EXTRA); // QKILL_FUEL (Codex): pearl-paid steps extend the certain-kill search
         }
+        K = std::min(K, capK);
         const bool trailOk = static_cast<int>(trail.size()) == myLen;
         auto pass = [&](int t) { // may a path step through t at all (ignoring our own body timing)
             if (t < 0 || !visible[t] || freeOther[t] > 1)
@@ -4628,6 +4707,21 @@ struct Bot
             ours = std::max(qsOurLen, 1);
         return !(ours > 0 && ours > theirs);
     }
+    // DGU F5 QG_RAM (root-portals-maze C3): an enemy head that threatens our crowned queen: near her last known tile,
+    // or (Maze park) inside our home field (frame x <= QG_FIELD_X; non-queens rarely hear her beacon there)
+    bool qgNearQueen(int tile) const
+    {
+        if (!RP.queenKing || amQueen() || !queenKingRound())
+            return false;
+        if (queenAlive() && qTile >= 0 && wrapDist(tile, qTile) <= QG_RAM)
+            return true;
+        if (RP.qPark == 2)
+        {
+            int x = tile % w.W, fx = w.myTeam == 'A' ? x : w.W - 1 - x;
+            return fx <= QG_FIELD_X;
+        }
+        return false;
+    }
     // Try a head-on ram at distance 1 or 2. Returns true if we emitted it.
     bool tryRam()
     {
@@ -4638,7 +4732,7 @@ struct Bot
             r2log("lhk");
             return true;
         }
-        if (QKILL_KING && ENABLE_RAM && units >= 2 && !amQueen() && feedPhase() && iAmKing() && qkkAllowed() && tryQueenKill())
+        if (QKILL_KING && ENABLE_RAM && units >= 2 && !amQueen() && feedPhase() && iAmKing() && qkkAllowed() && tryQueenKill(QKK_FREE ? freeSteps(myLen) : 1 << 30))
         {
             r2log("qkk"); // ROUND2 P1: a king (often a self-crowned L8+ camper) takes a certain queen kill too
             return true;
@@ -4661,7 +4755,11 @@ struct Bot
             bool hunt = QUEEN_HUNT && s.id <= 1 && !amQueen() && units >= QH_MIN_UNITS;
             // worth it if they're at least as valuable as us, and we aren't the king
             bool worth = hunt || theirs >= myLen || (myLen <= RAM_MAX_OWN_LEN);
-            if (!hunt && RP.ramGuard && theirs < myLen + 2)
+            // DGU F5 QG_RAM: an enemy head this close to our crowned queen is worth any small trade
+            const bool qgRam = QG_RAM > 0 && myLen <= QG_RAM_MAXLEN && qgNearQueen(s.tile);
+            if (qgRam)
+                worth = true;
+            if (!hunt && !qgRam && RP.ramGuard && theirs < myLen + 2)
             {
                 // an even trade only helps when we have the numbers
                 int allyHeads = 1, enemyHeads = 0;
@@ -5278,10 +5376,58 @@ struct Bot
     // SPLIT_VIABLE (notes/23): time-aware flood area for one half after SPLIT k (child head =
     // our tail, parent head = our head); own segments free as each half moves, others use freeOther.
     // v39 QSPLIT_ROOM: true if the queen must not split off k now (her side lacks room or an ally head is close)
+    // DGU F2 QVAULT bit 1: a portal-only room = a component of the plain (non-portal) step graph of at most
+    // QVAULT_MAX tiles whose every way out is a portal (Slithery Fight 2x2 vaults). Its exit lands next to its
+    // entrance: on the queen's own neck, her newborn children and the allies trailing her, none of which she sees.
+    std::vector<char> vaultT;
+    int vaultRound = -1;
+    const void* vaultKnown = nullptr; // a recognised map's topology is fixed: build the table once
+    bool isVault(int t)
+    {
+        if (!(QVAULT & 1) || t < 0)
+            return false;
+        if (vaultRound != round && (!w.known || vaultKnown != w.known))
+        {
+            vaultRound = round;
+            vaultKnown = w.known;
+            vaultT.assign(w.N, 0);
+            std::vector<int> comp(w.N, -1), q;
+            for (int s0 = 0; s0 < w.N; s0++)
+            {
+                if (comp[s0] >= 0)
+                    continue;
+                q.clear();
+                q.push_back(s0);
+                comp[s0] = s0;
+                bool portal = false;
+                for (size_t i = 0; i < q.size(); i++)
+                    for (int d = 0; d < 4; d++)
+                    {
+                        int v = step(q[i], d);
+                        if (v < 0)
+                            continue;
+                        if (v != w.plainStep(q[i], d))
+                        {
+                            portal = true;
+                            continue;
+                        }
+                        if (comp[v] < 0)
+                            comp[v] = s0, q.push_back(v);
+                    }
+                if (static_cast<int>(q.size()) <= QVAULT_MAX && portal)
+                    for (int u : q)
+                        vaultT[u] = 1;
+            }
+        }
+        return vaultT[t] != 0;
+    }
+
     bool qsrBlock(int k)
     {
         if (!QSPLIT_ROOM || !amQueen())
             return false;
+        if ((QVAULT & 1) && !RP.qPark && isVault(myHead))
+            return true; // DGU F2 QVAULT: no voluntary split inside a portal-only room (the child is born on its exit)
         for (auto& o : segs)
             if (o.head && o.team == w.myTeam && o.id != w.myId && wrapDist(o.tile, myHead) <= QSR_ALLY)
                 return true;
@@ -5674,6 +5820,8 @@ struct Bot
         updateQsPhase();
         qparkPrep();
         qsmPrep();
+        if (PM_TD_PULL > 0)
+            tdPrep(); // DGU F4
         if (QBOX || QGUARD)
             computeQRegion();
         eqHuntPrep();
@@ -6224,6 +6372,29 @@ struct Bot
             if (occId[t] >= 0 && freeT[t] > 1)
                 return false; // occupied (rams handled above)
             double score = 0;
+            if ((QVAULT & 1) && !RP.qPark && amQueen() && !isVault(myHead))
+            {
+                // DGU F2 QVAULT: the queen doesn't walk into a portal-only room, nor onto its mouth when her own
+                // body or others leave the room as the only way on
+                if (isVault(t))
+                    score -= QVAULT_PEN;
+                else
+                {
+                    int vaultNb = 0, exits = 0;
+                    for (int e = 0; e < 4; e++)
+                    {
+                        int v = step(t, e);
+                        if (v < 0 || v == myHead)
+                            continue;
+                        if (isVault(v))
+                            vaultNb++;
+                        else if (!(occId[v] >= 0 && freeT[v] > 2))
+                            exits++;
+                    }
+                    if (vaultNb > 0 && exits == 0)
+                        score -= QVAULT_PEN;
+                }
+            }
             if (QBOX && amQueen() && visible[t] && w.pearlMem[t])
             {
                 // QBOX: eating keeps the tail in place; with no free neighbour of t next turn she is boxed (L4 Schooltime)
@@ -6269,6 +6440,9 @@ struct Bot
                 score -= 50.0; // inside: the planned branch (the others are shorter or empty)
             if (area < need && !pump)
                 score -= AREA_WEIGHT * (need - area) / need + 20;
+            if ((QVAULT & 2) && !RP.qPark && amQueen() && w.known && std::strcmp(w.known->name, "Australia") == 0 && !queenSafe() && !visible[t] && t != w.plainStep(myHead, d) &&
+                area < QVAULT_AUS_AREA)
+                score -= QVAULT_AUS_PEN; // DGU F2 QVAULT bit 2: early queen never enters the Australia portal vault
             if (DIVE_VALUE && (DV_PARTS & 8) && !pump && !pfIn && t != holdTile && myLen <= PF_MAXLEN && !pfDepth.empty() &&
                 pfDepth[t] > 0 && pfDepth[myHead] == 0)
             {
@@ -6486,6 +6660,8 @@ struct Bot
                 score += qparkScore(t, d, eo.dead); // ROUND3 P7 PM_QPARK
             if (RP.qSmall)
                 score += qsmScore(t); // R10 LANE_QSMALL
+            if (PM_TD_PULL > 0)
+                score += tdPullScore(t); // DGU F4 PM_TD_PULL
             if (KING_CORRIDOR_PENALTY > 0 && myLen >= 10)
             {
                 // big dragons stay out of 1-wide corridors: no room to dodge or turn

@@ -109,6 +109,8 @@ void schDetect()
         schLayout = spawns == aSp ? 1 : 2;
         break;
     }
+    if (schLayout == 2 && SCH_DOORS)
+        w.schOpenDoors(); // DGU F6 SCH_DOORS: layout B's chamber doors are open
     if (schLayout == 2 && SCH_LAYOUT_PATCH)
     {
         for (int t = 0; t < w.N; t++)
@@ -363,6 +365,50 @@ double schKeepScore(int t)
 }
 #endif
 
+// DGU F6 SCH_CHAMBER: on layout B, small dragons walk to the side-room chambers behind the y30 doors
+std::vector<char> schCh;
+std::vector<int> schChD;
+double schChamberScore(int t)
+{
+    if (schCh.empty())
+    {
+        schCh.assign(w.N, 0);
+        for (int s0 : {w.idx(5, 30), w.idx(44, 30)})
+        {
+            std::vector<int> q{s0};
+            schCh[s0] = 1;
+            for (size_t i = 0; i < q.size(); i++)
+                for (int e = 0; e < 4; e++)
+                {
+                    int v = w.known->nxt[q[i] * 4 + e];
+                    if (v >= 0 && !schCh[v])
+                        schCh[v] = 1, q.push_back(v);
+                }
+        }
+        schChD.assign(w.N, 1 << 20);
+        std::vector<int> q;
+        for (int u = 0; u < w.N; u++)
+            if (schCh[u])
+                schChD[u] = 0, q.push_back(u);
+        for (size_t i = 0; i < q.size(); i++)
+            for (int e = 0; e < 4; e++)
+            {
+                int v = w.nxt[q[i] * 4 + e];
+                if (v >= 0 && schChD[v] > schChD[q[i]] + 1)
+                    schChD[v] = schChD[q[i]] + 1, q.push_back(v);
+            }
+    }
+    if (myLen > SCH_CH_MAXLEN || round < SCH_CH_FROM || round >= SCH_CH_TO || schCh[myHead] || schChD[myHead] > SCH_CH_RANGE)
+        return 0.0;
+    int inside = 0;
+    for (auto& o : segs)
+        if (o.head && o.team == w.myTeam && o.id != w.myId && schCh[o.tile])
+            inside++;
+    if (inside >= 2)
+        return 0.0;
+    return SCH_CH_W * (schChD[myHead] - schChD[t]);
+}
+
 // Extra score for moving onto tile t (direction d). Added to the normal score.
 double schooltimeScore(int t, int d)
 {
@@ -381,6 +427,8 @@ double schooltimeScore(int t, int d)
 #if SCH_B_KEEP
         s += schKeepScore(t);
 #endif
+        if (SCH_CHAMBER && SCH_DOORS)
+            s += schChamberScore(t); // DGU F6
         return s;
     }
 #endif
