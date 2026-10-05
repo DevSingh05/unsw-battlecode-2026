@@ -1,10 +1,10 @@
 # STATUS (single source of truth)
 
-Last updated: 2026-10-04 22:55 EDT. All updates to the user come from this page. Times are US Eastern.
+Last updated: 2026-10-05 00:35 EDT. All updates to the user come from this page. Times are US Eastern.
 
 ## Live and mainline
-- **Mainline = `bot/`** = b1: v61 (QS_FROM=100, QSPLIT_ROOM=1) + Portals/Maze queen park and crown. Every new idea goes into `bot/` as a flag, default 0. No vNN copies; test builds are staged in the scratchpad.
-- **Live on server:** b1 (identical copy in `variants/b1` for rating-restoring re-uploads).
+- **Mainline = `bot/`** = b2: v61 (QS_FROM=100, QSPLIT_ROOM=1) + Portals/Maze queen park and crown + QKILL_FUEL + INFER_SYM (unknown maps only). Every new idea goes into `bot/` as a flag, default 0. No vNN copies; test builds are staged in the scratchpad.
+- **Last accepted live build:** f1 (= b2 on known maps; identical copy in `variants/f1` for rating-restoring re-uploads). b1 copy kept in `variants/b1`.
 - **Fallbacks:** `variants/v61`, `variants/v44`. Re-uploading an identical build restores its old rating.
 - **Kept in `variants/`:** b1 (live), v61, v44 (fallbacks), v35, v38m (local test opponents).
 - **Challenge budget:** the server allows 60 challenge games/h (12 series). Unranked series let us choose maps, so map-specific fixes are tested with the loop restricted to their maps.
@@ -41,7 +41,8 @@ Last updated: 2026-10-04 22:55 EDT. All updates to the user come from this page.
 | m2 | m1 without the Schooltime change | **WIN** | 219 games: adjusted +7.5 pp (CI +1.0..+13.4), P(better) 0.99. Pooled m1+m2 per map vs v61: Portals 54% vs 41% (queen alive r500 85% vs 0%); Maze 40% vs 35% (queen alive 34% vs 10%); Stripes 85% vs 84% (flat → off); Trophy 64% vs 70% (→ off). |
 | b1 | v61 + PM_QPARK_PORTALS + PM_QPARK_MAZE (new mainline) | live since Sun 6:55 PM, ranked loop on all maps | baseline block for the next tests |
 | q1 | b1 + queen park on Australia/Around UNSW/Slithery/Tower Defense/weakhold | **LOSS** | per map vs v61 (unranked panel vs v61's mixed baseline, so biased against q1, but mechanisms agree): Australia 41% vs 56%, Around UNSW 40% vs 59%, Slithery 16% vs 31%, Tower Defense 43% vs 69% with eliminations 8% → 44% and r100 length ratio x0.29. All five off. Park helps only on Portals/Maze. |
-| f1 | b1 + QKILL_FUEL (Codex: pearl-paid steps in the certain queen-kill search) | **testing**, live since Sun 10:55 PM; loop unranked panel, all 17 maps | all-maps; adjusted model |
+| f1 | b1 + QKILL_FUEL (Codex: pearl-paid steps in the certain queen-kill search) | **accepted** (neutral) | 240 games: adjusted -0.1 pp (CI -12..+11), P 0.50; mechanism: enemy queen killed 39% → 43%, eliminated 27% → 12% (raw, opponent mix differs). Narrow, sound change → kept. Rating-restore copy: variants/f1. |
+| h1 | b2 + LATE_HUNT + QKILL_KING (lone enemy queen kill, alone) | **testing**, live since Mon 12:35 AM | all-maps; adjusted model; target: r500 losses with our queen dead while we lead |
 | k1 | b1 + QK_EG=2 (crowned-queen kamikaze guard, lunge reach 5 + approach trend) | staged (scratch r6/stage/k1), queued | Portals/Maze only in effect; judge on crowned-queen rams after r300 |
 
 ## What we know about why we lose (notes/newrules/LOSS_AUDIT2.md, v55/v61, 250 losses)

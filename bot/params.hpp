@@ -2059,7 +2059,7 @@
 // visible pearls on the path (eating keeps length). Top teams fund ~25% of their queen kills this way.
 // Ordinary rams, queen safety and the king gate are unchanged. Unit test: codex-battlecode/tests/queen_fuel_test.cpp
 #ifndef QKILL_FUEL
-#define QKILL_FUEL 0
+#define QKILL_FUEL 1 // on since 2026-10-05 (f1: server neutral-positive, accepted)
 #endif
 #ifndef QK_FUEL_MAXLEN
 #define QK_FUEL_MAXLEN 7      // only units up to this length extend the search
