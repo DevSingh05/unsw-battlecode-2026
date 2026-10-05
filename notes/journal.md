@@ -336,3 +336,4 @@
 - 14:26 UTC: s1 DROPPED (adjusted -4.8pp, P .14; fewer stillborn but length ratio r100 1.82->1.20, elims 11->24%). Lesson: don't block/defer splits. Restored cm1 (2232), then uploaded mainline b3 (inherits 2232).
 - 14:40 UTC: l1 (lane-map small queen: TD, Devil late, Autarky, QoS) uploaded; dev loop on those 4 maps; ranked loop continues.
 - 16:32 UTC: l1 DROPPED (no gain vs dev team on any of its 4 maps; Devil worse). b3 restored; dev loop back to all maps.
+- 17:45 UTC: Qualifier check b3 vs v61 on unseen sets (seed 801000): real .525, realhold .512, blind17 .529, pooled .522 -> no unseen-map regression from today's changes; slight gain (INFER_SYM).
