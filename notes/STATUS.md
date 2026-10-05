@@ -1,6 +1,6 @@
 # STATUS (single source of truth)
 
-Last updated: 2026-10-04 20:15 EDT. All updates to the user come from this page. Times are US Eastern.
+Last updated: 2026-10-04 22:55 EDT. All updates to the user come from this page. Times are US Eastern.
 
 ## Live and mainline
 - **Mainline = `bot/`** = b1: v61 (QS_FROM=100, QSPLIT_ROOM=1) + Portals/Maze queen park and crown. Every new idea goes into `bot/` as a flag, default 0. No vNN copies; test builds are staged in the scratchpad.
@@ -40,8 +40,9 @@ Last updated: 2026-10-04 20:15 EDT. All updates to the user come from this page.
 | m1 | Map pack: Portals/Maze queen park+crown, Stripes loop, Trophy early split, Schooltime B | partial (95 games): overall adjusted +9.6 pp, P(better) 0.99 | Portals: queen alive at r500 0% → 90%, wins 42% → 70% (n=10). Stripes 92% (n=13). Maze and Trophy flat (n=10-15). **Schooltime worse**: wins 77% → 45% (n=11), r300 length x0.54 → PM_SCHB dropped. |
 | m2 | m1 without the Schooltime change | **WIN** | 219 games: adjusted +7.5 pp (CI +1.0..+13.4), P(better) 0.99. Pooled m1+m2 per map vs v61: Portals 54% vs 41% (queen alive r500 85% vs 0%); Maze 40% vs 35% (queen alive 34% vs 10%); Stripes 85% vs 84% (flat → off); Trophy 64% vs 70% (→ off). |
 | b1 | v61 + PM_QPARK_PORTALS + PM_QPARK_MAZE (new mainline) | live since Sun 6:55 PM, ranked loop on all maps | baseline block for the next tests |
-| q1 | b1 + queen park on Australia/Around UNSW/Slithery/Tower Defense/weakhold | **testing**, live since Sun 7:35 PM; loop unranked on those 5 maps | per-map check ~10:05 PM |
-| f1 | b1 + QKILL_FUEL (Codex: pearl-paid steps in the certain queen-kill search) | queued after q1 | all-maps; tested alone |
+| q1 | b1 + queen park on Australia/Around UNSW/Slithery/Tower Defense/weakhold | **LOSS** | per map vs v61 (unranked panel vs v61's mixed baseline, so biased against q1, but mechanisms agree): Australia 41% vs 56%, Around UNSW 40% vs 59%, Slithery 16% vs 31%, Tower Defense 43% vs 69% with eliminations 8% → 44% and r100 length ratio x0.29. All five off. Park helps only on Portals/Maze. |
+| f1 | b1 + QKILL_FUEL (Codex: pearl-paid steps in the certain queen-kill search) | **testing**, live since Sun 10:55 PM; loop unranked panel, all 17 maps | all-maps; adjusted model |
+| k1 | b1 + QK_EG=2 (crowned-queen kamikaze guard, lunge reach 5 + approach trend) | staged (scratch r6/stage/k1), queued | Portals/Maze only in effect; judge on crowned-queen rams after r300 |
 
 ## What we know about why we lose (notes/newrules/LOSS_AUDIT2.md, v55/v61, 250 losses)
 - **We lose r500 tiebreaks, not fights.**
