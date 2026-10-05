@@ -399,3 +399,21 @@ Mid-game mass waste, r150-400, from self-inflicted deaths: units boxed in by all
 ### Also
 - **Ops:** DEV is a good stand-in for the VIB family (it beats VIB 74%), and our loop games appear rating-free for us. Keep the unranked dev loop for mechanism checks of items 1-4.
 - **Not re-proposed:** QS_FROM changes outside the lane maps, Portals early crown (PM_POR_EARLY failed locally), Schooltime B (server loss), QEXIT_LOOK, QK_BIG, MATCH_STRICT.
+
+## 6. R8 local build of fixes 1-3 (2026-10-05)
+Four flags in bot/, all default 0. With all flags off, bot/ plays identically to variants/f1 (sandbox seed 1000, both sides, Australia/Devil/Portals/QoS: 8/8 SAME).
+Method: 6 seeds x both sides vs f1 per map (12 side-games). Baseline is f1 vs f1 on the same seeds, with both sides counted. Ledger as in `selfcause_dev5.py`. Script: scratch r8/qp8.py, logs in r8/*.log.
+Self-play is noisy at n=12. Treat these as mechanism checks only.
+
+| flag | what | boxed-by-ally len/game | stillborn len | t100 | t300 | verdict |
+|---|---|---|---|---|---|---|
+| base f1 | | AUN 698, AUS 400, Dev 143, TD 71, Sch 512 | 227 / 177 / 67 / 24 / 99 | 127 / 92 / 39 / 27 / 86 | 171 / 158 / 56 / 41 / 180 | |
+| CROWD_MAPS (bitmask 1 AUN, 2 AUS, 4 Devil, 8 TD; value 3; 16 = Schooltime 3 -> 5) | crowd penalty per map | AUN 479, AUS 367, Dev 53, TD 87, Sch 345 | 128 / 137 / 26 / 29 / 81 | 130 / 98 / 28 / 37 / 64 | 180 / 173 / 31 / 56 / 130 | **AUN and AUS kept** (waste down, mass up). Devil cuts mass (t100 -29%). TD waste goes up. Schooltime t100 -26%. **Staged: cm_pack = 3, cm_aun = 1, cm_aus = 2** |
+| ALLY_BOX=1 | penalise steps to t with ≤1 exit when an ally body (freeT > 2 - ABX_SLACK) takes an exit; +25 if another head is within 2 of the last exit | 595 / 321 / 100 / 62 | 176 / 175 / 45 / 21 | 124 / 77 / 34 / 31 | 179 / 117 / 35 / 40 | box -15..-30% on all 4 maps, but 4-map t300 -13% (Australia -26%, Devil -37%). Fails. The no-exit-only variant (PEN1=0, CONT=0) is weak and mixed. SLACK=0 gives the same result. Not staged. |
+| SPLIT_DEFER=3 | growth split waits ≤3 turns for a tail exit | 870 / 418 / 125 / 76 | **183 / 106 / 27 / 11** | 142 / 84 / 34 / 25 | 185 / 147 / 54 / 37 | stillborn length -20..-60% on every map. 4-map t100 and t300 flat (71.4 vs 71.2, 105.8 vs 106.3); AUN boxed goes up. **Staged: sdf** |
+| TIP_REV=3 (and TR_NET=1 TR_DEPTH=8) | L≥5 non-queen: split L-2 when best depth < TR_DEPTH; surviveDepth counts tip split after eating TR_NET | ≈ base | ≈ base | identical | ≈ base | Inert: our units split at L4, so non-queen L≥5 exists only after split stop or as kings. t100 is bit-identical. A real test needs a larger SPLIT_LEN first. Not staged. |
+
+CPU max on maps/sprint/australia.map with each flag on: 34.0-34.2M (trv2 37.0M).
+Suggested server order:
+1. cm_pack: unranked loop on Around UNSW + Australia vs DEV/VIB; judge boxed-by-ally waste and r300 length.
+2. sdf: all maps; this is the isolated version of c1's SPLIT_NEEDS_EXIT; judge stillborn and `len_ratio_r300`.

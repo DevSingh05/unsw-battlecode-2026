@@ -1,6 +1,6 @@
 # STATUS (single source of truth)
 
-Last updated: 2026-10-05 00:35 EDT. All updates to the user come from this page. Times are US Eastern.
+Last updated: 2026-10-05 04:20 EDT. All updates to the user come from this page. Times are US Eastern.
 
 ## Live and mainline
 - **Mainline = `bot/`** = b2: v61 (QS_FROM=100, QSPLIT_ROOM=1) + Portals/Maze queen park and crown + QKILL_FUEL + INFER_SYM (unknown maps only). Every new idea goes into `bot/` as a flag, default 0. No vNN copies; test builds are staged in the scratchpad.
@@ -42,7 +42,8 @@ Last updated: 2026-10-05 00:35 EDT. All updates to the user come from this page.
 | b1 | v61 + PM_QPARK_PORTALS + PM_QPARK_MAZE (new mainline) | live since Sun 6:55 PM, ranked loop on all maps | baseline block for the next tests |
 | q1 | b1 + queen park on Australia/Around UNSW/Slithery/Tower Defense/weakhold | **LOSS** | per map vs v61 (unranked panel vs v61's mixed baseline, so biased against q1, but mechanisms agree): Australia 41% vs 56%, Around UNSW 40% vs 59%, Slithery 16% vs 31%, Tower Defense 43% vs 69% with eliminations 8% → 44% and r100 length ratio x0.29. All five off. Park helps only on Portals/Maze. |
 | f1 | b1 + QKILL_FUEL (Codex: pearl-paid steps in the certain queen-kill search) | **accepted** (neutral) | 240 games: adjusted -0.1 pp (CI -12..+11), P 0.50; mechanism: enemy queen killed 39% → 43%, eliminated 27% → 12% (raw, opponent mix differs). Narrow, sound change → kept. Rating-restore copy: variants/f1. |
-| h1 | b2 + LATE_HUNT + QKILL_KING (lone enemy queen kill, alone) | **testing**, live since Mon 12:35 AM | all-maps; adjusted model; target: r500 losses with our queen dead while we lead |
+| h1 | b2 + LATE_HUNT + QKILL_KING (lone enemy queen kill, alone) | **LOSS** | 586 games: adjusted -2.1 pp (CI -9.6..+5.3), P 0.29 → drop at 500. King queen kills 0% → 4% but no gain. f1 restored (2221). |
+| k2 | b2 + QK_EG=2 (crowned-queen kamikaze guard) | **testing**, live since Mon 4:20 AM; dev loop on Portals/Maze/Trauma | judge on crowned-queen rams after r300 and queen tiebreaks on Portals/Maze/Trauma |
 | k1 | b1 + QK_EG=2 (crowned-queen kamikaze guard, lunge reach 5 + approach trend) | staged (scratch r6/stage/k1), queued | Portals/Maze only in effect; judge on crowned-queen rams after r300 |
 
 ## What we know about why we lose (notes/newrules/LOSS_AUDIT2.md, v55/v61, 250 losses)
