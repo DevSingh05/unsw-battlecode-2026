@@ -1,9 +1,9 @@
 # STATUS (single source of truth)
 
-Last updated: 2026-10-05 06:35 EDT. All updates to the user come from this page. Times are US Eastern.
+Last updated: 2026-10-05 08:20 EDT. All updates to the user come from this page. Times are US Eastern.
 
 ## Live and mainline
-- **Mainline = `bot/`** = b2: v61 (QS_FROM=100, QSPLIT_ROOM=1) + Portals/Maze queen park and crown + QKILL_FUEL + INFER_SYM (unknown maps only). Every new idea goes into `bot/` as a flag, default 0. No vNN copies; test builds are staged in the scratchpad.
+- **Mainline = `bot/`** = b3 (b2 + Australia crowd penalty): v61 (QS_FROM=100, QSPLIT_ROOM=1) + Portals/Maze queen park and crown + QKILL_FUEL + INFER_SYM (unknown maps only). Every new idea goes into `bot/` as a flag, default 0. No vNN copies; test builds are staged in the scratchpad.
 - **Last accepted live build:** f1 (= b2 on known maps; identical copy in `variants/f1` for rating-restoring re-uploads). b1 copy kept in `variants/b1`.
 - **Fallbacks:** `variants/v61`, `variants/v44`. Re-uploading an identical build restores its old rating.
 - **Kept in `variants/`:** b1 (live), v61, v44 (fallbacks), v35, v38m (local test opponents).
@@ -44,8 +44,8 @@ Last updated: 2026-10-05 06:35 EDT. All updates to the user come from this page.
 | f1 | b1 + QKILL_FUEL (Codex: pearl-paid steps in the certain queen-kill search) | **accepted** (neutral) | 240 games: adjusted -0.1 pp (CI -12..+11), P 0.50; mechanism: enemy queen killed 39% → 43%, eliminated 27% → 12% (raw, opponent mix differs). Narrow, sound change → kept. Rating-restore copy: variants/f1. |
 | h1 | b2 + LATE_HUNT + QKILL_KING (lone enemy queen kill, alone) | **LOSS** | 586 games: adjusted -2.1 pp (CI -9.6..+5.3), P 0.29 → drop at 500. King queen kills 0% → 4% but no gain. f1 restored (2221). |
 | k2 | b2 + QK_EG=2 (crowned-queen kamikaze guard) | **LOSS** (mechanism) | 313 games: adjusted -0.9 pp, P 0.41; target stat wrong way: queen alive at r500 Portals 92% → 81%, Maze 56% → 39% (mostly vs dev team). Dropped; f1 restored (2221). |
-| cm1 | b2 + CROWD_MAPS=3 (crowd penalty on Around UNSW + Australia) | **testing**, live since Mon 6:35 AM; dev loop on those 2 maps | judge per map: self-inflicted waste, r300 length, wins |
-| sdf | b2 + SPLIT_DEFER=3 (growth split waits up to 3 turns for a tail exit) | queued | local: stillborn length -20..60%, totals flat |
+| cm1 | b2 + CROWD_MAPS=3 (crowd penalty on Around UNSW + Australia) | **accepted for Australia only** | per map (n 12-28, cm1 mostly vs dev team): Australia length ratio r100 1.65 → 2.51, r300 1.21 → 2.07, wins 50% → 57%; Around UNSW stillborn down but ratio flat, wins 67% → 46% → bit off. Mainline b3 = CROWD_MAPS=2. |
+| s1 | b3 + SPLIT_DEFER=3 | **testing**, live since Mon 8:20 AM; dev loop all maps + ranked loop | all-maps; target stillborn_by_r100 down, length ratio r300 not down |
 | k1 | b1 + QK_EG=2 (crowned-queen kamikaze guard, lunge reach 5 + approach trend) | staged (scratch r6/stage/k1), queued | Portals/Maze only in effect; judge on crowned-queen rams after r300 |
 
 ## What we know about why we lose (notes/newrules/LOSS_AUDIT2.md, v55/v61, 250 losses)

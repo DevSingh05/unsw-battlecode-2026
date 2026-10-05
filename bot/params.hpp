@@ -2105,7 +2105,7 @@
 //    1 Around UNSW, 2 Australia, 4 Devil, 8 Tower Defense (value CROWD_MAPS_V);
 //    16 Schooltime (already PM_SCH_CR=3; the bit raises it to CROWD_MAPS_SCH).
 #ifndef CROWD_MAPS
-#define CROWD_MAPS 0
+#define CROWD_MAPS 2 // on since 2026-10-05: Australia only (cm1: r100 len ratio 1.65->2.51, r300 1.21->2.07); AUN bit flat -> off
 #endif
 #ifndef CROWD_MAPS_V
 #define CROWD_MAPS_V 3.0

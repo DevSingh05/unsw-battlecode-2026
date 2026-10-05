@@ -332,3 +332,4 @@
 - 08:14 UTC: h1 DROPPED at 586 games (adjusted -2.1pp, P .29). f1 restored (2221). k2 = b2 + QK_EG=2 uploaded (smoke ok, CPU 33.3M); dev loop restricted to Portals/Maze/Trauma; ranked loop unchanged.
 - 08:15 UTC: Anti-waste flags built (default 0, flags-off identical to f1): CROWD_MAPS=3 (AUN+AUS: waste down, mass up) staged cm_pack; SPLIT_DEFER=3 (stillborn -20..60%, totals flat) staged sdf; ALLY_BOX (r300 -13%) and TIP_REV (inert: units split at L4) not staged. Queue after k2: cm_pack (unranked dev loop on AUN+AUS), then sdf (all maps).
 - 10:25 UTC: k2 DROPPED (queen survival r500 down on Portals/Maze; adjusted -0.9pp). f1 restored (2221). cm1 = cm_pack uploaded; dev loop on Around UNSW + Australia.
+- 12:13 UTC: cm1: Australia bit accepted (len ratio r100 1.65->2.51), AUN bit off. bot/ CROWD_MAPS=2 -> mainline b3 (variants/b3). s1 = b3 + SPLIT_DEFER=3 uploaded; dev loop back to all maps.
