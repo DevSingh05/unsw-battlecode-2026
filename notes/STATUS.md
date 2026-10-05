@@ -1,6 +1,6 @@
 # STATUS (single source of truth)
 
-Last updated: 2026-10-05 10:45 EDT. All updates to the user come from this page. Times are US Eastern.
+Last updated: 2026-10-05 12:40 EDT. All updates to the user come from this page. Times are US Eastern.
 
 ## Live and mainline
 - **Mainline = `bot/`** = b3 (b2 + Australia crowd penalty): v61 (QS_FROM=100, QSPLIT_ROOM=1) + Portals/Maze queen park and crown + QKILL_FUEL + INFER_SYM (unknown maps only). Every new idea goes into `bot/` as a flag, default 0. No vNN copies; test builds are staged in the scratchpad.
@@ -47,7 +47,7 @@ Last updated: 2026-10-05 10:45 EDT. All updates to the user come from this page.
 | cm1 | b2 + CROWD_MAPS=3 (crowd penalty on Around UNSW + Australia) | **accepted for Australia only** | per map (n 12-28, cm1 mostly vs dev team): Australia length ratio r100 1.65 → 2.51, r300 1.21 → 2.07, wins 50% → 57%; Around UNSW stillborn down but ratio flat, wins 67% → 46% → bit off. Mainline b3 = CROWD_MAPS=2. |
 | s1 | b3 + SPLIT_DEFER=3 | **LOSS** | 318 games: adjusted -4.8 pp (CI -13.2..+3.8), P 0.14. Stillborn by r100 12.6 → 4.5 per game, but length ratio r100 1.82 → 1.20, eliminated 11% → 24%. Second time that blocking/deferring splits backfired (c1 too): stillborn children are cheap and the extra splits pay off. Don't retry. |
 | b3 | mainline: b2 + Australia crowd penalty | live since Mon 10:35 AM (inherited 2232 from cm1) | |
-| l1 | b3 + LANE_QSMALL=54, LANE_QSM_LATE=4 (small unfed queen near home on Tower Defense, Devil (late), Autarky, Queen Of Spades) | **testing**, live since Mon 10:40 AM; dev loop on those 4 maps | local: queen alive r500 TD 3 → 9/12, Autarky 2 → 10, QoS 0 → 5; eliminations TD 4 → 0, Autarky 2 → 0. Trophy/Dilemma off (economy collapses / no effect). Judge per map. |
+| l1 | b3 + lane-map small queen (TD, Devil late, Autarky, QoS) | **LOSS** | vs dev team on those maps, l1 vs earlier builds (h1+s1): Autarky 0/20 vs 0/19, TD 3/20 vs 4/19, QoS 6/20 vs 5/20, Devil 6/20 vs 11/20. Adjusted -5.0 pp, P 0.13. b3 restored. |
 | k1 | b1 + QK_EG=2 (crowned-queen kamikaze guard, lunge reach 5 + approach trend) | staged (scratch r6/stage/k1), queued | Portals/Maze only in effect; judge on crowned-queen rams after r300 |
 
 ## What we know about why we lose (notes/newrules/LOSS_AUDIT2.md, v55/v61, 250 losses)
