@@ -450,3 +450,26 @@ Method: 6 seeds x both sides vs b3 per map (12 side-games). Baseline is b3 vs b3
 - Where the map gives a home pocket economy (TD, Autarky, QoS), the small home queen survives and the army is unchanged or larger.
 - **Staged l1** (scratch r10/stage/l1) = bot/ + `LANE_QSMALL=54` (TD, Devil, Autarky, QoS) + `LANE_QSM_LATE=4` (Devil). PM_QOS_QSPLIT stays 0.
 - CPU max 33.4M on Australia, 19.1M on Autarky, 14.0M on QoS. Local self-play only: judge on the server by queen alive at r100/r200 and eliminations on these 4 maps vs DEV/VIB.
+
+## R11 MIDSIZE: mid-size units economy (flag in bot/, default 0)
+- **Code** (params.hpp end, main.cpp `msUnit`/`msShed`): from `MS_FROM`, once we have `MS_MINUNITS` (8) units, non-queen non-king units with hash(id) % `MS_MOD` == 0 (plus any unit born after MS_FROM at L >= 3, `MS_INHERIT`) split at `MS_LEN` instead of 4. The split is half (`MS_BULK=0`) or bulk (child L-2). They get `MS_POCKET` (150) for regions smaller than L+3, and no pumping. `MS_SAFE` bits: 1 = enemy kamikaze reach as full threat (cap 3); 2 = big-unit threat penalty at L5; 4 = a threatened L5+ sheds L-2 from a safe open tail; 8 = penalty near enemy heads (r 4). Early game is unchanged.
+- **Test:** paired sandbox games vs variants/b3. Seeds 4000 (+5000, 6000 for msL/msK). Maps: Australia, Around UNSW, Islands and Schooltime x2 seeds, Devil and Default x1, both sides, so 20 side-games per setting. The baseline is b3 vs b3 on the same seeds. Scripts are in scratch `r11/qp11.py` and `sum11.py`.
+
+| setting | L4+ share r100-300 | fresh eats by L4+ r100-300 | t100 / t200 / t300 | longest r500 | n100 / n200 | head-on deaths of L5+ | self waste r100-399 | wins vs b3 |
+|---|---|---|---|---|---|---|---|---|
+| b3 (base, seed 4000) | 10% | 56 | 84 / 130 / 137 | 40 | 34 / 45 | 3.6 | 661 | .50 |
+| A: MOD2 LEN6 bulk r80 | 27% | 102 | 87 / 126 / 129 | 33 | 32 / 38 | 12.6 | 526 | .20 |
+| B: MOD2 LEN8 bulk r80 | 28% | 101 | 88 / 114 / 119 | 31 | 31 / 32 | 16.2 | 426 | .30 |
+| C: MOD2 LEN6 half r80 | 26% | 110 | 87 / 127 / 135 | 36 | 32 / 37 | 11.1 | 579 | .40 |
+| D: all units LEN6 bulk r100 | 38% | 128 | 84 / 122 / 131 | 36 | 34 / 35 | 14.4 | 527 | .30 |
+| H: C + SAFE=15 | 27% | 110 | 87 / 131 / 138 | 34 | 32 / 37 | 6.6 | 580 | .35 |
+| K: H + MINUNITS 24 (n=60) | 22% | 96 | 87 / 126 / 135 (b3 137) | -4.9 vs b3 | 32 / 38 | 6.4 | 566 | .32 |
+| **L: H from r150 (n=60)** | 19% (b3 9%) | 81 (b3 51) | 86 / 126 / 143 (b3 86 / 127 / 138) | -3.4 ±2.1 vs b3 | 35 / 40 (b3 35 / 44) | 6.2 (b3 3.5) | 579 (b3 659) | .42 |
+
+- **The mechanism works.** L4+ unit-turns go up 2-4x and fresh eats by L4+ units double. That reaches VIB's 16% share. Stillborn and boxed waste fall 10-35%.
+- **But it doesn't pay against b3.** Total fresh eats fall by 15-40 per game (fewer units cover less of the map) and corpse re-eats fall by about 40. b3's L2-3 swarm rams our L5-6 units: head-on L5+ deaths rise 3.6 → 11-16 per game, 93% of them started by the enemy. The opponent's t300 rises by 15-35.
+  - SAFE=15 halves those deaths (11 → 6.6) but doesn't remove them.
+  - Bulk splits (A, B, D) are worse than half splits. LEN8 is worst.
+  - Islands is the worst map in every setting: fresh eats -70, opponent +50.
+- **Chosen: L** (MOD 2, LEN 6, half, from r150, SAFE 15). Pooled over 60 games: t300 +5.1 (SE 4.2), longest at r500 -3.4 (SE 2.1), wins .42 vs b3, eliminations equal (.10). r300 is up a little and nothing collapses, so it is **staged as ms1** (scratch `r11/stage/ms1`). It is weak, though. The lower longest-at-r500 counts against it, so it is a low-priority server candidate. If it goes up, judge it on `len_ratio_r300` and longest at r500 vs DEV/VIB, not on b3 self-play.
+- Flags off: identical to variants/b3 on 4 maps (Australia, Devil, Portals, QoS; sandbox seed 1000; both sides). ms1 CPU max is 33.9M on maps/sprint/australia.map. Setting D peaked at 42.9M on Around UNSW, so don't use MS_MOD=1.

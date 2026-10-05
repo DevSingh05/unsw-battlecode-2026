@@ -3836,6 +3836,14 @@ struct Bot
                 }
                 reach = std::max(reach, kr);
             }
+            if (MIDSIZE && (MS_SAFE & 1) && myLen >= 5 && msUnit())
+            {
+                // R11 MIDSIZE bit 1: a mid-size unit sees the kamikaze reach K(Lv) (capped) as full threat
+                int Lv = enemyVisibleLength(s.id);
+                if (!enemyTailSeen(s))
+                    Lv = std::max(Lv, 3);
+                reach = std::max(reach, std::min(freeSteps(Lv) + std::max(0, Lv - 2), static_cast<int>(MS_KRCAP)));
+            }
             if (KREACH_KING && myLen >= KING_MIN_LEN)
             {
                 // v37a step 7: a big enemy rams our king for free from F(Lv) > KING_THREAT_REACH
@@ -5312,6 +5320,26 @@ struct Bot
         return area;
     }
 
+    // R11 MIDSIZE: mid-size units (params.hpp). msBornLen = our length on our first decide().
+    int msBornLen = -1;
+    bool msLineage = false;
+    bool msUnit() const
+    {
+        if (!MIDSIZE || amQueen() || round < MS_FROM || round >= MS_TO || units < MS_MINUNITS || iAmKing())
+            return false;
+        if (msLineage)
+            return true;
+        return MS_MOD <= 1 || ((static_cast<unsigned>(w.myId) * 2654435761u) >> 13) % MS_MOD == 0;
+    }
+
+    // MS_SAFE bit 4: a threatened mid-size unit (L >= 5) sheds its bulk as a child from a safe, open tail
+    bool msShed(bool threatened) const
+    {
+        if (!MIDSIZE || !(MS_SAFE & 4) || !threatened || myLen < 5 || !msUnit() || static_cast<int>(trail.size()) < myLen)
+            return false;
+        return threatAt[trail[myLen - 1]] == 0 && tailHasExit(myLen - 2);
+    }
+
     // R8 SPLIT_DEFER (DEVTEST1 fix 2): the growth split waits up to SPLIT_DEFER consecutive turns for a free
     // tile at our tail, then goes anyway. Called last in the growth-split gate.
     int sdWait = 0, sdRound = -10;
@@ -5641,6 +5669,8 @@ struct Bot
             emitMove(myDir);
             return;
         }
+        if (MIDSIZE && msBornLen < 0)
+            msBornLen = myLen, msLineage = MS_INHERIT && round >= MS_FROM && myLen >= 3 && !amQueen();
         updateQsPhase();
         qparkPrep();
         qsmPrep();
@@ -5917,13 +5947,23 @@ struct Bot
         }
         if (!pfIn && !stLap && holdTile < 0 && !(RP.kingDeclare && kingSelf) && !bigLate && !noVolSplit() && (!SPLIT_NEEDS_EXIT || tailHasExit(2)) &&
             !(CONS_R && CONS_NOSPLIT && (consActive || consHostKeep())) &&
-            !(UNK_SEALED_FOOD && !w.known && UNK_SEALED_ROOM_MIN > 0 && roomSize(UNK_SEALED_ROOM_MIN) < UNK_SEALED_ROOM_MIN) && myLen >= SPLIT_LEN && myLen >= 4 && units < w.unitLimit && units < SPLIT_MAX_UNITS &&
+            !(UNK_SEALED_FOOD && !w.known && UNK_SEALED_ROOM_MIN > 0 && roomSize(UNK_SEALED_ROOM_MIN) < UNK_SEALED_ROOM_MIN) && myLen >= (MIDSIZE && msUnit() ? (msShed(threatened) ? 5 : MS_LEN) : SPLIT_LEN) && myLen >= 4 && units < w.unitLimit && units < SPLIT_MAX_UNITS &&
             (round < RP.splitStopRound || (RP.lateSplitRound > 0 && round < RP.lateSplitRound && myLen <= LATE_SPLIT_MAXLEN)) &&
-            !threatened && sdOk())
+            (!threatened || msShed(threatened)) && sdOk())
         {
             int k = SPLIT_CHILD > 0 ? std::min(SPLIT_CHILD, myLen - 2) : myLen / 2;
             if (tipK > 0)
                 k = tipK;
+            else if (MIDSIZE && msUnit())
+            {
+                // R11 MIDSIZE: bulk (child L-2 leaves from the tail) or half; fall back if the tail end is closed
+                int kb = MS_BULK || threatened ? myLen - 2 : myLen / 2;
+                if (tailHasExit(kb))
+                    k = kb;
+                else if (tailHasExit(myLen / 2))
+                    k = myLen / 2;
+                r2log("msp", k);
+            }
             else if (PUMP_TIP_SPLIT)
             {
                 int exits = 0; // at a dead-end tip the child (our tail end) takes the bulk out
@@ -6210,7 +6250,14 @@ struct Bot
             score += 10.0 * pearls;
             int need = myLen + 3;
             bool pfEntry = POCKET_FACTORY && !pfIn && !pfDepth.empty() && pfDepth[t] > pfDepth[myHead];
-            bool pump = POCKET_PUMP && area < need && !qGuard() && !qparkNoDive() && !whNoPump() && (t == holdTile || (pfEntry ? pfDiveOK(t) : pocketWorthPumping(t)));
+            const bool msBig = MIDSIZE && myLen >= 5 && msUnit();
+            if (msBig && area < need)
+                score -= MS_POCKET; // R11 MIDSIZE: a mid-size unit stays out of pockets
+            if (msBig && (MS_SAFE & 8))
+                for (auto& o : segs)
+                    if (o.head && o.team != w.myTeam && wrapDist(o.tile, t) <= MS_NEAR_R)
+                        score -= MS_NEAR_PEN * (MS_NEAR_R + 1 - wrapDist(o.tile, t)); // MS_SAFE bit 8: keep off enemy heads
+            bool pump = POCKET_PUMP && area < need && !msBig && !qGuard() && !qparkNoDive() && !whNoPump() && (t == holdTile || (pfEntry ? pfDiveOK(t) : pocketWorthPumping(t)));
             eo.dead = qGuard() && area < need; // v37e QGUARD (from v37b): a dead end she can't turn around in
             if (QNOPOCKET && amQueen() && round >= 1 && !pfDepth.empty() && pfDepth[t] > 0 && pfDepth[t] > pfDepth[myHead])
                 eo.dead = true; // v43 QNOPOCKET: a leaf-pruned pocket is a tree; heading in, she can never turn back
@@ -6294,7 +6341,7 @@ struct Bot
             // SMALL_SPRINT_THREAT (notes/19): not locally ahead, a ram costs the dragon AND the corpse race
             bool outnum = SMALL_SPRINT_THREAT && myLen < 6 && localAllies <= localEnemies;
             if (threat > 0)
-                score -= (myLen >= 6 ? 25.0 + 4.0 * myLen : (outnum ? SMALL_THREAT_PEN_OUT : SMALL_THREAT_PEN)) * (units <= LAST_FEW_UNITS ? LAST_FEW_MULT : 1.0);
+                score -= (myLen >= 6 || (MIDSIZE && (MS_SAFE & 2) && myLen >= 5 && msUnit()) ? 25.0 + 4.0 * myLen : (outnum ? SMALL_THREAT_PEN_OUT : SMALL_THREAT_PEN)) * (units <= LAST_FEW_UNITS ? LAST_FEW_MULT : 1.0);
             else if (outnum && sprintThreatAt[t] > 0)
                 score -= SMALL_SPRINT_PEN * (units <= LAST_FEW_UNITS ? LAST_FEW_MULT : 1.0);
             if ((THREAT_FREE || KREACH) && !queenSafe() && threat == 0 && threatPaidAt[t] > 0)

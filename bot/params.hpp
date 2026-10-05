@@ -2184,3 +2184,53 @@
 #ifndef QSM_UNITS
 #define QSM_UNITS 6
 #endif
+
+// R11 MIDSIZE (notes/top5/DEVTEST1_OCT5.md, TOP1_VIBING_OCT4.md): mid-size units economy. From MS_FROM (once we have
+// MS_MINUNITS units) a share of non-queen, non-king units (hash(id) % MS_MOD == 0; MS_MOD 1 = all) grow to MS_LEN
+// before the growth split, then split bulk (MS_BULK 1: child takes L-2 from the tail, parent keeps 2) or half
+// (MS_BULK 0). MS_INHERIT: a unit born after MS_FROM with length >= 3 (a bulk/half child) is mid-size too.
+// MS_POCKET: extra penalty for a mid-size unit at L >= 5 stepping into a region smaller than L+3 (no pumping).
+// Early game unchanged. Off (0) = b3.
+#ifndef MIDSIZE
+#define MIDSIZE 0
+#endif
+#ifndef MS_FROM
+#define MS_FROM 80
+#endif
+#ifndef MS_TO
+#define MS_TO 500             // the growth split stops at splitStopRound anyway
+#endif
+#ifndef MS_MINUNITS
+#define MS_MINUNITS 8
+#endif
+#ifndef MS_MOD
+#define MS_MOD 2
+#endif
+#ifndef MS_LEN
+#define MS_LEN 6
+#endif
+#ifndef MS_BULK
+#define MS_BULK 1
+#endif
+#ifndef MS_INHERIT
+#define MS_INHERIT 1
+#endif
+#ifndef MS_POCKET
+#define MS_POCKET 150.0
+#endif
+// MS_SAFE bitmask: 1 = mid-size L >= 5 sees enemy kamikaze reach F(Lv)+(Lv-2), capped at MS_KRCAP, as full threat;
+// 2 = mid-size L5 gets the big-unit threat penalty (25 + 4L instead of SMALL_THREAT_PEN).
+#ifndef MS_SAFE
+#define MS_SAFE 0
+#endif
+#ifndef MS_KRCAP
+#define MS_KRCAP 3
+#endif
+// MS_SAFE 4 = a threatened mid-size L >= 5 splits L-2 off (child from a safe open tail); 8 = penalty
+// MS_NEAR_PEN * (MS_NEAR_R + 1 - d) per enemy head within walking distance d <= MS_NEAR_R of the step.
+#ifndef MS_NEAR_R
+#define MS_NEAR_R 4
+#endif
+#ifndef MS_NEAR_PEN
+#define MS_NEAR_PEN 15.0
+#endif
