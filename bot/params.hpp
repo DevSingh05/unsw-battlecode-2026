@@ -438,7 +438,7 @@
 #endif
 // Unknown maps: infer the map's symmetry from seen walls and mirror what we learn.
 #ifndef INFER_SYM
-#define INFER_SYM 0
+#define INFER_SYM 1 // on since 2026-10-04: unknown maps only; .548 blind in two separate runs (REAL_SWEEP + qual)
 #endif
 // Matching non-open edges needed before trusting a symmetry.
 #ifndef INFER_SYM_MIN
