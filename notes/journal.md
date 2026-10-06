@@ -352,3 +352,5 @@
 - 03:40 UTC: QBOX_ONESPLIT built into bot/ (default 0; flags-off identical to b3; 58/61 FTM games unchanged, 2/3 Portals box turns flip; 14/64 Portals games vs others change only at box turns). Staged pb1. PM_TD_PULL now 6/6 TD losses vs FTM flip.
 - 05:09 UTC: v1 per-map: TD pull and Australia vault ban accepted -> mainline b4 (variants/b4). Slithery vault bit and SCH_DOORS off. pb2 = b4 + QBOX_ONESPLIT uploaded, unranked only, loops on Portals/Maze/Trauma.
 - 15:39 UTC: Machine slept ~3h overnight (loops idle). pb2 REJECTED (no queen-survival gain; Portals/Trauma worse). b4 uploaded and live with RANKED loop (favourable panel).
+- 15:56 UTC: PAUSED (user moving). b4 live.
+- 16:49 UTC: RESUMED. b4 at 2249. kf1 = b4 + QKILL_KING + QKK_FREE uploaded, unranked only, all maps. Parallel session unsw-battlecode-b1 working in its own scratch (patches only; I keep the server).
