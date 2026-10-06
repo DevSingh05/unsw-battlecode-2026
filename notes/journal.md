@@ -344,3 +344,6 @@
 - 22:51 UTC: Deep-understanding round done (notes/newrules/UNDERSTANDING.md): 6 decision-verified fixes built as flags, 10 plausible causes rejected at decision level. u1 = map pack of 5 map-specific fixes uploaded; dev loop on its 6 maps; QKK_FREE (all maps) next.
 - 23:09 UTC: u1 lost 0-5 in its first RANKED series (vs Sponge) -> 2212 -> 2131 (new uploads start with high uncertainty, so early ranked losses swing hard). Rule from now: ranked challenges ONLY while an accepted build is live; test builds get unranked challenges only. Main loop switched to unranked on u1's 6 maps.
 - 23:14 UTC: u1 PULLED (user). b3 re-uploaded; ranked loop back on (b3 is accepted); dev loop stopped.
+- 23:49 UTC: PAUSED (user): loop + local games SIGSTOPped; FTM/VIB analysts told to stop.
+- 00:50 UTC: RESUMED.
+- 01:11 UTC: VIB_OCT5 done: Vibing++ (strong build, pre 22:06 UTC) not hunting our queen specifically; we're 22-29 vs them. Harness-backed fixes: SCH_DOORS(+CHAMBER) Schooltime B (4 losses; first changed moves head to unvisited beds 116 vs 44), QVAULT=1 Slithery (2 early vault losses flip). QSTALK (scratch) risky, similar ideas lost. QKK_FREE no effect vs VIB. Waiting for FTM analyst.
