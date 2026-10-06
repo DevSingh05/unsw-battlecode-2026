@@ -1,9 +1,80 @@
 # forgot to mention (FTM, id 264): current play vs b3, 2026-10-05
 
-Status: **PAUSED at about 23:45 UTC 5 Oct (19:45 EDT)** on the user's request. Steps 1-2 (data and profile) are done.
-Step 3 (decision-replay verification) has only started: the harness rebuild is checked IDENTICAL on 1182917 and nothing
-has been verified yet. Step 4 (prototype fixes) has not started. Nothing in bot/ or variants/ was touched, nothing
-was submitted, no challenges, no Discord or browser.
+Status: **PAUSED a second time, at about 01:20 UTC 6 Oct (21:20 EDT 5 Oct)**, on the user's request. Done: steps 1-2,
+the harness fidelity check, and harness runs of PM_POR_EARLY and the five staged fixes on the FTM games (results
+below). Not done: `show --debug` traces at the cited points, and the step-4 prototype (Portals queen box). Nothing in bot/
+or variants/ was touched, nothing was submitted, no challenges, no Discord or browser. All my processes are stopped.
+(My replay script `ftm5/chains.py` lacked a `__main__` guard, so it kept spawning processes; I killed its orphans,
+pids 43826/43827. Add the guard before running it again.)
+
+## Session 2 results (harness, sandbox, scratch `ftm5/v/<label>/<game>.json`)
+- **Fidelity:** with the exact server zips (`--sub b3` / `--sub cm1`), all 61 games vs FTM rebuild IDENTICAL and
+  **628,814 / 628,814 turns match**. bot/ with every flag off (cm1 rows with CROWD_MAPS=3) also matches 100% on all 61,
+  so any change a flag makes below comes from that flag.
+- **PM_POR_EARLY=1 (Portals, 7 games):** every game changes 361-449 turns, starting at r210-214. Most changes fall in
+  r225-300 (non-queen moves and splits become feed moves), and wins change as much as losses (1160797 361,
+  1164511 439). So it is a policy change, not a point fix. The harness confirms the mechanism (feeding starts about
+  65 rounds earlier) but cannot score the outcome. The local test on 4 Oct (OWN_RANKED_OCT4.md R7) showed the
+  blocker: the queen fed early gets boxed and sheds to death. **Not shippable alone.**
+- **New verified mechanism on Portals: the queen box-and-shed chain (QBOX_K2).** Seen in 3 of 5 Portals losses vs FTM:
+  - 1182688: L40 → 2 over r407-425.
+  - 1151983: L41 → dead at r409. Their queen ended at L8, so with our queen intact this game is a likely **win**.
+  - 1151507: L39 → 31 over r433-437.
+
+  Geometry from the replays (`ftm5/box.py GAME SIDE ROUND`):
+  - 1182688 r405-406: from (19,1) she steps W to (18,1). Its only open side leads N to (18,0). There N and W are kelp,
+    S is her neck, and E is a portal into her own segment 7 at (13,13).
+  - 1151983: at r385 she steps S into (22,13). Its only open side is the portal E to (9,1), the far side of the map.
+    She then walks (9,0) → (8,0) → (8,1) and is boxed at r390.
+
+  In both she has to take a portal step, which the park scores dead (`qparkScore`, PM_QP_PEN). It is the only move
+  left, because the step before it entered a cell whose only non-portal exit was a dead end.
+
+  Then `tryMove`'s trapped branch (main.cpp ~6963, `QBOX_K2 && amQueen() && bestD < 0` → `SPLIT 2`) sheds 2 per
+  turn. Every child is stillborn (exits=0) and frees only the 2 rear tiles. Her head neighbour stays blocked until
+  her length drops below that segment's index (7 in 1182688), so she loses about 33 length in 17 turns.
+  *Not yet traced with `show --debug`* (the pause came first). Points to trace: 1182688 dragon q r404-407,
+  1151983 q r384-390, 1151507 q r432-433.
+- **PM_TD_PULL=2 (TD, 5 of 6 losses; 1160796 failed on a build-dir race, rerun it):** in all 5, the same opening
+  decisions flip. Our non-queen (dragon 3) goes **S → W toward the centre at r0, 1, 2 and 12-18** (r3 S → N). Later,
+  turns at r30-62 flip too (1182687 r37-41, r59-62). That is 14-24 changed turns per game; the queen never changes. The opening is deterministic, so these are the
+  same 9-10 decisions in every TD game. There are no TD wins vs FTM to check "unchanged" against; UNDERSTANDING's
+  check had 21/21 wins changing toward the centre. This is the cause in all 6 TD eliminations (FTM's non-queen reaches
+  the centre at r45-50; ours at r55-60 by the top route).
+- **QG_RAM=8 (Maze, 7 games):** 1133622 changes 22 turns at r325-398, 1160800 10, 1138664/1164998/1176048 1-3,
+  1176685/1182690 0. Our queen's killer is an L3-5 FTM head in 4 of 6 losses: 1133622 r399 by L5 id 774,
+  1160800 r392 L3, 1164998 r339 L3, 1182690 r466 L3. In 1133622 our L2 id 766 was at distance 1 from killer 774 at
+  r347 and changes its move (E → N). Whether that is a ram is not traced. 1176685 is a pre-crown ally-box HitSelf
+  at r299, and 1138664 is a pure queen race (92 v 20). The win 1176048 changes 3 turns.
+- **QVAULT=3 (big open, 12 games):** the queen's vault-entry move flips in every Australia loss that has one:
+  1133621 r34 W→E, 1164507 r36 S→E, 1165000 r62 EN→W. Slithery 1160798 also flips (r24 W→E, then r26 SPLIT 2
+  instead of N). The one changed win is 1138229 r44 S→E; the queen died in that vault in the win as well.
+  AUNSW/Islands are unchanged in all 6. 1151982 is unchanged (its r27 death has a different cause). **QVAULT=1**
+  changes only Slithery 1160798.
+- **QKILL_KING + QKK_FREE (all 61):** 1 changed turn (1176046 r416). Against FTM it almost never fires: their queen
+  is either dead early (L2-4) or parked out of reach.
+
+## Ranked fixes vs FTM (harness evidence as of the pause)
+1. **PM_TD_PULL=2** (staged, `dgu/stage/PM_TD_PULL`). 5/5 TD losses flip at the same opening decisions; the queen is
+   untouched. TD is 6/6 eliminations vs FTM. Scope: TD only. Risk: low (one map; the queen still random-walks out).
+2. **QVAULT=3** (staged). 3/3 Australia vault entries and 1/1 Slithery entry flip, 1 win changes at the same kind of
+   move, 6/6 AUNSW/Islands unchanged. Risk: the 4 Oct smoke had one Australia-A loss (see UNDERSTANDING).
+3. **Portals box fix (to build): replace the K2 shed chain with one split of k = L - i**, where i is the index of
+   her own segment next to the head. The child's tail is then exactly on that tile, so the tile frees next round:
+   the queen keeps i segments and the rest stays on our team as an ally instead of 17 stillborn L2s. A second part
+   is still unspecified: an entry guard against a cell whose only non-portal exit is a dead end. Expected: 3/5
+   Portals losses change at the box turn; 1151983 is a likely flip to a win. Also a prerequisite for PM_POR_EARLY.
+   Not prototyped yet.
+4. **QG_RAM=8**: changes 2 of 4 Maze ram-death losses before the death. Not traced, low confidence.
+5. **PM_POR_EARLY**: only after fix 3, and judged on the server (the harness cannot score it).
+6. QKK_FREE: neutral vs FTM (1 turn in 61 games). Its case rests on other opponents.
+
+## Next steps when resumed (supersede the list at the end of this note)
+1. `show --debug` on the box points above. Get the score breakdown at the entry step, the code path in
+   `qparkScore` / `tryMove`, and confirm the K2 branch.
+2. Prototype fix 3 in `ftm5/bot/` (copy of bot/, flag default 0). Then verify all 61 games: the 3 box turns must flip,
+   and every other turn must match. Expect 0 changes elsewhere, because the branch fires only when the queen has no legal move.
+3. Rerun tdp on 1160796, then do the small-map eliminations (step 4 of the task).
 
 ## Data (all local, reusable)
 - Scratch folder: `/private/tmp/claude-501/-Users-devsingh-Developer-UNSW-Battlecode/4107a3b1-a08f-4826-9eaa-522a1a1ebd84/scratchpad/ftm5/`

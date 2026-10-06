@@ -347,3 +347,5 @@
 - 23:49 UTC: PAUSED (user): loop + local games SIGSTOPped; FTM/VIB analysts told to stop.
 - 00:50 UTC: RESUMED.
 - 01:11 UTC: VIB_OCT5 done: Vibing++ (strong build, pre 22:06 UTC) not hunting our queen specifically; we're 22-29 vs them. Harness-backed fixes: SCH_DOORS(+CHAMBER) Schooltime B (4 losses; first changed moves head to unvisited beds 116 vs 44), QVAULT=1 Slithery (2 early vault losses flip). QSTALK (scratch) risky, similar ideas lost. QKK_FREE no effect vs VIB. Waiting for FTM analyst.
+- 01:13 UTC: PAUSED (user).
+- 03:04 UTC: v1 = b3 + PM_TD_PULL + QVAULT + SCH_DOORS uploaded; UNRANKED ONLY (both loops on its 4 maps). b3 at 2170 (restore copy variants/b3).
