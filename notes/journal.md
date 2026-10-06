@@ -350,3 +350,4 @@
 - 01:13 UTC: PAUSED (user).
 - 03:04 UTC: v1 = b3 + PM_TD_PULL + QVAULT + SCH_DOORS uploaded; UNRANKED ONLY (both loops on its 4 maps). b3 at 2170 (restore copy variants/b3).
 - 03:40 UTC: QBOX_ONESPLIT built into bot/ (default 0; flags-off identical to b3; 58/61 FTM games unchanged, 2/3 Portals box turns flip; 14/64 Portals games vs others change only at box turns). Staged pb1. PM_TD_PULL now 6/6 TD losses vs FTM flip.
+- 05:09 UTC: v1 per-map: TD pull and Australia vault ban accepted -> mainline b4 (variants/b4). Slithery vault bit and SCH_DOORS off. pb2 = b4 + QBOX_ONESPLIT uploaded, unranked only, loops on Portals/Maze/Trauma.

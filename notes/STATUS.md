@@ -1,9 +1,9 @@
 # STATUS (single source of truth)
 
-Last updated: 2026-10-05 23:05 EDT. All updates to the user come from this page. Times are US Eastern.
+Last updated: 2026-10-06 01:15 EDT. All updates to the user come from this page. Times are US Eastern.
 
 ## Live and mainline
-- **Mainline = `bot/`** = b3 (b2 + Australia crowd penalty): v61 (QS_FROM=100, QSPLIT_ROOM=1) + Portals/Maze queen park and crown + QKILL_FUEL + INFER_SYM (unknown maps only). Every new idea goes into `bot/` as a flag, default 0. No vNN copies; test builds are staged in the scratchpad.
+- **Mainline = `bot/`** = b4 (b3 + Tower Defense centre pull + Australia queen vault ban); b3 = b2 + Australia crowd penalty: v61 (QS_FROM=100, QSPLIT_ROOM=1) + Portals/Maze queen park and crown + QKILL_FUEL + INFER_SYM (unknown maps only). Every new idea goes into `bot/` as a flag, default 0. No vNN copies; test builds are staged in the scratchpad.
 - **Last accepted live build:** f1 (= b2 on known maps; identical copy in `variants/f1` for rating-restoring re-uploads). b1 copy kept in `variants/b1`.
 - **Fallbacks:** `variants/v61`, `variants/v44`. Re-uploading an identical build restores its old rating.
 - **Kept in `variants/`:** b1 (live), v61, v44 (fallbacks), v35, v38m (local test opponents).
@@ -51,7 +51,9 @@ Last updated: 2026-10-05 23:05 EDT. All updates to the user come from this page.
 | l1 | b3 + lane-map small queen (TD, Devil late, Autarky, QoS) | **LOSS** | vs dev team on those maps, l1 vs earlier builds (h1+s1): Autarky 0/20 vs 0/19, TD 3/20 vs 4/19, QoS 6/20 vs 5/20, Devil 6/20 vs 11/20. Adjusted -5.0 pp, P 0.13. b3 restored. |
 | ms1 | b3 + MIDSIZE (half of units split at L6 from r150) | **LOSS** | 356 games: adjusted -5.8 pp (CI -12.4..+1.3), P 0.05. r300 length ratio x1.18 but wins down. b3 restored. |
 | u1 | b3 + 5 map-specific fixes (QVAULT, PM_TROPHY_RG, PM_TD_PULL, QG_RAM, SCH_DOORS/CHAMBER) | **pulled** after 0-5 ranked vs Sponge (2212 → 2131) and weak dev-team games; user call. b3 restored. |
-| v1 | b3 + PM_TD_PULL=2 + QVAULT=3 + SCH_DOORS=1 (harness-verified vs FTM/VIB: TD centre race 5/5 flips, vault entries flip, Schooltime B units head to unvisited beds) | **testing (unranked only)**, live since Mon 11:05 PM; both loops unranked on TD/Australia/Slithery/Schooltime | judge per map; b3 restored after |
+| v1 | b3 + PM_TD_PULL + QVAULT=3 + SCH_DOORS (unranked) | **partly accepted** | per map vs b3: TD wins 41% → 60%, eliminated 48% → 24%, r100 length x2.6 (keep); Australia queen alive r100 18% → 45%, wins 53% → 58% (keep QVAULT bit 2); Slithery queen alive r100 57% → 87% but wins 25% → 21%, r300 length x0.86 (bit 1 off); Schooltime wins 36% → 25% (SCH_DOORS off). New mainline b4. |
+| b4 | mainline: b3 + PM_TD_PULL=2 + QVAULT=2 (Australia) | accepted (per-map evidence); copy variants/b4 | |
+| pb2 | b4 + QBOX_ONESPLIT (self-boxed queen splits once, from r200) | **testing (unranked only)**, live since Tue 1:15 AM; loops on Portals/Maze/Trauma | judge on Portals/Maze queen length and alive at r500 |
 | (next) | QKILL_KING + QKK_FREE (king takes certain free-step queen kills) | queued | all maps; 10/12 failure decisions flip, 64/74 big-open wins unchanged |
 | k1 | b1 + QK_EG=2 (crowned-queen kamikaze guard, lunge reach 5 + approach trend) | staged (scratch r6/stage/k1), queued | Portals/Maze only in effect; judge on crowned-queen rams after r300 |
 

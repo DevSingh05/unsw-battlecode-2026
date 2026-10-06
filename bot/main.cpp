@@ -1,4 +1,4 @@
-// MAINLINE (bot/) = b3 (2026-10-05): v61 + Portals/Maze queen park+crown + QKILL_FUEL + INFER_SYM + Australia crowd penalty. New ideas = flags, default 0. Status: notes/STATUS.md
+// MAINLINE (bot/) = b4 (2026-10-06): b3 + Tower Defense centre pull + Australia queen vault ban. New ideas = flags, default 0. Status: notes/STATUS.md
 // v51: v44 + MATCH_STRICT-lite (unseen-map guard only: a starting dragon whose start fits no known map marks the map
 // v51: v44 + MATCH_STRICT-lite (unseen-map guard only: a starting dragon whose start fits no known map marks the map
 //      unseen for its team; official maps play exactly as v44; notes/newrules/UNSEEN_GENERALISATION.md section 10)

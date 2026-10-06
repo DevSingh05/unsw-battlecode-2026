@@ -1704,7 +1704,7 @@
 //  2: Australia only: before queenSafe(), the queen takes -QVAULT_AUS_PEN for a portal step into an unseen tile
 //     whose area is < QVAULT_AUS_AREA (the 12-tile portal vault).
 #ifndef QVAULT
-#define QVAULT 0
+#define QVAULT 2 // on since 2026-10-06: Australia vault ban (v1: queen alive r100 18->45%); Slithery bit 1 off
 #endif
 #ifndef QVAULT_MAX
 #define QVAULT_MAX 6
@@ -1722,7 +1722,7 @@
 // score += PM_TD_PULL per walking step closer to the centre field (x 13-18, tiles with a pearl rate > 0), until the
 // head is within PM_TD_PULL_MIN steps of it. 0 = off.
 #ifndef PM_TD_PULL
-#define PM_TD_PULL 0.0
+#define PM_TD_PULL 2.0 // on since 2026-10-06 (v1: TD wins 41->60%, eliminated 48->24%)
 #endif
 #ifndef PM_TD_PULL_FROM
 #define PM_TD_PULL_FROM 0
