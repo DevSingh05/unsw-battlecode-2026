@@ -1,11 +1,80 @@
 # forgot to mention (FTM, id 264): current play vs b3, 2026-10-05
 
-Status: **PAUSED a second time, at about 01:20 UTC 6 Oct (21:20 EDT 5 Oct)**, on the user's request. Done: steps 1-2,
-the harness fidelity check, and harness runs of PM_POR_EARLY and the five staged fixes on the FTM games (results
-below). Not done: `show --debug` traces at the cited points, and the step-4 prototype (Portals queen box). Nothing in bot/
-or variants/ was touched, nothing was submitted, no challenges, no Discord or browser. All my processes are stopped.
-(My replay script `ftm5/chains.py` lacked a `__main__` guard, so it kept spawning processes; I killed its orphans,
-pids 43826/43827. Add the guard before running it again.)
+Status: **finished 03:40 UTC 6 Oct (23:40 EDT 5 Oct).** Sessions 1-2 are below. Session 3 (right after this block)
+built **QBOX_ONESPLIT** into bot/ (default 0) and staged it as `scratchpad/r12/stage/pb1`. Nothing was submitted,
+no challenges, no Discord or browser. The pre-edit main.cpp/params.hpp are in `archive/bot_pre_qbox1_20261006/`.
+`ftm5/chains.py` now has its `__main__` guard.
+
+## Session 3: QBOX_ONESPLIT (Portals box fix), verified
+- **The code path, from `show --debug` (exact b3 zip, every turn MATCHes the server).**
+  - 1182688 r398-406: the fed L35 queen circles a 240-tile area inside her own coil. The candidate areas then collapse
+    (r398 area 6-9, r400 0-5). From r401 on she has 1 candidate a turn. At r403 the only candidate is the portal E
+    to (19,0), with area 4 and score -2403 (PM_QP_PEN). The next steps (19,1) and (18,1) end at (18,0), area 1.
+  - 1151983 r384-389 shows the same pattern: single candidates of area 0-5, then the portal E to (9,1) at score -2451.
+  - At r407 (1182688) and r390 (1151983) the trace shows `top 0/0 candidates` and `-> reverse split`. That is the
+    trapped branch in `tryMove` (main.cpp: `qboxSplit`, then `QBOX_K2 && amQueen() && bestD < 0` → `trapK = 2`).
+  - **An entry guard would not help.** At every step into the dead end she had exactly one candidate, because the
+    trap is her own coil (UNDERSTANDING's Portals cause), not a static map pocket. So only the shed part is fixed.
+- **The fix** (bot/main.cpp, in the trapped branch after the K2 line; params.hpp `QBOX_ONESPLIT 0`, `QB1_FROM 200`).
+  - When the queen has no legal move, round >= 200, and every open side of her head is her own body (kelp and her own
+    segments never move away), she splits once with `k = L - i`. Here i is the highest index of her own segment
+    next to her head (2 <= i <= L-2).
+  - The child's tail is then that tile, so it frees when the child moves, and she has a step next turn. The other L-i
+    segments stay one live ally.
+  - Skipped near the end of the game, when `L - 2*(499 - round) > i`, because there the K2 chain is still longer at
+    r500 (queen tiebreak). Case: 1138664 Maze r480, L60 with i=7, K2 ends the game at L20.
+  - The K2 chain ends at the same queen length i (it frees that tile only once L <= i), but 10-18 turns later.
+    Its L2 children mostly live 2-40 rounds, so their mass is not lost outright.
+- **Harness (sandbox, all turns):**
+  - FTM games: **3 of 61 change, all of them queen box splits.** These are the two Portals box turns
+    (1182688 r407 SPLIT 2 → SPLIT 33, keep 7; 1151983 r390 → SPLIT 34, keep 7) and Maze 1176685 r294 (L10).
+    1151507 does not flip: its open side, the portal S to (28,1), is not her body, so K2 stays. The other 58 games are
+    byte-identical, including all 23 wins.
+  - **b3/cm1 Portals games vs other teams (64 games, 50 W / 14 L):** 14 change, 7 W and 7 L. Every changed turn is a
+    queen box split at r377-482, and nothing else changes. In each one, i is about equal to where K2 bottoms out
+    (for example 1166580 r456: L40, K2 reaches L12 at r472, one split keeps about 9-11 at r456).
+  - Flags off (ftm5/bot and bot/): 0 changes in 61 + 64 games.
+  - Ungated tests showed a **Slithery side effect**: every Slithery game starts with our L26 queen in her spawn coil
+    and a K2 chain at r0-9, and those L2 children live, which is our early forager count. That is why the flag has
+    the `QB1_FROM 200` gate. Opponents split once there (k=18-23); that is a separate, untested idea.
+- **Sandbox smoke (pb1 vs variants/b3, seed 1000):**
+  - Portals A and B: CPU 8.9M. Australia (maps/sprint) A and B: CPU 33.4M / 32.6M. No errors.
+  - Paired Portals seed: both queens are boxed at r473 at L48. b3 sheds to L28 at r483 and ends at L32; pb1 keeps 27
+    in one split and ends at **L36**. Both lose 45 to the opponent.
+- **bot/ with the flag off = variants/b3**: 8/8 identical fingerprints (ident.sh: australia, devil, portals, QoS, both
+  sides).
+- **What the server should judge:** Portals queen length at r500, queen alive at r500, queen splits per box event.
+  The harness can't score what she does next (regrowth, a re-box next to the L20-30 child), so its value is
+  "faster and no worse in the decision", not a proven win.
+
+## Session 3: other reruns
+- PM_TD_PULL=2 on 1160796 (the build-race rerun): its non-queen (id 2, side B) flips N→E at r0-2 and r17-21.
+  **6/6 TD losses vs FTM now flip** at the opening decisions.
+- PM_TROPHY_RG=2 on Trophy/Devil vs FTM: the losses change at r31-63 (it refuses 2-step rams), not at the r7-9 trade
+  that UNDERSTANDING cites (that trade came from other opponents). The win 1138668 changes at r8. Not a clear lever vs FTM.
+- Small-map eliminations vs FTM (10 outside TD):
+  - Trophy ×2: no flip found.
+  - Devil ×2: our queen killed at r23-38, UNDERSTANDING's early-queen threat cause; QE_THREAT_PEN was not run.
+  - PD ×2: both queens die at r9-13, a coin flip.
+  - Stripes ×1: we lose the r50-100 fight 1/3 vs 17/39. Our queen always dies at r13 by design, and we still win 5/6.
+  - Default ×1: queen HitSelf at r167.
+  - Autarky ×2: our queen killed at r119/r167 by heads at the centre gates, their queen alive. We had equal or more
+    mass at r100 in both.
+
+  None were harness-verified this session.
+
+## Final ranked fixes vs FTM
+1. **PM_TD_PULL=2** (staged `dgu/stage/PM_TD_PULL`): 6/6 TD losses flip at the same opening decisions, the queen
+   is unchanged, and there are no TD wins vs FTM. TD only, low risk. Server metric: first centre arrival before r44.
+2. **QVAULT=3** (staged): 3/3 Australia and 1/1 Slithery vault entries flip, 1 Australia win changes at the same
+   move, and 6/6 Around UNSW/Islands are unchanged. Risk: the one-seed Australia-A smoke loss (4 Oct).
+3. **QBOX_ONESPLIT=1** (new, in bot/ default 0, staged `r12/stage/pb1`): 2/3 Portals box turns flip, 58/61 FTM
+   games are unchanged, and vs others 14/64 Portals games change at box turns only. All maps from r200, but it fires
+   only on a fully self-boxed queen. Low risk. The likely gain is a few queen length and 10-18 fewer boxed turns;
+   1151983 (their queen L8) is the possible flip to a win.
+4. QG_RAM=8: 2/4 Maze ram losses change before the death. Not traced, low confidence.
+5. PM_POR_EARLY: only together with fix 3 and judged on the server (FTM's queen is L10-20 at r300, ours is L3).
+6. QKK_FREE: 1 turn in 61 games, neutral vs FTM.
 
 ## Session 2 results (harness, sandbox, scratch `ftm5/v/<label>/<game>.json`)
 - **Fidelity:** with the exact server zips (`--sub b3` / `--sub cm1`), all 61 games vs FTM rebuild IDENTICAL and
@@ -69,7 +138,7 @@ pids 43826/43827. Add the guard before running it again.)
 5. **PM_POR_EARLY**: only after fix 3, and judged on the server (the harness cannot score it).
 6. QKK_FREE: neutral vs FTM (1 turn in 61 games). Its case rests on other opponents.
 
-## Next steps when resumed (supersede the list at the end of this note)
+## Session-2 next steps (done in session 3, see top)
 1. `show --debug` on the box points above. Get the score breakdown at the entry step, the code path in
    `qparkScore` / `tryMove`, and confirm the K2 branch.
 2. Prototype fix 3 in `ftm5/bot/` (copy of bot/, flag default 0). Then verify all 61 games: the 3 box turns must flip,
@@ -153,7 +222,7 @@ pids 43826/43827. Add the guard before running it again.)
   QoS 2, Devil 2, Portals 2 (their queen died), Maze 1176048 (their queen died at r498), AUNSW 1176683, Islands 1183196,
   Trauma 1182920 (our queen 53 v 45). Not yet studied for "what we did right".
 
-## Next steps when resumed (in order)
+## Session-1 next steps (done, see top)
 1. Baseline harness: `VPJ=3 python3 <dgu>/builder/vp.py ftm_b3 bot <ftm5>/list_all.txt`. vp.py takes columns
    `id side sub map`, and cm1 rows need `-D CROWD_MAPS=3`, which vp.py adds. Better: run with `--sub b3` / `--sub cm1`
    so the zip is exact. Confirm 100% match.

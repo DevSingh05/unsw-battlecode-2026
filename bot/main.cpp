@@ -6962,6 +6962,41 @@ struct Bot
             int trapK = myLen - 2;
             if (QBOX_K2 && amQueen() && bestD < 0 && myLen >= 5)
                 trapK = 2; // v43 QBOX_K2: a boxed queen sheds 2 and waits (she can wait again while L >= 4)
+            if (QBOX_ONESPLIT && amQueen() && bestD < 0 && round >= QB1_FROM && static_cast<int>(trail.size()) >= myLen)
+            {
+                // notes/top5/FTM_OCT5.md: a boxed queen whose head touches her own segment i keeps exactly i segments
+                // in one split. The child's tail is then that tile and frees when the child moves, so she has a step
+                // next turn about 10-18 rounds sooner, and the rest of her mass stays one ally (the K2 chain sheds it as ~17 L2s).
+                // only when every open side is her own body (kelp and her own segments never move away; another
+                // dragon's body may, and then the K2 wait keeps more of her)
+                int keep = -1;
+                bool ownOnly = true;
+                for (int d = 0; d < 4 && ownOnly; d++)
+                {
+                    int t = step(myHead, d);
+                    if (t < 0)
+                        continue;
+                    int idx = -1;
+                    for (int i = 1; i < myLen && idx < 0; i++)
+                        if (trail[i] == t)
+                            idx = i;
+                    if (idx < 0)
+                        ownOnly = false;
+                    else if (idx >= 2 && idx <= myLen - 2)
+                        keep = std::max(keep, idx);
+                }
+                if (!ownOnly)
+                    keep = -1;
+                if (keep >= 2 && myLen - 2 * (499 - round) > keep)
+                    keep = -1; // near r500 the K2 chain is still longer than keep when the game ends (queen tiebreak)
+                if (keep >= 2)
+                {
+                    trapK = myLen - keep;
+                    r2log("qb1", keep);
+                    if (dbg)
+                        std::fprintf(dbg, "  qbox one split: keep %d of %d\n", keep, myLen);
+                }
+            }
             r2log(bestD < 0 ? (amQueen() ? "spEq" : "spE0") : "spE1", trapK);
             out += "SPLIT " + std::to_string(trapK) + "\n";
             pending.clear();

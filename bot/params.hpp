@@ -1334,6 +1334,14 @@
 #ifndef QBOX
 #define QBOX 1
 #endif
+// QBOX_ONESPLIT (notes/top5/FTM_OCT5.md): a boxed queen whose head touches her own segment i splits once, keeping i
+// segments (child = the other L-i, alive), instead of the QBOX_K2 shed-2 chain. 0 = off.
+#ifndef QBOX_ONESPLIT
+#define QBOX_ONESPLIT 0
+#endif
+#ifndef QB1_FROM
+#define QB1_FROM 200    // QBOX_ONESPLIT only from this round (the Slithery spawn coil's r0-9 K2 children are useful foragers)
+#endif
 #ifndef QBOX_RESERVE
 #define QBOX_RESERVE 1        // unit slots non-queens leave free (a split at 64 units is illegal and kills the parent)
 #endif
