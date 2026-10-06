@@ -1014,6 +1014,12 @@
 #ifndef KING_POS_POSTMOVE
 #define KING_POS_POSTMOVE 0
 #endif
+// ---- KW_QID (2026-10-06): the king word's id field is 10 bits, so dragons 1024/1025 (2048/2049, ...) arrived as
+// ids 0/1 and were taken for our queen (40/773 games: their words overwrote the queen beacon on Portals/Maze, and
+// feeders took our queen for the king on Schooltime). 1 = send such ids as 2/3 instead; 0 = b4 behaviour.
+#ifndef KW_QID
+#define KW_QID 0
+#endif
 // ---- scramble every sonar word we send with a keyed bijection (enemies intercept our rays) (IMP_FINDINGS.md)
 #ifndef SONAR_ENCRYPT
 #define SONAR_ENCRYPT 1

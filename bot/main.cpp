@@ -1897,12 +1897,14 @@ struct Bot
                 return LH_SALT[b];
         return 0;
     }
+    // the king word's 10-bit id field; KW_QID keeps non-queens off our queen's ids 0/1
+    static int kw10(int id) { return (KW_QID && id > 1 && (id & 1023) <= 1) ? ((id & 1023) | 2) : (id & 1023); }
     uint64_t encodeKing(int tile, int len, int id, int hop, int dir, int rnd, uint64_t key = SECRET) const
     {
         if (LATE_HUNT && LH_BEACON && key == SECRET)
             key ^= lhSalt();
         uint64_t x = static_cast<uint64_t>(tile % w.W) | (static_cast<uint64_t>(tile / w.W) << 6) |
-                     (static_cast<uint64_t>(std::min(len, 255)) << 12) | (static_cast<uint64_t>(id & 1023) << 20) |
+                     (static_cast<uint64_t>(std::min(len, 255)) << 12) | (static_cast<uint64_t>(kw10(id)) << 20) |
                      (static_cast<uint64_t>(hop & 3) << 30) | (static_cast<uint64_t>(dir & 3) << 32) |
                      (static_cast<uint64_t>(rnd & 511) << 34);
         uint64_t check =
@@ -2100,7 +2102,7 @@ struct Bot
                 lhNoteAlive(round - 1 - LH_AGE[lastSaltIdx]); // v68: the sender knew our queen alive recently
             if (round - rnd > 4)
                 continue;
-            if (id == (w.myId & 1023))
+            if (id == kw10(w.myId))
                 continue;
             if (LATE_HUNT && id <= 1)
                 lhNoteAlive(rnd); // v68: our queen is broadcasting as a king
@@ -2120,7 +2122,7 @@ struct Bot
                 if (!found)
                     kingsSeen.push_back({id, len, tile, dir, rnd});
             }
-            bool better = len > kingLen || id == (kingId & 1023) || round - kingRound > 6;
+            bool better = len > kingLen || id == kw10(kingId) || round - kingRound > 6;
             if (better && (rnd >= kingRound || len > kingLen))
             {
                 kingId = id;
@@ -2129,7 +2131,7 @@ struct Bot
                 kingDir = dir;
                 kingRound = rnd;
             }
-            if (hop < KING_RELAY_HOPS && hop < bestHopRelay && id == (kingId & 1023))
+            if (hop < KING_RELAY_HOPS && hop < bestHopRelay && id == kw10(kingId))
             {
                 bestHopRelay = hop;
                 relayMsg = encodeKing(tile, len, id, hop + 1, dir, rnd);
@@ -2145,7 +2147,7 @@ struct Bot
                     bk = &k;
             if (bk && (bk->len > kingLen || round - kingRound > 2))
             {
-                if (bk->id != (kingId & 1023))
+                if (bk->id != kw10(kingId))
                 {
                     haveRelay = bk->round >= round - 4;
                     relayMsg = encodeKing(bk->tile, bk->len, bk->id, 1, bk->dir, bk->round);
@@ -2162,7 +2164,7 @@ struct Bot
                     bk = &k;
             if (bk && (bk->len >= kingLen || round - kingRound > KC_MEM))
             {
-                if (bk->id != (kingId & 1023))
+                if (bk->id != kw10(kingId))
                 {
                     haveRelay = round - bk->round <= 4; // relay the longest, not the last heard
                     relayMsg = encodeKing(bk->tile, bk->len, bk->id, 1, bk->dir, bk->round);
@@ -2181,7 +2183,7 @@ struct Bot
                 if (!decodeKing(m, tile, len, id, hop, dir, rnd, STATUS_SECRET))
                     continue;
                 learnFrame(lastFrameCode);
-                if (round - rnd > CONS_MEM || id == (w.myId & 1023))
+                if (round - rnd > CONS_MEM || id == kw10(w.myId))
                     continue;
                 if (hop < CONS_RELAY_HOPS && round - rnd <= 2 && len > relayLen)
                 {
@@ -2207,7 +2209,7 @@ struct Bot
         // we can see the king ourselves: use exact data
         if (kingId >= 0)
             for (auto& sg : segs)
-                if (sg.head && sg.team == w.myTeam && (sg.id & 1023) == (kingId & 1023) && sg.id != w.myId)
+                if (sg.head && sg.team == w.myTeam && kw10(sg.id) == kw10(kingId) && sg.id != w.myId)
                 {
                     kingTile = sg.tile;
                     kingDir = sg.facing;
@@ -2219,7 +2221,7 @@ struct Bot
             int vis = 0;
             bool inside = true;
             for (auto& sg : segs)
-                if (sg.team == w.myTeam && (sg.id & 1023) == (kingId & 1023) && sg.id != w.myId)
+                if (sg.team == w.myTeam && kw10(sg.id) == kw10(kingId) && sg.id != w.myId)
                 {
                     vis++;
                     int dx = std::abs(sg.tile % w.W - myHead % w.W), dy = std::abs(sg.tile / w.W - myHead / w.W);
@@ -3250,7 +3252,7 @@ struct Bot
         bool heard = kingId >= 0 && round - kingRound <= 8;
         if (kingSelf)
         {
-            if (heard && (kingLen > myLen + KING_STEPDOWN_MARGIN || (kingLen >= myLen && (kingId & 1023) < (w.myId & 1023))))
+            if (heard && (kingLen > myLen + KING_STEPDOWN_MARGIN || (kingLen >= myLen && kw10(kingId) < kw10(w.myId))))
                 kingSelf = false;
             return;
         }
@@ -3408,7 +3410,7 @@ struct Bot
     // ROUND3 P7: on a per-map queen-king map the crowned queen is fed whatever her length (a parked queen is L3)
     bool feedsQueen() const
     {
-        return RP.queenKing && !amQueen() && queenKingRound() && queenAlive() && kingId >= 0 && (kingId & 1023) <= 1;
+        return RP.queenKing && !amQueen() && queenKingRound() && queenAlive() && kingId >= 0 && kw10(kingId) <= 1;
     }
     // walking distance a -> b over static tiles (bodies ignored), capped: maxd + 1 = further / walled off
     int walkDist(int a, int b, int maxd) const
@@ -3538,10 +3540,10 @@ struct Bot
                 for (auto& s2 : segs)
                     if (s2.id == sg.id)
                         n++;
-                add(sg.id & 1023, n, sg.tile, sg.facing, true);
+                add(kw10(sg.id), n, sg.tile, sg.facing, true);
             }
         for (auto& k : kingsSeen)
-            if (round - k.round <= CONS_MEM && k.id != (w.myId & 1023))
+            if (round - k.round <= CONS_MEM && k.id != kw10(w.myId))
                 add(k.id, k.len, k.tile, k.dir, false);
         for (auto& k : statusSeen)
             if (round - k.round <= CONS_MEM)
@@ -3573,7 +3575,7 @@ struct Bot
         int dk = wrapDist(myHead, h.tile);
         consFirst = true;
         for (auto& o : segs)
-            if (o.head && o.team == w.myTeam && o.id != w.myId && (o.id & 1023) != h.id)
+            if (o.head && o.team == w.myTeam && o.id != w.myId && kw10(o.id) != h.id)
             {
                 int n = 0; // only other small heads (would-be feeders) queue with us
                 for (auto& s2 : segs)
@@ -3626,7 +3628,7 @@ struct Bot
             // precise: no other small ally head is nearer than the host to where our head pearl lands
             // (43% of the first version's pearls went to bystanders)
             for (auto& o : segs)
-                if (o.head && o.team == w.myTeam && o.id != w.myId && (o.id & 1023) != consHostId &&
+                if (o.head && o.team == w.myTeam && o.id != w.myId && kw10(o.id) != consHostId &&
                     wrapDist(o.tile, myHead) <= dk)
                 {
                     int n = 0;
@@ -5863,7 +5865,7 @@ struct Bot
         {
             bool kingVisible = false;
             for (auto& sg : segs)
-                if (sg.head && sg.id != w.myId && (sg.id & 1023) == (kingId & 1023) && sg.team == w.myTeam)
+                if (sg.head && sg.id != w.myId && kw10(sg.id) == kw10(kingId) && sg.team == w.myTeam)
                     kingVisible = true;
             int dk = wrapDist(myHead, kingTile);
             int feedDist = (RP.lateFeedRound > 0 && round >= RP.lateFeedRound) ? 6 : FEED_DIST;
@@ -5890,7 +5892,7 @@ struct Bot
                     // only right next to it, and not while its last meal is still lying there
                     bool closest = true;
                     for (auto& o : segs)
-                        if (o.head && o.team == w.myTeam && o.id != w.myId && (o.id & 1023) != (kingId & 1023))
+                        if (o.head && o.team == w.myTeam && o.id != w.myId && kw10(o.id) != kw10(kingId))
                         {
                             int od = wrapDist(o.tile, k);
                             if (od < dk || (od == dk && o.id < w.myId))
@@ -6285,7 +6287,7 @@ struct Bot
         int qakHead = -1;
         std::vector<int> qakEsc;
         if (QALLY_KEEP && !amQueen() && round >= QAK_FROM &&
-            (RP.queenKing || !(feedPhase() && kingId >= 0 && (kingId & 1023) <= 1 && shouldFeed())))
+            (RP.queenKing || !(feedPhase() && kingId >= 0 && kw10(kingId) <= 1 && shouldFeed())))
         {
             for (auto& o : segs)
                 if (o.head && o.team == w.myTeam && o.id <= 1)
@@ -6352,7 +6354,7 @@ struct Bot
             return n;
         };
         if (QAK_HARD && !amQueen() && myLen >= QAKH_LEN && round >= QAK_FROM &&
-            !(feedPhase() && kingId >= 0 && (kingId & 1023) <= 1 && shouldFeed()))
+            !(feedPhase() && kingId >= 0 && kw10(kingId) <= 1 && shouldFeed()))
         {
             for (auto& o : segs)
                 if (o.head && o.team == w.myTeam && o.id <= 1)

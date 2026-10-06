@@ -228,7 +228,7 @@ bool portalsOverride()
     // (and, being short of the king, becomes a feeder/merger).
     if (kingSelf && round >= POR_MERGE_R)
         for (auto& k : kingsSeen)
-            if (round - k.round <= 8 && (k.id & 1023) != (w.myId & 1023) && k.len >= myLen + POR_MERGE_GAP)
+            if (round - k.round <= 8 && kw10(k.id) != kw10(w.myId) && k.len >= myLen + POR_MERGE_GAP)
             {
                 kingSelf = false;
                 break;

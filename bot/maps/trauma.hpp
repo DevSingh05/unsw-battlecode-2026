@@ -179,7 +179,7 @@ bool traKing(int& kt, int& kd, int& kl) const
     if (kt >= 0)
     {
         kl = bestCnt;
-        if (kingId >= 0 && (bestId & 1023) == (kingId & 1023))
+        if (kingId >= 0 && kw10(bestId) == kw10(kingId))
             kl = std::max(kl, kingLen);
         return true;
     }

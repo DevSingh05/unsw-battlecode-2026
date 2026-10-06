@@ -354,3 +354,4 @@
 - 15:39 UTC: Machine slept ~3h overnight (loops idle). pb2 REJECTED (no queen-survival gain; Portals/Trauma worse). b4 uploaded and live with RANKED loop (favourable panel).
 - 15:56 UTC: PAUSED (user moving). b4 live.
 - 16:49 UTC: RESUMED. b4 at 2249. kf1 = b4 + QKILL_KING + QKK_FREE uploaded, unranked only, all maps. Parallel session unsw-battlecode-b1 working in its own scratch (patches only; I keep the server).
+- 16:57 UTC: Merged KW_QID (king-word 10-bit id alias fix from parallel session) into bot/, default 0; flags-off identical to b4 on devil/portals/maze/australia. To ride on a later accepted build.
