@@ -1,6 +1,6 @@
 # STATUS (single source of truth)
 
-Last updated: 2026-10-06 12:55 EDT. All updates to the user come from this page. Times are US Eastern.
+Last updated: 2026-10-07 15:30 EDT. All updates to the user come from this page. Times are US Eastern.
 
 ## Live and mainline
 - **Mainline = `bot/`** = b4 (b3 + Tower Defense centre pull + Australia queen vault ban); b3 = b2 + Australia crowd penalty: v61 (QS_FROM=100, QSPLIT_ROOM=1) + Portals/Maze queen park and crown + QKILL_FUEL + INFER_SYM (unknown maps only). Every new idea goes into `bot/` as a flag, default 0. No vNN copies; test builds are staged in the scratchpad.
@@ -52,8 +52,8 @@ Last updated: 2026-10-06 12:55 EDT. All updates to the user come from this page.
 | ms1 | b3 + MIDSIZE (half of units split at L6 from r150) | **LOSS** | 356 games: adjusted -5.8 pp (CI -12.4..+1.3), P 0.05. r300 length ratio x1.18 but wins down. b3 restored. |
 | u1 | b3 + 5 map-specific fixes (QVAULT, PM_TROPHY_RG, PM_TD_PULL, QG_RAM, SCH_DOORS/CHAMBER) | **pulled** after 0-5 ranked vs Sponge (2212 → 2131) and weak dev-team games; user call. b3 restored. |
 | v1 | b3 + PM_TD_PULL + QVAULT=3 + SCH_DOORS (unranked) | **partly accepted** | per map vs b3: TD wins 41% → 60%, eliminated 48% → 24%, r100 length x2.6 (keep); Australia queen alive r100 18% → 45%, wins 53% → 58% (keep QVAULT bit 2); Slithery queen alive r100 57% → 87% but wins 25% → 21%, r300 length x0.86 (bit 1 off); Schooltime wins 36% → 25% (SCH_DOORS off). New mainline b4. |
-| b4 | mainline: b3 + PM_TD_PULL=2 + QVAULT=2 (Australia) | **live (ranked)** since Tue 11:45 AM; copy variants/b4 | |
-| kf1 | b4 + QKILL_KING + QKK_FREE (king takes certain free-step queen kills) | **testing (unranked only)**, live since Tue 12:55 PM; loops unranked, all maps | judge: their queen alive at r500, king queen kills, adjusted (24-36 h local context) |
+| b4 | mainline: b3 + PM_TD_PULL=2 + QVAULT=2 (Australia) | **live (ranked)**, re-uploaded Wed 3:30 PM (2220); copy variants/b4 | |
+| kf1 | b4 + QKILL_KING + QKK_FREE | **LOSS** | 392 games (unranked): adjusted -6.0 pp (CI -16..+4), P 0.13. King queen kills barely changed. b4 restored. |
 | pb2 | b4 + QBOX_ONESPLIT | **LOSS** | Portals wins 75% → 60%, queen alive r500 83% → 80%; Maze flat; Trauma 96% → 80%. Off. |
 | (next) | QKILL_KING + QKK_FREE (king takes certain free-step queen kills) | queued | all maps; 10/12 failure decisions flip, 64/74 big-open wins unchanged |
 | k1 | b1 + QK_EG=2 (crowned-queen kamikaze guard, lunge reach 5 + approach trend) | staged (scratch r6/stage/k1), queued | Portals/Maze only in effect; judge on crowned-queen rams after r300 |
