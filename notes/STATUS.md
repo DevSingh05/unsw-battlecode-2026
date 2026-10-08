@@ -1,6 +1,6 @@
 # STATUS (single source of truth)
 
-Last updated: 2026-10-07 23:45 EDT. All updates to the user come from this page. Times are US Eastern.
+Last updated: 2026-10-08 13:00 EDT. All updates to the user come from this page. Times are US Eastern.
 
 ## Live and mainline
 - **Mainline = `bot/`** = b4 (b3 + Tower Defense centre pull + Australia queen vault ban); b3 = b2 + Australia crowd penalty: v61 (QS_FROM=100, QSPLIT_ROOM=1) + Portals/Maze queen park and crown + QKILL_FUEL + INFER_SYM (unknown maps only). Every new idea goes into `bot/` as a flag, default 0. No vNN copies; test builds are staged in the scratchpad.
@@ -54,6 +54,7 @@ Last updated: 2026-10-07 23:45 EDT. All updates to the user come from this page.
 | u1 | b3 + 5 map-specific fixes (QVAULT, PM_TROPHY_RG, PM_TD_PULL, QG_RAM, SCH_DOORS/CHAMBER) | **pulled** after 0-5 ranked vs Sponge (2212 → 2131) and weak dev-team games; user call. b3 restored. |
 | v1 | b3 + PM_TD_PULL + QVAULT=3 + SCH_DOORS (unranked) | **partly accepted** | per map vs b3: TD wins 41% → 60%, eliminated 48% → 24%, r100 length x2.6 (keep); Australia queen alive r100 18% → 45%, wins 53% → 58% (keep QVAULT bit 2); Slithery queen alive r100 57% → 87% but wins 25% → 21%, r300 length x0.86 (bit 1 off); Schooltime wins 36% → 25% (SCH_DOORS off). New mainline b4. |
 | b4 | mainline: b3 + PM_TD_PULL=2 + QVAULT=2 (Australia) | **live (ranked)**, re-uploaded Wed 3:30 PM (2220); copy variants/b4 | |
+| qf1 | **Qualifier build, live since Thu 1:00 PM**: b4 + QE_KR=2 (pearl-aware early-queen kamikaze reach) + UNK_PORTAL_SIDES=2, both gated to never-identified maps | known maps: 40/40 full-trace identical to b4 (17 maps + Schooltime B x3, both sides); unseen vs b4: .570 and .518 on two seed bases (pooled .544, 456 games); unknown_neck fixture: queen suicide fixed; CPU same as b4 (rare 40-54M spikes on a 64x64 map, b4 too; judge limit 100M). Copy: variants/qf1. Fallback: variants/b4. |
 | kf1 | b4 + QKILL_KING + QKK_FREE | **LOSS** | 392 games (unranked): adjusted -6.0 pp (CI -16..+4), P 0.13. King queen kills barely changed. b4 restored. |
 | pb2 | b4 + QBOX_ONESPLIT | **LOSS** | Portals wins 75% → 60%, queen alive r500 83% → 80%; Maze flat; Trauma 96% → 80%. Off. |
 | (next) | QKILL_KING + QKK_FREE (king takes certain free-step queen kills) | queued | all maps; 10/12 failure decisions flip, 64/74 big-open wins unchanged |

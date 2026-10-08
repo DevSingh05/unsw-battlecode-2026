@@ -831,3 +831,14 @@
 04:35 UTC ok cpu=88.7C load=8.37 paused=0
 04:45 UTC ok cpu=90.0C load=7.21 paused=0
 04:55 UTC ok cpu=84.5C load=7.08 paused=0
+05:00 UTC PAUSE cpu=104.4C load=18.13 warn=0
+05:05 UTC ok cpu=102.5C load=37.69 paused=1
+05:15 UTC ok cpu=97.3C load=29.85 paused=1
+05:25 UTC ok cpu=96.0C load=31.72 paused=1
+05:35 UTC ok cpu=96.0C load=31.75 paused=1
+05:46 UTC ok cpu=84.3C load=34.59 paused=1
+05:56 UTC ok cpu=95.8C load=31.53 paused=1
+06:06 UTC ok cpu=97.3C load=35.88 paused=1
+06:16 UTC ok cpu=95.7C load=30.98 paused=1
+06:26 UTC ok cpu=96.7C load=28.73 paused=1
+06:36 UTC ok cpu=95.3C load=23.10 paused=1
