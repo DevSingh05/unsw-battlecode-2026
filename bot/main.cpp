@@ -1207,8 +1207,8 @@ struct Bot
             }
         }
 #endif
-        if (UNK_SCARCE_FIX && !w.known && !w.portalUse && myHead >= 0)
-            scarceFixCheck();
+        if (UNK_SCARCE_FIX && !w.known && !w.portalUse && myHead >= 0 && !(QNO_UNKPORTAL >= 2 && qNoUnkPortal()))
+            scarceFixCheck(); // QNO_UNKPORTAL 2: the queen never links seen portal pairs into her paths either
         computePortalExits();
         computeFreeTimes();
         updateTrail();
@@ -2736,6 +2736,8 @@ struct Bot
     bool queenEarly() const { return QUEEN_SAFE && amQueen() && !qsOn; }
     // QF1: QE_KR acts only on maps this process never identified (sticky; QE_KR_ANYMAP=1 drops the gate = horse's prototype)
     bool qeKrOn() const { return queenEarly() && (QE_KR_ANYMAP || w.neverKnown()); }
+    // QNO_UNKPORTAL: on never-identified maps the queen never knocks on / explore-crosses an unknown portal
+    bool qNoUnkPortal() const { return QNO_UNKPORTAL && amQueen() && w.neverKnown(); }
     // ROUND3 P7 PM_QPARK: the queen is parked at home until the king seed round, then crowned (RP.queenKing).
     // Portals (qPark 1): she never crosses a portal and holds a spot far from every portal mouth/exit.
     // Maze (qPark 2): she stays inside the home field (frame x < PM_MAZE_QX).
@@ -3298,7 +3300,7 @@ struct Bot
                         warnDirs[d] = true;
                 }
         }
-        if (UNK_EXPLORE && !w.known && pending.size() <= 1 && !w.portalSide.empty())
+        if (UNK_EXPLORE && !w.known && pending.size() <= 1 && !w.portalSide.empty() && !qNoUnkPortal())
         {
             int at = pending.empty() ? myHead : pending.back();
             int face = pending.empty() ? myDir : lastMoveDir;
@@ -5129,6 +5131,8 @@ struct Bot
                     }
             }
         }
+        if (qNoUnkPortal())
+            exploreDesire = false; // QNO_UNKPORTAL: no door lure, no explore crossing for the queen
         if (UNK_EXPLORE_LURE > 0)
         {
             lureTile.assign(w.N, 0);
@@ -6874,7 +6878,7 @@ struct Bot
             }
         }
 
-        if (UNK_EXPLORE && exploreDesire && unkEchoRound == round && unkEchoTile == myHead && unkEchoClean)
+        if (UNK_EXPLORE && exploreDesire && unkEchoRound == round && unkEchoTile == myHead && unkEchoClean && !qNoUnkPortal())
         {
             int hunger = round - lastGrowRound;
             int exD = -1;

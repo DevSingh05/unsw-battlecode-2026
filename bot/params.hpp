@@ -2344,3 +2344,11 @@
 #ifndef QE_KR_ANYMAP
 #define QE_KR_ANYMAP 0
 #endif
+// QNO_UNKPORTAL (8 Oct, notes/top5/DEEP_CUTLERY_OCT8.md side finding): on maps this process never identified
+// (World::neverKnown), the queen (ids 0/1) never knocks on or explore-crosses an unknown portal (an edge not linked in
+// nxt): no explore desire (no door lure, no explore crossing) and no sonar knock. Pair-linked portals (UNK_SCARCE_FIX)
+// and the all-lethal UNK_PORTAL_ESCAPE fallback are unchanged. 2 = also no pair links for her (UNK_SCARCE_FIX off for the
+// queen's process), so every portal is kelp to her except in the all-lethal fallback.
+#ifndef QNO_UNKPORTAL
+#define QNO_UNKPORTAL 0
+#endif

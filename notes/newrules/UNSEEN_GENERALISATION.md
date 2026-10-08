@@ -342,3 +342,69 @@ Verdict:
 - On unseen maps it fixes the deterministic unknown-portal neck suicide and adds QE_KR. Pooled .544 vs b4 over 456 games.
 - Open item: the rt2028_24 single-turn CPU maxima of 40-54M are above our 40M bar. They are b4's own reply-search
   budget, well under the judge's 100M.
+
+## 12. QNO_UNKPORTAL: the queen stays off unknown portals on unseen maps (8 Oct, 15:35-17:00 EDT). Not shipped.
+Hypothesis (notes/top5/DEEP_CUTLERY_OCT8.md side finding): on maps the bot never identified, the queen should never knock on
+or cross a portal she doesn't know. In b4 blind self-play she crossed by r100 in 8 of 36 team-games, and all 8 died by r150.
+
+The flag is in bot/ with default 0, gated on `amQueen() && w.neverKnown()` (`Bot::qNoUnkPortal()`):
+- **1:** her explore desire is forced off, so she gets no door lure and makes no UNK_EXPLORE crossing. Her sonar knock on
+  unknown portals is dropped, so her beacons are not displaced. The explore-crossing branch also checks the gate.
+  Unknown portals are already kelp in `nxt`, so normal moves and sprints can't enter them. Pair-linked portals
+  (UNK_SCARCE_FIX `portalUse`) and the all-lethal UNK_PORTAL_ESCAPE fallback are unchanged.
+- **2:** as 1, and the queen's process also skips `scarceFixCheck`, so she never links seen pairs. Every portal is then kelp
+  to her except in the all-lethal fallback.
+
+Staging: work/qf2 = bot/ + `QE_KR 2`, `UNK_PORTAL_SIDES 2` and `QNO_UNKPORTAL 1`. work/qf2_scratch/qf2v2 is the same with
+`QNO_UNKPORTAL 2`. Scripts and logs are in work/qf2_scratch/ (gitignored).
+
+Checks (sandbox, seed 1000, full `-v` transcripts):
+- **Flags off** (bot/ + the qf1 defines vs variants/qf1): Trophy, Schooltime B, rt2028_00 and rt2028_05, both sides,
+  8/8 identical. Blind (NO_KNOWN_MAPS on both) Portals, Stripes, Islands and Trauma: 8/8. After the value-2 line was
+  added: 12/12 again.
+- **qf2 vs qf1 on the 17 server_live maps + schooltime_b/b2/b3, both sides: 40/40 identical**, max CPU 34.0M.
+  - Positive control (both blind): Portals and rt2028_00 differ at the queen's turn (r13, r2). Stripes is identical.
+- **CPU:**
+  - Australia known: 32.6/32.7M, the same as qf1.
+  - Australia blind: 35.0/35.1M, the same as qf1.
+  - rt2028_05 blind: 19.9M.
+- **Sandbox cache pitfall:** unswbc's judge-clang wasm cache key is the directory name plus the .c/.cpp contents. Headers
+  are not part of it (`clangtool.build`, `sources()`).
+  - So a stage dir that keeps its name and changes only params.hpp reuses the old wasm.
+  - Every stage here had a new name or a changed main.cpp, so every build was fresh.
+  - Give stage dirs a new name for each define set.
+
+Mechanism: 10 blind head-to-head games against qf1 (NO_KNOWN_MAPS on both sides, seed 975000) on Portals, Stripes, Trauma,
+rt2028_00 and rt2028_05, both sides. Counts are per team-game, from the replays (`work/qf2_scratch/mech.py`).
+
+| | queen crossed a never-crossed pair before r100 | queen crossings before r100 | queen alive at r150 | cand result |
+|---|---|---|---|---|
+| qf1 (base; value-1 run / value-2 run) | 8/10 / 8/10 | 31 / 46 | 4/10 / 5/10 | |
+| qf2 (value 1) | 3/10 (all pair links: Portals r72, Stripes r13/r17) | 25 | **8/10** | 8 W 2 L |
+| value 2 | **0/10** | 0 | **8/10** | 7 W 3 L |
+
+- On rt2028_00 and rt2028_05 the qf1 queen knocks and crosses at r5-18 and dies at r28-50, head-on.
+  - The value-1/2 queen stays home and wins on the longer queen at r500, 4/4.
+- On Portals and Stripes the value-1 games were move-for-move the same as qf1: those crossings use pair links, not explore.
+
+Unseen strength vs qf1 (`tools/unseen_eval.py --seeds 1 --jobs 5 --sets real,realhold,blind17`):
+
+| build | seed base | real | realhold | blind17 | pooled |
+|---|---|---|---|---|---|
+| qf2 (1) | 981000 | 43/80 .537 | 40/80 .500 | 35/68 .515 | 118/228 **.518** |
+| qf2 (1) | 982000 | 40/80 .500 | 41/80 .512 | 33/68 .485 | 114/228 **.500** |
+| qf2 (1) | both | 83/160 .519 | 81/160 .506 | 68/136 .500 | 232/456 **.509** |
+| value 2 | 981000 | 45/80 .562 | 40/80 .500 | 34/68 .500 | 119/228 **.522** |
+| value 2 | 982000 | 42/80 .525 | 42/80 .525 | 31/68 .456 | 115/228 **.504** |
+| value 2 | both | 87/160 .544 | 82/160 .512 | 65/136 .478 | 234/456 **.513** |
+
+Verdict:
+- **Not shipped.** The bar was pooled >= .52 and blind17 >= .48 on both seed bases.
+  - Value 1 fails on pooled at both seed bases (.518 and .500).
+  - Value 2 fails at 982000 on pooled (.504) and on blind17 (.456).
+- The flag does what it is meant to do. In the targeted games it removes the queen's knocks and explore crossings, and
+  8/10 queens are alive at r150 (qf1: 4/10 and 5/10). But the broad sets show no gain beyond noise (.509 and .513 over
+  456 games).
+  - Most unseen games probably never put the queen at an unknown portal, so any effect is diluted.
+  - These sets cannot tell whether it helps in the games where it does act.
+- bot/ keeps `QNO_UNKPORTAL 0`. variants/qf1 stays the Qualifier build. No variants/qf2 was made.
