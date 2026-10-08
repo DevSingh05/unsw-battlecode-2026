@@ -10,7 +10,7 @@ Last updated: 2026-10-07 23:45 EDT. All updates to the user come from this page.
 - **Challenge budget:** the server allows 60 challenge games/h (12 series). Unranked series let us choose maps, so map-specific fixes are tested with the loop restricted to their maps.
 
 ## Key dates
-- **Official (8 Oct update):** freeze 9 Oct 06:00 UTC = **Thu 2:00 AM EDT**; last active submission = Qualifier submission; then 3-4 h autoscrims on the current 17-map pool set seeds; Qualifier 10 Oct, Bo7, ALL UNSEEN maps; top 10 eligible go to the Grand Final. Strategy: known-map play (seeding) stays b4; Qualifier gains must come from unknown-map-gated changes that keep the 17 maps byte-identical.
+- **Official (8 Oct update):** freeze 9 Oct 06:00 UTC = **Fri 9 Oct 2:00 AM EDT**; last active submission = Qualifier submission; then 3-4 h autoscrims on the current 17-map pool set seeds; Qualifier 10 Oct, Bo7, ALL UNSEEN maps; top 10 eligible go to the Grand Final. Strategy: known-map play (seeding) stays b4; Qualifier gains must come from unknown-map-gated changes that keep the 17 maps byte-identical.
 - **Submission freeze for the Qualifier:** Fri 9 Oct, 2:00 AM EDT. Seeding comes from the final ladder.
 - **Qualifier stream:** Sat 10 Oct, 2:30 AM EDT. Best of 7, knockout, unseen maps.
 - **Grand Final:** 17 Oct.
