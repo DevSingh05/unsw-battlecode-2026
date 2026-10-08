@@ -15,6 +15,9 @@ Last updated: 2026-10-08 13:00 EDT. All updates to the user come from this page.
 - **Qualifier stream:** Sat 10 Oct, 2:30 AM EDT. Best of 7, knockout, unseen maps.
 - **Grand Final:** 17 Oct.
 
+## Rating strategy (8 Oct)
+- Ranked challenges go only to teams where our win rate beats the Elo expectation (gain even when we lose 2-3): SSS (W .44 vs E .19), larp (.40 vs .15), horse (.38 vs .24), Cutlery, FTM (.31 vs .23). Dropped Sponge (.32 vs .46), bread first search, Team SKKU (below expectation). Recompute with the snippet in notes/journal.md 8 Oct.
+
 ## How we test (lessons, in order of trust)
 0. **Ranked challenges only while an accepted build is live.** Test builds get unranked challenges only (u1 lost 69 Elo in its first ranked series because new uploads start with high uncertainty).
 1. **Server A/B is the judge.** One build is live at a time, for about 2-3 h (challenge loop at 45/h plus autoscrims).
