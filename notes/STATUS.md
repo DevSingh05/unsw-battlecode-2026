@@ -1,6 +1,6 @@
 # STATUS (single source of truth)
 
-Last updated: 2026-10-08 13:00 EDT. All updates to the user come from this page. Times are US Eastern.
+Last updated: 2026-10-08 17:05 EDT. All updates to the user come from this page. Times are US Eastern.
 
 ## Live and mainline
 - **Mainline = `bot/`** = b4 (b3 + Tower Defense centre pull + Australia queen vault ban); b3 = b2 + Australia crowd penalty: v61 (QS_FROM=100, QSPLIT_ROOM=1) + Portals/Maze queen park and crown + QKILL_FUEL + INFER_SYM (unknown maps only). Every new idea goes into `bot/` as a flag, default 0. No vNN copies; test builds are staged in the scratchpad.
@@ -59,6 +59,9 @@ Last updated: 2026-10-08 13:00 EDT. All updates to the user come from this page.
 | b4 | mainline: b3 + PM_TD_PULL=2 + QVAULT=2 (Australia) | **live (ranked)**, re-uploaded Wed 3:30 PM (2220); copy variants/b4 | |
 | qf1 | **Qualifier build, live since Thu 1:00 PM**: b4 + QE_KR=2 (pearl-aware early-queen kamikaze reach) + UNK_PORTAL_SIDES=2, both gated to never-identified maps | known maps: 40/40 full-trace identical to b4 (17 maps + Schooltime B x3, both sides); unseen vs b4: .570 and .518 on two seed bases (pooled .544, 456 games); unknown_neck fixture: queen suicide fixed; CPU same as b4 (rare 40-54M spikes on a 64x64 map, b4 too; judge limit 100M). Copy: variants/qf1. Fallback: variants/b4. |
 | kf1 | b4 + QKILL_KING + QKK_FREE | **LOSS** | 392 games (unranked): adjusted -6.0 pp (CI -16..+4), P 0.13. King queen kills barely changed. b4 restored. |
+| ag1 | qf1 base + UNK_GOV=50 (aAah split cap, unseen only) | **not shipped** | unseen vs b4: .491 / .531 (pooled .511, 456 games). Mid-size mass spreads away from the king and loses longest-dragon tiebreaks. |
+| cx1 | UNK_XP=1 (Cutlery-style portal crossing, unseen only) | **not shipped** | unseen vs b4: .487 / .539 (pooled .513); realhold under .5 on both seeds. Early blind queen crossers die early (ours 8/8, Cutlery 32/43). |
+| qn1 | qf1 + QNO_UNKPORTAL (queen never crosses unknown portals, unseen only) | **not shipped** | 17 maps + Schooltime B: 40/40 identical to qf1. Mechanism (10 blind games vs qf1): queen crossings before r100 8 → 0-3, queen alive r150 4 → 8. Unseen vs qf1: value 1 .518 / .500, value 2 .522 / .504 (blind17 .456 at 982000); ship rule needs ≥ .52 on both. Flag in bot/, default 0. |
 | pb2 | b4 + QBOX_ONESPLIT | **LOSS** | Portals wins 75% → 60%, queen alive r500 83% → 80%; Maze flat; Trauma 96% → 80%. Off. |
 | (next) | QKILL_KING + QKK_FREE (king takes certain free-step queen kills) | queued | all maps; 10/12 failure decisions flip, 64/74 big-open wins unchanged |
 | k1 | b1 + QK_EG=2 (crowned-queen kamikaze guard, lunge reach 5 + approach trend) | staged (scratch r6/stage/k1), queued | Portals/Maze only in effect; judge on crowned-queen rams after r300 |
