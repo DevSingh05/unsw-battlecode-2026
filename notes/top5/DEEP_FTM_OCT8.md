@@ -7,7 +7,7 @@ Scratch, scripts and raw output: `work/top4b/ftm/` (see PROGRESS.md there).
 ## TL;DR
 - **FTM's queen policy is simple and map-free.** Before her crown (about r210-260) she is L2-3 on 87% of her turns
   and splits 2 off at L4, keeping L2. She refuses pockets and dead ends, never starts a head-on, almost never
-  sprints, and is never boxed by her own body.
+  sprints, and never dies by her own body.
   - From about r210 on every map, L2-3 feeders kill themselves next to her (NoValidAction). She eats each drop within
     about 2 rounds and reaches L10 by r208-260.
 - **Our queen dies by her own hand in 40 of 153 clean games (26%); theirs in 5 of 198 (2.5%).**
@@ -21,8 +21,12 @@ Scratch, scripts and raw output: `work/top4b/ftm/` (see PROGRESS.md there).
   2. Pocket entries. When an open alternative exists, we take a pocket 40% of the time; FTM 10%.
   3. QS_EARLY_RAM. Our queen started 9 head-ons (both die); FTM's started 0.
 - **Prototype FTMQ** (floor 2 plus pocket veto, never-identified maps only, until r300; `work/top4b/ftm/bot`):
-  - unseen_eval vs b4 at seed-base 972000: real .512, realhold .475, blind17 .441, **pooled 109/228 = .478**.
-  - Seed-base 977000: see section 6.
+  pooled vs b4 is **.478** (972000) and **.469** (977000), so 216/456 = .474. That is below the .48 bar.
+  - Variant floor 3 plus veto: .500 and .500.
+  - Variant pocket veto alone: .482 (972000).
+  - Locally the floor-2 queen boxes far less (35 v 55 box events), but self-deaths don't drop (17 v 14). Allies seal
+    the small queen instead. Floor 3: 12 v 14 self-deaths, but 20 v 18 enemy kills.
+  - **No ship.** Nothing here beats qf1.
 - **Small maps:** both teams use the same split rule (split 2 off at L4). FTM's r0-100 lead is 1.5-2x more eats and
   splits, carried by more unit-turns: Autarky 117 v 78 eats, Trophy 92 v 52, weakhold 80 v 44, Devil 140 v 78,
   TD 62 v 35. Default and QoS are even. FTM loses more L2s to boxes, not fewer: its foragers are disposable.
@@ -31,7 +35,8 @@ Scratch, scripts and raw output: `work/top4b/ftm/` (see PROGRESS.md there).
 - 198 FTM-vs-us replays: replays/top4_ftm 137 (6-8 Oct) and replays/ftm_oct5 61 (4-5 Oct). Sides come from
   replays/ab_server/games.json.
 - Our side, "US": 153 games. The 45 played 7 Oct 04:00-19:30 UTC are dropped, because v61 may have played them
-  (TOP4_FTM_OCT8 attribution warning). The rest are b3/cm1/b4/kf1 queen code, which is the same for these rules.
+  (TOP4_FTM_OCT8 attribution warning). The rest are b3/cm1/b4/kf1, which share QG_MIN, QBOX/QBOX_K2, QSPLIT_ROOM and
+  QS_EARLY_RAM.
 - `qtrace.py` rebuilds every queen turn of both queens, r0-500. For each legal first step it records:
   - the static flood area, with and without portals (bodies as walls);
   - the onward free degree;
@@ -62,7 +67,7 @@ Scratch, scripts and raw output: `work/top4b/ftm/` (see PROGRESS.md there).
 | Q9 | portal step taken when a non-portal step exists, r0-100 | 19% (24/124) | 35% (92/263) |
 | Q10 | roaming: mean spawn BFS distance r0-50 / r50-100 / r100-200 | 10.7 / 9.6 / 4.3 | 8.1 / 9.3 / 5.1 |
 | Q10 | roaming: max distance (median game) | 17-19 | 11-13 |
-| Q11 | crown: first round at L10 or more (alive queen) | r208-260 on 12 map types | only Maze/Portals/Trauma (+3) |
+| Q11 | crown: first round at L10 or more (alive queen) | r208-260 on 12 map types | Maze/Portals/Trauma, plus 5 games on AUNSW/Islands/Slithery |
 | Q12 | feed: own-corpse eats by the queen per game, r200-299 / r300+ | 6.1 / 9.1 | 0.6 / 6.0 |
 
 Notes on the rules:
@@ -78,7 +83,8 @@ Notes on the rules:
 - **Deaths.**
   - FTM: 95 rammed by an enemy head (48 before r100), 4 NoValidAction boxes (L2-3), 1 allied head-on.
     0 HitSelf, 0 own-body.
-  - Ours: 67 rammed by an enemy, 9 head-ons she started, 26 HitSelf, 11 into an ally body, 3 allied head-ons.
+  - Ours: 67 rammed by an enemy, 9 head-ons she started, 26 HitSelf, 11 into an ally body, 3 allied head-ons,
+    1 into an enemy body.
     Enemy-caused deaths are 67/153 (44%) for us and 95/198 (48%) for FTM; the extra deaths are all self-caused.
 
 ## 3. Our queen's self-deaths (40/153) against the code
@@ -101,9 +107,9 @@ She walks a one-way corridor at L6, has 0 legal moves, QBOX splits 2, still 0, s
   - The dead-end veto (`eo.dead = qGuard() && area < need`, need = L+3, Voronoi area) acts only from r20. Before
     r20 POCKET_PUMP may even send her into a pocket.
   - QS_EARLY_RAM=1 lets the r<100 queen ram strictly shorter heads, a trade both lose (9 cases).
-- **Previously traced single cases still stand** (TOP4_FTM_OCT8): 1373837 is a forced ally move, and 1278124 is a
-  portal-blind QALLY_KEEP gate. They are 2 of the 14 ally-caused deaths. The other 12 are allies sealing the
-  corridor around a boxed L5+ queen.
+- **Previously traced single cases still stand** (TOP4_FTM_OCT8). 1278124 (a portal-blind QALLY_KEEP gate) is one
+  of the 14 ally-caused deaths here. 1373837 (a forced ally move) falls in the 7 Oct window, so it is outside this
+  count. The other 13 were not traced one by one, but `selfd.py` shows a boxed turn before 11 of them (all 11 ally-body deaths).
 
 ### The 2-3 differences that cause the self-deaths
 1. **Split floor.**
@@ -169,8 +175,8 @@ Patterns:
   r51 (ally body L5).
 - **Portals 1303411.** FTM refuses 30 of 36 pockets (r10 E area 227 over N area 2). Ours dies r29 at L3 after a
   split at r26 (4 to 2).
-- **Trophy 1383474.** FTM's queen: 8 splits 4 to 2, alive. Ours: L7 at r32-54, splits 7 to 5 six times, rammed r57
-  at L5.
+- **Trophy 1383474.** FTM's queen: 8 splits 4 to 2, alive. Ours: L5-8 at r32-54, splits 2 off at L7-8 six times,
+  rammed r57 at L5.
 - **weakhold 1294562.** FTM refuses 28 of 30 pockets and crowns at r250. Ours takes 15 of 22 and dies r172 (ally
   body, L2) after 171 rounds at L4.
 - **AUNSW 1416135, Islands 1261405, QoS 1269890, Australia 1164507.** All end in our box chain (section 3).
@@ -179,17 +185,86 @@ Patterns:
 `work/top4b/ftm/bot` = bot/ (with the qf1 `World::neverKnown()` gate) plus FTMQ, with `#define FTMQ 3` at the top of
 params.hpp. Defaults are 0 in the params block. About 50 lines in main.cpp:
 - `ftmqOn()` = FTMQ && queen && round < FTMQ_TO (300) && w.neverKnown().
-- **Bit 1:** split floor FTMQ_MIN=2 in `qgCap` and in the early floor, so she splits 2 off at L4 like FTM. From r300
+- **Bit 1:** split floor FTMQ_MIN (2) in `qgCap` and in the early floor, so she splits 2 off at L4 like FTM. From r300
   the old floor returns, so she can regrow for the r500 queen tiebreak.
 - **Bit 2:** pocket veto.
   - `eo.dead` is set when a time-aware flood from the step is smaller than max(L+3, FTMQ_AREA=10).
   - No POCKET_PUMP for her.
-  - The dead-end veto runs from r0, and never swaps into a more threatened step.
+  - The QGUARD dead-end veto runs from r0, and never swaps into a more threatened step.
+- Variants (same code, other top defines):
+  - `bot_f2`: bit 2 only.
+  - `bot_m3`: both bits with FTMQ_MIN 3, so she splits 2 off at L5 and stays L3-4.
+  - `bot_f1`: bit 1 only (not run).
 - Checks:
   - Known map: Trophy seed 1000, cand vs b4 and b4 vs b4 give the identical result line ("A wins after 93 rounds").
+    The gate is the qf1 sticky bit, which already passed its 40/40 identity check.
   - Unknown map: rt2028_05 changes. Our queen is L2 on 70% of turns r10-299 (b4: L4 100%).
 
-| seed-base | real | realhold | blind17 | pooled |
-|---|---|---|---|---|
-| 972000 | 41/80 = .512 | 38/80 = .475 | 30/68 = .441 | **109/228 = .478** |
-| 977000 | (running) | | | |
+unseen_eval vs variants/b4, sets real / realhold / blind17, `--seeds 1`:
+| build | seed-base | real | realhold | blind17 | pooled |
+|---|---|---|---|---|---|
+| FTMQ=3 (floor 2 + pocket veto) | 972000 | 41/80 .512 | 38/80 .475 | 30/68 .441 | **109/228 .478** |
+| FTMQ=3 | 977000 | 41/80 .512 | 33/80 .412 | 33/68 .485 | **107/228 .469** |
+| bot_f2 (pocket veto only) | 972000 | 40/80 .500 | 39/80 .487 | 31/68 .456 | 110/228 .482 |
+| bot_m3 (floor 3 + veto) | 972000 | 40/80 .500 | 39/80 .487 | 35/68 .515 | 114/228 .500 |
+| bot_m3 | 977000 | 43/80 .537 | 38/80 .475 | 33/68 .485 | 114/228 .500 |
+
+**Mechanism check** (`mech2.py`, 20 real_gen/tune maps, seed 972000, both sides; cand vs b4 against b4 vs b4,
+replays in `work/top4b/ftm/mech/m972/`; bot_m3 in `mech/m972m3/`):
+| | FTMQ=3 | b4 |
+|---|---|---|
+| score | 22/40 | 20/40 |
+| queen turns at L<=3 / L>=5 (r10-299) | 75% / 10% | 21% / 55% |
+| box events (0 legal moves, r12+) | **35** | 55 |
+| boxed (QBOX) queen splits r0-100 / r100-300 | **6 / 16** | 42 / 43 |
+| pocket taken / available, r0-100 | 61/222 (27%) | 96/298 (32%) |
+| dead end taken / available, r0-100 | 8/80 (10%) | 35/147 (24%) |
+| queen self-caused deaths (HitSelf, ally body, NoValidAction) | **17** | 14 |
+| queen alive r100 / r300 / r499 | 18 / 8 / 7 | 25 / 10 / 7 |
+| allies within 4 of the queen (median of game means) | 1.67 | 1.39 |
+| bot_m3 (floor 3) on the same 40 games | score 22/40, L<=3 40% / L>=5 18%, box events 50, self-deaths 12, enemy kills 20 (b4 18), alive r100 21 (b4 25) | |
+| queen turns with 2+ sides blocked by her own body | 11.8% | 20.4% (FTM server 2.7%) |
+
+**Reading.**
+- The prototype does what FTM's queen does: she is small, boxes far less and hardly sheds. But her self-deaths don't
+  fall (17 v 14). The deaths move from the L5+ box chain to an L2-4 queen sealed by allies, often her own fresh L2
+  children.
+  - Examples: rt2028_02 A r64 `L4/0 [self,self,ally,ally]`; rt2028_17 B r49 she splits 4 to 2, and at r52 she is
+    boxed by ally, self and kelp.
+  - Allies around her rise (1.67 v 1.39 within 4).
+- FTM's children don't disperse faster than ours. Child distance from the queen is a median 4/5/6/7 at +1/3/5/10
+  rounds, ours 5/5/6/6 (`kids.py`). FTM's allies block a side of their L2-3 queen
+  more often than ours do (7.7% of her turns, against our 4.9%).
+  - So the seals in our local games come from denser boards plus b4's own units: free sides of 1 or fewer on 34-37%
+    of queen turns locally, against 19-21% on the server.
+  - Not resolved.
+- Local queens mostly die to enemy head-ons before r100 on these maps (cand 15, b4 18 of 40), so a self-death rule
+  moves few results. That fits every build landing at .47-.50.
+
+**Verdict: no ship.**
+- FTMQ=3 is below the .48 bar on both seed bases (pooled 216/456 = .474).
+- The single bits are neutral at best: pocket veto alone .482 (972000), floor 3 plus veto .500 on both seed bases
+  (228/456). Locally floor 3 trades 2 fewer self-deaths for 2 more enemy kills.
+- The opponent is our own b4, which doesn't lunge or hunt the queen like FTM. That was always the limit of this test:
+  it can catch a regression, not show a gain against FTM.
+- With this evidence nothing here beats the qf1 build (QE_KR + UNK_PORTAL_SIDES).
+
+## 7. What this means for the Qualifier and after
+1. **Don't copy the floor.** FTM's L2-3 queen survives because the whole team plays around her:
+   - feeders die next to her, never in her corridor;
+   - foragers leave;
+   - she crowns at about r220.
+
+   Copying only her size moves our deaths from self-boxes to ally seals (section 6).
+2. **QS_EARLY_RAM is a clean candidate for later.** 9/153 queen head-ons that we started against 0/198, every
+   victim an L2-3 non-queen. Gating it off on unknown maps is a one-line change (`(FTMQ & 4)`-style, not built).
+   It is too rare (6% of games) to measure locally before the freeze.
+3. **The box chain is real.** 38/40 of our self-deaths pass through a 0-legal-move turn, and QBOX_K2 sheds 2 a turn
+   while still boxed (the 1407454 / 1151983 Portals chains are this). QBOX_ONESPLIT (FTM_OCT5) covers the crowned
+   case only (r200+). A pre-crown version is the post-Qualifier lead, together with an ally-avoidance ring that
+   scales with the queen's free exits.
+4. **Crowning.** FTM crowns a living queen at r208-260 on 12 map types, through feeder suicides 1-2 tiles from her
+   (eaten within 2 rounds). It is the same lesson as TOP4_SYNTHESIS action 5: a redesign, not a pre-freeze flag.
+5. **Small maps.** The r50-100 economy gap is volume (more units alive sooner, disposable L2 foragers diving into
+   pockets), not a different split rule. On weakhold, WH_NOPUMP turns off exactly the dive FTM uses from r8
+   (our eats by r50: 8 v 30). That is a known-map flag; worth an unranked block after the freeze if the server is free.
