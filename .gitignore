@@ -19,3 +19,6 @@ reference/
 
 # Local Claude Code session files
 .claude/
+
+# Durable scratch (survives reboots; /private/tmp does not)
+work/
