@@ -1,0 +1,77 @@
+--- variants/b4/main.cpp	2026-10-06 01:08:02
++++ /private/tmp/claude-501/-Users-devsingh-Developer-UNSW-Battlecode/4107a3b1-a08f-4826-9eaa-522a1a1ebd84/scratchpad/top4/horse/bot/main.cpp	2026-10-08 00:36:43
+@@ -3928,7 +3928,48 @@
+                 int Lv = enemyVisibleLength(s.id);
+                 if (Lv >= 17)
+                     reach = std::max(reach, freeSteps(Lv));
++            }
++            if (QE_KR == 1 && queenEarly())
++            {
++                // TOP4_HORSE QE_KR: before QS_FROM the queen sees each visible enemy head's kamikaze reach
++                // K(Lv) = F(Lv) + (Lv-2) (a head-on kills both, so its paid steps cost it nothing), capped
++                int Lv = enemyVisibleLength(s.id);
++                if (!enemyTailSeen(s))
++                    Lv = std::max(Lv, 3);
++                reach = std::max(reach, std::min(freeSteps(Lv) + std::max(0, Lv - 2), static_cast<int>(QE_KR_CAP)));
+             }
++            if (QE_KR >= 2 && queenEarly())
++            {
++                // TOP4_HORSE QE_KR=2: pearl-aware kamikaze reach. A paid step onto a pearl costs no length
++                // (tail stays, then one segment goes), so an L3 crossing pearls lunges 3-4 tiles, not 2.
++                int Lv = enemyVisibleLength(s.id);
++                if (!enemyTailSeen(s))
++                    Lv = std::max(Lv, 3);
++                const int F = freeSteps(Lv), budget = std::max(0, Lv - 2), cap = static_cast<int>(QE_KR_CAP);
++                std::vector<std::pair<int, int>> cur{{s.tile, 0}}, nxt; // (tile, paid used)
++                std::vector<int> best(w.N, INF);
++                best[s.tile] = 0;
++                for (int st = 1; st <= cap && !cur.empty(); st++)
++                {
++                    nxt.clear();
++                    for (auto [u, pu] : cur)
++                        for (int d = 0; d < 4; d++)
++                        {
++                            int v = step(u, d);
++                            if (v < 0 || v == s.tile)
++                                continue;
++                            int np = pu + (st > F ? 1 : 0) - (fsEats(v) ? 1 : 0); // a pearl on any step adds one segment
++                            if (np > budget || np >= best[v])
++                                continue;
++                            if (best[v] == INF)
++                                threatAt[v]++;
++                            best[v] = np;
++                            if (freeT[v] <= 1)
++                                nxt.push_back({v, np});
++                        }
++                    std::swap(cur, nxt);
++                }
++            }
+             int bfsReach = std::max(reach, paidReach);
+             tq.clear();
+             tq.push_back(s.tile);
+@@ -6518,6 +6559,8 @@
+                 score -= (myLen >= 6 || (MIDSIZE && (MS_SAFE & 2) && myLen >= 5 && msUnit()) ? 25.0 + 4.0 * myLen : (outnum ? SMALL_THREAT_PEN_OUT : SMALL_THREAT_PEN)) * (units <= LAST_FEW_UNITS ? LAST_FEW_MULT : 1.0);
+             else if (outnum && sprintThreatAt[t] > 0)
+                 score -= SMALL_SPRINT_PEN * (units <= LAST_FEW_UNITS ? LAST_FEW_MULT : 1.0);
++            if (QE_KR && queenEarly() && threat > 0)
++                score -= QE_KR_PEN; // TOP4_HORSE QE_KR: on top of the small-unit threat penalty
+             if ((THREAT_FREE || KREACH) && !queenSafe() && threat == 0 && threatPaidAt[t] > 0)
+                 score -= THREAT_PAID_MULT * (myLen >= 6 ? 25.0 + 4.0 * myLen : SMALL_THREAT_PEN) *
+                          (units <= LAST_FEW_UNITS ? LAST_FEW_MULT : 1.0);
+--- variants/b4/params.hpp	2026-10-06 01:08:02
++++ /private/tmp/claude-501/-Users-devsingh-Developer-UNSW-Battlecode/4107a3b1-a08f-4826-9eaa-522a1a1ebd84/scratchpad/top4/horse/bot/params.hpp	2026-10-08 00:24:55
+@@ -2321,3 +2321,14 @@
+ #ifndef MS_NEAR_PEN
+ #define MS_NEAR_PEN 15.0
+ #endif
++
++// TOP4_HORSE (scratch prototype, 8 Oct): early queen (before QS_FROM) sees enemy kamikaze reach K(Lv) <= QE_KR_CAP
++#ifndef QE_KR
++#define QE_KR 0
++#endif
++#ifndef QE_KR_CAP
++#define QE_KR_CAP 4
++#endif
++#ifndef QE_KR_PEN
++#define QE_KR_PEN 60.0
++#endif
