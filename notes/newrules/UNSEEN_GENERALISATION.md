@@ -280,3 +280,65 @@ Left, if resumed:
 - More seeds for blind-vs-known v43 (only 1 seed per map so far). Check the Schooltime-module churn on server data.
 - Build the qgen generator (spec in 6.4) and validate it with mapstats.py.
 - G1 hedge: done as v45 MATCH_STRICT (section 8). qgen: done as tools/realmapgen.py.
+
+## 11. qf1 Qualifier build (8 Oct, ~12:10 EDT): variants/qf1 = bot/ + `QE_KR 2` + `UNK_PORTAL_SIDES 2`. Not submitted.
+variants/qf1 is bot/ (minus .unswbc-build, *.orig, .DS_Store) with `#define QE_KR 2` and `#define UNK_PORTAL_SIDES 2`
+prepended to params.hpp. bot/ keeps every new flag at 0. KW_QID stays 0. Scripts and logs are in work/qf/ (gitignored).
+- **QE_KR** (notes/top5/TOP4_HORSE_OCT8.md 4; diff notes/top5/new_rules_tools/QE_KR_horse8.diff, applied unchanged): before
+  QS_FROM the queen floods each visible enemy head's kamikaze reach. Each visible pearl on the path refunds one paid step.
+  The flood is capped at 4, gives `threatAt`, and adds a 60 penalty.
+- **Gate:** QE_KR acts only while the new sticky per-process `World::neverKnown()` holds:
+  - `everKnown` is set in `adopt()` and never cleared, so it covers split children that adopt the map, a mid-game drop
+    (Schooltime B doors) and a MATCH_STRICT reset;
+  - `nkBirth` is set once, at the end of the process's first `analyse()`, to `!known && candidates.empty()`;
+  - live `!w.known` is not used. `QE_KR_ANYMAP=1` removes the gate (that is horse's ungated prototype).
+- **UNK_PORTAL_SIDES=2** (new value): the Codex reverse-face portal fix, applied only while `neverKnown()`. Value 1 is the
+  old ungated form. It acts inside observeEdges' `if (!known)` block, so with 1 a known map dropped mid-game would also
+  change; 2 rules that out.
+
+Checks (sandbox, seed 1000 unless noted):
+- **Identity on the 17 known maps.** The check compares the full `-v` transcript (every dragon's stdout, deaths and the
+  result) with CPU lines dropped. qf1 vs b4, both sides, against b4 vs b4, on maps/server_live (17 maps) plus
+  schooltime_b/b2/b3: **40/40 identical**.
+  - Positive control: the ungated build (QE_KR_ANYMAP=1 + UPS=1) differs in 11/12 games on Trophy, Devil, TD, Autarky and
+    Schooltime B/B2. Trophy ends at r29-30 instead of r93, and the Schooltime B queen diverges at r29/r50. So the gate is
+    what keeps the 17 identical.
+  - UPS=1 alone was also 12/12 identical on schooltime_b/b2/b3, Schooltime, Portals and Trauma at this seed.
+  - Flags off: bot/ vs b4 on Trophy, Devil, Portals and Schooltime B, both sides: 8/8 identical.
+- **Fixture** maps/targeted/unknown_neck.map (copied from codex-battlecode), seed 121000:
+  - b4 as A: the queen moves N into her neck through the unknown portal, dies at r0 and loses at r1.
+  - qf1 / UPS=2 / UPS=1 as A: MOVE E, the queen lives, draw at r500.
+  - QE_KR alone does not fix it.
+- **Unseen strength vs b4** (`tools/unseen_eval.py --seeds 1 --jobs 6 --sets real,realhold,blind17`; blind17 =
+  -DNO_KNOWN_MAPS=1 on both sides, so QE_KR is live there):
+
+| seed base | real | realhold | blind17 | pooled |
+|---|---|---|---|---|
+| 951000 | 46/80 .575 | 50/80 .625 | 34/68 .500 | 130/228 **.570** |
+| 961000 | 37/80 .463 | 46/80 .575 | 35/68 .515 | 118/228 **.518** |
+| both | 83/160 .519 | 96/160 .600 | 69/136 .507 | 248/456 **.544** |
+
+  Both seed bases are above the .48 bar, so QE_KR stays in. The base (b4) does not lunge like horse, so this checks for
+  regressions and cannot show the horse-specific gain. The per-flag-alone runs were skipped because the result was not
+  ambiguous.
+- **CPU, judge sandbox** (judge limit 100M):
+  - **Australia (known, flags inactive):** qf1 p99 27.8-31.2M, max 32.6-32.7M, equal to b4 in the same game. **Pass.**
+  - **Known-map identity runs:** qf1 max 34.0M over the 20 maps.
+  - **rt2028_24 (64x64, unseen):** p99 32.3-32.5M (b4 32.2-32.4M). **Over the 40M bar on max:** single-turn spikes of 40.1M
+    and 46.2M at seed 1000, and 54.4M and 42.5M at seed 1001.
+    - Each spike is one turn by a late non-queen dragon at r112-484, not a queen turn before r100.
+    - They match b4's REPLY_SEARCH budget (`REPLY_BUDGET_M 45`, hard stop at +10 = 55M).
+    - b4 spikes the same way on this map (40.1M in b4 self-play, 46.3M as the base side of a UPS game). Over 40M:
+      b4 2 of 24 team-games, UPS-carrying builds 9 of 12 (8 of them on rt2028_24). So UPS may make these spikes more frequent, but they stay
+      inside b4's own budget.
+    - The QE_KR flood itself is cheap: queen turns before r100 max 30.5-32.3M (b4 29.7-30.6M).
+  - **Other unseen maps:** g2026_16 (64x64) 35.7/40.0M (b4 35.6-37.4M); rh2029_26 (64x63) 35.1/35.3M.
+- **Robustness:** 12 sandbox games and the fixture, with return code 0 and no invalid/timeout/error lines. Maps: Australia,
+  rt2028_24, g2026_05 (10x8), g2026_32 (x-symmetry, 12 portal edges), rs7_00 (63x27, 18 dragons, same-size look-alike)
+  and g2027_22 (12x12 x-symmetry), both sides. Maxima on the small and odd maps were 4.6-29.2M.
+
+Verdict:
+- qf1 plays exactly as b4 on the 17 known maps and on Schooltime B, so seeding autoscrims are unaffected.
+- On unseen maps it fixes the deterministic unknown-portal neck suicide and adds QE_KR. Pooled .544 vs b4 over 456 games.
+- Open item: the rt2028_24 single-turn CPU maxima of 40-54M are above our 40M bar. They are b4's own reply-search
+  budget, well under the judge's 100M.

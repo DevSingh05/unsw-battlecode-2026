@@ -475,6 +475,7 @@ struct World
     void adopt(const KnownMap* m)
     {
         known = m;
+        everKnown = true; // QF1: sticky, never cleared (a later drop or MATCH_STRICT reset keeps it)
         applyMapParams(m->name, m->w * m->h);
         sym = m->sym;
 #if SPRINT_DEBUG
@@ -500,6 +501,13 @@ struct World
     bool pearlDistrust = false;                                // built-in pearl gaps contradicted by what we see
     // MATCH_STRICT (v51): msDead = this process treats the map as unseen for good (no known-map adoption)
     bool msDead = false;
+    // QF1 (8 Oct, Qualifier build): sticky per-process "never identified" bit. everKnown = a known map was adopted at
+    // any time (adopt(); split children that adopt the map count too). nkBirth = decided once, at the end of the
+    // process's first turn of identification: no known map and no candidate left (the INFER_SYM / NO_KNOWN_MAPS rule).
+    // Live !known is NOT used: it flips mid-game on known maps (Schooltime layout B door edges drop the map).
+    bool everKnown = false;
+    int nkBirth = -1; // -1 = first turn not finished yet
+    bool neverKnown() const { return !everKnown && (nkBirth < 0 ? (!known && candidates.empty()) : nkBirth == 1); }
     void msMarkUnseen()
     {
         if (known)
@@ -801,7 +809,7 @@ struct World
             for (auto& [td, pid] : portalObs)
             {
                 portalSide[td] = 1;
-                if (UNK_PORTAL_SIDES) // the edge is a portal from its other side too (Codex)
+                if (UNK_PORTAL_SIDES == 1 || (UNK_PORTAL_SIDES >= 2 && neverKnown())) // the edge is a portal from its other side too (Codex); 2 = never-identified maps only (QF1)
                     portalSide[plainStep(td / 4, td % 4) * 4 + (td % 4 + 2) % 4] = 1;
             }
             if (INFER_SYM)
@@ -1059,6 +1067,8 @@ struct Bot
             guessFrame();
 
         filterByCountdowns();
+        if (w.nkBirth < 0)
+            w.nkBirth = (!w.known && w.candidates.empty()) ? 1 : 0; // QF1: decided at this process's first turn, sticky
         if ((UNK_KING || UNK_SMALL_RAMGUARD) && !w.known && w.candidates.empty())
         {
             // unseen map (notes/unseen/PLAN.md Q2/Q7): turn the king + feeding machinery on
@@ -2724,6 +2734,8 @@ struct Bot
         return false;
     }
     bool queenEarly() const { return QUEEN_SAFE && amQueen() && !qsOn; }
+    // QF1: QE_KR acts only on maps this process never identified (sticky; QE_KR_ANYMAP=1 drops the gate = horse's prototype)
+    bool qeKrOn() const { return queenEarly() && (QE_KR_ANYMAP || w.neverKnown()); }
     // ROUND3 P7 PM_QPARK: the queen is parked at home until the king seed round, then crowned (RP.queenKing).
     // Portals (qPark 1): she never crosses a portal and holds a spot far from every portal mouth/exit.
     // Maze (qPark 2): she stays inside the home field (frame x < PM_MAZE_QX).
@@ -3930,6 +3942,47 @@ struct Bot
                 int Lv = enemyVisibleLength(s.id);
                 if (Lv >= 17)
                     reach = std::max(reach, freeSteps(Lv));
+            }
+            if (QE_KR == 1 && qeKrOn())
+            {
+                // TOP4_HORSE QE_KR: before QS_FROM the queen sees each visible enemy head's kamikaze reach
+                // K(Lv) = F(Lv) + (Lv-2) (a head-on kills both, so its paid steps cost it nothing), capped
+                int Lv = enemyVisibleLength(s.id);
+                if (!enemyTailSeen(s))
+                    Lv = std::max(Lv, 3);
+                reach = std::max(reach, std::min(freeSteps(Lv) + std::max(0, Lv - 2), static_cast<int>(QE_KR_CAP)));
+            }
+            if (QE_KR >= 2 && qeKrOn())
+            {
+                // TOP4_HORSE QE_KR=2: pearl-aware kamikaze reach. A paid step onto a pearl costs no length
+                // (tail stays, then one segment goes), so an L3 crossing pearls lunges 3-4 tiles, not 2.
+                int Lv = enemyVisibleLength(s.id);
+                if (!enemyTailSeen(s))
+                    Lv = std::max(Lv, 3);
+                const int F = freeSteps(Lv), budget = std::max(0, Lv - 2), cap = static_cast<int>(QE_KR_CAP);
+                std::vector<std::pair<int, int>> cur{{s.tile, 0}}, nxt; // (tile, paid used)
+                std::vector<int> best(w.N, INF);
+                best[s.tile] = 0;
+                for (int st = 1; st <= cap && !cur.empty(); st++)
+                {
+                    nxt.clear();
+                    for (auto [u, pu] : cur)
+                        for (int d = 0; d < 4; d++)
+                        {
+                            int v = step(u, d);
+                            if (v < 0 || v == s.tile)
+                                continue;
+                            int np = pu + (st > F ? 1 : 0) - (fsEats(v) ? 1 : 0); // a pearl on any step adds one segment
+                            if (np > budget || np >= best[v])
+                                continue;
+                            if (best[v] == INF)
+                                threatAt[v]++;
+                            best[v] = np;
+                            if (freeT[v] <= 1)
+                                nxt.push_back({v, np});
+                        }
+                    std::swap(cur, nxt);
+                }
             }
             int bfsReach = std::max(reach, paidReach);
             tq.clear();
@@ -6520,6 +6573,8 @@ struct Bot
                 score -= (myLen >= 6 || (MIDSIZE && (MS_SAFE & 2) && myLen >= 5 && msUnit()) ? 25.0 + 4.0 * myLen : (outnum ? SMALL_THREAT_PEN_OUT : SMALL_THREAT_PEN)) * (units <= LAST_FEW_UNITS ? LAST_FEW_MULT : 1.0);
             else if (outnum && sprintThreatAt[t] > 0)
                 score -= SMALL_SPRINT_PEN * (units <= LAST_FEW_UNITS ? LAST_FEW_MULT : 1.0);
+            if (QE_KR && qeKrOn() && threat > 0)
+                score -= QE_KR_PEN; // TOP4_HORSE QE_KR: on top of the small-unit threat penalty
             if ((THREAT_FREE || KREACH) && !queenSafe() && threat == 0 && threatPaidAt[t] > 0)
                 score -= THREAT_PAID_MULT * (myLen >= 6 ? 25.0 + 4.0 * myLen : SMALL_THREAT_PEN) *
                          (units <= LAST_FEW_UNITS ? LAST_FEW_MULT : 1.0);

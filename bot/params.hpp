@@ -673,7 +673,8 @@
 #define PORTAL_LOITER_PEN 0.0
 #endif
 // ---- Codex (notes: codex-battlecode/notes/portal-safety-v28.diff): record unknown portal edges
-// on both sides; in the all-lethal fallback never take the unknown portal behind our head
+// on both sides; in the all-lethal fallback never take the unknown portal behind our head.
+// 2 (QF1, 8 Oct) = the same, only while World::neverKnown() (a map dropped mid-game, e.g. Schooltime B, keeps b4 play)
 #ifndef UNK_PORTAL_SIDES
 #define UNK_PORTAL_SIDES 0
 #endif
@@ -2326,4 +2327,20 @@
 #endif
 #ifndef MS_NEAR_PEN
 #define MS_NEAR_PEN 15.0
+#endif
+
+// TOP4_HORSE (8 Oct, notes/top5/TOP4_HORSE_OCT8.md 4): early queen (before QS_FROM) sees enemy kamikaze reach K(Lv) <= QE_KR_CAP.
+// 1 = plain K reach, 2 = pearl-aware flood (each visible pearl on the path refunds one paid step). QF1: acts only on maps
+// this process never identified (World::neverKnown, sticky); QE_KR_ANYMAP=1 removes that gate (horse's ungated prototype).
+#ifndef QE_KR
+#define QE_KR 0
+#endif
+#ifndef QE_KR_CAP
+#define QE_KR_CAP 4
+#endif
+#ifndef QE_KR_PEN
+#define QE_KR_PEN 60.0
+#endif
+#ifndef QE_KR_ANYMAP
+#define QE_KR_ANYMAP 0
 #endif
