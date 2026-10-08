@@ -1,8 +1,8 @@
 # aAah (id 454) turn by turn: their decision rules vs ours (8 Oct, DEEP_AAAH)
 
-**Status: PAUSED (user pause, ~12:45 EDT 8 Oct).** The analysis is done. The prototype is built but the unseen check has
-**not** run. The resume steps are in `work/top4b/aaah/PROGRESS.md`. Nothing in bot/ or variants/ was changed, nothing was
-submitted, and there were no challenges.
+**Status: done (15:35 EDT 8 Oct).** The analysis was paused at 12:45 and resumed at 14:50. The prototype unseen check is
+in section 5: **GOV50 pooled .491 and .531 on two seed bases, .511 combined. Neutral, do not ship.** Nothing in bot/ or
+variants/ was changed, nothing was submitted, and there were no challenges.
 
 This builds on TOP4_AAAH_OCT8.md and does not redo it. Data:
 - the 88 replays in `replays/top4_aaah/`;
@@ -139,17 +139,42 @@ The crowding and stillborn pattern is the same as on known maps, and blind we st
   - `UNK_GOV=N`: the non-queen growth split is allowed only while units < N, or when the head is boxed. A boxed L>=5
     unit splits k=L-2 if its tail has an exit.
   - `UNK_GOV_FSM=m`: on such maps, a free multi-step path only has to beat the 1-step by m (default FS_MARGIN 0.5).
-- Smoke test (blind, GOV50 vs b4, seed 971500): Islands W, AUNSW L, Slithery W, all on longest dragon at r500.
-  Australia was paused mid-game. **Three games are not evidence.**
-- **Unseen check NOT run** (`tools/unseen_eval.py work/top4b/aaah/bot:-DUNK_GOV=50 --base variants/b4 --seeds 1 --jobs 2
-  --seed-base 971000 --sets real,realhold,blind17`). Risk: MIDSIZE ms1 (a related idea) lost on the server, at -5.8 pp.
+- **Smoke test** (blind, GOV50 as A vs b4, seed 971500): Islands W, Slithery W, AUNSW L, Australia L, all decided at
+  r500.
+  - Traced: the rule works as written. Units hold at 50-52 (boxed splits push it to 60-65 on Slithery and AUNSW).
+  - L5+ units at r200: 9-14 (b4 3-9). Total length at r200-300 is ahead on 3 of 4 maps (e.g. AUNSW r300 276 vs 237).
+  - **Both losses were on the longest-dragon tiebreak**: AUNSW 50 vs 87, Australia 51 vs 56. Spreading mass over
+    mid-size units starves b4's single fed king.
+  - aAah wins by elimination and queen tiebreak, not by longest, so this half of their design does not transfer to our
+    win conditions by itself.
+- **Unseen check** (`python3 tools/unseen_eval.py "work/top4b/aaah/bot:-DUNK_GOV=50" --base variants/b4 --seeds 1 --jobs 4
+  --sets real,realhold,blind17`, run from the project root):
 
-## 6. Known data issue
-- `a_mass` and the second `econ` run in `work/top4b/aaah/out_mass.txt` are mis-normalised. run.py marks the 20 vs-top
-  games as ours (gid >= 900000 test), so US per-game values are ×36/51 too low (open) and the aAah values mix in
-  vs-top games.
-- The numbers in sections 1-3 come from runs before that patch and are fine.
-- Fix: test `gid >= 9_000_000`, or mark local games explicitly.
+| seed-base | real | realhold | blind17 | pooled |
+|---|---|---|---|---|
+| 971000 | 38.0/80 = .475 | 40.0/80 = .500 | 34.0/68 = .500 | 112.0/228 = **.491** |
+| 976000 | 44.0/80 = .550 | 43.0/80 = .537 | 34.0/68 = .500 | 121.0/228 = **.531** |
+| both | 82/160 = .512 | 83/160 = .519 | 68/136 = .500 | 233/456 = **.511** |
+
+  - Every 95% interval covers .5 (e.g. 971000 real [.369, .583]). The two seed bases disagree by .04, which is noise
+    at n=228.
+  - **Verdict: neutral against b4; not a ship candidate.**
+  - UNK_GOV_FSM was skipped, per the rule "only if GOV50 >= .53 on both". The opponent is b4, not aAah, so this only
+    tests for regressions; it cannot show the gain against aAah's mass race.
+  - MIDSIZE ms1, a related idea, lost on the server (-5.8 pp).
+- **If anyone revisits it:** pair it with a king-feeding rule, so the longest-dragon tiebreak is not given up. The
+  governor alone only moves mass from the king into mid-size units.
+
+## 6. Mass accounting (corrected; b4 games, open, per game)
+| | eats r0-99 | length lost in deaths r0-99 | paid-step cost r0-99 | eats r100-199 | lost r100-199 | total r100 | total r200 |
+|---|---|---|---|---|---|---|---|
+| US (b4) | 181.8 | 138.7 (own move 122.2, rammed 16.5) | 2.4 | 234.1 | 235.7 | 64.2 | 61.9 |
+| aAah | 208.2 | 89.0 (own move 71.6, rammed 17.5) | 13.3 | 328.6 | 202.7 | 121.0 | 191.6 |
+
+- By r100 the gap is about 57 length: deaths about -50 for us, eats about +26 for them, paid steps -11 for them.
+- From r100-199 we gain nothing (-2); they gain about +97 gross, +68 after paid steps.
+- The run.py label bug (vs-top games counted as ours) is fixed: local games are now detected by `meta['src']`.
+  `out_econ_mass_fixed.txt` replaces `out_mass.txt`.
 
 ## Files (all in `work/top4b/aaah/`)
 - deep.py: tracer (deep/ = v1, deep2/ adds ally positions).

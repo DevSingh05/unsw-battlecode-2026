@@ -369,3 +369,4 @@
 - 16:20 UTC: PAUSED (user). qf1 live.
 - 18:50 UTC: RESUMED (no reboot). qf1 active 2293 #14. Resuming deep analysts: test prototypes (Cutlery UNK_XP, aAah UNK_GOV, FTM queen) on unseen sets, deadline 22:00 EDT to decide any qf2.
 - 18:53 UTC: Elo-EV analysis (b4/qf1 code, current ratings): win rate minus Elo expectation per opponent: SSS +0.26 (W .44 vs E .19, n63), larp +0.25 (n15), horse +0.14 (n34), FTM +0.08 (n42), Cutlery +0.16 (n5); NEGATIVE: Sponge -0.13 (n31), bread first search -0.19, Team SKKU -0.17. Ranked loop panel now SSS x2, larp x2, horse, FTM, Cutlery (dropped Sponge/bread/Big Bobs/Sabotage-d).
+- 19:34 UTC: aAah split-cap prototype UNK_GOV=50 vs b4 unseen: .491 / .531 (pooled .511, 456 games) -> neutral, NOT shipped. Mid-size mass spreads away from the single king and loses longest-dragon tiebreaks. Waiting on Cutlery UNK_XP and FTM queen prototypes.

@@ -1,8 +1,11 @@
-# Cutlery deep dive: how they play maps they have never seen (8 Oct, IN PROGRESS: paused 12:21 EDT)
+# Cutlery deep dive: how they play maps they have never seen (8 Oct; final 15:35 EDT)
 
-Status: the analysis is done. The prototype is built. **The unseen_eval of the prototype was started and then paused
-(SIGSTOPped) before it printed any set, so there are no win numbers yet.** Resume steps are in
-`work/top4b/cutlery/PROGRESS.md`. Nothing in `bot/` or `variants/` was touched, nothing was submitted and nothing was challenged.
+Status: done.
+- **Result:** UNK_XP (Cutlery-style unknown-portal exploration, only on maps the process never identified) vs b4 scored
+  pooled **.487 at seed-base 974000 and .539 at 975000 (.513 over 456 games)**.
+  - blind17 was .544 / .529, but realhold was .425 / .487.
+  - This is noise-level overall and fails the coordinator's bar (both pooled ≥ .53), so **UNK_LUNGE3 was not run**.
+- Nothing in `bot/` or `variants/` was touched, nothing was submitted and nothing was challenged.
 
 ## 0. Data and tools (all durable)
 - **Sprint replays, unseen maps for every team at the time:** `replays/cutlery_sprint/`, all 9 Cutlery battles, 63 games
@@ -18,9 +21,8 @@ Status: the analysis is done. The prototype is built. **The unseen_eval of the p
     paid moves, kill opportunities (BFS kamikaze reach, with pearls refunding paid steps), approach and the opening.
   - `agg.py` and `report.py`: the tables. `mouth.py`: crossing propensity at portal mouths. `label.py`: team labels.
   - `dl_sprint.py`, `blind_games.py`, `mech_games.py`.
-- **Caveat:** the `deep_*.pkl` files assumed queen id 0 = team A. That is false on some maps (Devil, for one), so the queen-only
-  stats below are approximate. Portal, lunge and kill stats are unaffected. The fix is in `deep.py`, and the `deep2_*.pkl`
-  re-run was paused mid-way.
+- **Queen ids:** the first pass assumed queen id 0 = team A, which is false on some maps (Devil, for one). It was re-run with
+  the fix (`deep2_*.pkl`). The old pickles are in `archive/top4b_cutlery_v1pkl/`. Every number below is from deep2.
 
 ## 1. Cutlery's policy rules (Cutlery-side; "S" = Sprint/unseen maps, "C" = current build)
 
@@ -30,12 +32,16 @@ Status: the analysis is done. The prototype is built. **The unseen_eval of the p
     **64.5% of the time** (S, 369/572). Current build: 30-76% depending on food in view.
   - Top Sprint opponents: 61%. **Our b4 blind: 4.3% (124/2905).**
   - At pairs the team has already crossed, the rate is neutral: 35% (S), 33% (C), us blind 18%.
+  - The current build (on maps it may know) does have a food gate: 30% overall, 76% with no pearl in view, 16% with 3+ in
+    view, 44% before r50. On unseen Sprint maps there was none.
 - **Rule P2: no hunger gate and no food gate.**
   - Crossing rate does not depend on hunger (<5 / <20 / 20+: 34 / 38 / 35%) or on the round.
   - Visible pearls on their own side don't stop it (S: vp 0 / 1-2 / 3+ = 64 / 43 / 80%).
   - First crossers have a median hunger of 10, and 58-61% of them had pearls in view on their own side.
 - **Rule P3: who crosses.**
-  - First crossings of each pair are made by L2 (66%), L3 (28%), L4 (4%). The queen makes 1-2%.
+  - First crossings of each pair are made by L2 (66%), L3 (28%), L4 (4%). The queen makes 4-5% of them.
+  - Their queen is not kept back. She crosses by r100 in 24/45 Sprint and 19/51 current portal-map games, and takes a
+    never-crossed portal on 20/20 of her Sprint mouth turns and 13/24 now.
   - Never on a paid step (0%). Rarely with an enemy head within 3 (11-21%).
 - **Timing.** Median first crossing r8 (S) / r10 (C). Ours blind: r73.
   - On Sprint maps, Cutlery first crossings by map: Australia r4, Islands r1, Stripes r8, AUNSW r31, Maze r50.
@@ -99,7 +105,7 @@ Status: the analysis is done. The prototype is built. **The unseen_eval of the p
   steps 2-3x more often.
 
 ### 1.4 Opening (r1-60)
-- **Queen split.** The queen splits as soon as she can: r0 at L5 on Sprint spawns; r8-9 at L4 now. Ours (blind): r29, L7.
+- **Queen split.** The queen splits as soon as she can: r0 at L5 on Sprint spawns; r8 at L4-5 now. Ours (blind): r29 at L7; vs Cutlery on known maps r16 at L7.
 - **Units at r30/r60:**
   - Cutlery: 11/18 (S) and 7.5/13 (C).
   - Sprint opponents: 8/12. Ours blind: 8.5/13.5.
@@ -123,11 +129,13 @@ Status: the analysis is done. The prototype is built. **The unseen_eval of the p
   numbers on small boards and units ≥ 8 elsewhere.
 - **Paid steps:** never used for food. The free-path search uses free steps only.
 - **King:** UNK_KING seed r250 / feed r300 (crown early at 62 units). Cutlery's first L10 is at r123-134, L20 at r231-268.
-- **Side finding: our queen does cross unknown portals.**
-  - b4 blind: our queen took a never-crossed portal on 21% of her mouth turns (6/28), our workers on 4%.
-  - She crossed by r100 in 8 of 36 blind team-games, and all 8 died by r150 (16 of the 28 that did not cross).
-  - Cutlery's queen makes 1% of first crossings. Crossing queens die early for every team, so this is partly selection.
-  - qf1's UNK_PORTAL_SIDES=2 covers only the neck-portal suicide.
+- **Side finding: queens that cross early die early, for every team.**
+  - b4 blind: our queen took a never-crossed portal on 9 of 28 mouth turns, our workers on 4%. She crossed by r100 in 8 of 36
+    blind team-games, and all 8 died by r150 (16 of the 28 that did not cross).
+  - Cutlery: 32/43 crossers died by r150 vs 19/53 non-crossers (S + C). Their queen is expendable; ours decides the r500
+    tiebreak.
+  - That makes "the queen never crosses blind" plausible, but it is untested here. qf1's UNK_PORTAL_SIDES=2 covers only the
+    neck-portal suicide.
 
 ## 3. The differences that most likely cost us on unseen maps
 1. **We barely cross unknown portals.** Never-crossed mouth 4% vs 64%, first crossing r73 vs r8, 0 vs 31 crossings by r100.
@@ -154,7 +162,27 @@ Status: the analysis is done. The prototype is built. **The unseen_eval of the p
     LEARN_PORTALS and eager UPE.
 - **`bot_l3/`** = the same with UNK_XP 0 + **UNK_LUNGE3** (prototype default 1): 3-step `tryRam` paths for non-queens L ≤ 5
   (an L3 needs a pearl on the way), same worth and guard rules. Built (compiles); not run.
-- **Eval:** `python3 tools/unseen_eval.py work/top4b/cutlery/bot --base variants/b4 --seeds 1 --jobs 2 --seed-base 974000
-  --sets real,realhold,blind17` (UNK_XP=1).
-  - Output goes to `work/top4b/cutlery/ue_xp1_974000.txt`.
-  - **Paused before any set finished: no numbers.**
+- **Eval:** `python3 tools/unseen_eval.py work/top4b/cutlery/bot --base variants/b4 --seeds 1 --jobs 2 --seed-base <S>
+  --sets real,realhold,blind17` (UNK_XP=1 is the prototype default).
+  - Both seed bases ran side by side, 4 games at a time.
+  - Output: `work/top4b/cutlery/ue_xp1_974000.txt` and `ue_xp1_975000.txt`.
+
+  | set | 974000 | 975000 | both |
+  |---|---|---|---|
+  | real (40 maps x 2) | 40/80 = .500 | 48/80 = .600 | 88/160 = .550 |
+  | realhold (40 x 2) | 34/80 = .425 | 39/80 = .487 | 73/160 = .456 |
+  | blind17 (17 official maps, both blind, 2 seeds x 2) | 37/68 = .544 | 36/68 = .529 | 73/136 = .537 |
+  | **pooled** | **111/228 = .487** | **123/228 = .539** | **234/456 = .513** |
+
+- **Verdict:**
+  - Not shippable on this evidence. One seed base is below .50, and realhold (the held-out generated maps) is below .50 on both.
+  - The one consistent positive is blind17 (.537 over 136, CI roughly .45-.62). That is the official-map set, where the Sprint
+    data says portal food matters most. It is suggestive, not proof.
+  - Remember that the opponent here is b4, which does not contest portal territory. A real opponent that crosses like Cutlery
+    takes that food away from b4-style play, so this eval probably understates the cost of *not* crossing. It also cannot show
+    the extra deaths that blind crossings cause against Cutlery-style 3-step rams.
+- **If anyone pursues it after the Qualifier:**
+  - Ration it: G3(b) in UNSEEN_GENERALISATION.md, 1 in 3-4 units.
+  - Keep the queen out.
+  - Check the Stripes elimination seen in the mechanism games first.
+- **UNK_LUNGE3 (`bot_l3/`):** not run. The bar was both pooled ≥ .53 and blind17 ≥ .48, and 974000 pooled .487 failed it.
