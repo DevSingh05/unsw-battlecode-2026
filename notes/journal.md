@@ -366,3 +366,5 @@
 - 15:38 UTC: PAUSED (user moving, lid closing). b4 live.
 - 16:00 UTC: Launched 4 deep analysts (aAah, FTM, horse, Cutlery): turn-by-turn decision rules, compare with our code, prototype unknown-map-only changes in work/top4b/<team>/ and quick unseen check vs b4. qf1 build agent finishing in parallel (only editor of bot/).
 - 16:06 UTC: qf1 UPLOADED (Qualifier build): b4 + QE_KR=2 + UNK_PORTAL_SIDES=2 (never-known gate). Known maps identical to b4 (40/40 full traces); unseen vs b4 .570/.518 (pooled .544). Inherited 2282. Ranked loop continues on qf1. Fallback variants/b4.
+- 16:20 UTC: PAUSED (user). qf1 live.
+- 18:50 UTC: RESUMED (no reboot). qf1 active 2293 #14. Resuming deep analysts: test prototypes (Cutlery UNK_XP, aAah UNK_GOV, FTM queen) on unseen sets, deadline 22:00 EDT to decide any qf2.
