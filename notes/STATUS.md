@@ -59,6 +59,12 @@ Last updated: 2026-10-07 23:45 EDT. All updates to the user come from this page.
 | (next) | QKILL_KING + QKK_FREE (king takes certain free-step queen kills) | queued | all maps; 10/12 failure decisions flip, 64/74 big-open wins unchanged |
 | k1 | b1 + QK_EG=2 (crowned-queen kamikaze guard, lunge reach 5 + approach trend) | staged (scratch r6/stage/k1), queued | Portals/Maze only in effect; judge on crowned-queen rams after r300 |
 
+## What the week taught us (summary, 7 Oct)
+- **Server wins came from queen handling and map-specific fixes:** QS_FROM=100 (early-economy queen), QSPLIT_ROOM, the Portals/Maze queen park, the Tower Defense centre pull and the Australia vault ban. Every one of them was either a narrow, decision-verified fix or a per-map change judged on its own map.
+- **What kept losing:** broad behaviour changes copied from other teams (lunges, queen-as-king on big maps, mid-size units), anything that blocked or delayed splits (c1, s1), and queen-safety penalties that moved her deaths without preventing them.
+- **Method:** decision-replay first (does the fix flip the losing decision and leave winning ones alone?), then unranked server tests judged per map. Ranked games only on accepted builds.
+- **Per-map portfolio:** across about 6,000 games and 24 builds, b4 was already the best on every map once noise and confounds were removed.
+
 ## What we know about why we lose (notes/newrules/LOSS_AUDIT2.md, v55/v61, 250 losses)
 - **We lose r500 tiebreaks, not fights.**
   - In 45% of losses to non-top-10 teams, our queen is dead at r500 and theirs is alive.
