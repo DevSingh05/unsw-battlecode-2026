@@ -360,3 +360,4 @@
 - 21:26 UTC: PAUSED (user). Portfolio workflow may stall; resume from cache later.
 - 03:39 UTC: Official update (8 Oct): freeze 9 Oct 06:00 UTC; 3-4 h autoscrims on current pool set seeds; Qualifier Bo7 all unseen maps; top 10 to Grand Final. No toolkit/map changes (1.2.9, same 17 maps). b4 at 2235 #16, ranked loop on. Launched qualifier-final-push workflow (unknown-map-gated improvements, robustness audit, stage qf1 + blind build).
 - 03:51 UTC: Committed analysis scripts under tools/analysis/ (10 commits) + STATUS week summary.
+- 04:02 UTC: b4 #14 at 2253. Launched top4-research (aAah #1 2555, FTM 2479, horse 2458, Cutlery 2440): per-team profile, our losses with harness checks, generalisable-to-unseen behaviours, synthesis of max 5 actions before freeze. qualifier-final-push still running.
