@@ -824,6 +824,17 @@
 #ifndef REPLY_BUDGET_M
 #define REPLY_BUDGET_M 45
 #endif
+// KE_BUDGET_M: tryKingEscape stops starting new bfsFrom/surviveDepth checks once this turn has used this many
+// M points (0 = no limit). work/stress/REPORT.md: up to 39 full-map calls are possible (~170M); 65M seen on a
+// 64x64 portal map. On a dead-end check past the budget the plain step counts as safe; sprints keep the best so far.
+#ifndef KE_BUDGET_M
+#define KE_BUDGET_M 0
+#endif
+// CONSIST_PORTAL: a portal seen in view no longer matches a known map's plain edge, so split children stop
+// adopting a wrong same-size known map ("Big Empty") on unseen maps (work/stress/REPORT.md, problem 2).
+#ifndef CONSIST_PORTAL
+#define CONSIST_PORTAL 0
+#endif
 // PROFILE_POINTS: append a LOG line with per-section points (sandbox clock) each turn. Local only.
 #ifndef PROFILE_POINTS
 #define PROFILE_POINTS 0

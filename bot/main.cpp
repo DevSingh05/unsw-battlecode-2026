@@ -700,6 +700,8 @@ struct World
             return v == -1;
         if (k == 0)
             return v == plain;
+        if (CONSIST_PORTAL)
+            return v != -1 && v != plain; // a portal never fits a plain edge
         return v != -1; // portal: goes somewhere (maybe the plain tile by coincidence)
     }
 
@@ -5326,7 +5328,7 @@ struct Bot
             int t = step(myHead, d);
             if (t >= 0 && !(occId[t] >= 0 && freeT[t] > 1) && threatAt[t] == 0)
             {
-                if (ESCAPE_DEADEND_FIX)
+                if (ESCAPE_DEADEND_FIX && !(KE_BUDGET_M > 0 && pointsM() - turnT0 > KE_BUDGET_M))
                 {
                     // notes/forensics: an unthreatened step into a dead end is not "safe" for a big dragon
                     double pv;
@@ -5347,7 +5349,8 @@ struct Bot
         std::string bestSeq;
         std::vector<int> bestPath;
         double bs = -1e18;
-        for (int n = 2; n <= 3 && bestSeq.empty(); n++)
+        bool keOver = false; // KE_BUDGET_M reached
+        for (int n = 2; n <= 3 && bestSeq.empty() && !keOver; n++)
         {
             const int paidN = std::max(0, n - (FREE_FIX ? freeSteps(myLen) : 1)); // segments this sprint costs
             if (myLen - paidN < 2)
@@ -5385,6 +5388,11 @@ struct Bot
                 }
                 if (!ok || threatAt[cur] > 0)
                     continue;
+                if (KE_BUDGET_M > 0 && pointsM() - turnT0 > KE_BUDGET_M)
+                {
+                    keOver = true;
+                    break;
+                }
                 double pv;
                 int area;
                 bfsFrom(cur, pv, area, 3 * myLen + 30);

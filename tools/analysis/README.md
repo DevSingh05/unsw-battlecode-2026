@@ -16,6 +16,7 @@ constants at the top before rerunning.
 | `board_view.py`, `sum_results.py`, `economy_per_half.py`, `kill_detail.py` | Board snapshots, result summaries, per-half eating and kill details. | Various |
 | `lane_queen_mech.py`, `lane_queen_summary.py` | Lane-map small-queen mechanism runs. | l1 study |
 | `ident.sh` | Plays a build and a reference on the same maps and seeds (sandbox) and compares result lines: the flags-off identity check. | Every flag merged into bot/ |
+| `idcheck.py` | Full-transcript identity: candidate vs base against base vs base on chosen maps, both sides, `--sandbox -v`, CPU/timing lines dropped. Prints MATCH/DIFF and the first differing line. | qf1/qf2 known-map identity (40/40) |
 | `mkstage.sh` | Copies bot/ (no build cache) and forces `#define` lines at the top of params.hpp. | Every server candidate |
 
 Server-side tools stay in `tools/` (`ab_server.py`, `ab_mech.py`, `decision_replay.py`, `auto_challenge.py`).
