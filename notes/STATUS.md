@@ -1,6 +1,6 @@
 # STATUS (single source of truth)
 
-Last updated: 2026-10-08 21:35 EDT. All updates to the user come from this page. Times are US Eastern.
+Last updated: 2026-10-08 21:18 EDT. All updates to the user come from this page. Times are US Eastern.
 
 ## Live and mainline
 - **Mainline = `bot/`** = b4 (b3 + Tower Defense centre pull + Australia queen vault ban); b3 = b2 + Australia crowd penalty: v61 (QS_FROM=100, QSPLIT_ROOM=1) + Portals/Maze queen park and crown + QKILL_FUEL + INFER_SYM (unknown maps only). Every new idea goes into `bot/` as a flag, default 0. No vNN copies; test builds are staged in the scratchpad.
