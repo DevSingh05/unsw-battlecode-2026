@@ -1464,6 +1464,36 @@
 #ifndef QUAL_QPARK_QKCAP
 #define QUAL_QPARK_QKCAP 0 // feeders stop feeding the crowned queen at this length (0 = no cap)
 #endif
+// QUAL_QPARK_IN: bit i (with its QUAL_QPARK bit) = the park starts only once the queen has left the portal-free region
+// of her spawn. km1 on Atlantis (12 Oct, 11 server games): the queen parked in the outer region stayed at L4 (no feeder
+// hears her across the portals) and was rammed there in 5 of 10 games, while the opponents' queens camped outside at
+// L12-34; we out-ate them 16 to 1 and lost 8 of 11 on the queen. Parked inside, she is among our units: they hear her
+// beacon and feed her from the feed round, and opponents rarely come in.
+#ifndef QUAL_QPARK_IN
+#define QUAL_QPARK_IN 0
+#endif
+// QUAL_QPARK_SEED / QUAL_QPARK_FEED: king seed round and feed start on a QUAL_QPARK map (0 = keep the map's own, i.e. the
+// UNK_KING 250 / 300). On Atlantis the unit cap is reached by r100, so the queen can be crowned and fed much earlier.
+#ifndef QUAL_QPARK_SEED
+#define QUAL_QPARK_SEED 0
+#endif
+#ifndef QUAL_QPARK_FEED
+#define QUAL_QPARK_FEED 0
+#endif
+// QUAL_QHOME: bit i = home leash for the queen on known Qualifier map i. She keeps foraging and splitting, but a step
+// that ends more than QUAL_QHOME_R plain (portal-free) walking steps from her spawn costs QUAL_QHOME_W per extra step,
+// lifted while an enemy head is within PM_QP_FLEE. km1 server games (12 Oct): on Whale Song and Troll Australia our
+// queen was 25 to 50 tiles from her spawn by r100 and was rammed in 17 of 20 games; the opponents' queens stayed
+// within about 8 tiles of theirs, ate there, and on Whale Song were alive at the end in 5 of 10.
+#ifndef QUAL_QHOME
+#define QUAL_QHOME 0
+#endif
+#ifndef QUAL_QHOME_R
+#define QUAL_QHOME_R 8
+#endif
+#ifndef QUAL_QHOME_W
+#define QUAL_QHOME_W 25.0
+#endif
 
 // ---- v41: FREE_STEPS (notes/newrules/V41.md)
 // FREE_STEPS=1: dragons with F=ceil(L/4)>=2 also score free multi-step paths of 2..F steps (beam search over the

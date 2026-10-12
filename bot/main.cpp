@@ -82,6 +82,10 @@ struct RuntimeParams
     int qkFrom = 0;                          // ROUND3 P7: the per-map queen-king starts at max(kingSeedRound, qkFrom)
     double crowdEarly = 0;                   // ROUND3 P7: crowd penalty used only while round < kingSeedRound (0 = off)
     int qSmall = 0;                          // R10 LANE_QSMALL: small home queen, never fed
+#if QUAL_KNOWN
+    int qParkIn = 0;                         // QUAL_QPARK_IN: the queen's process sets qPark = 1 once she has left her spawn's portal-free region
+    int qHomeR = 0;                          // QUAL_QHOME: home leash radius for the queen (0 = off)
+#endif
 };
 RuntimeParams RP;
 static inline bool qkOn() { return QUEEN_KING || RP.queenKing; }
@@ -200,7 +204,17 @@ void applyMapParams(const char* name, int tiles = 0)
         if (int qi = qualMapIndex(name); qi >= 0 && ((QUAL_CROWD) >> qi & 1))
             RP.crowd = QUAL_CROWD_V; // QUAL_CROWD: spread the swarm on this known Qualifier map
         if (int qi = qualMapIndex(name); qi >= 0 && ((QUAL_QPARK) >> qi & 1))
+        {
             RP.queenKing = 1, RP.qPark = 1, RP.qkFrom = QUAL_QPARK_QKFROM, RP.qkCap = QUAL_QPARK_QKCAP; // QUAL_QPARK: parked queen, crowned at the seed round
+            if ((QUAL_QPARK_IN) >> qi & 1)
+                RP.qPark = 0, RP.qParkIn = 1; // QUAL_QPARK_IN: she plays on until she is through a portal (qparkPrep)
+            if (QUAL_QPARK_SEED > 0)
+                RP.kingDeclare = 1, RP.kingSeedRound = QUAL_QPARK_SEED;
+            if (QUAL_QPARK_FEED > 0)
+                RP.feedStart = QUAL_QPARK_FEED;
+        }
+        if (int qi = qualMapIndex(name); qi >= 0 && ((QUAL_QHOME) >> qi & 1))
+            RP.qHomeR = QUAL_QHOME_R; // QUAL_QHOME: the queen forages near her spawn
 #endif
         return;
     }
@@ -3036,9 +3050,66 @@ struct Bot
     int qpAnchor = -1, qpHomeLeft = -1;
     bool qpFlee = false;
     std::vector<int> qpDist;
+#if QUAL_KNOWN
+    std::vector<char> qpInHome; // QUAL_QPARK_IN: the portal-free region of the queen's spawn tile
+    // QUAL_QHOME: the queen's spawn tile (her head on the first turn of her process; a look-alike map may be adopted
+    // some rounds later, so it is recorded on every map) and plain walking distance from it
+    int qhSpawn = -1;
+    bool qhFlee = false;
+    std::vector<int> qhDist;
+    double qhomeScore(int t) const
+    {
+        if (RP.qHomeR <= 0 || !amQueen() || qhDist.empty() || qhFlee)
+            return 0.0;
+        return -QUAL_QHOME_W * std::max(0, qhDist[t] - RP.qHomeR);
+    }
+#endif
     void qparkPrep()
     {
         qpFlee = false;
+#if QUAL_KNOWN
+        if (amQueen() && myHead >= 0 && qhSpawn < 0)
+            qhSpawn = myHead;
+        qhFlee = false;
+        if (RP.qHomeR > 0 && amQueen() && myHead >= 0)
+        {
+            if (qhDist.empty())
+            {
+                qhDist.assign(w.N, 99);
+                std::vector<int> q{qhSpawn};
+                qhDist[qhSpawn] = 0;
+                for (size_t i = 0; i < q.size(); i++)
+                    for (int d = 0; d < 4; d++)
+                    {
+                        int v = step(q[i], d);
+                        if (v >= 0 && v == w.plainStep(q[i], d) && qhDist[v] == 99)
+                            qhDist[v] = qhDist[q[i]] + 1, q.push_back(v);
+                    }
+            }
+            for (auto& o : segs)
+                if (o.head && o.team != w.myTeam && wrapDist(o.tile, myHead) <= PM_QP_FLEE)
+                    qhFlee = true; // an enemy head in reach: normal queen evasion decides
+        }
+        if (RP.qParkIn && RP.qPark == 0 && amQueen() && myHead >= 0)
+        {
+            if (qpInHome.empty())
+            {
+                // first turn of the queen's process = her spawn tile
+                qpInHome.assign(w.N, 0);
+                std::vector<int> q{myHead};
+                qpInHome[myHead] = 1;
+                for (size_t i = 0; i < q.size(); i++)
+                    for (int d = 0; d < 4; d++)
+                    {
+                        int v = step(q[i], d);
+                        if (v >= 0 && v == w.plainStep(q[i], d) && !qpInHome[v])
+                            qpInHome[v] = 1, q.push_back(v);
+                    }
+            }
+            if (!qpInHome[myHead])
+                RP.qPark = 1; // she is through a portal: park in this region from now on
+        }
+#endif
         if (!qparkQueen() || myHead < 0)
             return;
         for (auto& o : segs)
@@ -6804,6 +6875,10 @@ struct Bot
                 score += qparkScore(t, d, eo.dead); // ROUND3 P7 PM_QPARK
             if (RP.qSmall)
                 score += qsmScore(t); // R10 LANE_QSMALL
+#if QUAL_KNOWN
+            if (RP.qHomeR > 0)
+                score += qhomeScore(t); // QUAL_QHOME
+#endif
             if (PM_TD_PULL > 0)
                 score += tdPullScore(t); // DGU F4 PM_TD_PULL
             if (KING_CORRIDOR_PENALTY > 0 && myLen >= 10)
