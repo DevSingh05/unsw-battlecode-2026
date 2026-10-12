@@ -1,8 +1,18 @@
 # STATUS (single source of truth)
 
-Last updated: 2026-10-09 20:22 EDT. All updates to the user come from this page. Times are US Eastern.
+Last updated: 2026-10-12 15:50 EDT. All updates to the user come from this page. Times are US Eastern.
 
 ## Live and mainline
+- **LIVE since Mon 12 Oct 3:20 PM: km1 (id 22249)** = qf1 + four Qualifier maps played as known maps (Atlantis,
+  Maelstrom, Troll Australia, Whale Song), the map word, and a parked queen on Atlantis. The other 27 maps play as qf1.
+  Copy: `variants/km1`. **Fallback: re-activate qf1 (id 21001).** Study and numbers: notes/newrules/QUAL_MAPS_OCT12.md.
+- **Not in the Grand Final** (lost the Qualifier round of 32 to Sabotage-d, 3-4). Work now is ladder rating: 2174, #25
+  on 12 Oct. The pool has 31 maps since 10 Oct (17 old + the 14 Qualifier maps).
+- **Fast server test bed (new):** unranked challenges are open again and accept a map list, so a map-specific change
+  gets about 60 games an hour on its own maps against a fixed panel (`tools/auto_challenge.py --unranked-only --panel
+  ... --maps ...`; judge with `tools/analysis/oct12/build_watch.py` and `watch_mech.py`).
+- `bot/` carries the `QUAL_*` flags (default 0) and a 47-map `maps_data.hpp`. Lines below this point in this section
+  are from 9 Oct and describe the build history up to qf1.
 - **Mainline = `bot/`** = b4 (b3 + Tower Defense centre pull + Australia queen vault ban); b3 = b2 + Australia crowd penalty: v61 (QS_FROM=100, QSPLIT_ROOM=1) + Portals/Maze queen park and crown + QKILL_FUEL + INFER_SYM (unknown maps only). Every new idea goes into `bot/` as a flag, default 0. No vNN copies; test builds are staged in the scratchpad.
 - **Last accepted live build:** f1 (= b2 on known maps; identical copy in `variants/f1` for rating-restoring re-uploads). b1 copy kept in `variants/b1`.
 - **Fallbacks:** `variants/v61`, `variants/v44`. Re-uploading an identical build restores its old rating.
@@ -65,8 +75,7 @@ Last updated: 2026-10-09 20:22 EDT. All updates to the user come from this page.
 | cx1 | UNK_XP=1 (Cutlery-style portal crossing, unseen only) | **not shipped** | unseen vs b4: .487 / .539 (pooled .513); realhold under .5 on both seeds. Early blind queen crossers die early (ours 8/8, Cutlery 32/43). |
 | qn1 | qf1 + QNO_UNKPORTAL (queen never crosses unknown portals, unseen only) | **not shipped** | 17 maps + Schooltime B: 40/40 identical to qf1. Mechanism (10 blind games vs qf1): queen crossings before r100 8 → 0-3, queen alive r150 4 → 8. Unseen vs qf1: value 1 .518 / .500, value 2 .522 / .504 (blind17 .456 at 982000); ship rule needs ≥ .52 on both. Flag in bot/, default 0. |
 | pb2 | b4 + QBOX_ONESPLIT | **LOSS** | Portals wins 75% → 60%, queen alive r500 83% → 80%; Maze flat; Trauma 96% → 80%. Off. |
-| (next) | QKILL_KING + QKK_FREE (king takes certain free-step queen kills) | queued | all maps; 10/12 failure decisions flip, 64/74 big-open wins unchanged |
-| k1 | b1 + QK_EG=2 (crowned-queen kamikaze guard, lunge reach 5 + approach trend) | staged (scratch r6/stage/k1), queued | Portals/Maze only in effect; judge on crowned-queen rams after r300 |
+| km1 (id 22249) | qf1 + QUAL_KNOWN=0x2442 (Atlantis, Maelstrom, Troll Australia, Whale Song known) + QUAL_ROUTE=0x3FFD + QUAL_GOSSIP=1 + QUAL_QPARK=0x2 (Atlantis) | **live since Mon 12 Oct 3:20 PM**, under evaluation | Local vs qf1 on the four maps, fresh seeds: 11-5. First 40 unranked server games on the four maps vs ranks 14-24 (Elo expectation 44%): 18-22 (45%); qf1 on the same maps in the two days before: 40-85 (32% against an expectation of 56%). Per map: Maelstrom 9-1, Whale Song 4-6, Troll Australia 3-7, Atlantis 2-8. Atlantis economy is fixed (2,440 pearls eaten vs 150) but 8 losses came from the queen: theirs alive at L12-34 in 9 of 10, ours parked and unfed at L5-10 or rammed. |
 
 ## What the week taught us (summary, 7 Oct)
 - **Server wins came from queen handling and map-specific fixes:** QS_FROM=100 (early-economy queen), QSPLIT_ROOM, the Portals/Maze queen park, the Tower Defense centre pull and the Australia vault ban. Every one of them was either a narrow, decision-verified fix or a per-map change judged on its own map.
@@ -108,7 +117,15 @@ Refuted: P2 portal-exit bug fix (bug is real, fix doesn't change outcomes), P4 p
   - Harvesters (HARVEST 1/2), EARLY_QSPLIT.
 - **REAL_SWEEP** (notes/newrules/REAL_SWEEP.md): old unknown-map flags gave nothing except INFER_SYM.
 
-## Plan (one fix at a time, focused on the r500 queen problem)
+## Plan from 12 Oct (new maps first, each judged on its own maps with the unranked loop)
+1. **Atlantis: feed the parked queen.** We out-eat opponents 16 to 1 there and still lose the r500 queen tiebreak.
+2. **Whale Song queen** (5 of 6 losses: our queen dead, theirs alive at L8-65) and **Troll Australia king length**
+   (economy level, both queens dead, our longest shorter).
+3. **More maps known:** Ezam (local 7-3), then Athena, Hive, Metro, Ouroboros and Detention with the crowd penalty
+   (local 12-8 with it, 7-13 without). Trolley Problem x2 stay unseen maps until the one-pocket problem is fixed.
+4. Old weak maps: Around UNSW (-21 points vs expectation), Slithery Fight (-18), Devil (-12), Trophy (-11).
+
+## Plan (7 Oct; one fix at a time, focused on the r500 queen problem)
 1. **LATE_HUNT** (in bot/ as flag `LATE_HUNT`, default 0; variants/v68 = on): once our queen is dead, hunt theirs map-wide. Plays identically to v61 until an ally sees our queen die (detects ~60% of deaths, 0 false alarms). Local neutral, as expected. Next server test after v69. Judge it on r500 'our queen dead' losses vs non-top-10.
 2. **QEARLY_PEN** (v69): queen portal/blind penalties also before r100. Server test lost (leaning); flag not folded into bot/.
 3. **King timing** (v70, SPRINT_KING_PM): Around UNSW seed 190/feed 230. Mixed locally: helps when we out-mass the opponent, hurts against equal mass. Low priority; affects 1/17 of games.
