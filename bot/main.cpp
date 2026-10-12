@@ -554,7 +554,7 @@ struct World
         applyMapParams(m->name, m->w * m->h);
 #if QHOME_ON
         if ((QHOME_CROWN) && qhKnownR > 0 && RP.kingDeclare)
-            RP.queenKing = 1; // QHOME_CROWN: the leashed queen is the queen-king from the seed round
+            RP.queenKing = 1, RP.qkFrom = QHOME_CROWN_FROM, RP.qkCap = QHOME_CROWN_CAP; // QHOME_CROWN: the leashed queen is the queen-king from the seed round (or QHOME_CROWN_FROM)
         if ((QHOME_SMALL) > 0 && qhKnownR > 0)
             RP.queenKeep = 64, RP.queenKeepR = QHOME_SMALL; // QHOME_SMALL: no split floor for the leashed queen until that round
 #endif
@@ -1228,7 +1228,7 @@ struct Bot
                     RP.ramGuard = 2;
 #if QHOME_ON
                 if ((QHOME_CROWN) && (QHOME_UNK) > 0 && w.N >= QHOME_UNK_MIN_TILES && w.N <= QHOME_UNK_MAX_TILES && UNK_KING)
-                    RP.queenKing = 1; // QHOME_CROWN on a leashed unseen map
+                    RP.queenKing = 1, RP.qkFrom = QHOME_CROWN_FROM, RP.qkCap = QHOME_CROWN_CAP; // QHOME_CROWN on a leashed unseen map
                 if ((QHOME_SMALL) > 0 && (QHOME_UNK) > 0 && w.N >= QHOME_UNK_MIN_TILES && w.N <= QHOME_UNK_MAX_TILES)
                     RP.queenKeep = 64, RP.queenKeepR = QHOME_SMALL; // QHOME_SMALL on a leashed unseen map
 #endif

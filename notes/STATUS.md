@@ -1,16 +1,22 @@
 # STATUS (single source of truth)
 
-Last updated: 2026-10-12 15:50 EDT. All updates to the user come from this page. Times are US Eastern.
+Last updated: 2026-10-12 17:00 EDT. All updates to the user come from this page. Times are US Eastern.
 
 ## Live and mainline
-- **LIVE since Mon 12 Oct 3:20 PM: km1 (id 22249)** = qf1 + four Qualifier maps played as known maps (Atlantis,
-  Maelstrom, Troll Australia, Whale Song), the map word, and a parked queen on Atlantis. The other 27 maps play as qf1.
-  Copy: `variants/km1`. **Fallback: re-activate qf1 (id 21001).** Study and numbers: notes/newrules/QUAL_MAPS_OCT12.md.
-- **Not in the Grand Final** (lost the Qualifier round of 32 to Sabotage-d, 3-4). Work now is ladder rating: 2174, #25
-  on 12 Oct. The pool has 31 maps since 10 Oct (17 old + the 14 Qualifier maps).
-- **Fast server test bed (new):** unranked challenges are open again and accept a map list, so a map-specific change
-  gets about 60 games an hour on its own maps against a fixed panel (`tools/auto_challenge.py --unranked-only --panel
-  ... --maps ...`; judge with `tools/analysis/oct12/build_watch.py` and `watch_mech.py`).
+- **LIVE since Mon 12 Oct 4:34 PM: km4 (id 22267)** = qf1 plus, on the new maps: Atlantis, Maelstrom, Troll Australia
+  and Whale Song played as known maps; Atlantis queen parked inside the pearl region and fed; Troll Australia trap
+  rooms sealed; queen home leash (8 steps) on Whale Song, Troll Australia, Around UNSW and unseen big maps. The 17 old
+  maps except Around UNSW play as qf1 (same games on 13 of them in a same-seed check). Copies: `variants/km1`..`km4`.
+  **Fallback order: km3 (22258), km1 (22249), qf1 (21001)**; activate with `POST /api/v1/submissions/<id>/activate`.
+- **This session (unsw-battlecode-de) owns the server for now** (user, 12 Oct: battlecode_main's account is out of usage).
+- **Not in the Grand Final** (lost the Qualifier round of 32 to Sabotage-d, 3-4). Work now is ladder rating: 2177 #25 at
+  the start of 12 Oct, 2196 #21 at 5:00 PM after a dip to 2144 (first ranked series on fresh uploads swing 20-30 Elo).
+  The pool has 31 maps since 10 Oct (17 old + the 14 Qualifier maps).
+- **Allowances in use:** 60 hand-started games/h go to ranked series (`replays/auto_ranked`, panel SSS, TTT, FTM,
+  Computers, larp, WeHaveQuizzes, glyph team, Codehammer, chat gippy tea); the separate 60/h against DEV teams is the
+  test bed: unranked series vs dev test 1 on the maps under test (`replays/auto_dev13`). Stop either with a `STOP`
+  file in its folder. Judge with `tools/analysis/oct12/build_watch.py` and `watch_mech.py`.
+- **Uploads are bundled** (about one every two hours): each new upload widens the rating and the first series swing hard.
 - `bot/` carries the `QUAL_*` flags (default 0) and a 47-map `maps_data.hpp`. Lines below this point in this section
   are from 9 Oct and describe the build history up to qf1.
 - **Mainline = `bot/`** = b4 (b3 + Tower Defense centre pull + Australia queen vault ban); b3 = b2 + Australia crowd penalty: v61 (QS_FROM=100, QSPLIT_ROOM=1) + Portals/Maze queen park and crown + QKILL_FUEL + INFER_SYM (unknown maps only). Every new idea goes into `bot/` as a flag, default 0. No vNN copies; test builds are staged in the scratchpad.
@@ -75,6 +81,7 @@ Last updated: 2026-10-12 15:50 EDT. All updates to the user come from this page.
 | cx1 | UNK_XP=1 (Cutlery-style portal crossing, unseen only) | **not shipped** | unseen vs b4: .487 / .539 (pooled .513); realhold under .5 on both seeds. Early blind queen crossers die early (ours 8/8, Cutlery 32/43). |
 | qn1 | qf1 + QNO_UNKPORTAL (queen never crosses unknown portals, unseen only) | **not shipped** | 17 maps + Schooltime B: 40/40 identical to qf1. Mechanism (10 blind games vs qf1): queen crossings before r100 8 → 0-3, queen alive r150 4 → 8. Unseen vs qf1: value 1 .518 / .500, value 2 .522 / .504 (blind17 .456 at 982000); ship rule needs ≥ .52 on both. Flag in bot/, default 0. |
 | pb2 | b4 + QBOX_ONESPLIT | **LOSS** | Portals wins 75% → 60%, queen alive r500 83% → 80%; Maze flat; Trauma 96% → 80%. Off. |
+| km2 (22256), km3 (22258), km4 (22267) | km2 = km1 + Atlantis queen parked inside the pearl region (`QUAL_QPARK_IN`); km3 = km2 + queen home leash on Whale Song and Troll Australia (`QUAL_QHOME`); km4 = km3 + Troll Australia trap rooms sealed (`QUAL_TRAPSEAL`, `QUAL_PBLOCK`) + leash on Around UNSW and unseen big maps (`QHOME_OLD=1`, `QHOME_UNK=8`) | **km4 live since Mon 12 Oct 4:34 PM** | Atlantis: qf1 6-24, km1 3-8, km2 6-5 vs ranks 45-80 (queen alive 6 of 11 at L38-85, all six won; five losses = queen rammed), then 2-4 vs dev test 1. Troll Australia vs dev test 1: km3 0-6 with 30 length at r100 against 250 (six of nine starters died in the trap rooms before r50); km4 185 against 47 at r100 in its first game. Maelstrom: 10-1 and 4-2. Whale Song: 5-6, then 1-5 vs dev test 1 (their queen fed to L37-53). km4 ranked so far: 17-18 in games against an Elo expectation of 11.8. |
 | km1 (id 22249) | qf1 + QUAL_KNOWN=0x2442 (Atlantis, Maelstrom, Troll Australia, Whale Song known) + QUAL_ROUTE=0x3FFD + QUAL_GOSSIP=1 + QUAL_QPARK=0x2 (Atlantis) | **live since Mon 12 Oct 3:20 PM**, under evaluation | Local vs qf1 on the four maps, fresh seeds: 11-5. First 40 unranked server games on the four maps vs ranks 14-24 (Elo expectation 44%): 18-22 (45%); qf1 on the same maps in the two days before: 40-85 (32% against an expectation of 56%). Per map: Maelstrom 9-1, Whale Song 4-6, Troll Australia 3-7, Atlantis 2-8. Atlantis economy is fixed (2,440 pearls eaten vs 150) but 8 losses came from the queen: theirs alive at L12-34 in 9 of 10, ours parked and unfed at L5-10 or rammed. |
 
 ## What the week taught us (summary, 7 Oct)
@@ -117,13 +124,17 @@ Refuted: P2 portal-exit bug fix (bug is real, fix doesn't change outcomes), P4 p
   - Harvesters (HARVEST 1/2), EARLY_QSPLIT.
 - **REAL_SWEEP** (notes/newrules/REAL_SWEEP.md): old unknown-map flags gave nothing except INFER_SYM.
 
-## Plan from 12 Oct (new maps first, each judged on its own maps with the unranked loop)
-1. **Atlantis: feed the parked queen.** We out-eat opponents 16 to 1 there and still lose the r500 queen tiebreak.
-2. **Whale Song queen** (5 of 6 losses: our queen dead, theirs alive at L8-65) and **Troll Australia king length**
-   (economy level, both queens dead, our longest shorter).
-3. **More maps known:** Ezam (local 7-3), then Athena, Hive, Metro, Ouroboros and Detention with the crowd penalty
-   (local 12-8 with it, 7-13 without). Trolley Problem x2 stay unseen maps until the one-pocket problem is fixed.
-4. Old weak maps: Around UNSW (-21 points vs expectation), Slithery Fight (-18), Devil (-12), Trophy (-11).
+## Plan from 12 Oct, 5 PM (top-3 studies in: notes/top5/TOP3_SYNTHESIS_OCT12.md)
+1. **Kings.** We now out-mass opponents on the fixed maps and still lose the longest-dragon tiebreak: Troll Australia vs
+   dev test 1, 292 length against 79 at r300, lost 27 to 30 after an L87 coiled into itself at r436 and an L52 met an
+   enemy head on a pearl at r401, both with 62-63 units alive (no slot for the turn-around split). Next build:
+   `SPLIT_MAX_UNITS=61` (forgot to mention keeps two slots free; our longest dies boxed 3.3 times a game, theirs 0.3).
+2. **Queen, as all three top teams play her:** cut to 2 in round 0, near home, fed late. `QHOME_SMALL=250` is built
+   (local: alive at the end 11 of 20 against 16 of 40 with the leash alone); a late capped crown is being tested.
+3. **Atlantis:** our queen is still rammed inside (dev test 1 stalks her with length-2 units); guards or a hunt for
+   their outside queen are the two options.
+4. **Trolley Problem x2, Detention, Thermopylae, Ezam** and the five par maps: unchanged so far.
+5. Old weak maps after that: Slithery Fight, Devil, Trophy.
 
 ## Plan (7 Oct; one fix at a time, focused on the r500 queen problem)
 1. **LATE_HUNT** (in bot/ as flag `LATE_HUNT`, default 0; variants/v68 = on): once our queen is dead, hunt theirs map-wide. Plays identically to v61 until an ally sees our queen die (detects ~60% of deaths, 0 false alarms). Local neutral, as expected. Next server test after v69. Judge it on r500 'our queen dead' losses vs non-top-10.

@@ -1581,6 +1581,16 @@
 #ifndef QHOME_CROWN
 #define QHOME_CROWN 0
 #endif
+// QHOME_CROWN_FROM / QHOME_CROWN_CAP: with QHOME_CROWN the leashed queen is the queen-king only from this round (0 = the
+// king seed round) and feeders stop at this length (0 = no cap). Local, 12 Oct: crowned from r250 without a cap she was
+// fed to a median 34 but alive at the end in only 5 of 20 games (uncrowned small queen 11 of 20): a long queen is a ram
+// target for 250 rounds. A late, capped crown keeps her small for most of the game.
+#ifndef QHOME_CROWN_FROM
+#define QHOME_CROWN_FROM 0
+#endif
+#ifndef QHOME_CROWN_CAP
+#define QHOME_CROWN_CAP 0
+#endif
 // QHOME_SMALL: until this round (0 = off) the leashed queen has no split floor: she splits at length 4 like any unit
 // (QSPLIT_ROOM still applies), so she is a length 2-3 forager near home that keeps producing workers. larp and forgot
 // to mention (12 Oct studies, 122 and 126 replays): the queen is cut to 2 in round 0 in 173 of 182 games with a start
