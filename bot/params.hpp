@@ -1540,11 +1540,54 @@
 #ifndef QHOME_UNK_MAX_TILES
 #define QHOME_UNK_MAX_TILES 1000000
 #endif
+// NEWMAP_KING_SEED / NEWMAP_KING_FEED: king seed round and feed start (0 = keep UNK_KING_SEED 250 / UNK_KING_FEED 300) on
+// known Qualifier maps without a queen park and on unseen maps of at least QHOME_UNK_MIN_TILES tiles. The older Sprint
+// maps keep their own timing. larp (ladder #1, 122 replays, 12 Oct): first feeding suicide at exactly r250 in 27 games;
+// king line at r300/r400/end 17/57/97 on ten big maps against our 4/25/55 from similar totals, and "both queens dead,
+// longest decides" is 80-90% of our games on Athena, Metro, Ouroboros, Hive, Maelstrom and Troll Australia.
+#ifndef NEWMAP_KING_SEED
+#define NEWMAP_KING_SEED 0
+#endif
+#ifndef NEWMAP_KING_FEED
+#define NEWMAP_KING_FEED 0
+#endif
+// LOCAL_FEED: start round of local feeding (0 = off). From that round a non-queen, non-king unit of length <= LF_MAXLEN
+// that sees an ally head within LF_R tiles whose visible body is at least LF_HOST_MIN long, with no enemy head within
+// LF_ENEMY_R and more than the feed reserve of units left, moves into its own neck and leaves its pearls for that ally.
+// No walk to a distant king and no beacon needed. larp: 121 such suicides a game (233 on the big maps), a longer ally in
+// view in 80% of them, the team's longest within 3 tiles in only 10%; 59% of their king line's pearls are own corpses.
+// LF_MAPS: 0 = the NEWMAP_KING maps only (known Qualifier maps without a park, big unseen maps), 1 = every map.
+#ifndef LOCAL_FEED
+#define LOCAL_FEED 0
+#endif
+#ifndef LF_MAXLEN
+#define LF_MAXLEN 3
+#endif
+#ifndef LF_HOST_MIN
+#define LF_HOST_MIN 6
+#endif
+#ifndef LF_R
+#define LF_R 3
+#endif
+#ifndef LF_ENEMY_R
+#define LF_ENEMY_R 4
+#endif
+#ifndef LF_MAPS
+#define LF_MAPS 0
+#endif
 // QHOME_CROWN: 1 = on every leashed map the queen is also the queen-king (RP.queenKing): from the king seed round she
 // is a king, units that hear her feed her, and no rival crowns while she is heard; units out of earshot play the normal
 // king game. km3 on Whale Song vs the DEV team (12 Oct): our leashed queen lived to r500 at L12 and lost to theirs at L53.
 #ifndef QHOME_CROWN
 #define QHOME_CROWN 0
+#endif
+// QHOME_SMALL: until this round (0 = off) the leashed queen has no split floor: she splits at length 4 like any unit
+// (QSPLIT_ROOM still applies), so she is a length 2-3 forager near home that keeps producing workers. larp and forgot
+// to mention (12 Oct studies, 122 and 126 replays): the queen is cut to 2 in round 0 in 173 of 182 games with a start
+// length of 4+, kept at 2-3 until about r250 (349 re-splits), then fed; ours split at r0 in 30 of 455 games and is 5
+// long at r100.
+#ifndef QHOME_SMALL
+#define QHOME_SMALL 0
 #endif
 // any leash compiled in?
 #define QHOME_ON (((QUAL_KNOWN) && (QUAL_QHOME)) || (QHOME_OLD) || (QHOME_UNK))

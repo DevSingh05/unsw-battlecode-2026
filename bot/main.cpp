@@ -214,6 +214,14 @@ void applyMapParams(const char* name, int tiles = 0)
         qgen();
         crowdMaps();
 #if QUAL_KNOWN
+        if (qualKnown(name) && !((QUAL_QPARK) >> qualMapIndex(name) & 1))
+        {
+            // NEWMAP_KING_SEED / NEWMAP_KING_FEED: earlier crown and feed on a known Qualifier map (not on a parked-queen map)
+            if ((NEWMAP_KING_SEED) > 0)
+                RP.kingSeedRound = NEWMAP_KING_SEED;
+            if ((NEWMAP_KING_FEED) > 0)
+                RP.feedStart = NEWMAP_KING_FEED;
+        }
         if (int qi = qualMapIndex(name); qi >= 0 && ((QUAL_CROWD) >> qi & 1))
             RP.crowd = QUAL_CROWD_V; // QUAL_CROWD: spread the swarm on this known Qualifier map
         if (int qi = qualMapIndex(name); qi >= 0 && ((QUAL_QPARK) >> qi & 1))
@@ -547,6 +555,8 @@ struct World
 #if QHOME_ON
         if ((QHOME_CROWN) && qhKnownR > 0 && RP.kingDeclare)
             RP.queenKing = 1; // QHOME_CROWN: the leashed queen is the queen-king from the seed round
+        if ((QHOME_SMALL) > 0 && qhKnownR > 0)
+            RP.queenKeep = 64, RP.queenKeepR = QHOME_SMALL; // QHOME_SMALL: no split floor for the leashed queen until that round
 #endif
         sym = m->sym;
 #if SPRINT_DEBUG
@@ -1209,12 +1219,18 @@ struct Bot
                     RP.kingDeclare = 1;
                     RP.kingSeedRound = UNK_KING_SEED;
                     RP.feedStart = UNK_KING_FEED;
+                    if ((NEWMAP_KING_SEED) > 0 && w.N >= QHOME_UNK_MIN_TILES)
+                        RP.kingSeedRound = NEWMAP_KING_SEED; // NEWMAP_KING_SEED on a big unseen map
+                    if ((NEWMAP_KING_FEED) > 0 && w.N >= QHOME_UNK_MIN_TILES)
+                        RP.feedStart = NEWMAP_KING_FEED;
                 }
                 if (UNK_SMALL_RAMGUARD && w.N <= 750)
                     RP.ramGuard = 2;
 #if QHOME_ON
                 if ((QHOME_CROWN) && (QHOME_UNK) > 0 && w.N >= QHOME_UNK_MIN_TILES && w.N <= QHOME_UNK_MAX_TILES && UNK_KING)
                     RP.queenKing = 1; // QHOME_CROWN on a leashed unseen map
+                if ((QHOME_SMALL) > 0 && (QHOME_UNK) > 0 && w.N >= QHOME_UNK_MIN_TILES && w.N <= QHOME_UNK_MAX_TILES)
+                    RP.queenKeep = 64, RP.queenKeepR = QHOME_SMALL; // QHOME_SMALL on a leashed unseen map
 #endif
                 if (QPARK_UNK && UNK_KING)
                     RP.queenKing = QPG_CROWN, RP.qPark = 3, RP.qkCap = QPG_QKCAP, RP.qpLate = QPARK_UNK >= 2; // ROUND4: generic queen park on unseen maps
@@ -3394,7 +3410,7 @@ struct Bot
     bool qGuard() const { return QGUARD && amQueen() && (round >= QG_FROM || units >= QG_UNITS); }
     // QGUARD: largest split the queen may make (child k) so she keeps >= QG_MIN; < 2 = no split
     // v38q: QG_MIN floor off when the queen's kelp-sealed region is < QG_REGION_MIN tiles (Schooltime box)
-    bool qFloorOff() const { return (TROPHY_QSPLIT || PM_QOS_QSPLIT) && RP.queenKeep > 0 && amQueen() && units <= RP.queenKeep && round < RP.queenKeepR; }
+    bool qFloorOff() const { return (TROPHY_QSPLIT || PM_QOS_QSPLIT || (QHOME_SMALL)) && RP.queenKeep > 0 && amQueen() && units <= RP.queenKeep && round < RP.queenKeepR; }
     int qgCap(int k) const
     {
         int c = (qGuard() && !qFloorOff() && !(QG_REGION_MIN > 0 && qRegion < QG_REGION_MIN)) ? std::min(k, myLen - QG_MIN) : k;
@@ -6161,6 +6177,36 @@ struct Bot
             if (!queenSafe() && tryConsFeed())
                 return;
         }
+#if LOCAL_FEED
+        // ---- LOCAL_FEED: a small unit next to a clearly longer ally dies where it stands (larp's local consolidation)
+        if (round >= (LOCAL_FEED) && !amQueen() && !iAmKing() && !queenSafe() && myLen <= LF_MAXLEN && myHead >= 0 &&
+            units > feedReserveNow() &&
+            ((LF_MAPS) || (w.known ? (w.qualOn() && !RP.qPark && !RP.qParkIn) : (w.N >= QHOME_UNK_MIN_TILES))))
+        {
+            bool enemyNear = false, host = false;
+            for (auto& o : segs)
+                if (o.head && o.team != w.myTeam && wrapDist(o.tile, myHead) <= LF_ENEMY_R)
+                    enemyNear = true;
+            if (!enemyNear)
+                for (auto& o : segs)
+                {
+                    if (!o.head || o.team != w.myTeam || o.id == w.myId || wrapDist(o.tile, myHead) > LF_R)
+                        continue;
+                    int vis = 0;
+                    for (auto& b : segs)
+                        if (b.team == w.myTeam && b.id == o.id)
+                            vis++;
+                    if (vis >= LF_HOST_MIN)
+                        host = true;
+                }
+            if (host)
+            {
+                out += std::string("MOVE ") + DIRC[(myDir + 2) % 4] + "\n"; // into our own neck: we die here and leave pearls
+                pending.clear();
+                return;
+            }
+        }
+#endif
         // ---- feeding the king: die just in front of it so it eats our body
         bool feeding = shouldFeed() && !consActive && !queenSafe(); // consActive is false with CONS_R off
         int target = feeding ? feedTarget() : -1;
