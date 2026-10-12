@@ -86,6 +86,27 @@ struct RuntimeParams
 RuntimeParams RP;
 static inline bool qkOn() { return QUEEN_KING || RP.queenKing; }
 
+// QUAL_KNOWN: the 14 Qualifier maps (ranked pool since 10 Oct). The index is the bit in QUAL_KNOWN / QUAL_ROUTE / QUAL_QEKR.
+static const char* const QUAL_MAPS[14] = {"Athena", "Atlantis", "Caution", "Detention", "Ezam", "Hive", "Maelstrom",
+                                          "Metro", "Ouroboros", "Thermopylae", "Troll Australia", "Trolley Problem",
+                                          "Trolley Problem (Buffed)", "Whale Song"};
+int qualMapIndex(const char* name)
+{
+    std::string n(name ? name : "");
+    for (int i = 0; i < 14; i++)
+        if (n == QUAL_MAPS[i])
+            return i;
+    return -1;
+}
+// a Qualifier map whose QUAL_KNOWN bit is set (adopted and treated like a Sprint map)
+bool qualKnown(const char* name)
+{
+    if (!(QUAL_KNOWN))
+        return false; // flag off: folds away, no string work
+    int i = qualMapIndex(name);
+    return i >= 0 && ((QUAL_KNOWN) >> i & 1);
+}
+
 // Per-map overrides, keyed by the recognised map's name. Each value is a macro
 // so local tests can flip one map at a time (e.g. -DPM_DEVIL_RG=0).
 // SPRINT_KNOWN: the 7 Sprint maps (ranked pool since unswbc 1.2.7)
@@ -147,7 +168,7 @@ void applyMapParams(const char* name, int tiles = 0)
         if ((CROWD_MAPS & 16) && n == "Schooltime")
             RP.crowd = CROWD_MAPS_SCH;
     };
-    if (SPRINT_KNOWN && isSprintMap(name))
+    if ((SPRINT_KNOWN && isSprintMap(name)) || qualKnown(name))
     {
         // same high-level params the unknown-map path (UNK_KING / UNK_SMALL_RAMGUARD) gave them in v38m
         if (UNK_KING)
@@ -175,6 +196,12 @@ void applyMapParams(const char* name, int tiles = 0)
         }
         qgen();
         crowdMaps();
+#if QUAL_KNOWN
+        if (int qi = qualMapIndex(name); qi >= 0 && ((QUAL_CROWD) >> qi & 1))
+            RP.crowd = QUAL_CROWD_V; // QUAL_CROWD: spread the swarm on this known Qualifier map
+        if (int qi = qualMapIndex(name); qi >= 0 && ((QUAL_QPARK) >> qi & 1))
+            RP.queenKing = 1, RP.qPark = 1, RP.qkFrom = QUAL_QPARK_QKFROM, RP.qkCap = QUAL_QPARK_QKCAP; // QUAL_QPARK: parked queen, crowned at the seed round
+#endif
         return;
     }
     auto set = [&](const char* map, int rg, int kd, int ks, int ss, int fs) {
@@ -468,13 +495,24 @@ struct World
         spawnAt.assign(N, -1);
         for (int i = 0; i < KNOWN_MAP_COUNT; i++)
             if (!NO_KNOWN_MAPS && KNOWN_MAPS[i].w == w && KNOWN_MAPS[i].h == h &&
-                (SPRINT_KNOWN || !isSprintMap(KNOWN_MAPS[i].name)))
+                (SPRINT_KNOWN || !isSprintMap(KNOWN_MAPS[i].name)) &&
+                (i < KNOWN_MAP_COUNT - 14 || ((QUAL_KNOWN) >> (i - (KNOWN_MAP_COUNT - 14)) & 1))) // QUAL_KNOWN: the 14 Qualifier maps are the last entries (QUAL_MAPS order); candidates only with their bit set
                 candidates.push_back(i);
     }
 
+    // QUAL_KNOWN: index of the adopted map in QUAL_MAPS when its QUAL_KNOWN bit is set, else -1. Set by adopt(); read
+    // only while known != nullptr. Cached so the per-turn hooks cost an int test, not string compares (the search
+    // budgets run on the CPU-points clock, so extra work per turn shifts decisions on every map).
+    int qualIdx = -1;
+    bool qualTold = false; // QUAL_GOSSIP: an ally that was sure named this map
+    bool qualOn() const { return (QUAL_KNOWN) && known && qualIdx >= 0; }
+    bool qualOn(int mask) const { return (QUAL_KNOWN) && known && qualIdx >= 0 && (mask >> qualIdx & 1); }
     void adopt(const KnownMap* m)
     {
         known = m;
+#if QUAL_KNOWN
+        qualIdx = qualKnown(m->name) ? qualMapIndex(m->name) : -1;
+#endif
         everKnown = true; // QF1: sticky, never cleared (a later drop or MATCH_STRICT reset keeps it)
         applyMapParams(m->name, m->w * m->h);
         sym = m->sym;
@@ -1093,8 +1131,8 @@ struct Bot
                 RP.kingSeedRound = std::min(RP.kingSeedRound, std::max(110, round));
         }
         // SPRINT_KING_FULL: known Sprint map gets UNK_KING's crown-early rule too
-        if (SPRINT_KNOWN && SPRINT_KING_FULL && UNK_KING && w.known && isSprintMap(w.known->name) &&
-            units >= w.unitLimit - 2)
+        if (SPRINT_KING_FULL && UNK_KING && w.known &&
+            ((SPRINT_KNOWN && isSprintMap(w.known->name)) || w.qualOn()) && units >= w.unitLimit - 2)
             RP.kingSeedRound = std::min(RP.kingSeedRound, std::max(110, round));
         if (UNK_SIZE_PARAMS && !w.known && !unkParamsSet)
         {
@@ -1450,7 +1488,7 @@ struct Bot
         (void)areaCap;
         // PEARL_ROUTE (Codex, codex-battlecode/notes/pearl-route.md): value the best single route,
         // not the sum over every branch. 1 = all maps, 2 = unknown maps only
-        if (PEARL_ROUTE == 1 || (PEARL_ROUTE == 2 && (!w.known || (SPRINT_ROUTE && isSprintMap(w.known->name) && !(SPRINT_ROUTE_NOWEAK && std::string(w.known->name) == "weakhold")))))
+        if (PEARL_ROUTE == 1 || (PEARL_ROUTE == 2 && (!w.known || (SPRINT_ROUTE && isSprintMap(w.known->name) && !(SPRINT_ROUTE_NOWEAK && std::string(w.known->name) == "weakhold")) || w.qualOn(QUAL_ROUTE))))
             pearlScore = PEARL_ROUTE_REGION * pearlScore + PEARL_ROUTE_SCALE * bestPearlRoute();
     }
 
@@ -2002,6 +2040,16 @@ struct Bot
         uint64_t check = mix(x ^ MAP_SECRET ^ (static_cast<uint64_t>(w.myTeam) << 50)) & ((1ULL << 45) - 1);
         return x | (check << 19);
     }
+    // QUAL_GOSSIP: "this is Qualifier map i" (same word layout as encodeUnseen, code 200 + i instead of 255)
+    uint64_t encodeQualMap() const
+    {
+        uint64_t x = static_cast<uint64_t>(200 + w.qualIdx) | (static_cast<uint64_t>(myFrameCode() & 3) << 8) |
+                     (static_cast<uint64_t>(round & 511) << 10);
+        uint64_t check = mix(x ^ MAP_SECRET ^ (static_cast<uint64_t>(w.myTeam) << 50)) & ((1ULL << 45) - 1);
+        return x | (check << 19);
+    }
+    // sure of a Qualifier map: adopted it and every other same-size map is ruled out, or an ally that was sure said so
+    bool qualSure() const { return w.qualOn() && (w.candidates.size() == 1 || w.qualTold); }
     void msReadUnseen()
     {
         for (uint64_t raw : in.msgs)
@@ -2015,6 +2063,23 @@ struct Bot
                 w.msMarkUnseen();
                 return;
             }
+#if QUAL_KNOWN
+            if (QUAL_GOSSIP && (x & 255) >= 200 && (x & 255) < 214 && ((round - static_cast<int>((x >> 10) & 511)) & 511) <= 2)
+            {
+                int c = KNOWN_MAP_COUNT - 14 + static_cast<int>((x & 255) - 200);
+                // only a map this process still holds as a candidate (same size, nothing seen that contradicts it)
+                if (std::find(w.candidates.begin(), w.candidates.end(), c) == w.candidates.end())
+                    continue;
+                w.qualTold = true;
+                if (w.known != &KNOWN_MAPS[c] || w.candidates.size() > 1)
+                {
+                    w.candidates.assign(1, c);
+                    if (w.known != &KNOWN_MAPS[c])
+                        w.adopt(&KNOWN_MAPS[c]);
+                }
+                return;
+            }
+#endif
         }
     }
     void readMessages()
@@ -2737,7 +2802,8 @@ struct Bot
     }
     bool queenEarly() const { return QUEEN_SAFE && amQueen() && !qsOn; }
     // QF1: QE_KR acts only on maps this process never identified (sticky; QE_KR_ANYMAP=1 drops the gate = horse's prototype)
-    bool qeKrOn() const { return queenEarly() && (QE_KR_ANYMAP || w.neverKnown()); }
+    // QUAL_QEKR: also on a known Qualifier map (qf1 played those with QE_KR on, as never-identified maps)
+    bool qeKrOn() const { return queenEarly() && (QE_KR_ANYMAP || w.neverKnown() || w.qualOn(QUAL_QEKR)); }
     // QNO_UNKPORTAL: on never-identified maps the queen never knocks on / explore-crosses an unknown portal
     bool qNoUnkPortal() const { return QNO_UNKPORTAL && amQueen() && w.neverKnown(); }
     // ROUND3 P7 PM_QPARK: the queen is parked at home until the king seed round, then crowned (RP.queenKing).
@@ -3378,6 +3444,15 @@ struct Bot
             for (int d = 0; d < 4; d++)
                 out += std::string("SONAR ") + DIRC[d] + " " + std::to_string(sonarOut(m)) + "\n";
         }
+#if QUAL_KNOWN
+        if (QUAL_GOSSIP && qualSure() && !anyWarn && (out.find("SPLIT ") != std::string::npos || round < QUAL_GOSSIP_R) &&
+            out.find("SONAR ") == std::string::npos)
+        {
+            uint64_t m = encodeQualMap(); // name the map for the child (split turns) and for allies in line (early idle turns)
+            for (int d = 0; d < 4; d++)
+                out += std::string("SONAR ") + DIRC[d] + " " + std::to_string(sonarOut(m)) + "\n";
+        }
+#endif
         if (PORTAL_ECHO_GUARD)
         {
             // remember what our warn rays probed: next turn's echo counts tell us
@@ -3475,7 +3550,7 @@ struct Bot
     // UNK_KING: every dragon computes the same shrinking reserve (14 at r300 -> 3 at r490)
     int feedReserveNow() const
     {
-        if (UNK_KING && (!w.known || (SPRINT_KNOWN && SPRINT_KING_FULL && isSprintMap(w.known->name))))
+        if (UNK_KING && (!w.known || (SPRINT_KING_FULL && ((SPRINT_KNOWN && isSprintMap(w.known->name)) || w.qualOn()))))
             return std::max(3, 14 - (std::clamp(round, 300, 490) - 300) * 11 / 190);
         return RP.feedReserve;
     }

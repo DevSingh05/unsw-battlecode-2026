@@ -1410,6 +1410,61 @@
 #define SPRINT_ROUTE_NOWEAK 1
 #endif
 
+// ---- QUAL_KNOWN (12 Oct): the 14 Qualifier maps, in the ranked pool since 10 Oct and appended to maps_data.hpp as
+// MAP33..MAP46 (work/kn1/append_maps.py; old entries and their order unchanged). Bit i = map i of QUAL_MAPS in main.cpp
+// (0x3FFF = all 14). A set bit adopts that map as a known map and treats it like a Sprint map (UNK_KING seed/feed,
+// small-map ram guard, SPRINT_KING_FULL reserve and crown-early). 0 = the 14 stay unseen maps (qf1 behaviour: their
+// candidates are skipped, so the old maps and every unseen map play as before).
+#ifndef QUAL_KNOWN
+#define QUAL_KNOWN 0
+#endif
+// QUAL_ROUTE: bit i = keep PEARL_ROUTE=2's route valuation on known Qualifier map i (what SPRINT_ROUTE does for the
+// Sprint maps; weakhold showed this must be chosen per map).
+#ifndef QUAL_ROUTE
+#define QUAL_ROUTE 0x3FFF
+#endif
+// QUAL_QEKR: bit i = QE_KR (pearl-aware early-queen kamikaze reach) stays on for known Qualifier map i. qf1 played
+// these maps with it on (never-identified gate); 0x3FFF keeps that. Needs QE_KR > 0.
+#ifndef QUAL_QEKR
+#define QUAL_QEKR 0x3FFF
+#endif
+// QUAL_GOSSIP: map word for the Qualifier maps. Four of them share every start tile with an older map (Ezam = Maze and
+// Trauma, Detention = Schooltime, Troll Australia = Australia, Trolley Problem (Buffed) = Trolley Problem), and the
+// first difference is 4-23 steps from the starts, so starters and split children adopt the older look-alike first
+// (audit 12 Oct: 25% of Ezam processes began as Maze, the parked queen never corrected). 1 = a dragon that has adopted
+// a Qualifier map and has no other candidate left (or was told) says so on its idle sonar: on split turns (the child
+// hears it) and on any idle turn before round QUAL_GOSSIP_R. A listener that still holds that map as a candidate adopts
+// it and drops the rest. Only Qualifier-map adopters ever send it, so the 17 old maps are untouched.
+#ifndef QUAL_GOSSIP
+#define QUAL_GOSSIP 0
+#endif
+#ifndef QUAL_GOSSIP_R
+#define QUAL_GOSSIP_R 200
+#endif
+// QUAL_CROWD: bit i = crowd penalty QUAL_CROWD_V on known Qualifier map i (as CROWD_MAPS does for Australia). On
+// Trolley Problem the known-map build sends every unit to the nearest hot pocket, where they box each other in
+// (12 Oct: 703 pearls eaten against 3,182 for the unseen-map build on the same map).
+#ifndef QUAL_CROWD
+#define QUAL_CROWD 0
+#endif
+#ifndef QUAL_CROWD_V
+#define QUAL_CROWD_V 3.0
+#endif
+// QUAL_QPARK: bit i = Portals-style queen park on known Qualifier map i (RP.qPark 1: she never crosses a portal, holds
+// the spot furthest from portal mouths and pearl spawns in her portal-free home region, and is crowned at the king seed
+// round like PM_QPARK_PORTALS). Meant for Atlantis, where 96% of the food is behind portals: the known-map build wins
+// the economy there (2,400 pearls against 130) but its queen dies around r100 in the pearl field and it then loses the
+// r500 queen tiebreak to any queen that stayed home.
+#ifndef QUAL_QPARK
+#define QUAL_QPARK 0
+#endif
+#ifndef QUAL_QPARK_QKFROM
+#define QUAL_QPARK_QKFROM 0 // the parked queen is crowned at max(king seed round, this)
+#endif
+#ifndef QUAL_QPARK_QKCAP
+#define QUAL_QPARK_QKCAP 0 // feeders stop feeding the crowned queen at this length (0 = no cap)
+#endif
+
 // ---- v41: FREE_STEPS (notes/newrules/V41.md)
 // FREE_STEPS=1: dragons with F=ceil(L/4)>=2 also score free multi-step paths of 2..F steps (beam search over the
 // normal per-move evaluation run on a virtual body), and take the best one when it beats the chosen 1-step by FS_MARGIN.
