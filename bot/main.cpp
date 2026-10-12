@@ -84,7 +84,6 @@ struct RuntimeParams
     int qSmall = 0;                          // R10 LANE_QSMALL: small home queen, never fed
 #if QUAL_KNOWN
     int qParkIn = 0;                         // QUAL_QPARK_IN: the queen's process sets qPark = 1 once she has left her spawn's portal-free region
-    int qHomeR = 0;                          // QUAL_QHOME: home leash radius for the queen (0 = off)
 #endif
 };
 RuntimeParams RP;
@@ -103,6 +102,20 @@ int qualMapIndex(const char* name)
     return -1;
 }
 // a Qualifier map whose QUAL_KNOWN bit is set (adopted and treated like a Sprint map)
+// QUAL_QHOME / QHOME_OLD: queen home-leash radius for a known map (0 = no leash)
+int qhomeKnownRadius(const char* name)
+{
+    static const char* const O[15] = {"Around UNSW", "Australia", "Islands", "Slithery Fight", "Schooltime", "Autarky",
+                                      "Default", "Trophy", "Devil", "Queen Of Spades", "Prisoners Dilemma", "Stripes",
+                                      "Tower Defense", "weakhold", "Trauma"}; // QHOME_OLD_MAPS
+    std::string n(name ? name : "");
+    if (int qi = qualMapIndex(name); qi >= 0)
+        return (((QUAL_KNOWN) >> qi & 1) && ((QUAL_QHOME) >> qi & 1)) ? QUAL_QHOME_R : 0;
+    for (int i = 0; i < 15; i++)
+        if (n == O[i])
+            return ((QHOME_OLD) >> i & 1) ? QHOME_OLD_R : 0;
+    return 0;
+}
 bool qualKnown(const char* name)
 {
     if (!(QUAL_KNOWN))
@@ -213,8 +226,6 @@ void applyMapParams(const char* name, int tiles = 0)
             if (QUAL_QPARK_FEED > 0)
                 RP.feedStart = QUAL_QPARK_FEED;
         }
-        if (int qi = qualMapIndex(name); qi >= 0 && ((QUAL_QHOME) >> qi & 1))
-            RP.qHomeR = QUAL_QHOME_R; // QUAL_QHOME: the queen forages near her spawn
 #endif
         return;
     }
@@ -518,6 +529,7 @@ struct World
     // only while known != nullptr. Cached so the per-turn hooks cost an int test, not string compares (the search
     // budgets run on the CPU-points clock, so extra work per turn shifts decisions on every map).
     int qualIdx = -1;
+    int qhKnownR = 0; // QUAL_QHOME / QHOME_OLD: leash radius of the adopted map (set by adopt(); read only while known)
     bool qualTold = false; // QUAL_GOSSIP: an ally that was sure named this map
     bool qualOn() const { return (QUAL_KNOWN) && known && qualIdx >= 0; }
     bool qualOn(int mask) const { return (QUAL_KNOWN) && known && qualIdx >= 0 && (mask >> qualIdx & 1); }
@@ -527,8 +539,15 @@ struct World
 #if QUAL_KNOWN
         qualIdx = qualKnown(m->name) ? qualMapIndex(m->name) : -1;
 #endif
+#if QHOME_ON
+        qhKnownR = qhomeKnownRadius(m->name);
+#endif
         everKnown = true; // QF1: sticky, never cleared (a later drop or MATCH_STRICT reset keeps it)
         applyMapParams(m->name, m->w * m->h);
+#if QHOME_ON
+        if ((QHOME_CROWN) && qhKnownR > 0 && RP.kingDeclare)
+            RP.queenKing = 1; // QHOME_CROWN: the leashed queen is the queen-king from the seed round
+#endif
         sym = m->sym;
 #if SPRINT_DEBUG
         std::fprintf(stderr, "ADOPT %s id=%d team=%c\n", m->name, myId, myTeam);
@@ -540,7 +559,60 @@ struct World
             gmin[t] = m->gmin[t];
             gmax[t] = m->gmax[t];
         }
+#if QUAL_KNOWN
+        sealSig = 0; // QUAL_TRAPSEAL: nxt was rewritten, seal again
+#endif
     }
+#if QUAL_KNOWN
+    // QUAL_TRAPSEAL: seal the edges into every pearl-less one-door portal room of the adopted map and, with
+    // QUAL_PBLOCK, of each known Qualifier map that is still a candidate. Redone whenever that set changes (a look-alike
+    // ruled out reopens its rooms). nxt is rebuilt from the adopted map first; nothing else edits it on a known map
+    // while SCH_DOORS is 0, so the seal is skipped when SCH_DOORS is on.
+    uint64_t sealSig = 0;
+    void sealRooms(const KnownMap& c)
+    {
+        std::vector<char> trap(N, 0);
+        bool any = false;
+        for (int t = 0; t < N; t++)
+        {
+            if (c.gmax[t] != 0)
+                continue;
+            int cnt = 0, pd = -1;
+            for (int d = 0; d < 4; d++)
+                if (c.nxt[t * 4 + d] >= 0)
+                    cnt++, pd = d;
+            if (cnt == 1 && c.nxt[t * 4 + pd] != plainStep(t, pd))
+                trap[t] = 1, any = true;
+        }
+        if (!any)
+            return;
+        for (int i = 0; i < N * 4; i++)
+            if (nxt[i] >= 0 && trap[nxt[i]] && !trap[i / 4])
+                nxt[i] = -1;
+    }
+    void applySeals()
+    {
+        if (!(QUAL_TRAPSEAL) || SCH_DOORS || !known)
+            return;
+        uint64_t sig = 1469598103934665603ULL ^ static_cast<uint64_t>(known - KNOWN_MAPS + 1);
+        if (QUAL_PBLOCK)
+            for (int c : candidates)
+                if (c >= KNOWN_MAP_COUNT - 14 && &KNOWN_MAPS[c] != known)
+                    sig = (sig ^ static_cast<uint64_t>(c + 1)) * 1099511628211ULL;
+        if (sig == sealSig)
+            return;
+        const bool redo = sealSig != 0;
+        sealSig = sig;
+        if (redo)
+            for (int i = 0; i < N * 4; i++)
+                nxt[i] = known->nxt[i];
+        sealRooms(*known);
+        if (QUAL_PBLOCK)
+            for (int c : candidates)
+                if (c >= KNOWN_MAP_COUNT - 14 && &KNOWN_MAPS[c] != known)
+                    sealRooms(KNOWN_MAPS[c]);
+    }
+#endif
 
     // Edge letter seen in vision: '.', 'w', or a portal id.
     static int edgeKind(const std::string& s) { return s == "." ? 0 : s == "w" ? 1 : 2; }
@@ -1121,6 +1193,9 @@ struct Bot
             guessFrame();
 
         filterByCountdowns();
+#if QUAL_KNOWN
+        w.applySeals(); // QUAL_TRAPSEAL (after the map and the candidate list are settled for this turn)
+#endif
         if (w.nkBirth < 0)
             w.nkBirth = (!w.known && w.candidates.empty()) ? 1 : 0; // QF1: decided at this process's first turn, sticky
         if ((UNK_KING || UNK_SMALL_RAMGUARD) && !w.known && w.candidates.empty())
@@ -1137,6 +1212,10 @@ struct Bot
                 }
                 if (UNK_SMALL_RAMGUARD && w.N <= 750)
                     RP.ramGuard = 2;
+#if QHOME_ON
+                if ((QHOME_CROWN) && (QHOME_UNK) > 0 && w.N >= QHOME_UNK_MIN_TILES && w.N <= QHOME_UNK_MAX_TILES && UNK_KING)
+                    RP.queenKing = 1; // QHOME_CROWN on a leashed unseen map
+#endif
                 if (QPARK_UNK && UNK_KING)
                     RP.queenKing = QPG_CROWN, RP.qPark = 3, RP.qkCap = QPG_QKCAP, RP.qpLate = QPARK_UNK >= 2; // ROUND4: generic queen park on unseen maps
             }
@@ -3052,29 +3131,40 @@ struct Bot
     std::vector<int> qpDist;
 #if QUAL_KNOWN
     std::vector<char> qpInHome; // QUAL_QPARK_IN: the portal-free region of the queen's spawn tile
-    // QUAL_QHOME: the queen's spawn tile (her head on the first turn of her process; a look-alike map may be adopted
-    // some rounds later, so it is recorded on every map) and plain walking distance from it
+#endif
+#if QHOME_ON
+    // QUAL_QHOME / QHOME_OLD / QHOME_UNK: the queen's spawn tile (her head on the first turn of her process; a look-alike
+    // map may be adopted some rounds later, so it is recorded on every map) and plain walking distance from it
     int qhSpawn = -1;
     bool qhFlee = false;
     std::vector<int> qhDist;
+    const KnownMap* qhFor = nullptr; // the map qhDist was built on (rebuilt when the adopted map changes)
+    int qhomeR() const
+    {
+        if (w.known)
+            return w.qhKnownR;
+        return ((QHOME_UNK) > 0 && w.N >= QHOME_UNK_MIN_TILES && w.N <= QHOME_UNK_MAX_TILES) ? (QHOME_UNK) : 0;
+    }
     double qhomeScore(int t) const
     {
-        if (RP.qHomeR <= 0 || !amQueen() || qhDist.empty() || qhFlee)
+        const int hr = qhomeR();
+        if (hr <= 0 || !amQueen() || qhDist.empty() || qhFlee)
             return 0.0;
-        return -QUAL_QHOME_W * std::max(0, qhDist[t] - RP.qHomeR);
+        return -QUAL_QHOME_W * std::max(0, qhDist[t] - hr);
     }
 #endif
     void qparkPrep()
     {
         qpFlee = false;
-#if QUAL_KNOWN
+#if QHOME_ON
         if (amQueen() && myHead >= 0 && qhSpawn < 0)
             qhSpawn = myHead;
         qhFlee = false;
-        if (RP.qHomeR > 0 && amQueen() && myHead >= 0)
+        if (qhomeR() > 0 && amQueen() && myHead >= 0)
         {
-            if (qhDist.empty())
+            if (qhDist.empty() || qhFor != w.known)
             {
+                qhFor = w.known;
                 qhDist.assign(w.N, 99);
                 std::vector<int> q{qhSpawn};
                 qhDist[qhSpawn] = 0;
@@ -3090,6 +3180,8 @@ struct Bot
                 if (o.head && o.team != w.myTeam && wrapDist(o.tile, myHead) <= PM_QP_FLEE)
                     qhFlee = true; // an enemy head in reach: normal queen evasion decides
         }
+#endif
+#if QUAL_KNOWN
         if (RP.qParkIn && RP.qPark == 0 && amQueen() && myHead >= 0)
         {
             if (qpInHome.empty())
@@ -6656,6 +6748,10 @@ struct Bot
             if ((QVAULT & 2) && !RP.qPark && amQueen() && w.known && std::strcmp(w.known->name, "Australia") == 0 && !queenSafe() && !visible[t] && t != w.plainStep(myHead, d) &&
                 area < QVAULT_AUS_AREA)
                 score -= QVAULT_AUS_PEN; // DGU F2 QVAULT bit 2: early queen never enters the Australia portal vault
+#if QUAL_KNOWN
+            if (amQueen() && !RP.qPark && w.qualOn(QUAL_QVAULT) && t != w.plainStep(myHead, d) && area < QVAULT_AUS_AREA)
+                score -= QVAULT_PEN; // QUAL_QVAULT: never through a portal into a small room
+#endif
             if (DIVE_VALUE && (DV_PARTS & 8) && !pump && !pfIn && t != holdTile && myLen <= PF_MAXLEN && !pfDepth.empty() &&
                 pfDepth[t] > 0 && pfDepth[myHead] == 0)
             {
@@ -6875,9 +6971,8 @@ struct Bot
                 score += qparkScore(t, d, eo.dead); // ROUND3 P7 PM_QPARK
             if (RP.qSmall)
                 score += qsmScore(t); // R10 LANE_QSMALL
-#if QUAL_KNOWN
-            if (RP.qHomeR > 0)
-                score += qhomeScore(t); // QUAL_QHOME
+#if QHOME_ON
+            score += qhomeScore(t); // QUAL_QHOME / QHOME_OLD / QHOME_UNK (0 unless this process is a leashed queen)
 #endif
             if (PM_TD_PULL > 0)
                 score += tdPullScore(t); // DGU F4 PM_TD_PULL

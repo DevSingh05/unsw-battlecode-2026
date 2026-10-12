@@ -1494,6 +1494,60 @@
 #ifndef QUAL_QHOME_W
 #define QUAL_QHOME_W 25.0
 #endif
+// QUAL_QVAULT: bit i = on known Qualifier map i the queen takes -QVAULT_PEN for a portal step into a region of fewer than
+// QVAULT_AUS_AREA free tiles, at any time and also when fleeing. Troll Australia has one-tile rooms whose only door is
+// the portal you came through: 12 Oct local runs, the team-B queen died there at r23 (shed to L2, then hit herself) in
+// 4 of 6 games on two seeds, after stepping W from (29,39) with an enemy head near.
+#ifndef QUAL_QVAULT
+#define QUAL_QVAULT 0
+#endif
+// QUAL_TRAPSEAL: 1 = on a known map, every edge that leads into a one-door portal room with no pearl spawn is treated as
+// kelp. Such a room is a tile whose only open side is a portal; a dragon of length 2 or more that steps in comes back out
+// onto its own neck. Troll Australia has four (the sealed ends of Australia's vault portals: (6,23), (7,23), (56,40),
+// (57,40)) and Caution has four; Portals and Stripes have one-door rooms too, but with pearls (their vault economy), and
+// those stay open. Server replays, 42 Troll Australia games: we lost 1,118 units (3,122 length) and 9 queens in those
+// four tiles, 33 units a game as an unseen map and 8 a game once the map was known (corpse pearls keep luring units in).
+#ifndef QUAL_TRAPSEAL
+#define QUAL_TRAPSEAL 0
+#endif
+// QUAL_PBLOCK: 1 (with QUAL_TRAPSEAL) = while another known Qualifier map is still a candidate, its trap rooms are sealed
+// too. On Troll Australia every starter first adopts Australia (same start tiles), whose data shows those rooms open;
+// the team-B queen walked into (6,23) at r21 in 4 of 6 local games before she had seen a difference.
+#ifndef QUAL_PBLOCK
+#define QUAL_PBLOCK 0
+#endif
+// QHOME_OLD: the same queen home leash on older known maps. Bit order = QHOME_OLD_MAPS in main.cpp: Around UNSW 0,
+// Australia 1, Islands 2, Slithery Fight 3, Schooltime 4, Autarky 5, Default 6, Trophy 7, Devil 8, Queen Of Spades 9,
+// Prisoners Dilemma 10, Stripes 11, Tower Defense 12, weakhold 13, Trauma 14 (Portals and Maze have their own parks).
+// qf1 replays, 10-12 Oct: on Around UNSW our queen was alive at the end in 1 of 32 games and theirs in 17 of 32; she was
+// 22 tiles from her spawn at r100, theirs 7; "our queen dead, theirs alive" decided 15 of 21 losses.
+#ifndef QHOME_OLD
+#define QHOME_OLD 0
+#endif
+#ifndef QHOME_OLD_R
+#define QHOME_OLD_R 8
+#endif
+// QHOME_UNK: leash radius on maps with no known map adopted (0 = off), for boards of at least QHOME_UNK_MIN_TILES tiles.
+// Distances come from the plain grid as known on her first turn (walls not seen yet do not count).
+#ifndef QHOME_UNK
+#define QHOME_UNK 0
+#endif
+#ifndef QHOME_UNK_MIN_TILES
+#define QHOME_UNK_MIN_TILES 2000
+#endif
+// ...and at most this many (4,000 leaves out the 64x64 Thermopylae, where the unseen-map queen already survives best:
+// alive at the end in 10 of 33 qf1 games, and locally the leash cut that from 4 of 4 to 2 of 4)
+#ifndef QHOME_UNK_MAX_TILES
+#define QHOME_UNK_MAX_TILES 1000000
+#endif
+// QHOME_CROWN: 1 = on every leashed map the queen is also the queen-king (RP.queenKing): from the king seed round she
+// is a king, units that hear her feed her, and no rival crowns while she is heard; units out of earshot play the normal
+// king game. km3 on Whale Song vs the DEV team (12 Oct): our leashed queen lived to r500 at L12 and lost to theirs at L53.
+#ifndef QHOME_CROWN
+#define QHOME_CROWN 0
+#endif
+// any leash compiled in?
+#define QHOME_ON (((QUAL_KNOWN) && (QUAL_QHOME)) || (QHOME_OLD) || (QHOME_UNK))
 
 // ---- v41: FREE_STEPS (notes/newrules/V41.md)
 // FREE_STEPS=1: dragons with F=ceil(L/4)>=2 also score free multi-step paths of 2..F steps (beam search over the
