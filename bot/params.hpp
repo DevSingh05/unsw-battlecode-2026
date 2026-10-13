@@ -1647,6 +1647,10 @@
 #ifndef LF_ENEMY_R
 #define LF_ENEMY_R 4
 #endif
+// LF_QUAL: bit mask over the Qualifier maps (QUAL_MAPS order); non-zero = LOCAL_FEED acts only on those known maps.
+#ifndef LF_QUAL
+#define LF_QUAL 0
+#endif
 #ifndef LF_MAPS
 #define LF_MAPS 0
 #endif

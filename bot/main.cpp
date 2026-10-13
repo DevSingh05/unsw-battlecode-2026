@@ -6574,7 +6574,7 @@ struct Bot
         // ---- LOCAL_FEED: a small unit next to a clearly longer ally dies where it stands (larp's local consolidation)
         if (round >= (LOCAL_FEED) && !amQueen() && !iAmKing() && !queenSafe() && myLen <= LF_MAXLEN && myHead >= 0 &&
             units > feedReserveNow() &&
-            ((LF_MAPS) || (w.known ? (w.qualOn() && !RP.qPark && !RP.qParkIn) : (w.N >= QHOME_UNK_MIN_TILES))))
+            ((LF_QUAL) ? w.qualOn(LF_QUAL) : ((LF_MAPS) || (w.known ? (w.qualOn() && !RP.qPark && !RP.qParkIn) : (w.N >= QHOME_UNK_MIN_TILES)))))
         {
             bool enemyNear = false, host = false;
             for (auto& o : segs)
