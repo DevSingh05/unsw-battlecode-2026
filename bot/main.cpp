@@ -224,6 +224,8 @@ void applyMapParams(const char* name, int tiles = 0)
         }
         if (int qi = qualMapIndex(name); qi >= 0 && ((QUAL_CROWD) >> qi & 1))
             RP.crowd = QUAL_CROWD_V; // QUAL_CROWD: spread the swarm on this known Qualifier map
+        if (int qi = qualMapIndex(name); qi >= 0 && ((QUAL_NODIVE) >> qi & 1))
+            RP.diveStopRound = 1; // QUAL_NODIVE: no pocket dives on this known Qualifier map
         if (int qi = qualMapIndex(name); qi >= 0 && ((QUAL_QPARK) >> qi & 1))
         {
             RP.queenKing = 1, RP.qPark = 1, RP.qkFrom = QUAL_QPARK_QKFROM, RP.qkCap = QUAL_QPARK_QKCAP; // QUAL_QPARK: parked queen, crowned at the seed round

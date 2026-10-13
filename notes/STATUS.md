@@ -1,20 +1,22 @@
 # STATUS (single source of truth)
 
-Last updated: 2026-10-12 17:00 EDT. All updates to the user come from this page. Times are US Eastern.
+Last updated: 2026-10-13 00:30 EDT. All updates to the user come from this page. Times are US Eastern.
 
 ## Live and mainline
-- **LIVE since Mon 12 Oct 4:34 PM: km4 (id 22267)** = qf1 plus, on the new maps: Atlantis, Maelstrom, Troll Australia
-  and Whale Song played as known maps; Atlantis queen parked inside the pearl region and fed; Troll Australia trap
-  rooms sealed; queen home leash (8 steps) on Whale Song, Troll Australia, Around UNSW and unseen big maps. The 17 old
-  maps except Around UNSW play as qf1 (same games on 13 of them in a same-seed check). Copies: `variants/km1`..`km4`.
-  **Fallback order: km3 (22258), km1 (22249), qf1 (21001)**; activate with `POST /api/v1/submissions/<id>/activate`.
+- **LIVE since Mon 12 Oct 11:26 PM: km6 (id 22332)** = qf1 plus: seven Qualifier maps played as known maps (Atlantis,
+  Maelstrom, Troll Australia, Whale Song, Hive, Detention, Ouroboros; the last three with a crowd penalty); Atlantis
+  queen parked inside the pearl region and fed; Troll Australia trap rooms sealed (and Australia's vault door kept
+  open); small home queen (cut to 2 in round 0, leash of 8 steps, fed from r350 to about 25) on Whale Song, Troll
+  Australia, Hive, Ouroboros, Around UNSW and unseen big maps; growth splits stop at 61 units. Copies:
+  `variants/km1`..`km6`. **Fallback order: km5 (22278), km4 (22267), qf1 (21001)**; activate with
+  `POST /api/v1/submissions/<id>/activate`.
 - **This session (unsw-battlecode-de) owns the server for now** (user, 12 Oct: battlecode_main's account is out of usage).
 - **Not in the Grand Final** (lost the Qualifier round of 32 to Sabotage-d, 3-4). Work now is ladder rating: 2177 #25 at
-  the start of 12 Oct, 2196 #21 at 5:00 PM after a dip to 2144 (first ranked series on fresh uploads swing 20-30 Elo).
+  the start of 12 Oct, 2240 #15 at 11:50 PM after a dip to 2144 (first ranked series on fresh uploads swing 20-30 Elo).
   The pool has 31 maps since 10 Oct (17 old + the 14 Qualifier maps).
 - **Allowances in use:** 60 hand-started games/h go to ranked series (`replays/auto_ranked`, panel SSS, TTT, FTM,
   Computers, larp, WeHaveQuizzes, glyph team, Codehammer, chat gippy tea); the separate 60/h against DEV teams is the
-  test bed: unranked series vs dev test 1 on the maps under test (`replays/auto_dev13`). Stop either with a `STOP`
+  test bed: unranked series vs dev test 1 on the maps under test (`replays/auto_dev15`). Stop either with a `STOP`
   file in its folder. Judge with `tools/analysis/oct12/build_watch.py` and `watch_mech.py`.
 - **Uploads are bundled** (about one every two hours): each new upload widens the rating and the first series swing hard.
 - `bot/` carries the `QUAL_*` flags (default 0) and a 47-map `maps_data.hpp`. Lines below this point in this section

@@ -1450,6 +1450,12 @@
 #ifndef QUAL_CROWD_V
 #define QUAL_CROWD_V 3.0
 #endif
+// QUAL_NODIVE: bit i = no pocket dives at all on known Qualifier map i (RP.diveStopRound = 1). Trolley Problem as a
+// known map: every unit goes to the nearest hot dead-end pocket (38-39, 3-8) and dies there (12 Oct, 648 pearls eaten
+// against 3,048 for the unseen-map build).
+#ifndef QUAL_NODIVE
+#define QUAL_NODIVE 0
+#endif
 // QUAL_QPARK: bit i = Portals-style queen park on known Qualifier map i (RP.qPark 1: she never crosses a portal, holds
 // the spot furthest from portal mouths and pearl spawns in her portal-free home region, and is crowned at the king seed
 // round like PM_QPARK_PORTALS). Meant for Atlantis, where 96% of the food is behind portals: the known-map build wins
