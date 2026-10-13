@@ -1558,6 +1558,20 @@
 #ifndef OLD_CROWD_V
 #define OLD_CROWD_V 3.0
 #endif
+// QHIDE_KEEPOUT: > 0 = non-queen units keep this many plain steps away from our queen's hide tile (QHIDE maps that are
+// not QHIDE_BIG; units that are feeding her are exempt); the cost is QHIDE_KEEPOUT_PEN per step inside.
+#ifndef QHIDE_KEEPOUT
+#define QHIDE_KEEPOUT 0
+#endif
+// QHIDE_KEEPOUT_MASK: 0 = every hide entry, else bit i = only QHIDE_SPOTS entry i (QHIDE bit order). Local 13 Oct vs
+// km16 with radius 3: Athena 3-1 and 4-0 (queen alive 2 of 4 against 0 of 4), Australia 1-3 and 0-2 (the escorts and the
+// vault food are inside the zone), no effect on Around UNSW, Devil, Metro.
+#ifndef QHIDE_KEEPOUT_MASK
+#define QHIDE_KEEPOUT_MASK 0
+#endif
+#ifndef QHIDE_KEEPOUT_PEN
+#define QHIDE_KEEPOUT_PEN 60.0
+#endif
 // UBOX: 1 = a step that will enclose the unit in a small region (walls, its own body as it lies after the step, eating
 // counted as a turn in which the tail does not move) costs UBOX_PEN + UBOX_PER per point below UBOX_MIN_GAIN, where the
 // gain is (pearls eaten in there) - 2 when it can still split out and minus its length when it cannot. Bit 2 = only for

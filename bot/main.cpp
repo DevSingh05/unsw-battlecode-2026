@@ -3189,6 +3189,75 @@ struct Bot
         return -QHUNT_W * std::min(qhuDist[t], 80);
     }
 #endif
+#if QHIDE
+    // ---- QHIDE_KEEPOUT (13 Oct): our own units box the hiding queen. Athena since km13: 10 of her 11 deaths are her own
+    // move into an ally's body or her own, with allied bodies on every side of the hide tile (it has food next to it).
+    // Every non-queen unit on a known map works out the hide tile from the same table (our queen's start tile comes
+    // from the map's dragon list) and pays QHIDE_KEEPOUT_PEN per step inside QHIDE_KEEPOUT plain steps of it.
+    std::vector<int> qkoDist;
+    const KnownMap* qkoFor = nullptr;
+    int qkoTile = -1;
+    void qkoPrep()
+    {
+        if ((QHIDE_KEEPOUT) <= 0 || amQueen() || !w.known || w.swapState < 0)
+        {
+            qkoTile = -1;
+            return;
+        }
+        if (qkoFor == w.known)
+            return;
+        qkoFor = w.known;
+        qkoTile = -1;
+        qkoDist.clear();
+        const KnownMap* m = w.known;
+        const int mine = ((w.myTeam == 'A') != (w.swapState == 1)) ? 0 : 1; // our team's number in the map file
+        int spawn = -1;
+        if (m->dragons && m->dragonCount >= 2)
+            for (int id = 0; id < 2; id++)
+                if (m->dragons[id * 4] == mine)
+                    spawn = w.idx(m->dragons[id * 4 + 2], m->dragons[id * 4 + 3]);
+        if (spawn < 0)
+            return;
+        for (int i = 0; i < QHIDE_COUNT && qkoTile < 0; i++)
+        {
+            const QHideSpot& sp = QHIDE_SPOTS[i];
+            if (!((QHIDE) >> i & 1) || ((QHIDE_BIG) >> i & 1) || sp.w != w.W || sp.h != w.H)
+                continue;
+            if ((QHIDE_KEEPOUT_MASK) != 0 && !((QHIDE_KEEPOUT_MASK) >> i & 1))
+                continue; // QHIDE_KEEPOUT_MASK: only on these hide entries
+            if (sp.skip && std::strcmp(m->name, sp.skip) == 0)
+                continue;
+            for (int k = 0; k < 2; k++)
+                if (sp.spawn[k] == spawn)
+                    qkoTile = sp.hide[k];
+        }
+        if (qkoTile < 0)
+            return;
+        qkoDist.assign(w.N, 99);
+        std::vector<int> q{qkoTile};
+        qkoDist[qkoTile] = 0;
+        for (size_t i = 0; i < q.size(); i++)
+        {
+            if (qkoDist[q[i]] > (QHIDE_KEEPOUT))
+                continue;
+            for (int d = 0; d < 4; d++)
+            {
+                int v = step(q[i], d);
+                if (v >= 0 && v == w.plainStep(q[i], d) && qkoDist[v] == 99)
+                    qkoDist[v] = qkoDist[q[i]] + 1, q.push_back(v);
+            }
+        }
+    }
+    double qkoScore(int t) const
+    {
+        if (qkoTile < 0 || qkoDist.empty() || qkoDist[t] > (QHIDE_KEEPOUT))
+            return 0.0;
+        return -(QHIDE_KEEPOUT_PEN) * ((QHIDE_KEEPOUT) + 1 - qkoDist[t]);
+    }
+#else
+    void qkoPrep() {}
+    double qkoScore(int) const { return 0.0; }
+#endif
 #if QHUNT
     bool qhuHoldNow() const { return qhuRole() && myLen < (QHUNT_HOLD) + 2; }
     int qhuSurplus() const { return qhuRole() ? myLen - (QHUNT_HOLD) : 0; }
@@ -6887,6 +6956,7 @@ struct Bot
         }
 #endif
         flPrep(); // FEED_LEAVE (before anything this turn values a pearl)
+        qkoPrep(); // QHIDE_KEEPOUT
         // ---- feeding the king: die just in front of it so it eats our body
         bool feeding = shouldFeed() && !consActive && !queenSafe(); // consActive is false with CONS_R off
         int target = feeding ? feedTarget() : -1;
@@ -7854,6 +7924,8 @@ struct Bot
                 score -= (SCATTER_PULL) * std::min(scDist[t], static_cast<int>(SCATTER_CAP)); // SCATTER
             if (flKing >= 0 && flReserved(t) && visible[t] && w.pearlMem[t])
                 score -= FEED_LEAVE_PEN; // FEED_LEAVE: that pearl is the king's
+            if (!feeding)
+                score += qkoScore(t); // QHIDE_KEEPOUT (0 unless t is next to our queen's hide tile)
             if (hotTarget >= 0 && !pump) // stay near fast pockets (presence wins them)
                 score -= HOT_PULL * std::min(bfsDist[hotTarget], HOT_PULL_RANGE);
             if (whcOn)

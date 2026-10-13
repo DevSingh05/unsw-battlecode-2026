@@ -1,9 +1,9 @@
 # STATUS (single source of truth)
 
-Last updated: 2026-10-13 18:50 EDT. All updates to the user come from this page. Times are US Eastern.
+Last updated: 2026-10-13 19:35 EDT. All updates to the user come from this page. Times are US Eastern.
 
 ## Live and mainline
-- **LIVE since Tue 13 Oct 5:26 PM: km16 (id 22435)** = qf1 plus, in order:
+- **LIVE since Tue 13 Oct 7:32 PM: km17 (id 22447)** = qf1 plus, in order:
   - km1-km6 (12 Oct): seven Qualifier maps played as known maps (Atlantis, Maelstrom, Troll Australia, Whale Song,
     Hive, Detention, Ouroboros), Atlantis queen parked inside the pearl field, Troll Australia trap rooms sealed, small
     leashed home queen on Whale Song, Troll Australia, Hive, Ouroboros and unseen mid-size maps, growth splits stop at
@@ -43,29 +43,32 @@ Last updated: 2026-10-13 18:50 EDT. All updates to the user come from this page.
     our long-dragon deaths the killer was in view at distance 2-3, where only its head shows); hunters keep length 5
     (reach 5 instead of 1-3); the **enclosure test** on Islands, Australia and Maelstrom (a unit no longer eats its way
     into a dead end or a ring of its own body that it cannot leave; Islands locally 1.4-2.7 times km15's length).
-  km16 on the server (50 min): ranked 59-41 (+3 points over the expectation); our longest dragon was rammed in the
-  last 60 rounds in 2 of 75 games (40 of 381 before, 31 of them lost).
+  - km17 (7:32 PM): our own units keep out of the queen's hide zone on Athena (10 of her 11 deaths there were her own
+    move into an ally's or her own body; local 11-1 with the zone), hunters also on Thermopylae and Tower Defense.
+  km16 on the server (two hours): **ranked 162-113, 59%, the best of the builds so far** (+4 points over the
+  expectation); Maelstrom 17-2, Metro 9-4, Australia 9-8 with 1.9 times the opponent's length at r300 (0.4-0.5 before);
+  our longest dragon was rammed in the last 60 rounds in 2 of 75 games (40 of 381 before, 31 of them lost).
   km15 on the server (75 min): ranked 56-64, but 17-9 on the eight hunter maps (km14 19-21 there); on Around UNSW the
   opponent's queen now survives 2 of 9 games (17 of 29 before).
   km14 on the server (70 min): ranked 85-80, vs dev test 1 41-31 (km12 27-58, km13 6-14).
   km13 on the server (75 min, 74-74): Metro 5-6 with our queen alive in 4 of 10 (0-15 vs dev test 1 before), Islands
   4-6 (4-15 before), Around UNSW 2-6 with half the opponents' length at r100 (a third before).
   Server so far: Ezam 6-2 since km10 (0-10 before); the hideout wins where the opponent's queen dies (Devil 12-2, Queen Of Spades 4-0, Maelstrom 9-8) and
-  lost where it lives and is long (Slithery Fight 2-14, Islands 2-15). Copies: `variants/km1`..`km16`.
-  **Fallback order: km15 (22430), km14 (22425), km13 (22420), km12 (22382), qf1 (21001)**; activate with
+  lost where it lives and is long (Slithery Fight 2-14, Islands 2-15). Copies: `variants/km1`..`km17`.
+  **Fallback order: km16 (22435), km15 (22430), km14 (22425), km13 (22420), qf1 (21001)**; activate with
   `POST /api/v1/submissions/<id>/activate`.
 - **This session (unsw-battlecode-de) owns the server for now** (user, 12 Oct: battlecode_main's account is out of usage).
 - **Not in the Grand Final** (lost the Qualifier round of 32 to Sabotage-d, 3-4). Work now is ladder rating: 2177 #25 at
   the start of 12 Oct; 2205 #21 at 1:00 AM on 13 Oct; 2295 #13 at 3:12 AM when km7 went live (a 35-30 hour against
   top-12 teams); 2302 #12 at 5:50 AM; 2329 at 6:15 AM; **2306 #12 at 6:34 AM** when km12 went live (the rating swings 30-40 after
-  every upload); 2255-2275 through the morning (km12 ranked 60-60), 2234 #18 at 1:34 PM when km13 went live; 2281 #15 at 2:56 PM when km14 went live; 2255 #14 at 4:09 PM when km15 went live; **2183 #22 at 5:26 PM** when km16 went live. The rating swings by 100+ within minutes on single series (2054 to 2392 between 3:44 and 3:57 PM), so builds are judged by wins against the expectation and by the dev test 1 record, not by the rating. Each
+  every upload); 2255-2275 through the morning (km12 ranked 60-60), 2234 #18 at 1:34 PM when km13 went live; 2281 #15 at 2:56 PM when km14 went live; 2255 #14 at 4:09 PM when km15 went live; 2183 #22 at 5:26 PM when km16 went live; 2268 #16 at 7:08 PM; **2257 at 7:32 PM** when km17 went live. The rating swings by 100+ within minutes on single series (2054 to 2392 between 3:44 and 3:57 PM), so builds are judged by wins against the expectation and by the dev test 1 record, not by the rating. Each
   submission keeps its own rating; the team's is the active one's. The pool has 31 maps since 10 Oct (17 old + the 14 Qualifier maps).
 - **Allowances in use:** 60 hand-started games/h go to ranked series (`replays/auto_ranked`). Since 1:13 AM the panel is
   the teams we gain rating against per series (10-13 Oct data): SSS, TTT, horse, WeHaveQuizzes, Settlers, Codehammer,
   plus Cutlery and chat gippy tea; larp, Computers, forgot to mention and the hieroglyph team were dropped (we lose 3 to
   5 points a series against them); since 1:05 PM also without horse (22-43, -46 points) and chat gippy tea (7-23, -51),
   with test4 and Sponge added. The separate 60/h against DEV teams is the test bed: unranked series vs dev test 1
-  on Metro, Athena, Maelstrom, Islands, Australia (`replays/auto_dev25`). Stop either with a `STOP` file in
+  on Athena, Thermopylae, Tower Defense, Islands, Slithery Fight (`replays/auto_dev26`). Stop either with a `STOP` file in
   its folder. Judge with `tools/analysis/oct12/build_watch.py`, `by_build.py` and `watch_mech.py`.
 - **Open after km7:** the hidden queen stays at length 2, so she loses the tiebreak to any living enemy queen that is
   longer; the full late crown (to 25) got her rammed at r394-449 in local play, the small one (to 10) cost wins on
