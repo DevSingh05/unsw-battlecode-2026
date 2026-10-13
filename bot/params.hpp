@@ -1756,6 +1756,43 @@
 #ifndef QESC_WI
 #define QESC_WI 12.0
 #endif
+// QHIDE_BIG: bit i = on entry i the hideout queen keeps her length: no QHIDE_SMALL, radius QHIDE_R_BIG, QUEEN_SAFE
+// rules from round 0, and on the known map she is the queen-king from round QHIDE_BIG_FROM (cap QHIDE_BIG_CAP, 0 = none).
+// For maps where the queen starts long and the winners keep her long at home (Slithery Fight: she starts at 25; on the
+// server km7's hidden queen ended at 6-11 against dev test 1's 67-97 in the games both queens survived).
+#ifndef QHIDE_BIG
+#define QHIDE_BIG 0
+#endif
+#ifndef QHIDE_R_BIG
+#define QHIDE_R_BIG 5
+#endif
+// QHIDE_BIG_NOSPLIT: 1 = the QHIDE_BIG queen makes no voluntary split at all (she keeps her starting length), and her
+// leash radius grows with her: QHIDE_R_BIG + length / QHIDE_BIG_RDIV.
+#ifndef QHIDE_BIG_NOSPLIT
+#define QHIDE_BIG_NOSPLIT 0
+#endif
+#ifndef QHIDE_BIG_RDIV
+#define QHIDE_BIG_RDIV 6
+#endif
+#ifndef QHIDE_BIG_FROM
+#define QHIDE_BIG_FROM 100
+#endif
+#ifndef QHIDE_BIG_CAP
+#define QHIDE_BIG_CAP 0
+#endif
+// QHIDE_RUN: the hideout queen runs from a scout instead of circling (0 = off). While an enemy head is in view within
+// QHIDE_RUN walking steps of her head, every step is worth QHIDE_RUN_W per walking step of distance from the nearest
+// visible enemy head (counted to QHIDE_RUN_CAP). km7 on the server: a single length 2-3 unit walks up over five to ten
+// rounds while she keeps turning inside the corner, 4 steps from it, until every exit is next to its head.
+#ifndef QHIDE_RUN
+#define QHIDE_RUN 0
+#endif
+#ifndef QHIDE_RUN_W
+#define QHIDE_RUN_W 30.0
+#endif
+#ifndef QHIDE_RUN_CAP
+#define QHIDE_RUN_CAP 10
+#endif
 // QHIDE_SAFE0: 1 = the hideout queen plays the QUEEN_SAFE rules from round 0 (as a parked queen does) instead of from
 // QS_FROM. Before QS_FROM a queen is a normal unit of the early economy, head-on trades included: km7's hidden queen
 // sprinted two steps into an enemy head at r80-89 in 4 of its first 14 deaths on the server.

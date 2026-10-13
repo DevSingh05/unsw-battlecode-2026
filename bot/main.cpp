@@ -600,6 +600,8 @@ struct World
             qhideIdx = -1;
         if ((QHIDE_CROWN) && RP.kingDeclare && qhideIdx >= 0 && ((QHIDE_CROWN) >> qhideIdx & 1))
             RP.queenKing = 1, RP.qkFrom = QHIDE_CROWN_FROM, RP.qkCap = QHIDE_CROWN_CAP; // QHIDE_CROWN: the hideout queen is the queen-king from that round
+        if ((QHIDE_BIG) && RP.kingDeclare && qhideIdx >= 0 && ((QHIDE_BIG) >> qhideIdx & 1))
+            RP.queenKing = 1, RP.qkFrom = QHIDE_BIG_FROM, RP.qkCap = QHIDE_BIG_CAP; // QHIDE_BIG: a long home queen, fed from that round
 #endif
         sym = m->sym;
 #if SPRINT_DEBUG
@@ -3363,6 +3365,15 @@ struct Bot
     bool qhLooked = false; // the table was searched (once, on the queen's first turn)
     int qhBuilt = -1000;   // round qhDist was last built on an unseen map
     int qhSrcBuilt = -1;   // the tile qhDist was built from
+    int qhIdx = -1;        // the QHIDE_SPOTS entry that matched
+    std::vector<int> qrunDist; // QHIDE_RUN: walking steps from the nearest visible enemy head (empty = nobody close)
+    double qrunScore(int t) const
+    {
+        if (qrunDist.empty() || !amQueen())
+            return 0.0;
+        return QHIDE_RUN_W * std::min(qrunDist[t], QHIDE_RUN_CAP);
+    }
+    bool qhBig() const { return qhIdx >= 0 && ((QHIDE_BIG) >> qhIdx & 1); }
     const char* qhSkip = nullptr; // the entry is not used while the adopted map has this name
     bool qhHideOn() const { return qhHide >= 0 && !(qhSkip && w.known && std::strcmp(w.known->name, qhSkip) == 0); }
 #endif
@@ -3370,7 +3381,7 @@ struct Bot
     {
 #if QHIDE
         if (qhHideOn())
-            return (QHIDE_R) + (queenKingRound() ? (QHIDE_R_CROWN) : 0);
+            return qhBig() ? (QHIDE_R_BIG) + ((QHIDE_BIG_NOSPLIT) ? myLen / (QHIDE_BIG_RDIV) : 0) : (QHIDE_R) + (queenKingRound() ? (QHIDE_R_CROWN) : 0);
 #endif
         if (w.known)
             return w.qhKnownR;
@@ -3404,15 +3415,37 @@ struct Bot
                     continue;
                 for (int k = 0; k < 2; k++)
                     if (s.spawn[k] == qhSpawn)
-                        qhHide = s.hide[k], qhSkip = s.skip;
+                        qhHide = s.hide[k], qhSkip = s.skip, qhIdx = i;
             }
         }
-        if (qhHideOn() && (QHIDE_SMALL) > 0)
+        if (qhHideOn() && (QHIDE_SMALL) > 0 && !qhBig())
             RP.queenKeep = 64, RP.queenKeepR = QHIDE_SMALL; // every turn: adopting a map rewrites RP
         if (qhHideOn() && !w.known && round - qhBuilt >= (QHIDE_REBUILD))
             qhDist.clear(); // unseen map: the walls seen since the last build change the walk
         if (!qhDist.empty() && qhSrcBuilt != (qhHideOn() ? qhHide : qhSpawn))
             qhDist.clear(); // the entry was switched off or on by the adopted map: walk from the other tile
+        qrunDist.clear();
+        if ((QHIDE_RUN) > 0 && amQueen() && qhHideOn() && myHead >= 0)
+        {
+            // walking distance (portals included, bodies ignored) from every enemy head in view
+            std::vector<int> dd(w.N, 99), q;
+            for (auto& o : segs)
+                if (o.head && o.team != w.myTeam && dd[o.tile] == 99)
+                    dd[o.tile] = 0, q.push_back(o.tile);
+            for (size_t i = 0; i < q.size(); i++)
+            {
+                if (dd[q[i]] >= (QHIDE_RUN_CAP) + 2)
+                    continue;
+                for (int d = 0; d < 4; d++)
+                {
+                    int v = step(q[i], d);
+                    if (v >= 0 && dd[v] == 99)
+                        dd[v] = dd[q[i]] + 1, q.push_back(v);
+                }
+            }
+            if (!q.empty() && dd[myHead] <= (QHIDE_RUN))
+                qrunDist.swap(dd);
+        }
 #endif
         qhFlee = false;
         if (qhomeR() > 0 && amQueen() && myHead >= 0)
@@ -3723,13 +3756,20 @@ struct Bot
     // ROUND6 QK_EG: the crowned queen (L >= QK_EG_MINLEN) uses the endgame-guard reach/veto (not its split ban)
     bool qkEgOn() const { return QK_EG && amQueen() && queenKingRound() && myLen >= QK_EG_MINLEN; }
     bool egOn() const { return egOrigOn() || qkEgOn(); }
-    bool noVolSplit() const { return egOrigOn(); }
+    bool noVolSplit() const
+    {
+#if QHIDE
+        if ((QHIDE_BIG_NOSPLIT) && amQueen() && qhBig() && qhHideOn())
+            return true; // QHIDE_BIG_NOSPLIT: the long home queen keeps her length
+#endif
+        return egOrigOn();
+    }
     void updateQsPhase()
     {
         if (!qsOn && (round >= QS_FROM || (QS_UNITS > 0 && units >= QS_UNITS) || (RP.qPark == 1 && amQueen()) || (QPG_SAFE0 && RP.qPark == 3 && qpStarted && amQueen())))
             qsOn = true;
 #if QHIDE
-        if ((QHIDE_SAFE0) && !qsOn && amQueen() && qhHideOn())
+        if (((QHIDE_SAFE0) || qhBig()) && !qsOn && amQueen() && qhHideOn())
             qsOn = true; // QHIDE_SAFE0: a hiding queen is no part of the early economy
 #endif
 #if QHOME_ON
@@ -7361,6 +7401,7 @@ struct Bot
 #if QHIDE
             if (qhHideOn() && amQueen() && !qhFlee && !qhDist.empty() && t != w.plainStep(myHead, d))
                 score -= QHIDE_PORTAL_PEN; // QHIDE: the walk is by plain steps; a tile behind a portal only looks nearer
+            score += qrunScore(t); // QHIDE_RUN (0 unless a scout is close to the hiding queen)
 #endif
 #endif
             if (PM_TD_PULL > 0)
