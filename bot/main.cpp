@@ -5731,6 +5731,12 @@ struct Bot
             if (!s.head || s.team == w.myTeam)
                 continue;
             int theirs = enemyVisibleLength(s.id);
+            // RAM_HIDDEN (13 Oct, notes/top5/LUNGES_OCT13.md rule 4): a head at the edge of the view shows one or two
+            // segments, so "theirs" was too small for the trade test and the ram guard. larp's units of 2-3 take 78-80%
+            // of their 1-step and 46-49% of their 2-step chances on enemy units of 4-7 (we 47-56% and 26-30%), and units
+            // of 4-7 make 48% of the kills on our long dragons. An enemy whose tail is out of view counts RAM_HIDDEN more.
+            if ((RAM_HIDDEN) > 0 && s.id > 1 && !enemyTailSeen(s))
+                theirs += (RAM_HIDDEN);
             // QUEEN_HUNT: the enemy queen is worth any 1-for-1 trade (a dead queen scores 0 at r500)
             bool hunt = QUEEN_HUNT && s.id <= 1 && !amQueen() && units >= QH_MIN_UNITS;
             // worth it if they're at least as valuable as us, and we aren't the king

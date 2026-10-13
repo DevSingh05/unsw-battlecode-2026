@@ -1790,6 +1790,11 @@
 #ifndef KING_KILL
 #define KING_KILL 0
 #endif
+// RAM_HIDDEN: segments added to an enemy's visible length in the ordinary 1-2 step ram test when its tail is out of view
+// (0 = off; see tryRam()).
+#ifndef RAM_HIDDEN
+#define RAM_HIDDEN 0
+#endif
 // KK_REL / KK_HIDDEN / KK_TRY: see the comment at KING_KILL in tryRam() (0 / 0 / 1 = the km14 behaviour).
 #ifndef KK_REL
 #define KK_REL 0
