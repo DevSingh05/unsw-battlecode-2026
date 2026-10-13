@@ -1684,8 +1684,31 @@
 #ifndef QHOME_SMALL
 #define QHOME_SMALL 0
 #endif
+// QHIDE: bit i = queen hideout for entry i of QHIDE_SPOTS (bot/qhide_data.hpp; generated from the 13 Oct enemy-traffic
+// study, tools/analysis/oct13). A queen whose map size and start tile match an enabled entry is leashed to that quiet tile
+// (QHIDE_R plain steps) instead of to her start, on known and unseen maps alike; once she is the queen-king the radius
+// grows by QHIDE_R_CROWN so a long body has room. QHIDE_SMALL: until this round (0 = off) that queen has no split floor
+// (she splits at 4 like any unit), whatever the other leash flags say. 0 = off: no table, no code.
+#ifndef QHIDE
+#define QHIDE 0
+#endif
+#ifndef QHIDE_R
+#define QHIDE_R 2
+#endif
+#ifndef QHIDE_R_CROWN
+#define QHIDE_R_CROWN 6
+#endif
+#ifndef QHIDE_SMALL
+#define QHIDE_SMALL 0
+#endif
+#ifndef QHIDE_PORTAL_PEN
+#define QHIDE_PORTAL_PEN 400.0 // a hideout queen that is not fleeing pays this for a step through a portal
+#endif
+#ifndef QHIDE_REBUILD
+#define QHIDE_REBUILD 8 // unseen maps: rebuild the walking distances every this many rounds as walls are learnt
+#endif
 // any leash compiled in?
-#define QHOME_ON (((QUAL_KNOWN) && (QUAL_QHOME)) || (QHOME_OLD) || (QHOME_UNK))
+#define QHOME_ON (((QUAL_KNOWN) && (QUAL_QHOME)) || (QHOME_OLD) || (QHOME_UNK) || (QHIDE))
 
 // ---- v41: FREE_STEPS (notes/newrules/V41.md)
 // FREE_STEPS=1: dragons with F=ceil(L/4)>=2 also score free multi-step paths of 2..F steps (beam search over the

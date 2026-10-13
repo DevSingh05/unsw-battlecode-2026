@@ -17,6 +17,9 @@
 
 #include "maps_data.hpp"
 #include "params.hpp"
+#if QHIDE
+#include "qhide_data.hpp"
+#endif
 
 #include <algorithm>
 #include <array>
@@ -3258,8 +3261,17 @@ struct Bot
     std::vector<int> qhDist;
     std::vector<int> qhPortal; // QHOME_PORTAL_R: plain steps to the nearest portal mouth or exit (99 = far)
     const KnownMap* qhFor = nullptr; // the map qhDist was built on (rebuilt when the adopted map changes)
+#if QHIDE
+    int qhHide = -1;       // QHIDE: this queen's hideout tile (-1 = no entry for this map and start)
+    bool qhLooked = false; // the table was searched (once, on the queen's first turn)
+    int qhBuilt = -1000;   // round qhDist was last built on an unseen map
+#endif
     int qhomeR() const
     {
+#if QHIDE
+        if (qhHide >= 0)
+            return (QHIDE_R) + (queenKingRound() ? (QHIDE_R_CROWN) : 0);
+#endif
         if (w.known)
             return w.qhKnownR;
         return ((QHOME_UNK) > 0 && w.N >= QHOME_UNK_MIN_TILES && w.N <= QHOME_UNK_MAX_TILES) ? (QHOME_UNK) : 0;
@@ -3281,6 +3293,25 @@ struct Bot
 #if QHOME_ON
         if (amQueen() && myHead >= 0 && qhSpawn < 0)
             qhSpawn = myHead;
+#if QHIDE
+        if (amQueen() && qhSpawn >= 0 && !qhLooked)
+        {
+            qhLooked = true;
+            for (int i = 0; i < QHIDE_COUNT && qhHide < 0; i++)
+            {
+                const QHideSpot& s = QHIDE_SPOTS[i];
+                if (!((QHIDE) >> i & 1) || s.w != w.W || s.h != w.H)
+                    continue;
+                for (int k = 0; k < 2; k++)
+                    if (s.spawn[k] == qhSpawn)
+                        qhHide = s.hide[k];
+            }
+        }
+        if (qhHide >= 0 && (QHIDE_SMALL) > 0)
+            RP.queenKeep = 64, RP.queenKeepR = QHIDE_SMALL; // every turn: adopting a map rewrites RP
+        if (qhHide >= 0 && !w.known && round - qhBuilt >= (QHIDE_REBUILD))
+            qhDist.clear(); // unseen map: the walls seen since the last build change the walk
+#endif
         qhFlee = false;
         if (qhomeR() > 0 && amQueen() && myHead >= 0)
         {
@@ -3288,8 +3319,14 @@ struct Bot
             {
                 qhFor = w.known;
                 qhDist.assign(w.N, 99);
-                std::vector<int> q{qhSpawn};
-                qhDist[qhSpawn] = 0;
+#if QHIDE
+                qhBuilt = round;
+                const int qhSrc = qhHide >= 0 ? qhHide : qhSpawn;
+#else
+                const int qhSrc = qhSpawn;
+#endif
+                std::vector<int> q{qhSrc};
+                qhDist[qhSrc] = 0;
                 for (size_t i = 0; i < q.size(); i++)
                     for (int d = 0; d < 4; d++)
                     {
@@ -3545,7 +3582,7 @@ struct Bot
     bool qGuard() const { return QGUARD && amQueen() && (round >= QG_FROM || units >= QG_UNITS); }
     // QGUARD: largest split the queen may make (child k) so she keeps >= QG_MIN; < 2 = no split
     // v38q: QG_MIN floor off when the queen's kelp-sealed region is < QG_REGION_MIN tiles (Schooltime box)
-    bool qFloorOff() const { return (TROPHY_QSPLIT || PM_QOS_QSPLIT || (QHOME_SMALL)) && RP.queenKeep > 0 && amQueen() && units <= RP.queenKeep && round < RP.queenKeepR; }
+    bool qFloorOff() const { return (TROPHY_QSPLIT || PM_QOS_QSPLIT || (QHOME_SMALL) || (QHIDE_SMALL)) && RP.queenKeep > 0 && amQueen() && units <= RP.queenKeep && round < RP.queenKeepR; }
     int qgCap(int k) const
     {
         int c = (qGuard() && !qFloorOff() && !(QG_REGION_MIN > 0 && qRegion < QG_REGION_MIN)) ? std::min(k, myLen - QG_MIN) : k;
@@ -7177,6 +7214,10 @@ struct Bot
                 score += qsmScore(t); // R10 LANE_QSMALL
 #if QHOME_ON
             score += qhomeScore(t); // QUAL_QHOME / QHOME_OLD / QHOME_UNK (0 unless this process is a leashed queen)
+#if QHIDE
+            if (qhHide >= 0 && amQueen() && !qhFlee && !qhDist.empty() && t != w.plainStep(myHead, d))
+                score -= QHIDE_PORTAL_PEN; // QHIDE: the walk is by plain steps; a tile behind a portal only looks nearer
+#endif
 #endif
             if (PM_TD_PULL > 0)
                 score += tdPullScore(t); // DGU F4 PM_TD_PULL
