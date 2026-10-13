@@ -1773,6 +1773,21 @@
 #ifndef QHOME_SAFE0
 #define QHOME_SAFE0 0
 #endif
+// QHOME_NORAM: 1 = a leashed or hiding queen never takes a head-on trade (tryRam), also before QS_FROM. Narrower than
+// QHOME_SAFE0 / QHIDE_SAFE0: the rest of her early play is unchanged.
+#ifndef QHOME_NORAM
+#define QHOME_NORAM 0
+#endif
+// QDEF: bodyguard reflex, on every map (0 = off). A non-queen, non-king unit of length <= QDEF_MAXLEN that has our own
+// queen's head in view takes a certain head-on (the tryQueenKill sprint with a target tile) against the enemy head
+// nearest to her within QDEF wrap-distance tiles. No stationing: only units that happen to be there act.
+// (QG_RAM is the older value-based version for a crowned queen only.)
+#ifndef QDEF
+#define QDEF 0
+#endif
+#ifndef QDEF_MAXLEN
+#define QDEF_MAXLEN 5
+#endif
 // any leash compiled in?
 #define QHOME_ON (((QUAL_KNOWN) && (QUAL_QHOME)) || (QHOME_OLD) || (QHOME_UNK) || (QHIDE))
 

@@ -5324,6 +5324,10 @@ struct Bot
     {
         if (queenSafe())
             return false; // the queen never trades herself
+#if QHOME_ON
+        if ((QHOME_NORAM) && amQueen() && qhomeR() > 0)
+            return false; // QHOME_NORAM: nor does a leashed or hiding queen before QS_FROM
+#endif
         if (LATE_HUNT && LH_KING_KILL && lhOn() && ENABLE_RAM && iAmKing() && tryQueenKill())
         {
             r2log("lhk");
@@ -5341,6 +5345,25 @@ struct Bot
             r2log("qk");
             return true;
         }
+#if QDEF
+        if (!amQueen() && !iAmKing() && myLen <= QDEF_MAXLEN)
+        {
+            // QDEF: our queen is in view and an enemy head is within QDEF tiles of her: the nearest one, if the kill is certain
+            int qh = -1, bestT = -1, bestD = (QDEF) + 1;
+            for (auto& s : segs)
+                if (s.head && s.team == w.myTeam && s.id <= 1)
+                    qh = s.tile;
+            if (qh >= 0)
+                for (auto& s : segs)
+                    if (s.head && s.team != w.myTeam && wrapDist(s.tile, qh) < bestD)
+                        bestD = wrapDist(s.tile, qh), bestT = s.tile;
+            if (bestT >= 0 && tryQueenKill(1 << 30, bestT))
+            {
+                r2log("qdef", bestD);
+                return true;
+            }
+        }
+#endif
 #if QESC
         if (qescRamOk() && qescIntr >= 0 && tryQueenKill(1 << 30, qescIntr))
         {
