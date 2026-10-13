@@ -537,6 +537,7 @@ struct World
     // only while known != nullptr. Cached so the per-turn hooks cost an int test, not string compares (the search
     // budgets run on the CPU-points clock, so extra work per turn shifts decisions on every map).
     int qualIdx = -1;
+    bool lookAlikeQ = false; // QUAL_GOSSIP: the adopted map is a known Qualifier map, or shares its size and every start tile with one
     int qhKnownR = 0; // QUAL_QHOME / QHOME_OLD: leash radius of the adopted map (set by adopt(); read only while known)
     bool qualTold = false; // QUAL_GOSSIP: an ally that was sure named this map
     bool qualOn() const { return (QUAL_KNOWN) && known && qualIdx >= 0; }
@@ -546,6 +547,18 @@ struct World
         known = m;
 #if QUAL_KNOWN
         qualIdx = qualKnown(m->name) ? qualMapIndex(m->name) : -1;
+        lookAlikeQ = qualIdx >= 0;
+        for (int i = KNOWN_MAP_COUNT - 14; i < KNOWN_MAP_COUNT && !lookAlikeQ; i++)
+        {
+            const KnownMap& o = KNOWN_MAPS[i];
+            if (&o == m || !((QUAL_KNOWN) >> (i - (KNOWN_MAP_COUNT - 14)) & 1) || o.w != m->w || o.h != m->h ||
+                o.dragonCount != m->dragonCount)
+                continue;
+            bool same = true;
+            for (int k = 0; k < m->dragonCount * 4 && same; k++)
+                same = o.dragons[k] == m->dragons[k];
+            lookAlikeQ = same;
+        }
 #endif
 #if QHOME_ON
         qhKnownR = qhomeKnownRadius(m->name);
@@ -600,12 +613,12 @@ struct World
             if (nxt[i] >= 0 && trap[nxt[i]] && !trap[i / 4])
                 nxt[i] = -1;
     }
-    void applySeals()
+    void applySeals(bool candSeal)
     {
         if (!(QUAL_TRAPSEAL) || SCH_DOORS || !known)
             return;
         uint64_t sig = 1469598103934665603ULL ^ static_cast<uint64_t>(known - KNOWN_MAPS + 1);
-        if (QUAL_PBLOCK)
+        if (candSeal)
             for (int c : candidates)
                 if (c >= KNOWN_MAP_COUNT - 14 && &KNOWN_MAPS[c] != known)
                     sig = (sig ^ static_cast<uint64_t>(c + 1)) * 1099511628211ULL;
@@ -617,7 +630,7 @@ struct World
             for (int i = 0; i < N * 4; i++)
                 nxt[i] = known->nxt[i];
         sealRooms(*known);
-        if (QUAL_PBLOCK)
+        if (candSeal)
             for (int c : candidates)
                 if (c >= KNOWN_MAP_COUNT - 14 && &KNOWN_MAPS[c] != known)
                     sealRooms(KNOWN_MAPS[c]);
@@ -1204,7 +1217,7 @@ struct Bot
 
         filterByCountdowns();
 #if QUAL_KNOWN
-        w.applySeals(); // QUAL_TRAPSEAL (after the map and the candidate list are settled for this turn)
+        w.applySeals((QUAL_PBLOCK) && round - birthRound < QUAL_PBLOCK_AGE); // QUAL_TRAPSEAL (after the map and the candidate list are settled for this turn)
 #endif
         if (w.nkBirth < 0)
             w.nkBirth = (!w.known && w.candidates.empty()) ? 1 : 0; // QF1: decided at this process's first turn, sticky
@@ -2149,16 +2162,17 @@ struct Bot
         uint64_t check = mix(x ^ MAP_SECRET ^ (static_cast<uint64_t>(w.myTeam) << 50)) & ((1ULL << 45) - 1);
         return x | (check << 19);
     }
-    // QUAL_GOSSIP: "this is Qualifier map i" (same word layout as encodeUnseen, code 200 + i instead of 255)
+    // QUAL_GOSSIP: "this is known map i" (same word layout as encodeUnseen, code 150 + KNOWN_MAPS index instead of 255)
     uint64_t encodeQualMap() const
     {
-        uint64_t x = static_cast<uint64_t>(200 + w.qualIdx) | (static_cast<uint64_t>(myFrameCode() & 3) << 8) |
+        uint64_t x = static_cast<uint64_t>(150 + (w.known - KNOWN_MAPS)) | (static_cast<uint64_t>(myFrameCode() & 3) << 8) |
                      (static_cast<uint64_t>(round & 511) << 10);
         uint64_t check = mix(x ^ MAP_SECRET ^ (static_cast<uint64_t>(w.myTeam) << 50)) & ((1ULL << 45) - 1);
         return x | (check << 19);
     }
     // sure of a Qualifier map: adopted it and every other same-size map is ruled out, or an ally that was sure said so
-    bool qualSure() const { return w.qualOn() && (w.candidates.size() == 1 || w.qualTold); }
+    // (13 Oct: also an old map that has a known Qualifier look-alike, e.g. Australia against Troll Australia)
+    bool qualSure() const { return w.known && w.lookAlikeQ && (w.candidates.size() == 1 || w.qualTold); }
     void msReadUnseen()
     {
         for (uint64_t raw : in.msgs)
@@ -2173,9 +2187,9 @@ struct Bot
                 return;
             }
 #if QUAL_KNOWN
-            if (QUAL_GOSSIP && (x & 255) >= 200 && (x & 255) < 214 && ((round - static_cast<int>((x >> 10) & 511)) & 511) <= 2)
+            if (QUAL_GOSSIP && (x & 255) >= 150 && (x & 255) < 150 + KNOWN_MAP_COUNT && ((round - static_cast<int>((x >> 10) & 511)) & 511) <= 2)
             {
-                int c = KNOWN_MAP_COUNT - 14 + static_cast<int>((x & 255) - 200);
+                int c = static_cast<int>((x & 255) - 150);
                 // only a map this process still holds as a candidate (same size, nothing seen that contradicts it)
                 if (std::find(w.candidates.begin(), w.candidates.end(), c) == w.candidates.end())
                     continue;
@@ -2952,6 +2966,83 @@ struct Bot
             if (o.head && o.team != w.myTeam && wrapDist(o.tile, myHead) <= PM_QP_FLEE)
                 qsmFlee = true;
     }
+#if QHUNT
+    // QHUNT: queen hunters. qhuDist = walking distance (portals included) to the current target tile.
+    std::vector<int> qhuDist, qhuRing;
+    int qhuTarget = -1, qhuSpawn = -2;
+    const KnownMap* qhuFor = nullptr;
+    bool qhuOn() const
+    {
+        return w.known && w.N >= QHUNT_MIN_TILES && w.swapState >= 0 && !amQueen() && !iAmKing() && myHead >= 0 &&
+               myLen <= QHUNT_MAXLEN && round >= (QHUNT) && units >= QHUNT_MIN_UNITS && (w.myId % QHUNT_MOD) == 0;
+    }
+    void qhuPrep()
+    {
+        if (!qhuOn())
+            return;
+        const KnownMap* m = w.known;
+        if (qhuFor != m || qhuSpawn == -2)
+        {
+            // the enemy queen's spawn tile from the map table (ids 0/1 are the queens; the frame swap exchanges the sides)
+            qhuFor = m;
+            qhuSpawn = -1;
+            qhuRing.clear();
+            qhuTarget = -1;
+            const int mine = ((w.myTeam == 'A') != (w.swapState == 1)) ? 0 : 1; // our team's number in the map file
+            if (m->dragons && m->dragonCount >= 2)
+                for (int id = 0; id < 2; id++)
+                    if (m->dragons[id * 4] != mine)
+                        qhuSpawn = w.idx(m->dragons[id * 4 + 2], m->dragons[id * 4 + 3]);
+            if (qhuSpawn >= 0)
+            {
+                // her home: tiles within QHUNT_R plain steps of the spawn; the outer half are the waypoints
+                std::vector<int> dd(w.N, -1), q{qhuSpawn};
+                dd[qhuSpawn] = 0;
+                for (size_t i = 0; i < q.size(); i++)
+                {
+                    if (dd[q[i]] >= QHUNT_R)
+                        continue;
+                    for (int d = 0; d < 4; d++)
+                    {
+                        int v = step(q[i], d);
+                        if (v >= 0 && v == w.plainStep(q[i], d) && dd[v] < 0)
+                            dd[v] = dd[q[i]] + 1, q.push_back(v);
+                    }
+                }
+                for (int t : q)
+                    if (dd[t] == 0 || dd[t] >= QHUNT_R / 2)
+                        qhuRing.push_back(t);
+            }
+        }
+        if (qhuSpawn < 0 || qhuRing.empty())
+            return;
+        int tgt = qhuRing[(static_cast<size_t>(w.myId) * 7 + static_cast<size_t>(round / QHUNT_PERIOD)) % qhuRing.size()];
+        for (auto& o : segs)
+            if (o.head && o.team != w.myTeam && o.id <= 1)
+                tgt = o.tile; // she is in view: go for her head
+        if (tgt == qhuTarget && !qhuDist.empty())
+            return;
+        qhuTarget = tgt;
+        qhuDist.assign(w.N, 999);
+        std::vector<int> q{tgt};
+        qhuDist[tgt] = 0;
+        for (size_t i = 0; i < q.size(); i++)
+            for (int d = 0; d < 4; d++)
+            {
+                // reverse walk: tiles from which a step lands on q[i]; edges are symmetric except portals, so use
+                // the forward step of the neighbour when it leads here, else the forward step from here as a fallback
+                int v = step(q[i], d);
+                if (v >= 0 && qhuDist[v] == 999)
+                    qhuDist[v] = qhuDist[q[i]] + 1, q.push_back(v);
+            }
+    }
+    double qhuScore(int t) const
+    {
+        if (!qhuOn() || qhuDist.empty() || qhuTarget < 0 || qhuDist[myHead] >= 999)
+            return 0.0;
+        return -QHUNT_W * std::min(qhuDist[t], 80);
+    }
+#endif
     // DGU F4 PM_TD_PULL (root-lanes-b RLB C1): Tower Defense non-queen units walk to the centre field early.
     std::vector<int> tdDist;
     bool tdPullOn() const
@@ -6143,6 +6234,9 @@ struct Bot
         qsmPrep();
         if (PM_TD_PULL > 0)
             tdPrep(); // DGU F4
+#if QHUNT
+        qhuPrep(); // QHUNT
+#endif
         if (QBOX || QGUARD)
             computeQRegion();
         eqHuntPrep();
@@ -7022,6 +7116,9 @@ struct Bot
 #endif
             if (PM_TD_PULL > 0)
                 score += tdPullScore(t); // DGU F4 PM_TD_PULL
+#if QHUNT
+            score += qhuScore(t); // QHUNT (0 unless this unit is a hunter)
+#endif
             if (KING_CORRIDOR_PENALTY > 0 && myLen >= 10)
             {
                 // big dragons stay out of 1-wide corridors: no room to dodge or turn

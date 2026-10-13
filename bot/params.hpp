@@ -1516,6 +1516,15 @@
 #ifndef QUAL_PBLOCK
 #define QUAL_PBLOCK 0
 #endif
+// QUAL_PBLOCK_AGE: the candidate seal holds only for the first this-many rounds of a process's life. Australia's vault
+// door (28,39)E -> (7,23) is the same edge as a Troll Australia trap, and the two 12-tile vaults hold 52% of Australia's
+// food. km4/km5 sealed it for as long as Troll Australia stayed a candidate, which for many Australia processes was for
+// ever: Australia went 0-5 on the server (13 Oct). A young process waits; an older one that still cannot tell plays
+// the map it adopted. Processes that are sure also say so (QUAL_GOSSIP now names an old map that has a known
+// Qualifier look-alike), so on Australia the doubt usually ends within a few rounds.
+#ifndef QUAL_PBLOCK_AGE
+#define QUAL_PBLOCK_AGE 40
+#endif
 // QHOME_OLD: the same queen home leash on older known maps. Bit order = QHOME_OLD_MAPS in main.cpp: Around UNSW 0,
 // Australia 1, Islands 2, Slithery Fight 3, Schooltime 4, Autarky 5, Default 6, Trophy 7, Devil 8, Queen Of Spades 9,
 // Prisoners Dilemma 10, Stripes 11, Tower Defense 12, weakhold 13, Trauma 14 (Portals and Maze have their own parks).
@@ -1550,6 +1559,37 @@
 #endif
 #ifndef NEWMAP_KING_FEED
 #define NEWMAP_KING_FEED 0
+#endif
+// QHUNT: start round of the queen hunters (0 = off). On a known map of at least QHUNT_MIN_TILES tiles, once we have
+// QHUNT_MIN_UNITS units, every QHUNT_MOD-th non-queen, non-king unit of length <= QHUNT_MAXLEN walks to the enemy
+// queen's home: a waypoint within QHUNT_R plain steps of her spawn tile (from the map table), changed every
+// QHUNT_PERIOD rounds, or her head while it is in view. The pull is QHUNT_W per step; the kill itself is the existing
+// QKILL / QUEEN_HUNT ram. Top teams' queens live within about 10 tiles of their spawn all game and nobody looks for
+// them; km5 server games, 13 Oct: we lost to a live enemy queen while holding 5 to 6 times the opponent's length
+// (Australia 333 vs 63 and 393 vs 66 at r300, Atlantis 7 times), 13 of 29 losses on the eleven watched maps.
+#ifndef QHUNT
+#define QHUNT 0
+#endif
+#ifndef QHUNT_MOD
+#define QHUNT_MOD 5
+#endif
+#ifndef QHUNT_MAXLEN
+#define QHUNT_MAXLEN 4
+#endif
+#ifndef QHUNT_MIN_UNITS
+#define QHUNT_MIN_UNITS 24
+#endif
+#ifndef QHUNT_R
+#define QHUNT_R 8
+#endif
+#ifndef QHUNT_PERIOD
+#define QHUNT_PERIOD 25
+#endif
+#ifndef QHUNT_W
+#define QHUNT_W 6.0
+#endif
+#ifndef QHUNT_MIN_TILES
+#define QHUNT_MIN_TILES 2000
 #endif
 // LOCAL_FEED: start round of local feeding (0 = off). From that round a non-queen, non-king unit of length <= LF_MAXLEN
 // that sees an ally head within LF_R tiles whose visible body is at least LF_HOST_MIN long, with no enemy head within
