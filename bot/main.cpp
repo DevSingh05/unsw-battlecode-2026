@@ -3420,6 +3420,8 @@ struct Bot
         }
         if (qhHideOn() && (QHIDE_SMALL) > 0 && !qhBig())
             RP.queenKeep = 64, RP.queenKeepR = QHIDE_SMALL; // every turn: adopting a map rewrites RP
+        if (qhHideOn() && qhBig())
+            RP.queenKeepR = 0; // QHIDE_BIG: the split floor stays on, whatever QHOME_SMALL set for a leashed map
         if (qhHideOn() && !w.known && round - qhBuilt >= (QHIDE_REBUILD))
             qhDist.clear(); // unseen map: the walls seen since the last build change the walk
         if (!qhDist.empty() && qhSrcBuilt != (qhHideOn() ? qhHide : qhSpawn))
@@ -5386,7 +5388,7 @@ struct Bot
             return true;
         }
 #if QDEF
-        if (!amQueen() && !iAmKing() && myLen <= QDEF_MAXLEN)
+        if (!amQueen() && !iAmKing() && myLen <= QDEF_MAXLEN && ((QDEF_QUAL) == 0 || w.qualOn(QDEF_QUAL)))
         {
             // QDEF: our queen is in view and an enemy head is within QDEF tiles of her: the nearest one, if the kill is certain
             int qh = -1, bestT = -1, bestD = (QDEF) + 1;

@@ -1,28 +1,32 @@
 # STATUS (single source of truth)
 
-Last updated: 2026-10-13 04:36 EDT. All updates to the user come from this page. Times are US Eastern.
+Last updated: 2026-10-13 05:18 EDT. All updates to the user come from this page. Times are US Eastern.
 
 ## Live and mainline
-- **LIVE since Tue 13 Oct 4:34 AM: km8 (id 22368)** = km7 plus one fix (a leashed or hiding queen never rams: before
-  round 100 the small queen took head-on trades like a normal unit, 8 of km7's first 30 queen deaths on the hideout
-  maps). km7 (3:12 AM, id 22360) = km6 plus the **queen hideout** (`QHIDE`): on Australia, Maelstrom,
-  Slithery Fight, Islands, Around UNSW, Devil, Queen Of Spades, Autarky and Thermopylae the queen is cut to 2 in round 0,
-  walks to a quiet corner of her own side and circles there (2 steps). The corners come from the enemy-traffic study of
-  5,500 server replays (`tools/analysis/oct13/`, table `bot/qhide_data.hpp`). On five of them she is fed late to about 10.
-  Local vs km6 on those maps: 51-27 over 78 games, our queen alive at the end in 44 against 12.
-  km6 (still the base) = qf1 plus seven Qualifier maps played as known maps, Atlantis queen parked inside, Troll
-  Australia trap rooms sealed, small leashed home queen on Whale Song, Troll Australia, Hive, Ouroboros and unseen
-  mid-size maps, growth splits stop at 61 units. Copies: `variants/km1`..`km8`.
-  **Fallback order: km7 (22360), km6 (22332), km5 (22278), qf1 (21001)**; activate with `POST /api/v1/submissions/<id>/activate`.
+- **LIVE since Tue 13 Oct 5:15 AM: km9 (id 22373)** = qf1 plus, in order:
+  - km1-km6 (12 Oct): seven Qualifier maps played as known maps (Atlantis, Maelstrom, Troll Australia, Whale Song,
+    Hive, Detention, Ouroboros), Atlantis queen parked inside the pearl field, Troll Australia trap rooms sealed, small
+    leashed home queen on Whale Song, Troll Australia, Hive, Ouroboros and unseen mid-size maps, growth splits stop at
+    61 units.
+  - km7 (3:12 AM): **queen hideout** (`QHIDE`): the queen is cut to 2 in round 0, walks to a quiet corner of her own side
+    and circles there. Corners come from an enemy-traffic study of 5,500 server replays (`tools/analysis/oct13/`, table
+    `bot/qhide_data.hpp`). Now on Devil, Queen Of Spades, Maelstrom, Australia, Around UNSW, Autarky, Thermopylae.
+  - km8 (4:34 AM): a leashed or hiding queen never rams (before round 100 the small queen took head-on trades).
+  - km9 (5:15 AM): Slithery Fight gets a **long home queen** instead (starts at 25, fed from r100, 27-60 at the end
+    locally); Islands hideout off again.
+  Server so far: the hideout wins where the opponent's queen dies (Devil 12-2, Queen Of Spades 4-0, Maelstrom 9-8) and
+  lost where it lives and is long (Slithery Fight 2-14, Islands 2-15). Copies: `variants/km1`..`km9`.
+  **Fallback order: km8 (22368), km7 (22360), km6 (22332), qf1 (21001)**; activate with
+  `POST /api/v1/submissions/<id>/activate`.
 - **This session (unsw-battlecode-de) owns the server for now** (user, 12 Oct: battlecode_main's account is out of usage).
 - **Not in the Grand Final** (lost the Qualifier round of 32 to Sabotage-d, 3-4). Work now is ladder rating: 2177 #25 at
   the start of 12 Oct; 2205 #21 at 1:00 AM on 13 Oct; 2295 #13 at 3:12 AM when km7 went live (a 35-30 hour against
-  top-12 teams); **2298 #13 at 4:30 AM** after km7's first 75 minutes (ranked 34-46, at par for that rating). The pool has 31 maps since 10 Oct (17 old + the 14 Qualifier maps).
+  top-12 teams); **2302 #13 at 5:15 AM** (km7 ranked 34-46 and km8 21-24, both at par for that rating). The pool has 31 maps since 10 Oct (17 old + the 14 Qualifier maps).
 - **Allowances in use:** 60 hand-started games/h go to ranked series (`replays/auto_ranked`). Since 1:13 AM the panel is
   the teams we gain rating against per series (10-13 Oct data): SSS, TTT, horse, WeHaveQuizzes, Settlers, Codehammer,
   plus Cutlery and chat gippy tea; larp, Computers, forgot to mention and the hieroglyph team were dropped (we lose 3 to
   5 points a series against them). The separate 60/h against DEV teams is the test bed: unranked series vs dev test 1
-  on Australia, Devil, Islands, Maelstrom, Slithery Fight (`replays/auto_dev16`). Stop either with a `STOP` file in
+  on Slithery Fight, Islands, Australia, Maelstrom, Around UNSW (`replays/auto_dev17`). Stop either with a `STOP` file in
   its folder. Judge with `tools/analysis/oct12/build_watch.py`, `by_build.py` and `watch_mech.py`.
 - **Open after km7:** the hidden queen stays at length 2, so she loses the tiebreak to any living enemy queen that is
   longer; the full late crown (to 25) got her rammed at r394-449 in local play, the small one (to 10) cost wins on

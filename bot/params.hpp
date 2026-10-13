@@ -1825,6 +1825,10 @@
 #ifndef QDEF_MAXLEN
 #define QDEF_MAXLEN 5
 #endif
+// QDEF_QUAL: bit mask over the Qualifier maps (QUAL_MAPS order); non-zero = QDEF acts only on those known maps.
+#ifndef QDEF_QUAL
+#define QDEF_QUAL 0
+#endif
 // any leash compiled in?
 #define QHOME_ON (((QUAL_KNOWN) && (QUAL_QHOME)) || (QHOME_OLD) || (QHOME_UNK) || (QHIDE))
 
