@@ -1780,6 +1780,11 @@
 #ifndef QHIDE_BIG_CAP
 #define QHIDE_BIG_CAP 0
 #endif
+// QHIDE_BIG_SEED: > 0 = on a QHIDE_BIG map the king seed round and the feed start are at most this round (the map's
+// own seed round, 300-350 on the Qualifier maps, otherwise delays the queen-king whatever QHIDE_BIG_FROM says).
+#ifndef QHIDE_BIG_SEED
+#define QHIDE_BIG_SEED 0
+#endif
 // QHIDE_RUN: the hideout queen runs from a scout instead of circling (0 = off). While an enemy head is in view within
 // QHIDE_RUN walking steps of her head, every step is worth QHIDE_RUN_W per walking step of distance from the nearest
 // visible enemy head (counted to QHIDE_RUN_CAP). km7 on the server: a single length 2-3 unit walks up over five to ten
@@ -1828,6 +1833,17 @@
 // QDEF_QUAL: bit mask over the Qualifier maps (QUAL_MAPS order); non-zero = QDEF acts only on those known maps.
 #ifndef QDEF_QUAL
 #define QDEF_QUAL 0
+#endif
+// EZAM_AS_MAZE: 1 = when Ezam is adopted as a known map (QUAL_KNOWN bit 4) it gets Maze's per-map parameters (queen
+// kept in the home field and crowned, early crowd penalty). Ezam shares Maze's size and start tiles, 70% of its walls
+// and 72% of its pearl tiles; unknown to the bot it is played as Maze on Maze's walls.
+#ifndef EZAM_AS_MAZE
+#define EZAM_AS_MAZE 0
+#endif
+// EZAM_QKCAP: with EZAM_AS_MAZE, the length at which feeders stop feeding the crowned queen on Ezam (-1 = Maze's
+// PM_MAZE_QKCAP, 0 = no cap). The known-map build eats 2.8 times what the Maze-on-Ezam build eats.
+#ifndef EZAM_QKCAP
+#define EZAM_QKCAP -1
 #endif
 // any leash compiled in?
 #define QHOME_ON (((QUAL_KNOWN) && (QUAL_QHOME)) || (QHOME_OLD) || (QHOME_UNK) || (QHIDE))

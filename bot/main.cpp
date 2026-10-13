@@ -161,6 +161,10 @@ void applyMapParams(const char* name, int tiles = 0)
 {
     RP = RuntimeParams{};
     std::string n(name ? name : "");
+#if QUAL_KNOWN
+    if ((EZAM_AS_MAZE) && n == "Ezam")
+        n = "Maze"; // EZAM_AS_MAZE: Ezam (a Maze with about 30% of its walls and pearl tiles changed) gets Maze's parameter set on its own map data
+#endif
     if (LANE_QSMALL)
     {
         static const char* const LQ[] = {"Trophy", "Tower Defense", "Devil", "Prisoners Dilemma", "Autarky", "Queen Of Spades"};
@@ -228,6 +232,10 @@ void applyMapParams(const char* name, int tiles = 0)
             // ROUND3 P7: Maze queen stays in the home field and is crowned; crowd penalty until the seed round
             if (PM_QPARK_MAZE)
                 RP.queenKing = 1, RP.qPark = 2, RP.qkFrom = PM_MAZE_QKFROM, RP.qkCap = PM_MAZE_QKCAP;
+#if QUAL_KNOWN
+            if (PM_QPARK_MAZE && (EZAM_AS_MAZE) && (EZAM_QKCAP) >= 0 && std::string(name ? name : "") == "Ezam")
+                RP.qkCap = EZAM_QKCAP; // EZAM_QKCAP: Ezam's own feed cap for the crowned queen (0 = none)
+#endif
             if (PM_MAZE_CR > 0 || (PM_MAZE_CR < 0 && PM_QPARK_MAZE))
                 RP.crowdEarly = PM_MAZE_CR > 0 ? PM_MAZE_CR : PM_MAZE_CR_AUTO;
         }
@@ -601,7 +609,11 @@ struct World
         if ((QHIDE_CROWN) && RP.kingDeclare && qhideIdx >= 0 && ((QHIDE_CROWN) >> qhideIdx & 1))
             RP.queenKing = 1, RP.qkFrom = QHIDE_CROWN_FROM, RP.qkCap = QHIDE_CROWN_CAP; // QHIDE_CROWN: the hideout queen is the queen-king from that round
         if ((QHIDE_BIG) && RP.kingDeclare && qhideIdx >= 0 && ((QHIDE_BIG) >> qhideIdx & 1))
+        {
             RP.queenKing = 1, RP.qkFrom = QHIDE_BIG_FROM, RP.qkCap = QHIDE_BIG_CAP; // QHIDE_BIG: a long home queen, fed from that round
+            if ((QHIDE_BIG_SEED) > 0)
+                RP.kingSeedRound = std::min(RP.kingSeedRound, static_cast<int>(QHIDE_BIG_SEED)), RP.feedStart = std::min(RP.feedStart, static_cast<int>(QHIDE_BIG_SEED));
+        }
 #endif
         sym = m->sym;
 #if SPRINT_DEBUG
