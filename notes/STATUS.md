@@ -1,6 +1,6 @@
 # STATUS (single source of truth)
 
-Last updated: 2026-10-13 17:30 EDT. All updates to the user come from this page. Times are US Eastern.
+Last updated: 2026-10-13 18:50 EDT. All updates to the user come from this page. Times are US Eastern.
 
 ## Live and mainline
 - **LIVE since Tue 13 Oct 5:26 PM: km16 (id 22435)** = qf1 plus, in order:
@@ -43,7 +43,10 @@ Last updated: 2026-10-13 17:30 EDT. All updates to the user come from this page.
     our long-dragon deaths the killer was in view at distance 2-3, where only its head shows); hunters keep length 5
     (reach 5 instead of 1-3); the **enclosure test** on Islands, Australia and Maelstrom (a unit no longer eats its way
     into a dead end or a ring of its own body that it cannot leave; Islands locally 1.4-2.7 times km15's length).
-  km15 on the server (75 min): ranked 56-64, but 17-9 on the eight hunter maps (km14 19-21 there).
+  km16 on the server (50 min): ranked 59-41 (+3 points over the expectation); our longest dragon was rammed in the
+  last 60 rounds in 2 of 75 games (40 of 381 before, 31 of them lost).
+  km15 on the server (75 min): ranked 56-64, but 17-9 on the eight hunter maps (km14 19-21 there); on Around UNSW the
+  opponent's queen now survives 2 of 9 games (17 of 29 before).
   km14 on the server (70 min): ranked 85-80, vs dev test 1 41-31 (km12 27-58, km13 6-14).
   km13 on the server (75 min, 74-74): Metro 5-6 with our queen alive in 4 of 10 (0-15 vs dev test 1 before), Islands
   4-6 (4-15 before), Around UNSW 2-6 with half the opponents' length at r100 (a third before).
@@ -68,6 +71,11 @@ Last updated: 2026-10-13 17:30 EDT. All updates to the user come from this page.
   longer; the full late crown (to 25) got her rammed at r394-449 in local play, the small one (to 10) cost wins on
   Maelstrom and Slithery Fight. Not hidden yet: Hive, Ouroboros, Whale Song, Troll Australia, Athena, Metro (no local
   gain), and the two-dragon maps (Trophy, Stripes, Default, Maze, Ezam: she is a needed worker there).
+- **How games are decided** (721 server games that reached r440, 13 Oct): our queen dead and theirs alive at r440 in
+  185 (17 won); both alive in 145 (57 won; Detention 35 and Schooltime 16 of those, both queens at 3, the longest
+  dragon decides; Slithery Fight 29 with theirs at 50 against our 24); ours alive and theirs dead in 99 (93 won, and
+  our queen still dies in the last 60 rounds in 16 of them); the rest both dead. Tools: `tools/analysis/oct13/qfate.py`,
+  `kingdeath.py`, `fog.py`, `work/oct13/lateq.py`.
 - **Research reports of 13 Oct** (four agents, user's suggestion; each ends with ranked rules): `notes/top5/LUNGES_OCT13.md`,
   `notes/top5/QUEEN_OCT13.md`, `notes/top5/ECONOMY_OCT13.md`, `notes/research/ALGORITHMS_OCT13.md`. Shipped from them in km16:
   threat split, unseen-tail reach, length-5 hunters, enclosure test. **Not done yet, in the order I would take them:**
