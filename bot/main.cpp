@@ -4602,7 +4602,7 @@ struct Bot
                     paidReach = std::min(F + 2, F + std::max(0, Lv - 2));
                 }
             }
-            if (KREACH && (myLen >= KREACH_MINLEN || (KREACH_QUEEN && amQueen())))
+            if (KREACH && ((myLen >= KREACH_MINLEN && !amQueen()) || (KREACH_QUEEN && amQueen() && ((KREACH_QUEEN_MAXLEN) <= 0 || myLen <= (KREACH_QUEEN_MAXLEN)))))
             {
                 // v37a step 3: kamikaze reach K(Lv) = F + (Lv-2) (a head-on kills both, so paid steps are free for it)
                 int Lv = enemyVisibleLength(s.id);

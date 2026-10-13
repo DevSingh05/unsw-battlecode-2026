@@ -2552,6 +2552,13 @@
 // ---- P6: defensive reach and endgame
 // KREACH_MINLEN / KREACH_QUEEN: who gets the KREACH kamikaze reach when KREACH=1 (defaults = the old behaviour:
 // L>=5 paid tier, queen full). Staged test: KREACH=1 KREACH_MINLEN=8 KREACH_QUEEN=0 KR_CAP=6.
+// KREACH_QUEEN_MAXLEN: with KREACH_QUEEN=1 the queen uses the full lunge reach only up to this length (0 = any length).
+// notes/top5/QUEEN_OCT13.md: enemy heads come within 5 steps of every team's queen 1.7 times per 100 rounds; their
+// length-2/3 queen dies in 9-12% of those approaches, ours in 30% (a head at distance 1-2 in 23% of her threatened
+// turns, theirs 5-12%). For every length the fed Maze queen died in 4 of 4 local games.
+#ifndef KREACH_QUEEN_MAXLEN
+#define KREACH_QUEEN_MAXLEN 0
+#endif
 // KREACH_UNSEEN: the enemy length assumed when its tail is not in view (3 = the old value: reach 2). Server 13 Oct
 // (tools/analysis/oct13/fog.py, 5,391 deaths of our 8+ dragons to an enemy head): in 67% the killer was inside the
 // victim's view when it started its last move, at Chebyshev distance 2 (1,843) or 3 (1,447), where only its head and
