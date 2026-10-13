@@ -1,9 +1,9 @@
 # STATUS (single source of truth)
 
-Last updated: 2026-10-13 06:37 EDT. All updates to the user come from this page. Times are US Eastern.
+Last updated: 2026-10-13 13:45 EDT. All updates to the user come from this page. Times are US Eastern.
 
 ## Live and mainline
-- **LIVE since Tue 13 Oct 6:34 AM: km12 (id 22382)** = qf1 plus, in order:
+- **LIVE since Tue 13 Oct 1:34 PM: km13 (id 22420)** = qf1 plus, in order:
   - km1-km6 (12 Oct): seven Qualifier maps played as known maps (Atlantis, Maelstrom, Troll Australia, Whale Song,
     Hive, Detention, Ouroboros), Atlantis queen parked inside the pearl field, Troll Australia trap rooms sealed, small
     leashed home queen on Whale Song, Troll Australia, Hive, Ouroboros and unseen mid-size maps, growth splits stop at
@@ -22,25 +22,39 @@ Last updated: 2026-10-13 06:37 EDT. All updates to the user come from this page.
   - km12 (6:34 AM): crowd penalty on Maelstrom (local 10-2); **Thermopylae played as a known map** with the crowd penalty
     (local 14-6). Of the 14 Qualifier maps only Caution and the two Trolley Problems are still played unseen (Trolley
     known loses 1-11 locally; Caution is already one of our best).
+  - km13 (1:34 PM): **spread fix on Around UNSW** (food further away counts for more, discount 0.92, plus the crowd
+    penalty: locally twice km12's length at r200) and the hideout there again instead of the long home queen (0-9 on
+    the server); crowd penalty on Islands; **hideout on Metro and Athena** (vs dev test 1 km12 went 0-14 and 3-11 there:
+    both queens died and their longest dragon won; on Athena our queen died around r35).
   Server so far: Ezam 6-2 since km10 (0-10 before); the hideout wins where the opponent's queen dies (Devil 12-2, Queen Of Spades 4-0, Maelstrom 9-8) and
-  lost where it lives and is long (Slithery Fight 2-14, Islands 2-15). Copies: `variants/km1`..`km12`.
-  **Fallback order: km11 (22378), km10 (22376), km9 (22373), km6 (22332), qf1 (21001)**; activate with
+  lost where it lives and is long (Slithery Fight 2-14, Islands 2-15). Copies: `variants/km1`..`km13`.
+  **Fallback order: km12 (22382), km10 (22376, own rating 2308), km9 (22373), km6 (22332), qf1 (21001)**; activate with
   `POST /api/v1/submissions/<id>/activate`.
 - **This session (unsw-battlecode-de) owns the server for now** (user, 12 Oct: battlecode_main's account is out of usage).
 - **Not in the Grand Final** (lost the Qualifier round of 32 to Sabotage-d, 3-4). Work now is ladder rating: 2177 #25 at
   the start of 12 Oct; 2205 #21 at 1:00 AM on 13 Oct; 2295 #13 at 3:12 AM when km7 went live (a 35-30 hour against
   top-12 teams); 2302 #12 at 5:50 AM; 2329 at 6:15 AM; **2306 #12 at 6:34 AM** when km12 went live (the rating swings 30-40 after
-  every upload; km12 stays up for at least two hours). The pool has 31 maps since 10 Oct (17 old + the 14 Qualifier maps).
+  every upload); 2255-2275 through the morning (km12 ranked 60-60), **2234 #18 at 1:34 PM** when km13 went live. Each
+  submission keeps its own rating; the team's is the active one's. The pool has 31 maps since 10 Oct (17 old + the 14 Qualifier maps).
 - **Allowances in use:** 60 hand-started games/h go to ranked series (`replays/auto_ranked`). Since 1:13 AM the panel is
   the teams we gain rating against per series (10-13 Oct data): SSS, TTT, horse, WeHaveQuizzes, Settlers, Codehammer,
   plus Cutlery and chat gippy tea; larp, Computers, forgot to mention and the hieroglyph team were dropped (we lose 3 to
-  5 points a series against them). The separate 60/h against DEV teams is the test bed: unranked series vs dev test 1
-  on Thermopylae, Maelstrom, Metro, Athena, Ezam (`replays/auto_dev20`). Stop either with a `STOP` file in
+  5 points a series against them); since 1:05 PM also without horse (22-43, -46 points) and chat gippy tea (7-23, -51),
+  with test4 and Sponge added. The separate 60/h against DEV teams is the test bed: unranked series vs dev test 1
+  on Around UNSW, Islands, Metro, Athena (`replays/auto_dev22`). Stop either with a `STOP` file in
   its folder. Judge with `tools/analysis/oct12/build_watch.py`, `by_build.py` and `watch_mech.py`.
 - **Open after km7:** the hidden queen stays at length 2, so she loses the tiebreak to any living enemy queen that is
   longer; the full late crown (to 25) got her rammed at r394-449 in local play, the small one (to 10) cost wins on
   Maelstrom and Slithery Fight. Not hidden yet: Hive, Ouroboros, Whale Song, Troll Australia, Athena, Metro (no local
   gain), and the two-dragon maps (Trophy, Stripes, Default, Maze, Ezam: she is a needed worker there).
+- **Open after km13 (the main lever now): our units do not spread.** On Around UNSW our heads have stood on 450-490
+  tiles by r100 against the opponents' 1,370-1,690 (34 units against 60, and more corpse pearls eaten than new ones);
+  smaller gaps on Australia, Slithery Fight and Thermopylae; on Metro we are ahead. km13's per-map settings close part of
+  it on Around UNSW only. Measure with `tools/analysis/oct13/spread.py` (server replay or `--local RUN`) and
+  `econ.py RUN stage/NAME`. Also open: on Metro both queens die and we lose the longest-dragon race by a few segments
+  with twice the length; Thermopylae (1-13 vs dev test 1: their length-2 queen circles her start tile and lives, ours
+  walks to the hideout and dies); Slithery Fight (0-9 with the long queen; a crowd penalty makes the team 35% longer
+  but the queen shorter).
 - **Uploads are bundled** (about one every two hours): each new upload widens the rating and the first series swing hard.
 - `bot/` carries the `QUAL_*` flags (default 0) and a 47-map `maps_data.hpp`. Lines below this point in this section
   are from 9 Oct and describe the build history up to qf1.

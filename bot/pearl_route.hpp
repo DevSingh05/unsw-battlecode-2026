@@ -14,7 +14,7 @@ double bestPearlRoute()
             if (v >= 0 && bfsDist[v] == bfsDist[u] + 1)
                 continuation = std::max(continuation, routeValue[v]);
         }
-        routeValue[u] = pearlValue(u, bfsDist[u]) + PEARL_GAMMA * continuation;
+        routeValue[u] = pearlValue(u, bfsDist[u]) + RP.gamma * continuation;
     }
-    return bfsQ.empty() ? 0.0 : PEARL_GAMMA * routeValue[bfsQ.front()];
+    return bfsQ.empty() ? 0.0 : RP.gamma * routeValue[bfsQ.front()];
 }

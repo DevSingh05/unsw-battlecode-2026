@@ -85,6 +85,7 @@ struct RuntimeParams
     int qkFrom = 0;                          // ROUND3 P7: the per-map queen-king starts at max(kingSeedRound, qkFrom)
     double crowdEarly = 0;                   // ROUND3 P7: crowd penalty used only while round < kingSeedRound (0 = off)
     int qSmall = 0;                          // R10 LANE_QSMALL: small home queen, never fed
+    double gamma = PEARL_GAMMA;              // OLD_GAMMA / QUAL_GAMMA: per-map discount per step for food further away
 #if QUAL_KNOWN
     int qParkIn = 0;                         // QUAL_QPARK_IN: the queen's process sets qPark = 1 once she has left her spawn's portal-free region
 #endif
@@ -136,6 +137,32 @@ int qhideEntry(const char* name)
     return -1;
 }
 #endif
+// OLD_NODIVE / OLD_GAMMA / OLD_CROWD: is this older known map's bit set in mask? Bit order = QHOME_OLD_MAPS, then
+// Maze 15, Portals 16.
+bool oldMapBit(const std::string& n, long mask)
+{
+    if (!mask)
+        return false;
+    static const char* const O[17] = {"Around UNSW", "Australia", "Islands", "Slithery Fight", "Schooltime", "Autarky",
+                                      "Default", "Trophy", "Devil", "Queen Of Spades", "Prisoners Dilemma", "Stripes",
+                                      "Tower Defense", "weakhold", "Trauma", "Maze", "Portals"};
+    for (int i = 0; i < 17; i++)
+        if ((mask >> i & 1) && n == O[i])
+            return true;
+    return false;
+}
+// the per-map settings that work the same way on every older known map (called at both ends of applyMapParams)
+void oldMapExtras(const std::string& n)
+{
+    if (oldMapBit(n, OLD_NODIVE))
+        RP.diveStopRound = 1; // OLD_NODIVE: no pocket dives
+    if (oldMapBit(n, OLD_GAMMA))
+        RP.gamma = OLD_GAMMA_V; // OLD_GAMMA: food further away counts for more
+    if (oldMapBit(n, OLD_CROWD))
+        RP.crowd = OLD_CROWD_V; // OLD_CROWD: spread the swarm
+    if (oldMapBit(n, OLD_CROWD_EARLY))
+        RP.crowdEarly = OLD_CROWD_V; // OLD_CROWD_EARLY: the same, only until the map's king seed round
+}
 bool qualKnown(const char* name)
 {
     if (!(QUAL_KNOWN))
@@ -265,6 +292,11 @@ void applyMapParams(const char* name, int tiles = 0)
                 RP.feedStart = QUAL_QPARK_FEED;
         }
 #endif
+#if QUAL_KNOWN
+        if (int qi = qualMapIndex(name); qi >= 0 && ((QUAL_GAMMA) >> qi & 1))
+            RP.gamma = QUAL_GAMMA_V; // QUAL_GAMMA: food further away counts for more on this known Qualifier map
+#endif
+        oldMapExtras(n);
         return;
     }
     auto set = [&](const char* map, int rg, int kd, int ks, int ss, int fs) {
@@ -356,6 +388,7 @@ void applyMapParams(const char* name, int tiles = 0)
     if (LATE_SPLIT_KING_MAPS > 0 && RP.kingRace && RP.lateSplitRound > LATE_SPLIT_KING_MAPS)
         RP.lateSplitRound = LATE_SPLIT_KING_MAPS;
     qgen();
+    oldMapExtras(n);
 }
 
 constexpr int INF = 1 << 29;
@@ -1623,7 +1656,7 @@ struct Bot
         bfsQ.push_back(start);
         pearlScore = 0;
         area = 0;
-        const double g = PEARL_GAMMA;
+        const double g = RP.gamma;
         std::vector<double> gp(1, 1.0);
         for (size_t qi = 0; qi < bfsQ.size(); qi++)
         {

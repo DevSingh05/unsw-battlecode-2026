@@ -1516,6 +1516,42 @@
 #ifndef QUAL_TRAPSEAL
 #define QUAL_TRAPSEAL 0
 #endif
+// OLD_NODIVE: bit i = no pocket dives on older known map i. Order: Around UNSW 0, Australia 1, Islands 2, Slithery Fight 3,
+// Schooltime 4, Autarky 5, Default 6, Trophy 7, Devil 8, Queen Of Spades 9, Prisoners Dilemma 10, Stripes 11,
+// Tower Defense 12, weakhold 13, Trauma 14, Maze 15, Portals 16. Server games 13 Oct: on Around UNSW we lose a median
+// of 76 units before r100 with no enemy involved (the opponent 31) and hold 36 units at r100 against 60.
+#ifndef OLD_NODIVE
+#define OLD_NODIVE 0
+#endif
+// OLD_GAMMA: bit i (same order) = on older known map i the discount per step for food further away is OLD_GAMMA_V
+// instead of PEARL_GAMMA (0.82). QUAL_GAMMA / QUAL_GAMMA_V: the same for known Qualifier map i (QUAL_MAPS order).
+// Local 13 Oct (t74, all maps at 0.88 / 0.92 / 0.95 against km12): better only on Around UNSW (length r100 172 vs 95 at
+// 0.92) and Thermopylae (63 vs 26 at 0.95); worse on Australia, Default, Islands, Metro, Maelstrom, Whale Song, Trauma.
+#ifndef OLD_GAMMA
+#define OLD_GAMMA 0
+#endif
+#ifndef OLD_GAMMA_V
+#define OLD_GAMMA_V 0.92
+#endif
+#ifndef QUAL_GAMMA
+#define QUAL_GAMMA 0
+#endif
+#ifndef QUAL_GAMMA_V
+#define QUAL_GAMMA_V 0.95
+#endif
+// OLD_CROWD: bit i (same order) = crowd penalty OLD_CROWD_V on older known map i (what CROWD_MAPS does for five maps).
+// Local 13 Oct (t73): Around UNSW length r100 158 vs 102, tiles visited by r100 734 vs 546.
+#ifndef OLD_CROWD
+#define OLD_CROWD 0
+#endif
+#ifndef OLD_CROWD_V
+#define OLD_CROWD_V 3.0
+#endif
+// OLD_CROWD_EARLY: bit i (same order) = the crowd penalty only until the map's king seed round (Slithery Fight: with
+// OLD_CROWD the fed home queen ended shorter, 0-4 locally, although the team was 35% longer at r200).
+#ifndef OLD_CROWD_EARLY
+#define OLD_CROWD_EARLY 0
+#endif
 // QUAL_PBLOCK: 1 (with QUAL_TRAPSEAL) = while another known Qualifier map is still a candidate, its trap rooms are sealed
 // too. On Troll Australia every starter first adopts Australia (same start tiles), whose data shows those rooms open;
 // the team-B queen walked into (6,23) at r21 in 4 of 6 local games before she had seen a difference.
