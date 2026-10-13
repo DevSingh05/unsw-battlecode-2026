@@ -3256,6 +3256,7 @@ struct Bot
     int qhSpawn = -1;
     bool qhFlee = false;
     std::vector<int> qhDist;
+    std::vector<int> qhPortal; // QHOME_PORTAL_R: plain steps to the nearest portal mouth or exit (99 = far)
     const KnownMap* qhFor = nullptr; // the map qhDist was built on (rebuilt when the adopted map changes)
     int qhomeR() const
     {
@@ -3268,7 +3269,10 @@ struct Bot
         const int hr = qhomeR();
         if (hr <= 0 || !amQueen() || qhDist.empty() || qhFlee)
             return 0.0;
-        return -QUAL_QHOME_W * std::max(0, qhDist[t] - hr);
+        double s = -QUAL_QHOME_W * std::max(0, qhDist[t] - hr);
+        if ((QHOME_PORTAL_R) > 0 && !qhPortal.empty())
+            s -= QHOME_PORTAL_W * std::max(0, (QHOME_PORTAL_R) - qhPortal[t]);
+        return s;
     }
 #endif
     void qparkPrep()
@@ -3293,6 +3297,35 @@ struct Bot
                         if (v >= 0 && v == w.plainStep(q[i], d) && qhDist[v] == 99)
                             qhDist[v] = qhDist[q[i]] + 1, q.push_back(v);
                     }
+                if ((QHOME_PORTAL_R) > 0)
+                {
+                    // distance to the nearest portal mouth (a tile with a portal side) or exit (a tile a portal lands on)
+                    qhPortal.assign(w.N, 99);
+                    std::vector<int> pq;
+                    for (int t = 0; t < w.N; t++)
+                        for (int d = 0; d < 4; d++)
+                        {
+                            int v = step(t, d);
+                            if (v >= 0 && v != w.plainStep(t, d))
+                            {
+                                if (qhPortal[t] == 99)
+                                    qhPortal[t] = 0, pq.push_back(t);
+                                if (qhPortal[v] == 99)
+                                    qhPortal[v] = 0, pq.push_back(v);
+                            }
+                        }
+                    for (size_t i = 0; i < pq.size(); i++)
+                    {
+                        if (qhPortal[pq[i]] >= (QHOME_PORTAL_R))
+                            continue;
+                        for (int d = 0; d < 4; d++)
+                        {
+                            int v = step(pq[i], d);
+                            if (v >= 0 && v == w.plainStep(pq[i], d) && qhPortal[v] == 99)
+                                qhPortal[v] = qhPortal[pq[i]] + 1, pq.push_back(v);
+                        }
+                    }
+                }
             }
             for (auto& o : segs)
                 if (o.head && o.team != w.myTeam && wrapDist(o.tile, myHead) <= PM_QP_FLEE)

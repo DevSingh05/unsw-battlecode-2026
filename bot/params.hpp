@@ -1656,6 +1656,16 @@
 #ifndef QHOME_CROWN
 #define QHOME_CROWN 0
 #endif
+// QHOME_PORTAL_R / QHOME_PORTAL_W: the leashed queen pays QHOME_PORTAL_W per step for ending closer than QHOME_PORTAL_R
+// plain steps to a portal mouth or exit (0 = off), also lifted while an enemy head is near. km5 on Whale Song, 13 Oct:
+// three of her six deaths were head-ons by a unit that had been 34-35 tiles away the round before, i.e. it came
+// through a portal next to her.
+#ifndef QHOME_PORTAL_R
+#define QHOME_PORTAL_R 0
+#endif
+#ifndef QHOME_PORTAL_W
+#define QHOME_PORTAL_W 30.0
+#endif
 // QHOME_CROWN_FROM / QHOME_CROWN_CAP: with QHOME_CROWN the leashed queen is the queen-king only from this round (0 = the
 // king seed round) and feeders stop at this length (0 = no cap). Local, 12 Oct: crowned from r250 without a cap she was
 // fed to a median 34 but alive at the end in only 5 of 20 games (uncrowned small queen 11 of 20): a long queen is a ram
