@@ -1701,6 +1701,17 @@
 #ifndef QHIDE_SMALL
 #define QHIDE_SMALL 0
 #endif
+// QHIDE_CROWN: bit i = on the known map(s) of QHIDE entry i the hideout queen is also the queen-king from round
+// QHIDE_CROWN_FROM, fed up to length QHIDE_CROWN_CAP (what QHOME_CROWN does on leashed maps). Needs the QHIDE bit too.
+#ifndef QHIDE_CROWN
+#define QHIDE_CROWN 0
+#endif
+#ifndef QHIDE_CROWN_FROM
+#define QHIDE_CROWN_FROM 350
+#endif
+#ifndef QHIDE_CROWN_CAP
+#define QHIDE_CROWN_CAP 25
+#endif
 #ifndef QHIDE_PORTAL_PEN
 #define QHIDE_PORTAL_PEN 400.0 // a hideout queen that is not fleeing pays this for a step through a portal
 #endif

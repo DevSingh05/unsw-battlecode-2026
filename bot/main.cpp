@@ -119,6 +119,23 @@ int qhomeKnownRadius(const char* name)
             return ((QHOME_OLD) >> i & 1) ? QHOME_OLD_R : 0;
     return 0;
 }
+#if QHIDE
+// QHIDE: the QHIDE_SPOTS entry that covers a known map, by name (look-alike maps share an entry); -1 = none
+int qhideEntry(const char* name)
+{
+    std::string n(name ? name : "");
+    if (n == "Australia")
+        n = "Troll Australia";
+    else if (n == "Maze")
+        n = "Ezam";
+    else if (n == "Trolley Problem")
+        n = "Trolley Problem (Buffed)";
+    for (int i = 0; i < QHIDE_COUNT; i++)
+        if (n == QHIDE_SPOTS[i].name)
+            return i;
+    return -1;
+}
+#endif
 bool qualKnown(const char* name)
 {
     if (!(QUAL_KNOWN))
@@ -575,6 +592,12 @@ struct World
             RP.queenKing = 1, RP.qkFrom = QHOME_CROWN_FROM, RP.qkCap = QHOME_CROWN_CAP; // QHOME_CROWN: the leashed queen is the queen-king from the seed round (or QHOME_CROWN_FROM)
         if ((QHOME_SMALL) > 0 && qhKnownR > 0)
             RP.queenKeep = 64, RP.queenKeepR = QHOME_SMALL; // QHOME_SMALL: no split floor for the leashed queen until that round
+#endif
+#if QHIDE
+        if ((QHIDE_CROWN) && RP.kingDeclare)
+            if (int hi = qhideEntry(m->name); hi >= 0 && ((QHIDE) >> hi & 1) && ((QHIDE_CROWN) >> hi & 1) &&
+                                               !(QHIDE_SPOTS[hi].skip && std::strcmp(m->name, QHIDE_SPOTS[hi].skip) == 0))
+                RP.queenKing = 1, RP.qkFrom = QHIDE_CROWN_FROM, RP.qkCap = QHIDE_CROWN_CAP; // QHIDE_CROWN: the hideout queen is the queen-king from that round
 #endif
         sym = m->sym;
 #if SPRINT_DEBUG
@@ -3265,11 +3288,14 @@ struct Bot
     int qhHide = -1;       // QHIDE: this queen's hideout tile (-1 = no entry for this map and start)
     bool qhLooked = false; // the table was searched (once, on the queen's first turn)
     int qhBuilt = -1000;   // round qhDist was last built on an unseen map
+    int qhSrcBuilt = -1;   // the tile qhDist was built from
+    const char* qhSkip = nullptr; // the entry is not used while the adopted map has this name
+    bool qhHideOn() const { return qhHide >= 0 && !(qhSkip && w.known && std::strcmp(w.known->name, qhSkip) == 0); }
 #endif
     int qhomeR() const
     {
 #if QHIDE
-        if (qhHide >= 0)
+        if (qhHideOn())
             return (QHIDE_R) + (queenKingRound() ? (QHIDE_R_CROWN) : 0);
 #endif
         if (w.known)
@@ -3304,13 +3330,15 @@ struct Bot
                     continue;
                 for (int k = 0; k < 2; k++)
                     if (s.spawn[k] == qhSpawn)
-                        qhHide = s.hide[k];
+                        qhHide = s.hide[k], qhSkip = s.skip;
             }
         }
-        if (qhHide >= 0 && (QHIDE_SMALL) > 0)
+        if (qhHideOn() && (QHIDE_SMALL) > 0)
             RP.queenKeep = 64, RP.queenKeepR = QHIDE_SMALL; // every turn: adopting a map rewrites RP
-        if (qhHide >= 0 && !w.known && round - qhBuilt >= (QHIDE_REBUILD))
+        if (qhHideOn() && !w.known && round - qhBuilt >= (QHIDE_REBUILD))
             qhDist.clear(); // unseen map: the walls seen since the last build change the walk
+        if (!qhDist.empty() && qhSrcBuilt != (qhHideOn() ? qhHide : qhSpawn))
+            qhDist.clear(); // the entry was switched off or on by the adopted map: walk from the other tile
 #endif
         qhFlee = false;
         if (qhomeR() > 0 && amQueen() && myHead >= 0)
@@ -3321,7 +3349,8 @@ struct Bot
                 qhDist.assign(w.N, 99);
 #if QHIDE
                 qhBuilt = round;
-                const int qhSrc = qhHide >= 0 ? qhHide : qhSpawn;
+                const int qhSrc = qhHideOn() ? qhHide : qhSpawn;
+                qhSrcBuilt = qhSrc;
 #else
                 const int qhSrc = qhSpawn;
 #endif
@@ -7215,7 +7244,7 @@ struct Bot
 #if QHOME_ON
             score += qhomeScore(t); // QUAL_QHOME / QHOME_OLD / QHOME_UNK (0 unless this process is a leashed queen)
 #if QHIDE
-            if (qhHide >= 0 && amQueen() && !qhFlee && !qhDist.empty() && t != w.plainStep(myHead, d))
+            if (qhHideOn() && amQueen() && !qhFlee && !qhDist.empty() && t != w.plainStep(myHead, d))
                 score -= QHIDE_PORTAL_PEN; // QHIDE: the walk is by plain steps; a tile behind a portal only looks nearer
 #endif
 #endif
