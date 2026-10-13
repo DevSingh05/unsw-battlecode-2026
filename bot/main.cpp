@@ -89,6 +89,7 @@ struct RuntimeParams
     int scatter = 0;                         // SCATTER_OLD / SCATTER_QUAL: free short units walk to food tiles further away
     int pfStrict = 0;                        // PF_STRICT_MAPS: PF_STRICT applies on this older known map
     int qhunt = 0;                           // QHUNT_OLD / QHUNT_QUAL: queen hunters on this map
+    int ubox = 0;                            // UBOX_OLD / UBOX_QUAL: the enclosure test on this map
 #if QUAL_KNOWN
     int qParkIn = 0;                         // QUAL_QPARK_IN: the queen's process sets qPark = 1 once she has left her spawn's portal-free region
 #endif
@@ -171,6 +172,10 @@ void oldMapExtras(const std::string& n)
         RP.pfStrict = 1; // PF_STRICT_MAPS
     if (oldMapBit(n, QHUNT_OLD))
         RP.qhunt = 1; // QHUNT_OLD
+    if (oldMapBit(n, UBOX_OLD))
+        RP.ubox = 1; // UBOX_OLD
+    if (oldMapBit(n, QKING_OLD) && !RP.queenKing && RP.kingDeclare)
+        RP.queenKing = 1, RP.qkFrom = QKING_FROM, RP.qkCap = QKING_CAP; // QKING_OLD: the queen is the king from the seed round
 }
 bool qualKnown(const char* name)
 {
@@ -287,7 +292,11 @@ void applyMapParams(const char* name, int tiles = 0)
                 RP.feedStart = NEWMAP_KING_FEED;
         }
         if (int qi = qualMapIndex(name); qi >= 0 && ((QUAL_CROWD) >> qi & 1))
+        {
             RP.crowd = QUAL_CROWD_V; // QUAL_CROWD: spread the swarm on this known Qualifier map
+            if ((QUAL_CROWD_EARLY) >> qi & 1)
+                RP.crowd = CROWD_PENALTY, RP.crowdEarly = QUAL_CROWD_V; // QUAL_CROWD_EARLY: only until the king seed round
+        }
         if (int qi = qualMapIndex(name); qi >= 0 && ((QUAL_NODIVE) >> qi & 1))
             RP.diveStopRound = 1; // QUAL_NODIVE: no pocket dives on this known Qualifier map
         if (int qi = qualMapIndex(name); qi >= 0 && ((QUAL_QPARK) >> qi & 1))
@@ -308,6 +317,8 @@ void applyMapParams(const char* name, int tiles = 0)
             RP.scatter = 1; // SCATTER_QUAL
         if (int qi = qualMapIndex(name); qi >= 0 && ((QHUNT_QUAL) >> qi & 1))
             RP.qhunt = 1; // QHUNT_QUAL
+        if (int qi = qualMapIndex(name); qi >= 0 && ((UBOX_QUAL) >> qi & 1))
+            RP.ubox = 1; // UBOX_QUAL
 #endif
         oldMapExtras(n);
         return;
@@ -2592,6 +2603,18 @@ struct Bot
     bool amQueen() const { return w.myId == 0 || w.myId == 1; }
     // BIG_RESERVE: is there a unit slot for this split? The last BIG_RESERVE slots are kept for the turn-around split
     // of a trapped long dragon (trappedSplit); with BIG_RESERVE 0 this is the plain unit-limit test.
+    // SPLIT_GATE (13 Oct, notes/top5/ECONOMY_OCT13.md rule 4): aAah fades the 4 -> 2+2 split between 52 and 58 units and
+    // dev test 1 stops it at 62; both then hold 25-32 units of length 5+ at r250 (we 0-7), which take two steps a turn
+    // and lunge 5+: 2.6-4.1 times our tiles and 1.8-2.2 times our new pearls on Around UNSW and Australia. With
+    // SPLIT_GATE_UNITS or more units of ours alive the growth split waits for length SPLIT_GATE_LEN.
+    bool splitGateOk() const
+    {
+        if ((SPLIT_GATE_UNITS) <= 0 || units < (SPLIT_GATE_UNITS) || amQueen())
+            return true;
+        if ((SPLIT_GATE_FROM) > 0 && round < (SPLIT_GATE_FROM))
+            return true;
+        return myLen >= (SPLIT_GATE_LEN);
+    }
     bool unitRoom(bool trappedSplit = false) const
     {
         int lim = w.unitLimit;
@@ -3086,6 +3109,17 @@ struct Bot
         return w.known && w.N >= QHUNT_MIN_TILES && w.swapState >= 0 && !amQueen() && !iAmKing() && myHead >= 0 &&
                myLen <= QHUNT_MAXLEN && round >= (QHUNT) && units >= QHUNT_MIN_UNITS && (w.myId % QHUNT_MOD) == 0;
     }
+    // QHUNT_HOLD: a hunter is a lancer. Lunge reach is ceil(L/4) + L - 2: 3 at length 4, 5 at length 5, 6 at length 6, so a
+    // hunter of 5-6 can strike almost any tile of its 7x7 view while one of 2-4 has to get within 1-3 steps of a queen
+    // that walks away from it (notes/research/ALGORITHMS_OCT13.md, proposal 3A). From QHUNT_HOLD_EARLY rounds before the
+    // hunt a hunter makes no growth split below QHUNT_HOLD + 2 and then sheds only the surplus.
+    bool qhuRole() const
+    {
+        if ((((QHUNT_OLD) | (QHUNT_QUAL)) != 0) && !RP.qhunt)
+            return false;
+        return (QHUNT_HOLD) > 0 && w.known && w.N >= QHUNT_MIN_TILES && !amQueen() && !iAmKing() && round >= (QHUNT) - (QHUNT_HOLD_EARLY) &&
+               units >= QHUNT_MIN_UNITS && (w.myId % QHUNT_MOD) == 0 && myLen <= QHUNT_MAXLEN;
+    }
     void qhuPrep()
     {
         if (!qhuOn())
@@ -3154,6 +3188,13 @@ struct Bot
             return 0.0;
         return -QHUNT_W * std::min(qhuDist[t], 80);
     }
+#endif
+#if QHUNT
+    bool qhuHoldNow() const { return qhuRole() && myLen < (QHUNT_HOLD) + 2; }
+    int qhuSurplus() const { return qhuRole() ? myLen - (QHUNT_HOLD) : 0; }
+#else
+    bool qhuHoldNow() const { return false; }
+    int qhuSurplus() const { return 0; }
 #endif
 #if QESC
     // QESC: queen escorts. qescDist = plain walking distance from our queen's hideout tile (99 = not reachable).
@@ -4566,7 +4607,7 @@ struct Bot
                 // v37a step 3: kamikaze reach K(Lv) = F + (Lv-2) (a head-on kills both, so paid steps are free for it)
                 int Lv = enemyVisibleLength(s.id);
                 if (!enemyTailSeen(s))
-                    Lv = std::max(Lv, 3);
+                    Lv = std::max(Lv, static_cast<int>(KREACH_UNSEEN)); // KREACH_UNSEEN: a head at the edge of the view shows one or two segments
                 int kr = std::min(freeSteps(Lv) + std::max(0, Lv - 2), static_cast<int>(KR_CAP));
                 if (amQueen())
                     reach = std::max(reach, kr); // full strength for the queen
@@ -4879,6 +4920,73 @@ struct Bot
         scBfs(pick, scDist);
         if (dbg)
             std::fprintf(dbg, "SCATTER target (%d,%d) d=%d\n", pick % w.W, pick / w.W, d0[pick]);
+    }
+
+    // ---- UBOX (13 Oct): will this step enclose me? The area search treats my own tail as free two steps later, but
+    // every pearl I eat keeps the tail in place for a turn and a head may not step onto its own tail tile, so a short
+    // unit that eats inside a 2x2 dead-end room (or a ring of its own body) ends up with no move and has to split,
+    // losing its front two segments for one pearl. Server, such splits per game before r250, ours / the opponent's:
+    // Slithery Fight 264/122, Maelstrom 208/1, Australia 73/8 (tools/analysis/oct13/badsplit.py).
+    // Test for a step onto t: R = the tiles I can still reach from t without crossing a wall, my own body as it will lie
+    // after the step, or a foreign body that stays longer than three steps (UBOX_CAP tiles or more = open, no test).
+    // A = |R|, p = pearls in R, L0 = my length after the step, i = the largest index (0 = head) of a segment of mine that
+    // touches R or t. That segment's tile is free for me only after L0 - i moves without eating, and I have at most
+    // A - p of those: A - p < L0 - i means I get enclosed. Then the visit is worth (pearls eaten) - 2 if I can still
+    // split at the end and minus my whole length if not; below UBOX_MIN_GAIN the step costs UBOX_PEN.
+    double uboxPen(int t) const
+    {
+        if (amQueen() || myLen < 2 || static_cast<int>(trail.size()) < myLen)
+            return 0.0;
+        const bool eat = visible[t] && w.pearlMem[t];
+        const int L0 = myLen + (eat ? 1 : 0);
+        const int keep = eat ? myLen : myLen - 1; // old segments 0..keep-1 stay; old segment j becomes j + 1
+        // UBOX_FAST: a fast spawn tile in there will have a pearl again before I am out (it grows me and it pays)
+        auto pearlThere = [&](int v) { return w.pearlMem[v] || ((UBOX_FAST) && w.gmax[v] > 0 && w.gmax[v] <= (UBOX_FAST)); };
+        auto ownIdx = [&](int v) {
+            for (int j = keep - 1; j >= 0; j--)
+                if (trail[j] == v)
+                    return j + 1;
+            return -1;
+        };
+        int reg[UBOX_CAP + 1];
+        int n = 0, A = 0, p = 0, iMax = 0;
+        reg[n++] = t;
+        for (int qi = 0; qi < n; qi++)
+        {
+            const int u = reg[qi];
+            for (int d = 0; d < 4; d++)
+            {
+                const int v = step(u, d);
+                if (v < 0 || v == u)
+                    continue;
+                bool seen = false;
+                for (int k = 0; k < n && !seen; k++)
+                    seen = reg[k] == v;
+                if (seen)
+                    continue;
+                if (const int oi = ownIdx(v); oi >= 0)
+                {
+                    iMax = std::max(iMax, oi);
+                    continue;
+                }
+                if (occId[v] >= 0 && occId[v] != w.myId && freeT[v] > 3)
+                    continue; // a foreign body that stays
+                if (n >= UBOX_CAP)
+                    return 0.0; // open enough
+                reg[n++] = v;
+                A++;
+                if (pearlThere(v))
+                    p++;
+            }
+        }
+        if (A - p >= L0 - iMax)
+            return 0.0;
+        const int eaten = (eat ? 1 : 0) + p;
+        const bool canSplit = L0 + p >= 4 && units < w.unitLimit;
+        const double gain = canSplit ? eaten - 2.0 : -static_cast<double>(myLen);
+        if (gain >= UBOX_MIN_GAIN)
+            return 0.0;
+        return UBOX_PEN + UBOX_PER * (UBOX_MIN_GAIN - gain);
     }
 
     bool pocketWorthPumping(int t)
@@ -5584,19 +5692,36 @@ struct Bot
         if (!amQueen() && myLen <= KK_OWN_MAX && units >= KK_MIN_UNITS)
         {
             // KING_KILL: the longest-looking enemy dragon whose head we can reach for certain this turn
-            int bestT = -1, bestVis = 0;
+            // KK_REL / KK_HIDDEN / KK_TRY (13 Oct, notes/top5/LUNGES_OCT13.md rule 3): aAah takes 41-51 / 36 / 26-32% of its
+            // lunge chances at 3 / 4 / 5 steps with any unit about as long as the target or shorter; we took 7 / 5 / 6% with
+            // KK_MIN_VIS=9, because a 7x7 view rarely shows nine segments of one dragon. KK_REL > 0: the target must look
+            // at least KK_REL longer than us, where an enemy whose tail is out of view counts KK_HIDDEN segments more.
+            // KK_TRY: how many targets to try, longest-looking first (1 = only the longest, the old behaviour).
+            int candT[4] = {-1, -1, -1, -1}, candV[4] = {0, 0, 0, 0};
+            const int kkTry = std::max(1, std::min(4, static_cast<int>(KK_TRY)));
             for (auto& s : segs)
                 if (s.head && s.team != w.myTeam && s.id > 1)
                 {
                     int vis = enemyVisibleLength(s.id);
-                    if (vis >= KK_MIN_VIS && vis > bestVis)
-                        bestVis = vis, bestT = s.tile;
+                    if ((KK_HIDDEN) > 0 && !enemyTailSeen(s))
+                        vis += (KK_HIDDEN);
+                    if (vis < KK_MIN_VIS || ((KK_REL) > 0 && vis < myLen + (KK_REL)))
+                        continue;
+                    for (int i = 0; i < kkTry; i++)
+                        if (vis > candV[i])
+                        {
+                            for (int j = kkTry - 1; j > i; j--)
+                                candV[j] = candV[j - 1], candT[j] = candT[j - 1];
+                            candV[i] = vis, candT[i] = s.tile;
+                            break;
+                        }
                 }
-            if (bestT >= 0 && tryQueenKill(1 << 30, bestT))
-            {
-                r2log("kk", bestVis);
-                return true;
-            }
+            for (int i = 0; i < kkTry; i++)
+                if (candT[i] >= 0 && tryQueenKill(1 << 30, candT[i]))
+                {
+                    r2log("kk", candV[i]);
+                    return true;
+                }
         }
 #endif
         double bestVal = 0;
@@ -6823,6 +6948,34 @@ struct Bot
             return;
 
         // ---- splitting
+        // THREAT_SPLIT (13 Oct, notes/top5/LUNGES_OCT13.md rule 1): larp's dragons of 8+ split in 77-81% of the turns in which
+        // an enemy head stands within about three steps and a unit slot is free (ours 10%), the head keeping 2 and the
+        // rest leaving tail-first, and lose 44-52 length a game to rams where we lose 400-500. Ours do the same when an
+        // enemy head can walk to our head in THREAT_SPLIT_D steps and the tail end is free and not itself threatened.
+        if ((THREAT_SPLIT) > 0 && !amQueen() && myLen >= (THREAT_SPLIT) && unitRoom(true) && static_cast<int>(trail.size()) >= myLen &&
+            round >= (THREAT_SPLIT_FROM) && !(RP.queenKing && iAmKing()))
+        {
+            bool near = false, tailNear = false;
+            const int tail = trail[myLen - 1];
+            for (auto& o : segs)
+                if (o.head && o.team != w.myTeam)
+                {
+                    if (wrapDist(o.tile, myHead) <= (THREAT_SPLIT_D) + 1 && walkDist(o.tile, myHead, THREAT_SPLIT_D) <= (THREAT_SPLIT_D))
+                        near = true;
+                    if (wrapDist(o.tile, tail) <= 2)
+                        tailNear = true;
+                }
+            if (near && !tailNear && threatAt[tail] == 0 && tailHasExit(myLen - 2))
+            {
+                r2log("tsp", myLen);
+                out += "SPLIT " + std::to_string(myLen - 2) + "\n";
+                pending.clear();
+                pendingSplit = true;
+                if (dbg)
+                    std::fprintf(dbg, "  -> threat split %d\n", myLen - 2);
+                return;
+            }
+        }
         bool threatened = threatAt[myHead] > 0 || (PORTAL_NO_SPLIT && portalExit[myHead]);
         bool bigLate = RP.kingDeclare && round >= RP.kingSeedRound && myLen >= KING_MIN_LEN;
         if (RP.keepLen > 0 && myLen >= RP.keepLen)
@@ -6993,15 +7146,17 @@ struct Bot
                     std::fprintf(dbg, "PF in depth=%d len=%d aheadP=%.2f hold=%d units=%d/%d any=%d\n", pfDepth[myHead], myLen, bestP, holdTile, units, w.unitLimit, anyFree);
             }
         }
-        if (!pfIn && !stLap && holdTile < 0 && !(RP.kingDeclare && kingSelf) && !bigLate && !noVolSplit() && (!SPLIT_NEEDS_EXIT || tailHasExit(2)) &&
+        if (!pfIn && !stLap && holdTile < 0 && !(RP.kingDeclare && kingSelf) && !bigLate && !noVolSplit() && !qhuHoldNow() && (!SPLIT_NEEDS_EXIT || tailHasExit(2)) &&
             !(CONS_R && CONS_NOSPLIT && (consActive || consHostKeep())) &&
-            !(UNK_SEALED_FOOD && !w.known && UNK_SEALED_ROOM_MIN > 0 && roomSize(UNK_SEALED_ROOM_MIN) < UNK_SEALED_ROOM_MIN) && myLen >= (MIDSIZE && msUnit() ? (msShed(threatened) ? 5 : MS_LEN) : SPLIT_LEN) && myLen >= 4 && unitRoom() && units < SPLIT_MAX_UNITS &&
+            !(UNK_SEALED_FOOD && !w.known && UNK_SEALED_ROOM_MIN > 0 && roomSize(UNK_SEALED_ROOM_MIN) < UNK_SEALED_ROOM_MIN) && myLen >= (MIDSIZE && msUnit() ? (msShed(threatened) ? 5 : MS_LEN) : SPLIT_LEN) && myLen >= 4 && unitRoom() && units < SPLIT_MAX_UNITS && splitGateOk() &&
             (round < RP.splitStopRound || (RP.lateSplitRound > 0 && round < RP.lateSplitRound && myLen <= LATE_SPLIT_MAXLEN)) &&
             (!threatened || msShed(threatened)) && sdOk())
         {
             int k = SPLIT_CHILD > 0 ? std::min(SPLIT_CHILD, myLen - 2) : myLen / 2;
             if (tipK > 0)
                 k = tipK;
+            else if (qhuSurplus() >= 2)
+                k = qhuSurplus(); // QHUNT_HOLD: the hunter keeps its lance and sheds the rest
             else if (MIDSIZE && msUnit())
             {
                 // R11 MIDSIZE: bulk (child L-2 leaves from the tail) or half; fall back if the tail end is closed
@@ -7348,6 +7503,16 @@ struct Bot
             // the dive test did not approve is priced as the dead end it is.
             if ((PF_STRICT) && pfEntry && !pump && t != holdTile && myLen <= PF_MAXLEN && !(area < need) && (((PF_STRICT_MAPS) == 0) || RP.pfStrict))
                 score -= PF_STRICT_PEN;
+            if ((UBOX) && ((((UBOX_OLD) | (UBOX_QUAL)) == 0) || RP.ubox) && !(pump && pfEntry) && t != holdTile && !pfIn && (((UBOX) & 2) == 0 || myLen <= UBOX_MAXLEN))
+            {
+                const double up = uboxPen(t); // UBOX: this step encloses me and does not pay for it
+                if (up > 0)
+                {
+                    score -= up;
+                    if (dbg)
+                        std::fprintf(dbg, "  ubox %c pen=%.0f\n", DIRC[d], up);
+                }
+            }
             if ((QVAULT & 2) && !RP.qPark && amQueen() && w.known && std::strcmp(w.known->name, "Australia") == 0 && !queenSafe() && !visible[t] && t != w.plainStep(myHead, d) &&
                 area < QVAULT_AUS_AREA)
                 score -= QVAULT_AUS_PEN; // DGU F2 QVAULT bit 2: early queen never enters the Australia portal vault

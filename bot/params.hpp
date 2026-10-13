@@ -10,6 +10,17 @@
 #define SPLIT_STOP_ROUND 350
 #endif
 // Stop splitting once the team has this many dragons.
+// SPLIT_GATE_UNITS / SPLIT_GATE_LEN / SPLIT_GATE_FROM: with at least SPLIT_GATE_UNITS units alive (0 = off) and from
+// round SPLIT_GATE_FROM, the growth split waits until the unit has SPLIT_GATE_LEN segments (see splitGateOk()).
+#ifndef SPLIT_GATE_UNITS
+#define SPLIT_GATE_UNITS 0
+#endif
+#ifndef SPLIT_GATE_LEN
+#define SPLIT_GATE_LEN 6
+#endif
+#ifndef SPLIT_GATE_FROM
+#define SPLIT_GATE_FROM 0
+#endif
 #ifndef SPLIT_MAX_UNITS
 #define SPLIT_MAX_UNITS 64
 #endif
@@ -1547,6 +1558,64 @@
 #ifndef OLD_CROWD_V
 #define OLD_CROWD_V 3.0
 #endif
+// UBOX: 1 = a step that will enclose the unit in a small region (walls, its own body as it lies after the step, eating
+// counted as a turn in which the tail does not move) costs UBOX_PEN + UBOX_PER per point below UBOX_MIN_GAIN, where the
+// gain is (pearls eaten in there) - 2 when it can still split out and minus its length when it cannot. Bit 2 = only for
+// units of length <= UBOX_MAXLEN. Regions of UBOX_CAP tiles or more are not tested. Not for the queen (QBOX) and not
+// for dives the static-pocket test approved.
+#ifndef UBOX
+#define UBOX 0
+#endif
+// QUAL_CROWD_EARLY: bit i = on known Qualifier map i the QUAL_CROWD penalty holds only until the king seed round (the
+// crowdEarly mechanism of Maze). Why: the penalty counts allied heads within two tiles of the step and stays on while
+// feeders have to gather round the king. Server since km14: Detention 5-7, all twelve decided by the longest dragon
+// with both queens alive at length 3, lost with 497 total length against 210 (longest 34 to 47) and 353 against 384
+// (37 to 44); Metro vs dev test 1 0-14 on the longest dragon with twice their length at r100.
+#ifndef QUAL_CROWD_EARLY
+#define QUAL_CROWD_EARLY 0
+#endif
+// QKING_OLD: bit i = on older known map i (OLD_NODIVE order) the queen is the team's king from the seed round (fed by the
+// feeders, stops at QKING_CAP segments, 0 = no cap; QKING_FROM = earliest round). weakhold since km14: 1-8, four of
+// them with our queen alive at 4 against 9-20 while we held 2-5 times their length and a longest dragon of 30-39.
+#ifndef QKING_OLD
+#define QKING_OLD 0
+#endif
+#ifndef QKING_FROM
+#define QKING_FROM 0
+#endif
+#ifndef QKING_CAP
+#define QKING_CAP 0
+#endif
+// UBOX_OLD / UBOX_QUAL: bit i = the test only on older known map i (OLD_NODIVE order) / known Qualifier map i; both 0 =
+// every map. Local 13 Oct vs km15 (UBOX=1, UBOX_FAST=8): Islands length r100 146/68, 116/84, r200 213/76, 183/82 and
+// half the boxed splits; Australia r200 192/138, 189/162; Maelstrom 166/48, 132/58; all 31 maps 31-31 with Tower
+// Defense 0-2 (4/63), Hive 167/202, Schooltime r200 144/230, so it goes on per map.
+#ifndef UBOX_OLD
+#define UBOX_OLD 0
+#endif
+#ifndef UBOX_QUAL
+#define UBOX_QUAL 0
+#endif
+#ifndef UBOX_CAP
+#define UBOX_CAP 14
+#endif
+#ifndef UBOX_PEN
+#define UBOX_PEN 80.0
+#endif
+#ifndef UBOX_PER
+#define UBOX_PER 10.0
+#endif
+#ifndef UBOX_MIN_GAIN
+#define UBOX_MIN_GAIN 1.0
+#endif
+#ifndef UBOX_MAXLEN
+#define UBOX_MAXLEN 8
+#endif
+// UBOX_FAST: spawn tiles with a gap of at most this many rounds count as holding a pearl inside the region (0 = only
+// pearls that are there now). A 2x2 room of four fast tiles then counts as a visit worth +2, an empty-looking one too.
+#ifndef UBOX_FAST
+#define UBOX_FAST 0
+#endif
 // FEED_LEAVE: pearls next to our fed king belong to the king. Bit 1 = the fed queen-king (QHIDE_BIG, Maze, Ezam, Portals,
 // parked queens), bit 2 = any king we would feed. While its head is in view, a pearl within FEED_LEAVE_R tiles of it has
 // no value for other units and stepping onto one costs FEED_LEAVE_PEN. FEED_LEAVE_EARLY: for the queen-king the rule
@@ -1721,6 +1790,28 @@
 #ifndef KING_KILL
 #define KING_KILL 0
 #endif
+// KK_REL / KK_HIDDEN / KK_TRY: see the comment at KING_KILL in tryRam() (0 / 0 / 1 = the km14 behaviour).
+#ifndef KK_REL
+#define KK_REL 0
+#endif
+#ifndef KK_HIDDEN
+#define KK_HIDDEN 0
+#endif
+#ifndef KK_TRY
+#define KK_TRY 1
+#endif
+// THREAT_SPLIT: 0 = off; else the minimum length of a non-queen dragon that splits off everything but its front two
+// segments when an enemy head can walk to its head in THREAT_SPLIT_D steps (needs a free unit slot and a free,
+// unthreatened tail end). THREAT_SPLIT_FROM: first round.
+#ifndef THREAT_SPLIT
+#define THREAT_SPLIT 0
+#endif
+#ifndef THREAT_SPLIT_D
+#define THREAT_SPLIT_D 3
+#endif
+#ifndef THREAT_SPLIT_FROM
+#define THREAT_SPLIT_FROM 0
+#endif
 #ifndef KK_OWN_MAX
 #define KK_OWN_MAX 4
 #endif
@@ -1745,6 +1836,14 @@
 // on Around UNSW and still lose to a length-2 queen that sits at home.
 #ifndef QHUNT_OLD
 #define QHUNT_OLD 0
+#endif
+// QHUNT_HOLD: 0 = off; else the length a hunter keeps (5 = lunge reach 5): from QHUNT_HOLD_EARLY rounds before QHUNT it
+// makes no growth split below QHUNT_HOLD + 2 and above that sheds only the surplus. Needs QHUNT_MAXLEN >= QHUNT_HOLD + 2.
+#ifndef QHUNT_HOLD
+#define QHUNT_HOLD 0
+#endif
+#ifndef QHUNT_HOLD_EARLY
+#define QHUNT_HOLD_EARLY 30
 #endif
 // QHUNT_CENTRE: 1 = every tile within QHUNT_R of her start is a waypoint and every other QHUNT_PERIOD the waypoint is the
 // start tile itself (dev test 1's length-2 queen circles a 2x2 block on her start tile on Thermopylae all game).
@@ -2453,6 +2552,13 @@
 // ---- P6: defensive reach and endgame
 // KREACH_MINLEN / KREACH_QUEEN: who gets the KREACH kamikaze reach when KREACH=1 (defaults = the old behaviour:
 // L>=5 paid tier, queen full). Staged test: KREACH=1 KREACH_MINLEN=8 KREACH_QUEEN=0 KR_CAP=6.
+// KREACH_UNSEEN: the enemy length assumed when its tail is not in view (3 = the old value: reach 2). Server 13 Oct
+// (tools/analysis/oct13/fog.py, 5,391 deaths of our 8+ dragons to an enemy head): in 67% the killer was inside the
+// victim's view when it started its last move, at Chebyshev distance 2 (1,843) or 3 (1,447), where only its head and
+// perhaps one segment show; killers are length 4+ in half the cases (reach 3-6).
+#ifndef KREACH_UNSEEN
+#define KREACH_UNSEEN 3
+#endif
 #ifndef KREACH_MINLEN
 #define KREACH_MINLEN 5
 #endif
