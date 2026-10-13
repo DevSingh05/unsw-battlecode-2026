@@ -1744,7 +1744,7 @@ struct Bot
             return false;
         };
         auto escapes = [&]() {
-            return (ESCAPE_SPLIT && L0 <= 3 && L >= 4 && units < w.unitLimit && (!RP.escapeHotOnly || hotEaten > 0) &&
+            return (ESCAPE_SPLIT && L0 <= 3 && L >= 4 && unitRoom() && (!RP.escapeHotOnly || hotEaten > 0) &&
                     (ESC_NET == 0 || L - L0 >= ESC_NET)) || // v44 ESC_NET
                    tipEscape();
         };
@@ -2491,6 +2491,15 @@ struct Bot
     // v36: dragons 0 and 1 are the queens (one per team; ids follow map DRAGON line order, and the team
     // that owns line 1 varies by map and by server start swap). Any dragon running this code is ours.
     bool amQueen() const { return w.myId == 0 || w.myId == 1; }
+    // BIG_RESERVE: is there a unit slot for this split? The last BIG_RESERVE slots are kept for the turn-around split
+    // of a trapped long dragon (trappedSplit); with BIG_RESERVE 0 this is the plain unit-limit test.
+    bool unitRoom(bool trappedSplit = false) const
+    {
+        int lim = w.unitLimit;
+        if ((BIG_RESERVE) > 0 && !amQueen() && !(trappedSplit && myLen >= BIG_RESERVE_LEN))
+            lim -= (BIG_RESERVE);
+        return units < lim;
+    }
     // v43 WH_NOPUMP: on weakhold no pocket dives/pumps (the 3-tile pocket cycle there is mass-neutral, V43.md)
     bool whNoPump() const { return WH_NOPUMP && w.known && std::string(w.known->name) == "weakhold"; }
     // v44 WH_CENTRE: on weakhold the non-queen starter (ids 2/3, WHC_IDS) walks to the open pearl fields
@@ -4973,12 +4982,13 @@ struct Bot
     // path of <= K(myLen) = F + (L-2) steps over empty tiles (or tiles our own tail freed this turn) that ends
     // on her head is a certain head-on kill. Own body simulated step by step: a free step frees 1 tail tile,
     // a paid step 2, eating holds 1; a paid step needs length >= 3. Shortest path wins.
-    bool tryQueenKill(int capK = 1 << 30) // DGU F1: capK caps the path length (QKK_FREE)
+    bool tryQueenKill(int capK = 1 << 30, int target = -1) // DGU F1: capK caps the path length (QKK_FREE); target >= 0: that head tile instead of the enemy queen's (KING_KILL)
     {
-        int eq = -1;
-        for (auto& s : segs)
-            if (s.head && s.team != w.myTeam && s.id <= 1)
-                eq = s.tile;
+        int eq = target;
+        if (eq < 0)
+            for (auto& s : segs)
+                if (s.head && s.team != w.myTeam && s.id <= 1)
+                    eq = s.tile;
         if (eq < 0 || myHead < 0)
             return false;
         const int F = freeSteps(myLen);
@@ -5148,6 +5158,25 @@ struct Bot
             r2log("qk");
             return true;
         }
+#if KING_KILL
+        if (!amQueen() && myLen <= KK_OWN_MAX && units >= KK_MIN_UNITS)
+        {
+            // KING_KILL: the longest-looking enemy dragon whose head we can reach for certain this turn
+            int bestT = -1, bestVis = 0;
+            for (auto& s : segs)
+                if (s.head && s.team != w.myTeam && s.id > 1)
+                {
+                    int vis = enemyVisibleLength(s.id);
+                    if (vis >= KK_MIN_VIS && vis > bestVis)
+                        bestVis = vis, bestT = s.tile;
+                }
+            if (bestT >= 0 && tryQueenKill(1 << 30, bestT))
+            {
+                r2log("kk", bestVis);
+                return true;
+            }
+        }
+#endif
         double bestVal = 0;
         std::string bestCmd;
         for (auto& s : segs)
@@ -5764,7 +5793,7 @@ struct Bot
             return true;
         }
         int tail = static_cast<int>(trail.size()) >= myLen ? trail[myLen - 1] : -1;
-        if (tail >= 0 && !queenSafe() && !queenEarly() && !qGuard() && !(EG_NOSWAP > 0 && ENDGAME_GUARD > 0 && round >= EG_NOSWAP) && units < w.unitLimit && tailHasExit(myLen - 2) && threatAt[tail] == 0)
+        if (tail >= 0 && !queenSafe() && !queenEarly() && !qGuard() && !(EG_NOSWAP > 0 && ENDGAME_GUARD > 0 && round >= EG_NOSWAP) && unitRoom() && tailHasExit(myLen - 2) && threatAt[tail] == 0)
         {
             bool enemyNearTail = false;
             for (auto& o : segs)
@@ -6374,7 +6403,7 @@ struct Bot
         {
             // keep one long dragon; only peel 2-long pieces off when it's much longer
             bigLate = true;
-            if (myLen >= RP.keepLen + 4 && units < w.unitLimit && round < RP.splitStopRound && !threatened && !noVolSplit() &&
+            if (myLen >= RP.keepLen + 4 && unitRoom() && round < RP.splitStopRound && !threatened && !noVolSplit() &&
                 qgCap(2) >= 2 && !qsrBlock(2))
             {
                 r2log("spA", 2);
@@ -6511,7 +6540,7 @@ struct Bot
                         }
                     }
                 }
-                else if (myLen >= 4 && units < w.unitLimit)
+                else if (myLen >= 4 && unitRoom())
                 {
                     int k = myLen - 2;
                     if (PF_CHILD_MAX > 0 && k > PF_CHILD_MAX + 1)
@@ -6540,7 +6569,7 @@ struct Bot
         }
         if (!pfIn && !stLap && holdTile < 0 && !(RP.kingDeclare && kingSelf) && !bigLate && !noVolSplit() && (!SPLIT_NEEDS_EXIT || tailHasExit(2)) &&
             !(CONS_R && CONS_NOSPLIT && (consActive || consHostKeep())) &&
-            !(UNK_SEALED_FOOD && !w.known && UNK_SEALED_ROOM_MIN > 0 && roomSize(UNK_SEALED_ROOM_MIN) < UNK_SEALED_ROOM_MIN) && myLen >= (MIDSIZE && msUnit() ? (msShed(threatened) ? 5 : MS_LEN) : SPLIT_LEN) && myLen >= 4 && units < w.unitLimit && units < SPLIT_MAX_UNITS &&
+            !(UNK_SEALED_FOOD && !w.known && UNK_SEALED_ROOM_MIN > 0 && roomSize(UNK_SEALED_ROOM_MIN) < UNK_SEALED_ROOM_MIN) && myLen >= (MIDSIZE && msUnit() ? (msShed(threatened) ? 5 : MS_LEN) : SPLIT_LEN) && myLen >= 4 && unitRoom() && units < SPLIT_MAX_UNITS &&
             (round < RP.splitStopRound || (RP.lateSplitRound > 0 && round < RP.lateSplitRound && myLen <= LATE_SPLIT_MAXLEN)) &&
             (!threatened || msShed(threatened)) && sdOk())
         {
@@ -7413,7 +7442,7 @@ struct Bot
         // QBOX (v38q): a queen with no legal move splits even when the tail has no exit (sealed Schooltime box)
         bool qboxSplit = QBOX && amQueen() && bestD < 0 && myLen >= 4 && units < w.unitLimit;
         if (qboxSplit ||
-            (trapped && myLen >= 4 && !(queenSafe() && threatAt[myHead] > 0) && !(qGuard() && bestD >= 0) && units < w.unitLimit &&
+            (trapped && myLen >= 4 && !(queenSafe() && threatAt[myHead] > 0) && !(qGuard() && bestD >= 0) && unitRoom(true) &&
              (tailHasExit(myLen - 2) || (TRAP_SPLIT_BLIND && bestD < 0 && static_cast<int>(trail.size()) < myLen))))
         {
             int trapK = myLen - 2;

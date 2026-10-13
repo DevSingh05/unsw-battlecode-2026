@@ -1560,6 +1560,35 @@
 #ifndef NEWMAP_KING_FEED
 #define NEWMAP_KING_FEED 0
 #endif
+// BIG_RESERVE: the last this-many non-queen unit slots (0 = off) can only be used by the turn-around split of a trapped
+// dragon of length >= BIG_RESERVE_LEN. Every other split (growth, escape, swap, peel, pocket) stops that many units
+// earlier. SPLIT_MAX_UNITS=61 (km5) only stops growth splits: in km5's server games we still sat at 60-63 units from
+// r250 on, and in nine losses decided by the longest dragon 21 of 76 deaths of our length-20+ dragons were self
+// collisions. forgot to mention sits at 60-61; its longest dragon dies boxed 0.3 times a game, ours 3.3.
+#ifndef BIG_RESERVE
+#define BIG_RESERVE 0
+#endif
+#ifndef BIG_RESERVE_LEN
+#define BIG_RESERVE_LEN 10
+#endif
+// KING_KILL: 1 = a non-queen unit of length <= KK_OWN_MAX takes a certain head-on against a non-queen enemy head whose
+// visible body is at least KK_MIN_VIS long, using the same sprint path search as the certain queen kill (free steps,
+// then paid steps, pearls on the way as fuel). Head-ons are one for one whatever the lengths, so this trades 2-4
+// segments for a long dragon. km5 server games, nine losses decided by the longest dragon: 49 of 76 deaths of our
+// length-20+ dragons were enemy head-ons, most from 3 to 6 steps away; our own ram only reaches 2 steps
+// (LUNGE34, any target, lost on the server in v64; this one is only for long targets and only when it is certain).
+#ifndef KING_KILL
+#define KING_KILL 0
+#endif
+#ifndef KK_OWN_MAX
+#define KK_OWN_MAX 4
+#endif
+#ifndef KK_MIN_VIS
+#define KK_MIN_VIS 8
+#endif
+#ifndef KK_MIN_UNITS
+#define KK_MIN_UNITS 4
+#endif
 // QHUNT: start round of the queen hunters (0 = off). On a known map of at least QHUNT_MIN_TILES tiles, once we have
 // QHUNT_MIN_UNITS units, every QHUNT_MOD-th non-queen, non-king unit of length <= QHUNT_MAXLEN walks to the enemy
 // queen's home: a waypoint within QHUNT_R plain steps of her spawn tile (from the map table), changed every
