@@ -1,23 +1,31 @@
 # STATUS (single source of truth)
 
-Last updated: 2026-10-13 00:30 EDT. All updates to the user come from this page. Times are US Eastern.
+Last updated: 2026-10-13 03:20 EDT. All updates to the user come from this page. Times are US Eastern.
 
 ## Live and mainline
-- **LIVE since Mon 12 Oct 11:26 PM: km6 (id 22332)** = qf1 plus: seven Qualifier maps played as known maps (Atlantis,
-  Maelstrom, Troll Australia, Whale Song, Hive, Detention, Ouroboros; the last three with a crowd penalty); Atlantis
-  queen parked inside the pearl region and fed; Troll Australia trap rooms sealed (and Australia's vault door kept
-  open); small home queen (cut to 2 in round 0, leash of 8 steps, fed from r350 to about 25) on Whale Song, Troll
-  Australia, Hive, Ouroboros, Around UNSW and unseen big maps; growth splits stop at 61 units. Copies:
-  `variants/km1`..`km6`. **Fallback order: km5 (22278), km4 (22267), qf1 (21001)**; activate with
-  `POST /api/v1/submissions/<id>/activate`.
+- **LIVE since Tue 13 Oct 3:12 AM: km7 (id 22360)** = km6 plus the **queen hideout** (`QHIDE`): on Australia, Maelstrom,
+  Slithery Fight, Islands, Around UNSW, Devil, Queen Of Spades, Autarky and Thermopylae the queen is cut to 2 in round 0,
+  walks to a quiet corner of her own side and circles there (2 steps). The corners come from the enemy-traffic study of
+  5,500 server replays (`tools/analysis/oct13/`, table `bot/qhide_data.hpp`). On five of them she is fed late to about 10.
+  Local vs km6 on those maps: 51-27 over 78 games, our queen alive at the end in 44 against 12.
+  km6 (still the base) = qf1 plus seven Qualifier maps played as known maps, Atlantis queen parked inside, Troll
+  Australia trap rooms sealed, small leashed home queen on Whale Song, Troll Australia, Hive, Ouroboros and unseen
+  mid-size maps, growth splits stop at 61 units. Copies: `variants/km1`..`km7`.
+  **Fallback order: km6 (22332), km5 (22278), qf1 (21001)**; activate with `POST /api/v1/submissions/<id>/activate`.
 - **This session (unsw-battlecode-de) owns the server for now** (user, 12 Oct: battlecode_main's account is out of usage).
 - **Not in the Grand Final** (lost the Qualifier round of 32 to Sabotage-d, 3-4). Work now is ladder rating: 2177 #25 at
-  the start of 12 Oct, 2240 #15 at 11:50 PM after a dip to 2144 (first ranked series on fresh uploads swing 20-30 Elo).
-  The pool has 31 maps since 10 Oct (17 old + the 14 Qualifier maps).
-- **Allowances in use:** 60 hand-started games/h go to ranked series (`replays/auto_ranked`, panel SSS, TTT, FTM,
-  Computers, larp, WeHaveQuizzes, glyph team, Codehammer, chat gippy tea); the separate 60/h against DEV teams is the
-  test bed: unranked series vs dev test 1 on the maps under test (`replays/auto_dev15`). Stop either with a `STOP`
-  file in its folder. Judge with `tools/analysis/oct12/build_watch.py` and `watch_mech.py`.
+  the start of 12 Oct; 2205 #21 at 1:00 AM on 13 Oct; **2295 #13 at 3:12 AM** when km7 went live (a 35-30 hour against
+  top-12 teams). The pool has 31 maps since 10 Oct (17 old + the 14 Qualifier maps).
+- **Allowances in use:** 60 hand-started games/h go to ranked series (`replays/auto_ranked`). Since 1:13 AM the panel is
+  the teams we gain rating against per series (10-13 Oct data): SSS, TTT, horse, WeHaveQuizzes, Settlers, Codehammer,
+  plus Cutlery and chat gippy tea; larp, Computers, forgot to mention and the hieroglyph team were dropped (we lose 3 to
+  5 points a series against them). The separate 60/h against DEV teams is the test bed: unranked series vs dev test 1
+  on Australia, Devil, Islands, Maelstrom, Slithery Fight (`replays/auto_dev16`). Stop either with a `STOP` file in
+  its folder. Judge with `tools/analysis/oct12/build_watch.py`, `by_build.py` and `watch_mech.py`.
+- **Open after km7:** the hidden queen stays at length 2, so she loses the tiebreak to any living enemy queen that is
+  longer; the full late crown (to 25) got her rammed at r394-449 in local play, the small one (to 10) cost wins on
+  Maelstrom and Slithery Fight. Not hidden yet: Hive, Ouroboros, Whale Song, Troll Australia, Athena, Metro (no local
+  gain), and the two-dragon maps (Trophy, Stripes, Default, Maze, Ezam: she is a needed worker there).
 - **Uploads are bundled** (about one every two hours): each new upload widens the rating and the first series swing hard.
 - `bot/` carries the `QUAL_*` flags (default 0) and a 47-map `maps_data.hpp`. Lines below this point in this section
   are from 9 Oct and describe the build history up to qf1.
