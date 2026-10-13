@@ -561,6 +561,7 @@ struct World
     int qualIdx = -1;
     bool lookAlikeQ = false; // QUAL_GOSSIP: the adopted map is a known Qualifier map, or shares its size and every start tile with one
     int qhKnownR = 0; // QUAL_QHOME / QHOME_OLD: leash radius of the adopted map (set by adopt(); read only while known)
+    int qhideIdx = -1; // QHIDE: QHIDE_SPOTS entry of the adopted map, -1 = none or switched off for it (set by adopt())
     bool qualTold = false; // QUAL_GOSSIP: an ally that was sure named this map
     bool qualOn() const { return (QUAL_KNOWN) && known && qualIdx >= 0; }
     bool qualOn(int mask) const { return (QUAL_KNOWN) && known && qualIdx >= 0 && (mask >> qualIdx & 1); }
@@ -594,10 +595,11 @@ struct World
             RP.queenKeep = 64, RP.queenKeepR = QHOME_SMALL; // QHOME_SMALL: no split floor for the leashed queen until that round
 #endif
 #if QHIDE
-        if ((QHIDE_CROWN) && RP.kingDeclare)
-            if (int hi = qhideEntry(m->name); hi >= 0 && ((QHIDE) >> hi & 1) && ((QHIDE_CROWN) >> hi & 1) &&
-                                               !(QHIDE_SPOTS[hi].skip && std::strcmp(m->name, QHIDE_SPOTS[hi].skip) == 0))
-                RP.queenKing = 1, RP.qkFrom = QHIDE_CROWN_FROM, RP.qkCap = QHIDE_CROWN_CAP; // QHIDE_CROWN: the hideout queen is the queen-king from that round
+        qhideIdx = qhideEntry(m->name);
+        if (qhideIdx >= 0 && (!((QHIDE) >> qhideIdx & 1) || (QHIDE_SPOTS[qhideIdx].skip && std::strcmp(m->name, QHIDE_SPOTS[qhideIdx].skip) == 0)))
+            qhideIdx = -1;
+        if ((QHIDE_CROWN) && RP.kingDeclare && qhideIdx >= 0 && ((QHIDE_CROWN) >> qhideIdx & 1))
+            RP.queenKing = 1, RP.qkFrom = QHIDE_CROWN_FROM, RP.qkCap = QHIDE_CROWN_CAP; // QHIDE_CROWN: the hideout queen is the queen-king from that round
 #endif
         sym = m->sym;
 #if SPRINT_DEBUG
@@ -3080,6 +3082,78 @@ struct Bot
         return -QHUNT_W * std::min(qhuDist[t], 80);
     }
 #endif
+#if QESC
+    // QESC: queen escorts. qescDist = plain walking distance from our queen's hideout tile (99 = not reachable).
+    std::vector<int> qescDist;
+    int qescTile = -1, qescIntr = -1, qescBuilt = -1000;
+    const KnownMap* qescFor = nullptr;
+    bool qescOn() const
+    {
+        return qescTile >= 0 && !qescDist.empty() && !amQueen() && !iAmKing() && myHead >= 0 && myLen <= QESC_MAXLEN &&
+               round >= QESC_FROM && (w.myId % QESC_MOD) < QESC_N && qescDist[myHead] <= QESC_CALL;
+    }
+    bool qescRamOk() const // may this unit take the escort's certain head-on this turn
+    {
+        return qescOn() || ((QESC_ANY) && qescTile >= 0 && !qescDist.empty() && !amQueen() && !iAmKing() && myHead >= 0 &&
+                            myLen <= QESC_MAXLEN && round >= QESC_FROM);
+    }
+    void qescPrep()
+    {
+        qescIntr = -1;
+        if (amQueen() || myHead < 0 || (!(QESC_ANY) && (w.myId % QESC_MOD) >= QESC_N))
+            return;
+        int e = -1, k = -1;
+        if (w.known)
+        {
+            e = w.qhideIdx;
+            if (w.swapState >= 0 && w.known->dragons && w.known->dragonCount >= 2)
+            {
+                const int mine = ((w.myTeam == 'A') != (w.swapState == 1)) ? 0 : 1; // our team's number in the map file
+                k = w.known->dragons[0] == mine ? 0 : 1;                           // which queen is ours
+            }
+        }
+        else
+            for (int i = 0; i < QHIDE_COUNT && e < 0; i++)
+                if (((QHIDE) >> i & 1) && QHIDE_SPOTS[i].w == w.W && QHIDE_SPOTS[i].h == w.H)
+                    e = i; // unseen map: the enabled entry of this size
+        if (k < 0 && (qId == 0 || qId == 1))
+            k = qId; // our queen's id from her beacon or a sighting
+        if (e < 0 || k < 0 || !((QESC) >> e & 1))
+        {
+            qescTile = -1;
+            return;
+        }
+        const int tile = QHIDE_SPOTS[e].hide[k];
+        if (tile != qescTile || qescDist.empty() || qescFor != w.known || (!w.known && round - qescBuilt >= (QHIDE_REBUILD)))
+        {
+            qescTile = tile, qescFor = w.known, qescBuilt = round;
+            qescDist.assign(w.N, 99);
+            std::vector<int> q{tile};
+            qescDist[tile] = 0;
+            for (size_t i = 0; i < q.size(); i++)
+                for (int d = 0; d < 4; d++)
+                {
+                    int v = step(q[i], d);
+                    if (v >= 0 && v == w.plainStep(q[i], d) && qescDist[v] == 99)
+                        qescDist[v] = qescDist[q[i]] + 1, q.push_back(v);
+                }
+        }
+        int best = (QESC_ZONE) + 1;
+        for (auto& o : segs)
+            if (o.head && o.team != w.myTeam && qescDist[o.tile] < best)
+                best = qescDist[o.tile], qescIntr = o.tile; // the enemy head nearest to the hideout, inside the zone
+    }
+    double qescScore(int t) const
+    {
+        if (!qescOn())
+            return 0.0;
+        const int d = std::min(qescDist[t], 60);
+        double s = -QESC_W * (std::max(0, d - (QESC_ROUT)) + std::max(0, (QESC_RIN) - d));
+        if (qescIntr >= 0)
+            s -= QESC_WI * wrapDist(t, qescIntr);
+        return s;
+    }
+#endif
     // DGU F4 PM_TD_PULL (root-lanes-b RLB C1): Tower Defense non-queen units walk to the centre field early.
     std::vector<int> tdDist;
     bool tdPullOn() const
@@ -3654,6 +3728,14 @@ struct Bot
     {
         if (!qsOn && (round >= QS_FROM || (QS_UNITS > 0 && units >= QS_UNITS) || (RP.qPark == 1 && amQueen()) || (QPG_SAFE0 && RP.qPark == 3 && qpStarted && amQueen())))
             qsOn = true;
+#if QHIDE
+        if ((QHIDE_SAFE0) && !qsOn && amQueen() && qhHideOn())
+            qsOn = true; // QHIDE_SAFE0: a hiding queen is no part of the early economy
+#endif
+#if QHOME_ON
+        if ((QHOME_SAFE0) && !qsOn && amQueen() && qhomeR() > 0)
+            qsOn = true; // QHOME_SAFE0: nor is a leashed one
+#endif
     }
     // QUEEN_KING: on king maps our queen is the only king from the seed round while she is alive
     int qId = -1, qLen = 0, qTile = -1, qDir = 0, qRound = -100000, qHop = 99;
@@ -5259,6 +5341,13 @@ struct Bot
             r2log("qk");
             return true;
         }
+#if QESC
+        if (qescRamOk() && qescIntr >= 0 && tryQueenKill(1 << 30, qescIntr))
+        {
+            r2log("qesc"); // QESC: an escort takes a certain head-on against the enemy head nearest to our queen's hideout
+            return true;
+        }
+#endif
 #if KING_KILL
         if (!amQueen() && myLen <= KK_OWN_MAX && units >= KK_MIN_UNITS)
         {
@@ -6367,6 +6456,9 @@ struct Bot
 #if QHUNT
         qhuPrep(); // QHUNT
 #endif
+#if QESC
+        qescPrep(); // QESC
+#endif
         if (QBOX || QGUARD)
             computeQRegion();
         eqHuntPrep();
@@ -7252,6 +7344,9 @@ struct Bot
                 score += tdPullScore(t); // DGU F4 PM_TD_PULL
 #if QHUNT
             score += qhuScore(t); // QHUNT (0 unless this unit is a hunter)
+#endif
+#if QESC
+            score += qescScore(t); // QESC (0 unless this unit is a queen escort)
 #endif
             if (KING_CORRIDOR_PENALTY > 0 && myLen >= 10)
             {

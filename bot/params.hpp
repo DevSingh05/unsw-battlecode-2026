@@ -1712,11 +1712,66 @@
 #ifndef QHIDE_CROWN_CAP
 #define QHIDE_CROWN_CAP 25
 #endif
+// QESC: bit i = queen escorts on the map(s) of QHIDE entry i (needs the QHIDE bit). Every unit whose id modulo QESC_MOD
+// is below QESC_N, of length <= QESC_MAXLEN, that is within QESC_CALL plain steps of our queen's hideout from round
+// QESC_FROM on, keeps QESC_RIN..QESC_ROUT steps from the hideout tile (QESC_W per step outside the band) and takes any
+// certain head-on against an enemy head within QESC_ZONE steps of it; while such a head is in view it closes in
+// (QESC_WI per tile). Server games of km7: a single length 2-3 enemy unit walks up to the hidden queen over 5-10 rounds
+// and corners her.
+#ifndef QESC
+#define QESC 0
+#endif
+#ifndef QESC_MOD
+#define QESC_MOD 16
+#endif
+// QESC_ANY: 1 = every non-queen, non-king unit of length <= QESC_MAXLEN (not only the escorts) takes a certain head-on
+// against an enemy head within QESC_ZONE steps of the hideout when it sees one.
+#ifndef QESC_ANY
+#define QESC_ANY 0
+#endif
+#ifndef QESC_N
+#define QESC_N 1
+#endif
+#ifndef QESC_MAXLEN
+#define QESC_MAXLEN 6
+#endif
+#ifndef QESC_FROM
+#define QESC_FROM 30
+#endif
+#ifndef QESC_CALL
+#define QESC_CALL 30
+#endif
+#ifndef QESC_RIN
+#define QESC_RIN 3
+#endif
+#ifndef QESC_ROUT
+#define QESC_ROUT 5
+#endif
+#ifndef QESC_ZONE
+#define QESC_ZONE 8
+#endif
+#ifndef QESC_W
+#define QESC_W 8.0
+#endif
+#ifndef QESC_WI
+#define QESC_WI 12.0
+#endif
+// QHIDE_SAFE0: 1 = the hideout queen plays the QUEEN_SAFE rules from round 0 (as a parked queen does) instead of from
+// QS_FROM. Before QS_FROM a queen is a normal unit of the early economy, head-on trades included: km7's hidden queen
+// sprinted two steps into an enemy head at r80-89 in 4 of its first 14 deaths on the server.
+#ifndef QHIDE_SAFE0
+#define QHIDE_SAFE0 0
+#endif
 #ifndef QHIDE_PORTAL_PEN
 #define QHIDE_PORTAL_PEN 400.0 // a hideout queen that is not fleeing pays this for a step through a portal
 #endif
 #ifndef QHIDE_REBUILD
 #define QHIDE_REBUILD 8 // unseen maps: rebuild the walking distances every this many rounds as walls are learnt
+#endif
+// QHOME_SAFE0: 1 = every leashed queen (QUAL_QHOME, QHOME_OLD, QHOME_UNK) plays the QUEEN_SAFE rules from round 0, like
+// QHIDE_SAFE0 for a hiding one: a queen cut to 2 in round 0 has no part in the early economy.
+#ifndef QHOME_SAFE0
+#define QHOME_SAFE0 0
 #endif
 // any leash compiled in?
 #define QHOME_ON (((QUAL_KNOWN) && (QUAL_QHOME)) || (QHOME_OLD) || (QHOME_UNK) || (QHIDE))
