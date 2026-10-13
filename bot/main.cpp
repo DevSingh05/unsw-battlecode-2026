@@ -86,6 +86,8 @@ struct RuntimeParams
     double crowdEarly = 0;                   // ROUND3 P7: crowd penalty used only while round < kingSeedRound (0 = off)
     int qSmall = 0;                          // R10 LANE_QSMALL: small home queen, never fed
     double gamma = PEARL_GAMMA;              // OLD_GAMMA / QUAL_GAMMA: per-map discount per step for food further away
+    int scatter = 0;                         // SCATTER_OLD / SCATTER_QUAL: free short units walk to food tiles further away
+    int pfStrict = 0;                        // PF_STRICT_MAPS: PF_STRICT applies on this older known map
 #if QUAL_KNOWN
     int qParkIn = 0;                         // QUAL_QPARK_IN: the queen's process sets qPark = 1 once she has left her spawn's portal-free region
 #endif
@@ -162,6 +164,10 @@ void oldMapExtras(const std::string& n)
         RP.crowd = OLD_CROWD_V; // OLD_CROWD: spread the swarm
     if (oldMapBit(n, OLD_CROWD_EARLY))
         RP.crowdEarly = OLD_CROWD_V; // OLD_CROWD_EARLY: the same, only until the map's king seed round
+    if (oldMapBit(n, SCATTER_OLD))
+        RP.scatter = 1; // SCATTER_OLD
+    if (oldMapBit(n, PF_STRICT_MAPS))
+        RP.pfStrict = 1; // PF_STRICT_MAPS
 }
 bool qualKnown(const char* name)
 {
@@ -295,6 +301,8 @@ void applyMapParams(const char* name, int tiles = 0)
 #if QUAL_KNOWN
         if (int qi = qualMapIndex(name); qi >= 0 && ((QUAL_GAMMA) >> qi & 1))
             RP.gamma = QUAL_GAMMA_V; // QUAL_GAMMA: food further away counts for more on this known Qualifier map
+        if (int qi = qualMapIndex(name); qi >= 0 && ((SCATTER_QUAL) >> qi & 1))
+            RP.scatter = 1; // SCATTER_QUAL
 #endif
         oldMapExtras(n);
         return;
@@ -4763,6 +4771,84 @@ struct Bot
             std::fprintf(dbg, "HOTMOUTH mouths=%zu\n", hotMouth.size());
     }
 
+    // ---- SCATTER (13 Oct): on the big old maps our heads stand on a third of the tiles the opponents' do by r100
+    // (tools/analysis/oct13/spread.py): with PEARL_GAMMA 0.82 nothing further than about ten steps pulls a unit, so the
+    // swarm circles its own corpse pearls. A free short unit on a known map picks one food tile SCATTER_MIND..MAXD
+    // steps away (weight = spawn rate ^ SCATTER_POW, drawn from its id and the round), walks there (pull per step of
+    // the static distance), rests SCATTER_REST rounds on arrival and picks again. Visible food on the way still wins.
+    int scTarget = -1, scPick = -1000, scRestUntil = -1;
+    std::vector<int> scDist; // static steps to scTarget over the map's edges (portals included)
+    void scBfs(int src, std::vector<int>& dist) const
+    {
+        dist.assign(w.N, INF);
+        std::vector<int> q{src};
+        dist[src] = 0;
+        for (size_t i = 0; i < q.size(); i++)
+        {
+            int u = q[i];
+            for (int d = 0; d < 4; d++)
+            {
+                int v = step(u, d);
+                if (v >= 0 && dist[v] == INF)
+                    dist[v] = dist[u] + 1, q.push_back(v);
+            }
+        }
+    }
+    void scPrep(bool busy)
+    {
+        if (!RP.scatter || !w.known || amQueen() || iAmKing() || busy || myLen > SCATTER_MAXLEN || round < SCATTER_FROM ||
+            round >= (SCATTER_UNTIL > 0 ? SCATTER_UNTIL : RP.feedStart) || (w.myId % SCATTER_MOD) >= SCATTER_N)
+        {
+            scTarget = -1;
+            return;
+        }
+        if (scTarget >= 0 && (scDist[myHead] <= SCATTER_ARRIVE || round - scPick > SCATTER_TTL))
+        {
+            if (scDist[myHead] <= SCATTER_ARRIVE)
+                scRestUntil = round + SCATTER_REST;
+            scTarget = -1;
+        }
+        if (scTarget >= 0 || round < scRestUntil || round - lastGrowRound < SCATTER_HUNGRY)
+            return; // SCATTER_HUNGRY: a unit that ate in the last few rounds stays where the food is
+        std::vector<int> d0;
+        scBfs(myHead, d0);
+        if (pfDepth.empty())
+            pfCompute();
+        double tot = 0;
+        auto wgt = [&](int t) {
+            if (d0[t] < SCATTER_MIND || d0[t] > SCATTER_MAXD)
+                return 0.0;
+            double r = w.rate(t);
+            if (r <= 0)
+                return 0.0;
+            // SCATTER_POCKET_W: a dead-end pocket costs its diver two segments a visit, so its rate is not what it pays
+            return std::pow(r, static_cast<double>(SCATTER_POW)) * (pfDepth[t] > 0 ? static_cast<double>(SCATTER_POCKET_W) : 1.0);
+        };
+        for (int t = 0; t < w.N; t++)
+            tot += wgt(t);
+        if (tot <= 0)
+            return;
+        uint64_t h = (static_cast<uint64_t>(w.myId) + 1) * 0x9E3779B97F4A7C15ULL + static_cast<uint64_t>(round) * 0xBF58476D1CE4E5B9ULL;
+        h ^= h >> 31, h *= 0x94D049BB133111EBULL, h ^= h >> 29;
+        double x = static_cast<double>(h % 1000003ULL) / 1000003.0 * tot, acc = 0;
+        int pick = -1;
+        for (int t = 0; t < w.N && pick < 0; t++)
+        {
+            double g = wgt(t);
+            if (g <= 0)
+                continue;
+            acc += g;
+            if (acc >= x)
+                pick = t;
+        }
+        if (pick < 0)
+            return;
+        scTarget = pick, scPick = round;
+        scBfs(pick, scDist);
+        if (dbg)
+            std::fprintf(dbg, "SCATTER target (%d,%d) d=%d\n", pick % w.W, pick / w.W, d0[pick]);
+    }
+
     bool pocketWorthPumping(int t)
     {
         auto why = [&](const char* r) { if (dbg) std::fprintf(dbg, "POCKET %s len=%d\n", r, myLen); return false; };
@@ -4839,6 +4925,10 @@ struct Bot
             return why("nohot");
         if (myLen + pearls < POCKET_NEED)
             return why("fewpearls");
+        // POCKET_MIN_P: the dive costs the front two segments and gives one corpse pearl back, so with fewer than two
+        // pearls inside it loses length (a length-3 diver after one pearl comes out at 2) and with two it only breaks even
+        if ((POCKET_MIN_P) > 0 && pearls < POCKET_MIN_P)
+            return why("minp");
         if (DIVE_VALUE && (DV_PARTS & 2) && dvValue(t) < DV_MARGIN)
             return why("dv"); // pearls summed over branches are not one path's pearls
         if (dbg)
@@ -7017,6 +7107,8 @@ struct Bot
         }
         if (queenSafe() && QUEEN_LOOK)
             computeQueenLook();
+        if ((SCATTER_OLD) || (SCATTER_QUAL))
+            scPrep(feeding || consActive || pfIn || holdTile >= 0);
         // ---- score each direction
         double best = -1e18;
         int bestD = -1;
@@ -7217,6 +7309,12 @@ struct Bot
                 score -= 50.0; // inside: the planned branch (the others are shorter or empty)
             if (area < need && !pump)
                 score -= AREA_WEIGHT * (need - area) / need + 20;
+            // PF_STRICT: the area search above walks back out through our own tail (a tile that is free again two steps
+            // later), so for a short unit a two-tile dead end looks open and entering it costs nothing; it then eats,
+            // splits and leaves its front two segments there, a cycle that nets zero. An entry into a static pocket that
+            // the dive test did not approve is priced as the dead end it is.
+            if ((PF_STRICT) && pfEntry && !pump && t != holdTile && myLen <= PF_MAXLEN && !(area < need) && (((PF_STRICT_MAPS) == 0) || RP.pfStrict))
+                score -= PF_STRICT_PEN;
             if ((QVAULT & 2) && !RP.qPark && amQueen() && w.known && std::strcmp(w.known->name, "Australia") == 0 && !queenSafe() && !visible[t] && t != w.plainStep(myHead, d) &&
                 area < QVAULT_AUS_AREA)
                 score -= QVAULT_AUS_PEN; // DGU F2 QVAULT bit 2: early queen never enters the Australia portal vault
@@ -7548,6 +7646,8 @@ struct Bot
             }
             if (pfTarget >= 0 && !pump)
                 score -= PF_PULL * std::min(bfsDist[pfTarget], PF_PULL_RANGE + 2);
+            if (scTarget >= 0 && !pump)
+                score -= (SCATTER_PULL) * std::min(scDist[t], static_cast<int>(SCATTER_CAP)); // SCATTER
             if (hotTarget >= 0 && !pump) // stay near fast pockets (presence wins them)
                 score -= HOT_PULL * std::min(bfsDist[hotTarget], HOT_PULL_RANGE);
             if (whcOn)

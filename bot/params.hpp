@@ -1547,6 +1547,87 @@
 #ifndef OLD_CROWD_V
 #define OLD_CROWD_V 3.0
 #endif
+// POCKET_MIN_P: a dive into a dead end that is not a static pocket (pocketWorthPumping) needs at least this many pearls
+// inside (0 = off: only length + pearls >= POCKET_NEED, which lets a length-3 unit dive for one pearl and come out at
+// 2). Server 13 Oct, splits that lose a half within two rounds outside static pockets, per game before r250, ours /
+// the opponent's: Slithery Fight 264/122, Maelstrom 208/1, Hive 104/32, Ezam 95/23, Around UNSW 74/25, Australia 73/8,
+// Islands 64/22 (tools/analysis/oct13/badsplit.py).
+#ifndef POCKET_MIN_P
+#define POCKET_MIN_P 0.0
+#endif
+// PF_STRICT: 1 = stepping from the core into a static dead-end pocket that the dive test did not approve costs
+// PF_STRICT_PEN (the area search leaks out through a short unit's own tail, so such an entry was free). On Around UNSW
+// our forward units cycle the two-tile pockets next to their start (eat two, split, leave two segments: net zero)
+// while dev test 1's go to the 34-tile centre field (46 pearls there by r50 against our 10, 284 against 13 by r250).
+// PF_STRICT_MAPS: 0 = every map, else bit i = only on older known map i (OLD_NODIVE order).
+#ifndef PF_STRICT
+#define PF_STRICT 0
+#endif
+#ifndef PF_STRICT_PEN
+#define PF_STRICT_PEN 200.0
+#endif
+#ifndef PF_STRICT_MAPS
+#define PF_STRICT_MAPS 0
+#endif
+// SCATTER_OLD / SCATTER_QUAL: bit i = on older known map i (OLD_NODIVE order) / known Qualifier map i (QUAL_MAPS order)
+// a free short unit picks a food tile SCATTER_MIND..SCATTER_MAXD static steps away (weight = spawn rate ^ SCATTER_POW),
+// is pulled to it by SCATTER_PULL per step (capped at SCATTER_CAP steps), rests SCATTER_REST rounds within
+// SCATTER_ARRIVE steps of it and picks again; a target is dropped after SCATTER_TTL rounds. Units: not the queen, not a
+// king, length <= SCATTER_MAXLEN, id % SCATTER_MOD < SCATTER_N, rounds SCATTER_FROM .. SCATTER_UNTIL (0 = the map's feed
+// start). Why: by r100 our heads have stood on 450-490 tiles of Around UNSW, the opponents' on 1,370-1,690.
+#ifndef SCATTER_OLD
+#define SCATTER_OLD 0
+#endif
+#ifndef SCATTER_QUAL
+#define SCATTER_QUAL 0
+#endif
+#ifndef SCATTER_PULL
+#define SCATTER_PULL 1.0
+#endif
+#ifndef SCATTER_CAP
+#define SCATTER_CAP 60
+#endif
+#ifndef SCATTER_MIND
+#define SCATTER_MIND 10
+#endif
+#ifndef SCATTER_MAXD
+#define SCATTER_MAXD 45
+#endif
+#ifndef SCATTER_POW
+#define SCATTER_POW 0.5
+#endif
+// SCATTER_POCKET_W: weight factor for food tiles inside dead-end pockets (1 = like any tile, 0 = never a target).
+// SCATTER_HUNGRY: a new target is picked only after this many rounds without eating (0 = always on the move).
+#ifndef SCATTER_POCKET_W
+#define SCATTER_POCKET_W 1.0
+#endif
+#ifndef SCATTER_HUNGRY
+#define SCATTER_HUNGRY 0
+#endif
+#ifndef SCATTER_ARRIVE
+#define SCATTER_ARRIVE 2
+#endif
+#ifndef SCATTER_REST
+#define SCATTER_REST 6
+#endif
+#ifndef SCATTER_TTL
+#define SCATTER_TTL 80
+#endif
+#ifndef SCATTER_MAXLEN
+#define SCATTER_MAXLEN 6
+#endif
+#ifndef SCATTER_MOD
+#define SCATTER_MOD 1
+#endif
+#ifndef SCATTER_N
+#define SCATTER_N 1
+#endif
+#ifndef SCATTER_FROM
+#define SCATTER_FROM 0
+#endif
+#ifndef SCATTER_UNTIL
+#define SCATTER_UNTIL 0
+#endif
 // OLD_CROWD_EARLY: bit i (same order) = the crowd penalty only until the map's king seed round (Slithery Fight: with
 // OLD_CROWD the fed home queen ended shorter, 0-4 locally, although the team was 35% longer at r200).
 #ifndef OLD_CROWD_EARLY
