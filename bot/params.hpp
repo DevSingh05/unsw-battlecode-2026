@@ -1547,6 +1547,24 @@
 #ifndef OLD_CROWD_V
 #define OLD_CROWD_V 3.0
 #endif
+// FEED_LEAVE: pearls next to our fed king belong to the king. Bit 1 = the fed queen-king (QHIDE_BIG, Maze, Ezam, Portals,
+// parked queens), bit 2 = any king we would feed. While its head is in view, a pearl within FEED_LEAVE_R tiles of it has
+// no value for other units and stepping onto one costs FEED_LEAVE_PEN. FEED_LEAVE_EARLY: for the queen-king the rule
+// starts this many rounds before her feed round. Server, Slithery Fight vs dev test 1, r250-449: our queen ate 27 and
+// 19 of the pearls of the 79 and 67 units that died within 8 steps of her, our other units 99 and 62; their queen 38
+// and 41 from 37 and 36 deaths, their other units 13 and 10 (tools/analysis/oct13/feedwho.py).
+#ifndef FEED_LEAVE
+#define FEED_LEAVE 0
+#endif
+#ifndef FEED_LEAVE_R
+#define FEED_LEAVE_R 5
+#endif
+#ifndef FEED_LEAVE_PEN
+#define FEED_LEAVE_PEN 40.0
+#endif
+#ifndef FEED_LEAVE_EARLY
+#define FEED_LEAVE_EARLY 0
+#endif
 // POCKET_MIN_P: a dive into a dead end that is not a static pocket (pocketWorthPumping) needs at least this many pearls
 // inside (0 = off: only length + pearls >= POCKET_NEED, which lets a length-3 unit dive for one pearl and come out at
 // 2). Server 13 Oct, splits that lose a half within two rounds outside static pockets, per game before r250, ours /
@@ -1719,6 +1737,23 @@
 // QKILL / QUEEN_HUNT ram. Top teams' queens live within about 10 tiles of their spawn all game and nobody looks for
 // them; km5 server games, 13 Oct: we lost to a live enemy queen while holding 5 to 6 times the opponent's length
 // (Australia 333 vs 63 and 393 vs 66 at r300, Atlantis 7 times), 13 of 29 losses on the eleven watched maps.
+// QHUNT_OLD / QHUNT_QUAL: bit i = hunters only on older known map i (OLD_NODIVE order) / known Qualifier map i (QUAL_MAPS
+// order); both 0 = every known map of QHUNT_MIN_TILES+ tiles. Server 13 Oct, 478 games since km7: our queen dead and
+// theirs alive at the end in 143 (0 won): Thermopylae 16 of 23, Autarky 13 of 23, Around UNSW 16 of 29, Australia 22 of
+// 47, Maze 7 of 15, Slithery Fight 17 of 44 (and 19 both alive, 2 won), Islands 15 of 46; her mean distance from her
+// start tile is 7-21 steps (tools/analysis/oct13/qfate.py). With the economy fixed we hold twice the opponent's length
+// on Around UNSW and still lose to a length-2 queen that sits at home.
+#ifndef QHUNT_OLD
+#define QHUNT_OLD 0
+#endif
+// QHUNT_CENTRE: 1 = every tile within QHUNT_R of her start is a waypoint and every other QHUNT_PERIOD the waypoint is the
+// start tile itself (dev test 1's length-2 queen circles a 2x2 block on her start tile on Thermopylae all game).
+#ifndef QHUNT_CENTRE
+#define QHUNT_CENTRE 0
+#endif
+#ifndef QHUNT_QUAL
+#define QHUNT_QUAL 0
+#endif
 #ifndef QHUNT
 #define QHUNT 0
 #endif

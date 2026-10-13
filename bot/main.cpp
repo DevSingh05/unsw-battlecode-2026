@@ -88,6 +88,7 @@ struct RuntimeParams
     double gamma = PEARL_GAMMA;              // OLD_GAMMA / QUAL_GAMMA: per-map discount per step for food further away
     int scatter = 0;                         // SCATTER_OLD / SCATTER_QUAL: free short units walk to food tiles further away
     int pfStrict = 0;                        // PF_STRICT_MAPS: PF_STRICT applies on this older known map
+    int qhunt = 0;                           // QHUNT_OLD / QHUNT_QUAL: queen hunters on this map
 #if QUAL_KNOWN
     int qParkIn = 0;                         // QUAL_QPARK_IN: the queen's process sets qPark = 1 once she has left her spawn's portal-free region
 #endif
@@ -168,6 +169,8 @@ void oldMapExtras(const std::string& n)
         RP.scatter = 1; // SCATTER_OLD
     if (oldMapBit(n, PF_STRICT_MAPS))
         RP.pfStrict = 1; // PF_STRICT_MAPS
+    if (oldMapBit(n, QHUNT_OLD))
+        RP.qhunt = 1; // QHUNT_OLD
 }
 bool qualKnown(const char* name)
 {
@@ -303,6 +306,8 @@ void applyMapParams(const char* name, int tiles = 0)
             RP.gamma = QUAL_GAMMA_V; // QUAL_GAMMA: food further away counts for more on this known Qualifier map
         if (int qi = qualMapIndex(name); qi >= 0 && ((SCATTER_QUAL) >> qi & 1))
             RP.scatter = 1; // SCATTER_QUAL
+        if (int qi = qualMapIndex(name); qi >= 0 && ((QHUNT_QUAL) >> qi & 1))
+            RP.qhunt = 1; // QHUNT_QUAL
 #endif
         oldMapExtras(n);
         return;
@@ -1597,8 +1602,17 @@ struct Bot
     }
 
     // Expected pearl value of tile t if we arrive on step s (s=1 this turn).
+    // ---- FEED_LEAVE (13 Oct): the pearls our feeders leave next to the fed queen are eaten by other small units of ours.
+    // Slithery Fight vs dev test 1, r250-449 (tools/analysis/oct13/feedwho.py): 79 and 67 of our units died within 8
+    // steps of our queen; she ate 27 and 19 of their pearls, other units of ours 99 and 62. Theirs: 37 and 36 deaths,
+    // queen 38 and 41, other units 13 and 10. While the fed king's head is in view, a pearl within FEED_LEAVE_R tiles
+    // of it is worth nothing to anyone else and stepping onto it costs FEED_LEAVE_PEN.
+    int flKing = -1; // head tile of our fed king when it is in view this turn (set by flPrep), else -1
+    bool flReserved(int t) const { return flKing >= 0 && t != flKing && wrapDist(t, flKing) <= FEED_LEAVE_R; }
     double pearlValue(int t, int s) const
     {
+        if (flKing >= 0 && flReserved(t))
+            return 0; // FEED_LEAVE
         int arrive = round + s - 1;
         double v = 0;
         if (visible[t])
@@ -3067,6 +3081,8 @@ struct Bot
     const KnownMap* qhuFor = nullptr;
     bool qhuOn() const
     {
+        if ((((QHUNT_OLD) | (QHUNT_QUAL)) != 0) && !RP.qhunt)
+            return false; // QHUNT_OLD / QHUNT_QUAL: with a map mask set, hunters only on those maps
         return w.known && w.N >= QHUNT_MIN_TILES && w.swapState >= 0 && !amQueen() && !iAmKing() && myHead >= 0 &&
                myLen <= QHUNT_MAXLEN && round >= (QHUNT) && units >= QHUNT_MIN_UNITS && (w.myId % QHUNT_MOD) == 0;
     }
@@ -3104,13 +3120,15 @@ struct Bot
                     }
                 }
                 for (int t : q)
-                    if (dd[t] == 0 || dd[t] >= QHUNT_R / 2)
-                        qhuRing.push_back(t);
+                    if (dd[t] == 0 || dd[t] >= QHUNT_R / 2 || (QHUNT_CENTRE))
+                        qhuRing.push_back(t); // QHUNT_CENTRE: every tile of her home is a waypoint, not only the outer half
             }
         }
         if (qhuSpawn < 0 || qhuRing.empty())
             return;
         int tgt = qhuRing[(static_cast<size_t>(w.myId) * 7 + static_cast<size_t>(round / QHUNT_PERIOD)) % qhuRing.size()];
+        if ((QHUNT_CENTRE) && ((w.myId / QHUNT_MOD + round / QHUNT_PERIOD) & 1) == 0)
+            tgt = qhuSpawn; // QHUNT_CENTRE: every other period the waypoint is her start tile itself (many queens circle on it)
         for (auto& o : segs)
             if (o.head && o.team != w.myTeam && o.id <= 1)
                 tgt = o.tile; // she is in view: go for her head
@@ -4059,6 +4077,20 @@ struct Bot
     bool feedsQueen() const
     {
         return RP.queenKing && !amQueen() && queenKingRound() && queenAlive() && kingId >= 0 && kw10(kingId) <= 1;
+    }
+    // FEED_LEAVE: bit 1 = the fed queen-king, bit 2 = any king we would feed (longer than us by 2+) once feeding is on
+    void flPrep()
+    {
+        flKing = -1;
+        if (!(FEED_LEAVE) || amQueen() || iAmKing() || kingId < 0)
+            return;
+        const bool qk = ((FEED_LEAVE) & 1) && feedsQueen() && round >= qkFeedRound() - FEED_LEAVE_EARLY;
+        const bool anyk = ((FEED_LEAVE) & 2) && RP.kingDeclare && feedPhase() && kingLen >= myLen + 2 && kw10(kingId) > 1;
+        if (!qk && !anyk)
+            return;
+        for (auto& sg : segs)
+            if (sg.head && sg.id != w.myId && sg.team == w.myTeam && kw10(sg.id) == kw10(kingId))
+                flKing = sg.tile;
     }
     // walking distance a -> b over static tiles (bodies ignored), capped: maxd + 1 = further / walled off
     int walkDist(int a, int b, int maxd) const
@@ -6723,6 +6755,7 @@ struct Bot
             }
         }
 #endif
+        flPrep(); // FEED_LEAVE (before anything this turn values a pearl)
         // ---- feeding the king: die just in front of it so it eats our body
         bool feeding = shouldFeed() && !consActive && !queenSafe(); // consActive is false with CONS_R off
         int target = feeding ? feedTarget() : -1;
@@ -7648,6 +7681,8 @@ struct Bot
                 score -= PF_PULL * std::min(bfsDist[pfTarget], PF_PULL_RANGE + 2);
             if (scTarget >= 0 && !pump)
                 score -= (SCATTER_PULL) * std::min(scDist[t], static_cast<int>(SCATTER_CAP)); // SCATTER
+            if (flKing >= 0 && flReserved(t) && visible[t] && w.pearlMem[t])
+                score -= FEED_LEAVE_PEN; // FEED_LEAVE: that pearl is the king's
             if (hotTarget >= 0 && !pump) // stay near fast pockets (presence wins them)
                 score -= HOT_PULL * std::min(bfsDist[hotTarget], HOT_PULL_RANGE);
             if (whcOn)
