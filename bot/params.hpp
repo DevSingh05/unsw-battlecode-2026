@@ -1856,6 +1856,14 @@
 #ifndef QHUNT_OLD
 #define QHUNT_OLD 0
 #endif
+// QHUNT_ROAM: 0 = off; N = every N-th hunter (by id / QHUNT_MOD) sweeps the whole map: its waypoint is a tile drawn from
+// its id and round / QHUNT_ROAM_PERIOD anywhere on the map (see qhuPrep()).
+#ifndef QHUNT_ROAM
+#define QHUNT_ROAM 0
+#endif
+#ifndef QHUNT_ROAM_PERIOD
+#define QHUNT_ROAM_PERIOD 60
+#endif
 // QHUNT_HOLD: 0 = off; else the length a hunter keeps (5 = lunge reach 5): from QHUNT_HOLD_EARLY rounds before QHUNT it
 // makes no growth split below QHUNT_HOLD + 2 and above that sheds only the surplus. Needs QHUNT_MAXLEN >= QHUNT_HOLD + 2.
 #ifndef QHUNT_HOLD

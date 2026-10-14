@@ -3163,6 +3163,27 @@ struct Bot
         int tgt = qhuRing[(static_cast<size_t>(w.myId) * 7 + static_cast<size_t>(round / QHUNT_PERIOD)) % qhuRing.size()];
         if ((QHUNT_CENTRE) && ((w.myId / QHUNT_MOD + round / QHUNT_PERIOD) & 1) == 0)
             tgt = qhuSpawn; // QHUNT_CENTRE: every other period the waypoint is her start tile itself (many queens circle on it)
+        if ((QHUNT_ROAM) > 0 && ((w.myId / QHUNT_MOD) % (QHUNT_ROAM)) == 0)
+        {
+            // QHUNT_ROAM: every QHUNT_ROAM-th hunter sweeps the whole map instead of her home: a waypoint on any open tile,
+            // changed every QHUNT_ROAM_PERIOD rounds. Atlantis vs Cutlery, 13 Oct: 61 units of ours against 10, and their
+            // length-4 queen sat next to OUR queen's start tile from r180 to r390 without meeting one of them.
+            uint64_t h = (static_cast<uint64_t>(w.myId) + 7) * 0x9E3779B97F4A7C15ULL + static_cast<uint64_t>(round / (QHUNT_ROAM_PERIOD)) * 0xBF58476D1CE4E5B9ULL;
+            h ^= h >> 31, h *= 0x94D049BB133111EBULL, h ^= h >> 29;
+            int t0 = static_cast<int>(h % static_cast<uint64_t>(w.N));
+            for (int k = 0; k < w.N; k++)
+            {
+                const int t = (t0 + k) % w.N;
+                bool open = false;
+                for (int d = 0; d < 4 && !open; d++)
+                    open = step(t, d) >= 0;
+                if (open)
+                {
+                    tgt = t;
+                    break;
+                }
+            }
+        }
         for (auto& o : segs)
             if (o.head && o.team != w.myTeam && o.id <= 1)
                 tgt = o.tile; // she is in view: go for her head
